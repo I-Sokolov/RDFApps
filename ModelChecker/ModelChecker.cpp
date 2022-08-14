@@ -2,10 +2,9 @@
 //
 
 #include "pch.h"
+#include "ModelChecker.h"
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath);
-
-static void MessageOut(const char* format, ...);
 
 
 int main(int argc, char* argv[])
@@ -24,30 +23,29 @@ int main(int argc, char* argv[])
     return level;
 }
 
-static void MessageOut(const char* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    vprintf(format, args);
-    va_end(args);
-}
+
 
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
 {
-    MessageOut("Checking file %s\n", filePath);
+    printf("Checking file %s", filePath);
     
     if (expressSchemaFilePath)
-        MessageOut("against schema %s", expressSchemaFilePath);
+        printf(" against schema %s\n\n", expressSchemaFilePath);
     else
-        MessageOut("against embedded schema");
+        printf(" against embedded schema\n\n");
 
-    SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath);
+    SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
     if (!model) {
-        MessageOut("Can not open model\n");
+        printf("Can not open model\n\n");
         return -13;
     }
 
-    sdaiCloseModel(model);
+    RDF::CModelChecker cheker;   
+    auto res = cheker.CheckModel(model);
+
+    //sdaiCloseModel(model);
+
+    return (int)res;
 }
 
