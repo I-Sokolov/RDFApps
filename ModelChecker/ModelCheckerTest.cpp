@@ -45,8 +45,7 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
 
     SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
     if (model) {
-        RDF::CModelChecker cheker;
-        result = cheker.CheckModel(model);
+        result = RDF::CModelChecker::CheckModel(model);
         //sdaiCloseModel(model);
     }
     else {
@@ -62,12 +61,10 @@ static int RunSmokeTests()
 {
     printf("\t<TestInvalidParameters>\n");
 
-    RDF::CModelChecker checker;
-    
-    int result = checker.CheckModel((int_t)&checker);
+    int result = RDF::CModelChecker::CheckModel((int_t)&result);
     printf("\t\t<Finished errorLevel='%d' />\n", result);
 
-    result = checker.CheckInstance((int_t)&result);
+    result = RDF::CModelChecker::CheckInstance((int_t)&result);
     printf("\t\t<Finished errorLevel='%d' />\n", result);
 
     printf("\t</TestInvalidParameters>\n");
