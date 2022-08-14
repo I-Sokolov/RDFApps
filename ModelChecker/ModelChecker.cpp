@@ -5,20 +5,26 @@
 #include "ModelChecker.h"
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath);
+static int RunSmokeTests();
 
 
 int main(int argc, char* argv[])
 {
-    printf("RDF step model checker\n\n");
+    printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    printf("<RDFExpressModelChecker>\n");
 
-    if (argc != 2 && argc != 3) {
-        printf("Usage: ModelChecker.exe <filepath> [<expressSchemaFilePath>]\n\n");
-        return -13;
+
+    int level = 0;
+
+    if (argc > 1) {
+        level = CheckModel(argv[1], argc > 2 ? argv[2] : NULL);
+    }
+    else {
+        level = RunSmokeTests();
     }
 
-    int level = CheckModel(argv[1], argc == 3 ? argv[2] : NULL);
-
-    printf("ModelChecker finished\n\n");
+    printf("\t<Finished errorLevel='%d' />\n", level);
+    printf("</RDFExpressModelChecker>\n");
 
     return level;
 }
@@ -28,24 +34,46 @@ int main(int argc, char* argv[])
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
 {
-    printf("Checking file %s", filePath);
+    printf("\t<CheckModel file='%s'", filePath);
     
     if (expressSchemaFilePath)
-        printf(" against schema %s\n\n", expressSchemaFilePath);
+        printf(" schema='%s'>\n", expressSchemaFilePath);
     else
-        printf(" against embedded schema\n\n");
+        printf(" embedded_schema='true'>\n");
+
+    int result = 0;
 
     SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
-    if (!model) {
-        printf("Can not open model\n\n");
-        return -13;
+    if (model) {
+        RDF::CModelChecker cheker;
+        result = cheker.CheckModel(model);
+        //sdaiCloseModel(model);
+    }
+    else {
+        printf("\t\t<Failure>Can not open model</Failure>\n");
+        result = -13;
     }
 
-    RDF::CModelChecker cheker;   
-    auto res = cheker.CheckModel(model);
-
-    //sdaiCloseModel(model);
-
-    return (int)res;
+    printf("\t</CheckModel>\n");
+    return result;
 }
 
+static int RunSmokeTests()
+{
+    printf("\t<TestInvalidParameters>\n");
+
+    RDF::CModelChecker checker;
+    
+    int result = checker.CheckModel((int_t)&checker);
+    printf("\t\t<Finished errorLevel='%d' />\n", result);
+
+    result = checker.CheckInstance((int_t)&result);
+    printf("\t\t<Finished errorLevel='%d' />\n", result);
+
+    printf("\t</TestInvalidParameters>\n");
+
+    // test model with cases
+    //
+    result = CheckModel("SmokeTests.ifc", NULL);
+    return result;
+}
