@@ -4,7 +4,9 @@
 #include "pch.h"
 #include "ModelChecker.h"
 
-static int CheckModel(const char* filePath, const char* expressSchemaFilePath);
+#define ASSERT assert
+
+static int CheckModel(const char* filePath, const char* expressSchemaFilePath, RDF::CModelChecker::ModelCheckerLog* pLog);
 static int RunSmokeTests();
 
 
@@ -17,7 +19,7 @@ int main(int argc, char* argv[])
     int level = 0;
 
     if (argc > 1) {
-        level = CheckModel(argv[1], argc > 2 ? argv[2] : NULL);
+        level = CheckModel(argv[1], argc > 2 ? argv[2] : NULL, NULL);
     }
     else {
         level = RunSmokeTests();
@@ -32,7 +34,7 @@ int main(int argc, char* argv[])
 
 
 
-static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
+static int CheckModel(const char* filePath, const char* expressSchemaFilePath, RDF::CModelChecker::ModelCheckerLog* pLog)
 {
     printf("\t<CheckModel file='%s'", filePath);
     
@@ -45,7 +47,7 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
 
     SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
     if (model) {
-        result = RDF::CModelChecker::CheckModel(model);
+        result = RDF::CModelChecker::CheckModel(model, pLog);
         //sdaiCloseModel(model);
     }
     else {
@@ -57,20 +59,85 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath)
     return result;
 }
 
+//
+// smoke-test expected issues
+//
+
+static int_t r4[] = {4};
+static int_t r6[] = {6};
+
+static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
+{
+    //id   class                    attrName                    ind     aggrLev/aggrInd         Issue
+    {101,   "IfcProject",           "GlobalId",                 0,      0,NULL,         RDF::CModelChecker::IssueID::MissedNonOptionalArgument},
+    {107,   "IfcUnitAssignment",    "Units",                    0,      1,r6,           RDF::CModelChecker::IssueID::UnexpectedValueType},
+    {123,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
+    {201,   "IfcProject",           "ObjectType",               4,      0,NULL,         RDF::CModelChecker::IssueID::UnexpectedStar},
+    {207,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedValueType},
+    {223,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
+    {301,   "IfcProject",           "OwnerHistory",             1,      0,NULL,         RDF::CModelChecker::IssueID::UnexpectedAggregation},
+    {307,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedAggregation},
+    {401,   "IfcProject",           NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
+    {501,   "IfcProject",           NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
+    {601,   "IfcProject",           "RepresentationContexts",   7,      0,NULL,         RDF::CModelChecker::IssueID::ExpectedAggregation}
+};
+
+
+//
+// smoke test run and check
+//
+
+struct CheckExpectedIssuses : public RDF::CModelChecker::ModelCheckerLog
+{
+    virtual void ReportIssue(RDF::CModelChecker::IssueInfo& issue) override;
+};
+
 static int RunSmokeTests()
 {
     printf("\t<TestInvalidParameters>\n");
 
-    int result = RDF::CModelChecker::CheckModel((int_t)&result);
+    RDF::CModelChecker::ErrorLevel result = RDF::CModelChecker::CheckModel((int_t)&result);
+    ASSERT(result == 100000);
     printf("\t\t<Finished errorLevel='%d' />\n", result);
 
     result = RDF::CModelChecker::CheckInstance((int_t)&result);
+    ASSERT(result == 100000);
     printf("\t\t<Finished errorLevel='%d' />\n", result);
 
     printf("\t</TestInvalidParameters>\n");
 
-    // test model with cases
+    // test model with different cases of issues
     //
-    result = CheckModel("SmokeTests.ifc", NULL);
+    CheckExpectedIssuses log;
+    result = CheckModel("SmokeTests.ifc", NULL, &log);
+
+    //all expected issues are reported
+    for (auto expected : rExpectedIssues) {
+        ASSERT(expected.stepId == -1);
+    }
+
     return result;
 }
+
+
+void CheckExpectedIssuses::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
+{
+    //check issue expected
+    bool found = false;
+    for (auto& expected : rExpectedIssues) {
+        if (expected.stepId == issue.stepId && expected.attrIndex == issue.attrIndex && expected.aggrLevel == issue.aggrLevel) {
+            for (int i = 0; i < issue.aggrLevel; i++) {
+                ASSERT(expected.aggrIndArray[i] == issue.aggrIndArray[i]);
+            }
+            found = true;
+            expected.stepId = -1; //mark as reported
+            break;
+        }
+    }
+    ASSERT(found);
+
+    //base report
+    __super::ReportIssue(issue);
+}
+
+
