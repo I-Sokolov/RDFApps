@@ -13,6 +13,7 @@ DATA;
 #501 = IFCPROJECT('2o1ykWxGT4ZxPjHNe4gayR', #2, 'Default Project', 'Description of Default Project', $, $, $, (#20), #7, 'add more');
 #601 = IFCPROJECT('2o1ykWxGT4ZxPjHNe4gayR', #2, 'Default Project', 'Description of Default Project', $, $, $, #20, #7);
 #2 = IFCOWNERHISTORY(#3, #6, $, .ADDED., $, $, $, 1232965595);
+#102 = IFCOWNERHISTORY('#3', #6, $, .ADDED., $, $, $, 1232965595);
 #3 = IFCPERSONANDORGANIZATION(#4, #5, $);
 #4 = IFCPERSON('ID001', 'Bonsma', 'Peter', $, $, $, $, $);
 #5 = IFCORGANIZATION($, 'TNO', 'TNO Building Innovation', $, $);

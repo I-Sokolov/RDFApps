@@ -70,6 +70,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
 {
     //id   class                    attrName                    ind     aggrLev/aggrInd         Issue
     {101,   "IfcProject",           "GlobalId",                 0,      0,NULL,         RDF::CModelChecker::IssueID::MissedNonOptionalArgument},
+    {102,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {107,   "IfcUnitAssignment",    "Units",                    0,      1,r6,           RDF::CModelChecker::IssueID::UnexpectedValueType},
     {123,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
     {201,   "IfcProject",           "ObjectType",               4,      0,NULL,         RDF::CModelChecker::IssueID::UnexpectedStar},
@@ -122,6 +123,9 @@ static int RunSmokeTests()
 
 void CheckExpectedIssuses::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 {
+    //base report
+    __super::ReportIssue(issue);
+
     //check issue expected
     bool found = false;
     for (auto& expected : rExpectedIssues) {
@@ -135,9 +139,6 @@ void CheckExpectedIssuses::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
         }
     }
     ASSERT(found);
-
-    //base report
-    __super::ReportIssue(issue);
 }
 
 
