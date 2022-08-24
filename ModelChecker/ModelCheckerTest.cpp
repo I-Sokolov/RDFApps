@@ -83,6 +83,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
     {124,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {125,   "IfcOwnerHistory",      "ChangeAction",             3,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {126,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
+    {130,   "IfcMeasureWithUnit",   "ValueComponent",           0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {170,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::WrongArgumentType},
     {170,   "IfcUnitAssignment",    "Units",                    0,      1,r6,           RDF::CModelChecker::IssueID::UnexpectedValueType},
     {171,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedValueType},
