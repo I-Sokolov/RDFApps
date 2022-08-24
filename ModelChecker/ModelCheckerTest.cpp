@@ -75,15 +75,18 @@ static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
     {113,   "IfcProject",           NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
     {114,   "IfcProject",           NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
     {115,   "IfcProject",           "RepresentationContexts",   7,      0,NULL,         RDF::CModelChecker::IssueID::ExpectedAggregation},
+    {116,   "IfcProject",           "OwnerHistory",             1,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {120,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {121,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {122,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {123,   "IfcOwnerHistory",      "CreationDate",             7,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {124,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
+    {125,   "IfcOwnerHistory",      "ChangeAction",             3,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
+    {126,   "IfcOwnerHistory",      "OwningUser",               0,      0,NULL,         RDF::CModelChecker::IssueID::WrongArgumentType},
     {170,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::WrongArgumentType},
     {170,   "IfcUnitAssignment",    "Units",                    0,      1,r6,           RDF::CModelChecker::IssueID::UnexpectedValueType},
     {171,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedValueType},
-    {172,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::WrongArgumentType},
+    {172,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedAggregation},
     {230,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
     {231,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
 };
@@ -135,6 +138,7 @@ void CheckExpectedIssuses::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
     bool found = false;
     for (auto& expected : rExpectedIssues) {
         if (expected.stepId == issue.stepId && expected.attrIndex == issue.attrIndex && expected.aggrLevel == issue.aggrLevel) {
+            assert(expected.issueId == issue.issueId);
             for (int i = 0; i < issue.aggrLevel; i++) {
                 ASSERT(expected.aggrIndArray[i] == issue.aggrIndArray[i]);
             }
