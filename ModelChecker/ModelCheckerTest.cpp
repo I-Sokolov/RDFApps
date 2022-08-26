@@ -63,12 +63,17 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath, R
 // smoke-test expected issues
 //
 
+static int_t r1[] = {1};
+static int_t r3[] = {3};
 static int_t r4[] = {4};
 static int_t r6[] = {6};
 
 static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
 {
     //id   class                    attrName                    ind     aggrLev/aggrInd         Issue
+    {84,    "IFCCARTESIANPOINTLIST2D",NULL,                     -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
+    {51,    "IfcProductDefinitionShape","Representations",      2,      1,r3,           RDF::CModelChecker::IssueID::UnresolvedReference},
+    {74,    "IfcPolyLoop",          "Polygon",                  0,      1,r1,           RDF::CModelChecker::IssueID::UnresolvedReference},
     {110,   "IfcProject",           "GlobalId",                 0,      0,NULL,         RDF::CModelChecker::IssueID::MissedNonOptionalArgument},
     {111,   "IfcProject",           "ObjectType",               4,      0,NULL,         RDF::CModelChecker::IssueID::UnexpectedStar},
     {112,   "IfcProject",           "OwnerHistory",             1,      0,NULL,         RDF::CModelChecker::IssueID::UnexpectedAggregation},
