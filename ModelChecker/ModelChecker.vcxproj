@@ -179,7 +179,8 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SmokeTests.ifc" />
+    <None Include="SmokeTestsIFC4.ifc" />
+    <None Include="SmokeTestsIFC2x3.ifc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -68,7 +68,7 @@ static int_t r3[] = {3};
 static int_t r4[] = {4};
 static int_t r6[] = {6};
 
-static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
+static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
 {
     //id   class                    attrName                    ind     aggrLev/aggrInd         Issue
     {84,    "IFCCARTESIANPOINTLIST2D",NULL,                     -1,     0,NULL,         RDF::CModelChecker::IssueID::WrongNumberOfArguments},
@@ -98,13 +98,24 @@ static RDF::CModelChecker::IssueInfo rExpectedIssues[] =
 };
 
 
+static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC4[] =
+{
+    {14,    "IfcShapeRepresentation",   "ContextOfItems",       0,      0,NULL,         RDF::CModelChecker::IssueID::MissedNonOptionalArgument}
+};
+
 //
 // smoke test run and check
 //
 
 struct CheckExpectedIssuses : public RDF::CModelChecker::ModelCheckerLog
 {
+    CheckExpectedIssuses(RDF::CModelChecker::IssueInfo* rExpectedIssuesIFC2x3, int nExpectedIssues) : m_rExpectedIssues(rExpectedIssuesIFC2x3), m_nExpectedIssues(nExpectedIssues) {}
+
     virtual void ReportIssue(RDF::CModelChecker::IssueInfo& issue) override;
+
+private:
+    RDF::CModelChecker::IssueInfo* m_rExpectedIssues;
+    int m_nExpectedIssues;
 };
 
 static int RunSmokeTests()
@@ -123,11 +134,20 @@ static int RunSmokeTests()
 
     // test model with different cases of issues
     //
-    CheckExpectedIssuses log;
-    result = CheckModel("SmokeTests.ifc", NULL, &log);
+
+    CheckExpectedIssuses log(rExpectedIssuesIFC2x3, _countof(rExpectedIssuesIFC2x3));
+    result = CheckModel("SmokeTestsIFC2x3.ifc", NULL, &log);
 
     //all expected issues are reported
-    for (auto expected : rExpectedIssues) {
+    for (auto expected : rExpectedIssuesIFC2x3) {
+        ASSERT(expected.stepId == -1);
+    }
+
+    CheckExpectedIssuses log2(rExpectedIssuesIFC4, _countof(rExpectedIssuesIFC4));
+    result = CheckModel("SmokeTestsIFC4.ifc", NULL, &log2);
+
+    //all expected issues are reported
+    for (auto expected : rExpectedIssuesIFC2x3) {
         ASSERT(expected.stepId == -1);
     }
 
@@ -142,7 +162,8 @@ void CheckExpectedIssuses::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 
     //check issue expected
     bool found = false;
-    for (auto& expected : rExpectedIssues) {
+    for (int i = 0; i < m_nExpectedIssues; i++) {
+        auto& expected = m_rExpectedIssues[i];
         if (expected.stepId == issue.stepId && expected.attrIndex == issue.attrIndex && expected.aggrLevel == issue.aggrLevel) {
             assert(expected.issueId == issue.issueId);
             for (int i = 0; i < issue.aggrLevel; i++) {
