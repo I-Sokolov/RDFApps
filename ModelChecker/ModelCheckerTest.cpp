@@ -64,9 +64,11 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath, R
 //
 
 static int_t r1[] = {1};
+static int_t r2[] = {2};
 static int_t r3[] = {3};
 static int_t r4[] = {4};
 static int_t r6[] = {6};
+static int_t r32[] = {3,2};
 
 static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
 {
@@ -98,12 +100,12 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
 };
 
 
-static int_t r32[] = {3,2};
-
 static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC4[] =
 {
     {14,    "IfcShapeRepresentation",   "ContextOfItems",       0,      0,NULL,         RDF::CModelChecker::IssueID::MissedNonOptionalArgument},
-    {29,    "IfcIndexedPolyCurve",      "Segments",             1,      2,r32,          RDF::CModelChecker::IssueID::WrongArgumentType}
+    {29,    "IfcIndexedPolyCurve",      "Segments",             1,      2,r32,          RDF::CModelChecker::IssueID::WrongArgumentType},
+    {29,    "IfcIndexedPolyCurve",      "Segments",             1,      1,r2,           RDF::CModelChecker::IssueID::WrongAggregationSize},
+    {7,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r2,           RDF::CModelChecker::IssueID::UnresolvedReference},
 };
 
 //
