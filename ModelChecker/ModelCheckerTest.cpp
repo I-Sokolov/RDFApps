@@ -2,6 +2,8 @@
 //
 
 #include "pch.h"
+
+#define IFCENGINE_MODEL_CHECKER
 #include "ModelChecker.h"
 
 #define ASSERT assert
