@@ -163,14 +163,14 @@ CString	CreateToolTipText(int_t ifcEntityInstance, int_t entity, int_t * pIndex)
 		CString	rValue = CreateToolTipText(ifcEntityInstance, engiGetEntityParent(entity), pIndex);
 
 		wchar_t	* entityName = nullptr;
-		engiGetEntityName(entity, sdaiUNICODE, (char**)&entityName);
+		engiGetEntityName(entity, sdaiUNICODE, (const char**)&entityName);
 		rValue += entityName;
 		rValue += "\n";
 
 		int_t	argCnt = engiGetEntityNoArguments(entity);
 		while ((*pIndex) < argCnt) {
 			wchar_t	* propertyName = nullptr;
-			engiGetEntityArgumentName(entity, (*pIndex), sdaiUNICODE, (char**)&propertyName);
+			engiGetEntityArgumentName(entity, (*pIndex), sdaiUNICODE, (const char**)&propertyName);
 
 			int_t	propertyType = 0;
 			engiGetEntityArgumentType(entity, (*pIndex), &propertyType);
@@ -207,7 +207,7 @@ CString	CreateToolTipText(int_t ifcEntityInstance)
 	rValue += " = ";
 
 	wchar_t	* entityName = nullptr;
-	engiGetEntityName(ifcEntity, sdaiUNICODE, (char **)&entityName);
+	engiGetEntityName(ifcEntity, sdaiUNICODE, (const char **)&entityName);
 
 	rValue += entityName;
 	rValue += "(...)\n\n";
@@ -395,7 +395,7 @@ wchar_t	* GetTreeItemName_ifcInstance(
 			* description = nullptr;
 
 	int_t	ifcInstanceType = sdaiGetInstanceType(ifcInstance);
-	engiGetEntityName(ifcInstanceType, sdaiUNICODE, (char**) &ifcType);
+	engiGetEntityName(ifcInstanceType, sdaiUNICODE, (const char**) &ifcType);
 
 	sdaiGetAttrBN(ifcInstance, (char*)L"name", sdaiUNICODE, &name);
 	sdaiGetAttrBN(ifcInstance, (char*)L"description", sdaiUNICODE, &description);
@@ -467,7 +467,7 @@ wchar_t	* GetTreeItemName_ifcEntity(
 {
 	wchar_t	* ifcEntityName = nullptr;
 
-	engiGetEntityName(ifcEntity, sdaiUNICODE, (char**) &ifcEntityName);
+	engiGetEntityName(ifcEntity, sdaiUNICODE, (const char**) &ifcEntityName);
 
 	size_t	i = 0, size = 0;
 	if (ifcEntityName) {

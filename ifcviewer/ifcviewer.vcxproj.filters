@@ -59,6 +59,7 @@
     <None Include="res\selectedPart.bmp">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="UpdateIfcEngine.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ifcviewer.h">

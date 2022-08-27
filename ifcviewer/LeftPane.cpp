@@ -589,7 +589,7 @@ void	CLeftPane::OnRClick(NMHDR* pNMHDR, LRESULT* pResult)
 			flags |= MF_DISABLED;
 		}
 		wchar_t	* entityName = 0;
-		engiGetEntityName(currentIfcEntity, sdaiUNICODE, (char**) &entityName);
+		engiGetEntityName(currentIfcEntity, sdaiUNICODE, (const char**) &entityName);
 		::AppendMenu(hMenu, flags, i++, entityName);
 	}
 	int_t sel = ::TrackPopupMenuEx(hMenu, 

@@ -1,11 +1,29 @@
-#ifndef __RDF_LTD__ENGINE_INLINE_H
-#define __RDF_LTD__ENGINE_INLINE_H
+#ifndef	__RDF_LTD__ENGINE_INLINE_H
+#define	__RDF_LTD__ENGINE_INLINE_H
 
 
 #include	<assert.h>
 
 #include	"engine.h"
 
+
+static	inline	int64_t	GetRevision(
+								)
+{
+	char	** timeStamp = nullptr;
+	return	GetRevision(
+					timeStamp
+				);
+}
+
+static	inline	int64_t	GetRevisionW(
+								)
+{
+	wchar_t	** timeStamp = nullptr;
+	return	GetRevisionW(
+					timeStamp
+				);
+}
 
 static	inline	char	* GetAssertionFile(
 								)
@@ -136,7 +154,7 @@ static	inline	int64_t	CreateInstance(
 								)
 {
 	const char	* name = nullptr;
-	return		CreateInstance(
+	return	CreateInstance(
 					owlClass,
 					name
 				);
@@ -147,7 +165,7 @@ static	inline	int64_t	CreateInstanceW(
 								)
 {
 	const wchar_t	* name = nullptr;
-	return		CreateInstanceW(
+	return	CreateInstanceW(
 					owlClass,
 					name
 				);
@@ -159,7 +177,7 @@ static	inline	int64_t	CreateInstanceEx(
 								)
 {
 	const char	* name = nullptr;
-	return		CreateInstanceEx(
+	return	CreateInstanceEx(
 					model,
 					owlClass,
 					name
@@ -172,7 +190,7 @@ static	inline	int64_t	CreateInstanceWEx(
 								)
 {
 	const wchar_t	* name = nullptr;
-	return		CreateInstanceWEx(
+	return	CreateInstanceWEx(
 					model,
 					owlClass,
 					name
@@ -343,13 +361,80 @@ static	inline	int64_t	SetObjectProperty(
 				);
 }
 
+static	inline	bool	IsInstanceOfClass(
+									int64_t				owlInstance,
+									const char			* name
+								)
+{
+	return	GetInstanceClass(owlInstance) == GetClassByName(GetModel(owlInstance), name);
+}
+
+static	inline	int64_t	CalculateInstance(
+									int64_t				owlInstance,
+									int64_t				* vertexBufferSize,
+									int64_t				* indexBufferSize
+								)
+{
+	int64_t	* transformationBufferSize = nullptr;
+	return	CalculateInstance(
+					owlInstance,
+					vertexBufferSize,
+					indexBufferSize,
+					transformationBufferSize
+				);
+}
+
+static	inline	int64_t	GetConceptualFaceEx(
+									int64_t				owlInstance,
+									int64_t				index,
+									int64_t				* startIndexTriangles,
+									int64_t				* noIndicesTriangles,
+									int64_t				* startIndexLines,
+									int64_t				* noIndicesLines,
+									int64_t				* startIndexPoints,
+									int64_t				* noIndicesPoints
+								)
+{
+	return	GetConceptualFaceEx(
+					owlInstance,
+					index,
+					startIndexTriangles,
+					noIndicesTriangles,
+					startIndexLines,
+					noIndicesLines,
+					startIndexPoints,
+					noIndicesPoints,
+					nullptr,		//	startIndexFacePolygons
+					nullptr,		//	noIndicesFacePolygons
+					nullptr,		//	startIndexConceptualFacePolygons
+					nullptr			//	noIndicesConceptualFacePolygons
+				);
+}
+
+static	inline	int64_t	GetConceptualFaceEx(
+									int64_t				owlInstance,
+									int64_t				index
+								)
+{
+	return	GetConceptualFaceEx(
+					owlInstance,
+					index,
+					nullptr,		//	startIndexTriangles
+					nullptr,		//	noIndicesTriangles
+					nullptr,		//	startIndexLines
+					nullptr,		//	noIndicesLines
+					nullptr,		//	startIndexPoints
+					nullptr			//	noIndicesPoints
+				);
+}
+
 static	inline	double	GetArea(
 									int64_t				owlInstance
 								)
 {
 	const void	* vertexBuffer = nullptr,
 				* indexBuffer = nullptr;
-	return		GetArea(
+	return	GetArea(
 					owlInstance,
 					vertexBuffer,
 					indexBuffer
@@ -362,7 +447,7 @@ static	inline	double	GetVolume(
 {
 	const void	* vertexBuffer = nullptr,
 				* indexBuffer = nullptr;
-	return		GetVolume(
+	return	GetVolume(
 					owlInstance,
 					vertexBuffer,
 					indexBuffer
@@ -376,7 +461,7 @@ static	inline	double	* GetCenter(
 {
 	const void	* vertexBuffer = nullptr,
 				* indexBuffer = nullptr;
-	return		GetCenter(
+	return	GetCenter(
 					owlInstance,
 					vertexBuffer,
 					indexBuffer,
@@ -391,7 +476,7 @@ static	inline	double	GetCentroid(
 {
 	const void	* vertexBuffer = nullptr,
 				* indexBuffer = nullptr;
-	return		GetCentroid(
+	return	GetCentroid(
 					owlInstance,
 					vertexBuffer,
 					indexBuffer,
@@ -405,11 +490,310 @@ static	inline	double	GetConceptualFaceArea(
 {
 	const void	* vertexBuffer = nullptr,
 				* indexBuffer = nullptr;
-	return		GetConceptualFaceArea(
+	return	GetConceptualFaceArea(
 					conceptualFace,
 					vertexBuffer,
 					indexBuffer
 				);
+}
+
+static	inline	int32_t	GetColorOfComponent(
+									int64_t				owlInstanceColorComponent
+								)
+{
+	assert(IsInstanceOfClass(owlInstanceColorComponent, "ColorComponent"));
+
+	int64_t	model = GetModel(owlInstanceColorComponent);
+
+	const char	* rgbwNames[4] = { "R", "G", "B", "W" };
+	double		rgbwValues[4] = { 0., 0., 0., 0. };
+
+	for	(size_t i = 0; i < 4; i++) {
+		double	* values = nullptr;
+		int64_t	card = 0;
+		GetDatatypeProperty(
+				owlInstanceColorComponent,
+				GetPropertyByName(
+						model,
+						rgbwNames[i]
+					),
+				(void**) &values,
+				&card
+			);
+		assert(card == 1);
+		rgbwValues[i] = (card == 1) ? values[0] : 0.;
+	}
+
+	return	COLOR_ARR_RGBW(rgbwValues);
+}
+
+static	inline	void	SetColorOfComponent(
+									int64_t				owlInstanceColorComponent,
+									int32_t				color
+								)
+{
+	assert(IsInstanceOfClass(owlInstanceColorComponent, "ColorComponent"));
+
+	int64_t	model = GetModel(owlInstanceColorComponent);
+
+	const char	* rgbwNames[4] = { "R", "G", "B", "W" };
+	double		rgbwValues[4];
+
+	COLOR_GET_COMPONENTS(rgbwValues, color);
+
+	for (size_t i = 0; i < 4; i++) {
+		SetDatatypeProperty(
+				owlInstanceColorComponent,
+				GetPropertyByName(
+						model,
+						rgbwNames[i]
+					),
+				&rgbwValues[i],
+				1
+			);
+	}
+}
+
+static	inline	void	GetColor(
+									int64_t				owlInstanceColor,
+									int32_t				* ambient,
+									int32_t				* diffuse,
+									int32_t				* emissive,
+									int32_t				* specular
+								)
+{
+	assert(IsInstanceOfClass(owlInstanceColor, "Color"));
+
+	int64_t	model = GetModel(owlInstanceColor);
+
+	GetDefaultColor(
+			model,
+			ambient,
+			diffuse,
+			emissive,
+			specular
+		);
+
+	const char	* componentNames[4] = { "ambient", "diffuse", "emissive", "specular" };
+	int32_t		* componentColors[4] = { ambient, diffuse, emissive, specular };
+
+	for (size_t i = 0; i < 4; i++) {
+		if (componentColors[i]) {
+			int64_t	* values = nullptr, card = 0;
+			GetObjectProperty(
+					owlInstanceColor,
+					GetPropertyByName(
+							model,
+							componentNames[i]
+						),
+					&values,
+					&card
+				);
+
+			int64_t owlInstanceColorComponent = (card == 1) ? values[0] : 0;
+			if (owlInstanceColorComponent) {
+				(*componentColors[i]) = GetColorOfComponent(owlInstanceColorComponent);
+			}
+		}
+	}
+}
+
+static	inline	void	SetColor(
+									int64_t				owlInstanceColor,
+									int32_t				ambient,
+									int32_t				diffuse,
+									int32_t				emissive,
+									int32_t				specular
+								)
+{
+	assert(IsInstanceOfClass(owlInstanceColor, "Color"));
+
+}
+
+static	inline	void	GetMaterialColor(
+									int64_t				owlInstanceMaterial,
+									int32_t				* ambient,
+									int32_t				* diffuse,
+									int32_t				* emissive,
+									int32_t				* specular
+								)
+{
+	assert(IsInstanceOfClass(owlInstanceMaterial, "Material"));
+
+	int64_t	* values = nullptr, card = 0;
+	GetObjectProperty(
+			owlInstanceMaterial,
+			GetPropertyByName(
+					GetModel(owlInstanceMaterial),
+					(char*) "color"
+				),
+			&values,
+			&card
+		);
+
+	int64_t	owlInstanceColor = (card == 1) ? values[0] : 0;
+	if (owlInstanceColor) {
+		GetColor(
+				owlInstanceColor,
+				ambient,
+				diffuse,
+				emissive,
+				specular
+			);
+	}
+	else {
+		GetDefaultColor(
+				GetModel(owlInstanceMaterial),
+				ambient,
+				diffuse,
+				emissive,
+				specular
+			);
+	}
+}
+
+static	inline	int32_t	GetMaterialColorAmbient(
+									int64_t				owlInstanceMaterial
+								)
+{
+	int32_t	ambient = 0;
+	GetMaterialColor(
+			owlInstanceMaterial,
+			&ambient,
+			nullptr,		//	diffuse
+			nullptr,		//	emissive
+			nullptr			//	specular
+		);
+	return	ambient;
+}
+
+static	inline	int32_t	GetMaterialColorDiffuse(
+									int64_t				owlInstanceMaterial
+								)
+{
+	int32_t	diffuse = 0;
+	GetMaterialColor(
+			owlInstanceMaterial,
+			nullptr,		//	ambient
+			&diffuse,
+			nullptr,		//	emissive
+			nullptr			//	specular
+		);
+	return	diffuse;
+}
+
+static	inline	int32_t	GetMaterialColorEmissive(
+									int64_t				owlInstanceMaterial
+								)
+{
+	int32_t	emissive = 0;
+	GetMaterialColor(
+			owlInstanceMaterial,
+			nullptr,		//	ambient
+			nullptr,		//	diffuse
+			&emissive,
+			nullptr			//	specular
+		);
+	return	emissive;
+}
+
+static	inline	int32_t	GetMaterialColorSpecular(
+									int64_t				owlInstanceMaterial
+								)
+{
+	int32_t	specular = 0;
+	GetMaterialColor(
+			owlInstanceMaterial,
+			nullptr,		//	ambient
+			nullptr,		//	diffuse
+			nullptr,		//	emissive
+			&specular
+		);
+	return	specular;
+}
+
+static	inline	int32_t	GetVertexColorAmbient(
+									int64_t				model,
+									const void			* vertexBuffer,
+									int64_t				vertexIndex,
+									int64_t				setting
+								)
+{
+	int32_t	ambient = 0;
+	GetVertexColor(
+			model,
+			vertexBuffer,
+			vertexIndex,
+			setting,
+			&ambient,
+			nullptr,		//	diffuse
+			nullptr,		//	emissive
+			nullptr			//	specular
+		);
+	return	ambient;
+}
+
+static	inline	int32_t	GetVertexColorDiffuse(
+									int64_t				model,
+									const void			* vertexBuffer,
+									int64_t				vertexIndex,
+									int64_t				setting
+								)
+{
+	int32_t	diffuse = 0;
+	GetVertexColor(
+			model,
+			vertexBuffer,
+			vertexIndex,
+			setting,
+			nullptr,		//	ambient
+			&diffuse,
+			nullptr,		//	emissive
+			nullptr			//	specular
+		);
+	return	diffuse;
+}
+
+static	inline	int32_t	GetVertexColorEmissive(
+									int64_t				model,
+									const void			* vertexBuffer,
+									int64_t				vertexIndex,
+									int64_t				setting
+								)
+{
+	int32_t	emissive = 0;
+	GetVertexColor(
+			model,
+			vertexBuffer,
+			vertexIndex,
+			setting,
+			nullptr,		//	ambient
+			nullptr,		//	diffuse
+			&emissive,
+			nullptr			//	specular
+		);
+	return	emissive;
+}
+
+static	inline	int32_t	GetVertexColorSpecular(
+									int64_t				model,
+									const void			* vertexBuffer,
+									int64_t				vertexIndex,
+									int64_t				setting
+								)
+{
+	int32_t	specular = 0;
+	GetVertexColor(
+			model,
+			vertexBuffer,
+			vertexIndex,
+			setting,
+			nullptr,		//	ambient
+			nullptr,		//	diffuse
+			nullptr,		//	emissive
+			&specular
+		);
+	return	specular;
 }
 
 

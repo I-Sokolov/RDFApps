@@ -292,7 +292,7 @@ int CProgressWnd::SetPos(int nPos)
 
 	if	(nPercentage != m_nPrevPercent) {
 		m_nPrevPercent = nPercentage;
-		strTitle.Format(_T("%s [%d%%]"),m_strTitle,nPercentage);
+		strTitle.Format(_T("%s [%d%%]"),(const wchar_t*)m_strTitle,nPercentage);
 		SetWindowText(strTitle);
 	}
 	return	m_wndProgress.SetPos(nPos);

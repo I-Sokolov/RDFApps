@@ -36,10 +36,6 @@
 #endif
 
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
 
 #define		sdaiADB					1
 #define		sdaiAGGR				sdaiADB + 1
@@ -54,6 +50,7 @@
 #define		sdaiUNICODE				sdaiSTRING + 1
 #define		sdaiEXPRESSSTRING		sdaiUNICODE + 1
 #define		engiGLOBALID			sdaiEXPRESSSTRING + 1
+#define		sdaiNUMBER				engiGLOBALID + 1
 
 #define		SdaiAccessMode			int_t
 #define		SdaiSession				int_t
@@ -97,6 +94,47 @@ typedef	int_t			SdaiPrimitiveType;
 typedef	int_t			* SdaiSet;
 typedef	char			* SdaiString;
 
+
+enum class enum_express_declaration : unsigned char
+{
+	__UNDEF = 0,
+	__ENTITY,
+	__ENUM,
+	__SELECT,
+	__DEFINED_TYPE
+};
+
+
+enum class enum_express_attr_type : unsigned char
+{
+	__NONE = 0, //attribute type is unknown here but it may be defined by referenced domain entity
+	__BINARY,
+	__BINARY_32,
+	__BOOLEAN,
+	__ENUMERATION,
+	__INTEGER,
+	__LOGICAL,
+	__NUMBER,
+	__REAL,
+	__SELECT,
+	__STRING
+};
+
+
+enum class enum_express_aggr : unsigned char
+{
+	__NONE = 0,
+	__ARRAY,
+	__BAG,
+	__LIST,
+	__SET
+};
+
+
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 
 
@@ -396,6 +434,100 @@ void		DECL STDC	setPrecisionDoubleExport(
 //
 
 //
+//		engiGetNextDeclarationIterator              (http://rdf.bg/ifcdoc/CP64/engiGetNextDeclarationIterator.html)
+//				int_t				model								IN
+//				int_t				iterator							IN
+//
+//				int_t				returns								OUT
+//
+//	This call returns next iterator of EXPRESS schema declarations.
+//	If the input iterator is NULL it returns first iterator.
+//	If the input iterator is last it returns NULL.
+//	Use engiGetDeclarationFromIterator to access EXPRESS declaration data. 
+//
+int_t		DECL STDC	engiGetNextDeclarationIterator(
+									int_t				model,
+									int_t				iterator
+								);
+
+//
+//		engiGetDeclarationFromIterator              (http://rdf.bg/ifcdoc/CP64/engiGetDeclarationFromIterator.html)
+//				int_t				model								IN
+//				int_t				iterator							IN
+//
+//				int_t				returns								OUT
+//
+//	This call returns handle to the EXPRESS schema declarations from iterator.
+//	It may be a handle to entity, or enumeration, select or type definition, use engiGetDeclarationType to recognize
+//	Use engiGetNextDeclarationIterator to get iterator.
+//
+int_t		DECL STDC	engiGetDeclarationFromIterator(
+									int_t				model,
+									int_t				iterator
+								);
+
+//
+//		engiGetDeclarationType                      (http://rdf.bg/ifcdoc/CP64/engiGetDeclarationType.html)
+//				int_t				declaration							IN
+//
+//				enum_express_declaration	returns								OUT
+//
+//	This call returns a type of the EXPRESS schema declarations from its handle.
+//
+enum_express_declaration DECL STDC engiGetDeclarationType(
+									int_t				declaration
+								);
+
+//
+//		engiGetEnumerationElement                   (http://rdf.bg/ifcdoc/CP64/engiGetEnumerationElement.html)
+//				int_t				enumeration							IN
+//				int_t				index								IN
+//
+//				char				* returns							OUT
+//
+//	This call returns a name of the enumaration element with the given index (zero based)
+//	It returns NULL if the index out of range
+//
+const char	DECL * STDC	engiGetEnumerationElement(
+									int_t				enumeration,
+									int_t				index
+								);
+
+//
+//		engiGetSelectElement                        (http://rdf.bg/ifcdoc/CP64/engiGetSelectElement.html)
+//				int_t				select								IN
+//				int_t				index								IN
+//
+//				int_t				returns								OUT
+//
+//	This call returns a declaration handle of the select element with the given index (zero based)
+//	It returns 0 if the index out of range
+//
+int_t		DECL STDC	engiGetSelectElement(
+									int_t				select,
+									int_t				index
+								);
+
+//
+//		engiGetDefinedType				(http://rdf.bg/ifcdoc/CP64/engiGetDefinedType.html)
+//				int_t						definedType							IN
+//				int_t						* referencedDeclaration				OUT
+//				int_t						* aggregationDescriptor				OUT
+// 
+//				enum_express_attr_type		returns								OUT
+//
+//	This call returns a simple type for defined type handle and can inquire referenced type, if any
+//
+
+enum_express_attr_type DECL STDC engiGetDefinedType(
+									int_t					definedType,
+									int_t					* referencedDeclaration,
+									int_t					* aggregationDescriptor
+								);
+
+
+
+//
 //		sdaiGetEntity                               (http://rdf.bg/ifcdoc/CP64/sdaiGetEntity.html)
 //				int_t				model								IN
 //				const char			* entityName						IN
@@ -407,6 +539,18 @@ void		DECL STDC	setPrecisionDoubleExport(
 int_t		DECL STDC	sdaiGetEntity(
 									int_t				model,
 									const char			* entityName
+								);
+
+//
+//		engiGetEntityModel                          (http://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
+//				int_t				entity								IN
+//
+//				int_t				returns								OUT
+//
+//	This call retrieves a model based on a given entity handle.
+//
+int_t		DECL STDC	engiGetEntityModel(
+									int_t				entity
 								);
 
 //
@@ -424,13 +568,27 @@ int_t		DECL STDC	engiGetEntityArgument(
 								);
 
 //
-//		engiGetEntityArgumentIndex                  (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
+//		engiGetEntityAttributeIndex                 (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndex.html)
 //				int_t				entity								IN
 //				const char			* argumentName						IN
 //
 //				int_t				returns								OUT
 //
 //	...
+//
+int_t		DECL STDC	engiGetEntityAttributeIndex(
+									int_t				entity,
+									const char			* argumentName
+								);
+
+//
+//		engiGetEntityArgumentIndex                  (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
+//				int_t				entity								IN
+//				const char			* argumentName						IN
+//
+//				int_t				returns								OUT
+//
+//	DEPRECATED use engiGetEntityAttributeIndex
 //
 int_t		DECL STDC	engiGetEntityArgumentIndex(
 									int_t				entity,
@@ -452,7 +610,7 @@ void		DECL STDC	engiGetEntityArgumentName(
 									int_t				entity,
 									int_t				index,
 									int_t				valueType,
-									char				** argumentName
+									const char			** argumentName
 								);
 
 //
@@ -529,7 +687,7 @@ int_t		DECL * STDC	sdaiGetEntityExtentBN(
 //		engiGetEntityName                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityName.html)
 //				int_t				entity								IN
 //				int_t				valueType							IN
-//				char				** entityName						IN / OUT
+//				const char			** entityName						IN / OUT
 //
 //				void				returns
 //
@@ -538,28 +696,42 @@ int_t		DECL * STDC	sdaiGetEntityExtentBN(
 void		DECL STDC	engiGetEntityName(
 									int_t				entity,
 									int_t				valueType,
-									char				** entityName
+									const char			** entityName
 								);
 
 //
-//		engiGetEntityNoArguments                    (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoArguments.html)
+//		engiGetEntityNoAttributes                    (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributes.html)
 //				int_t				entity								IN
 //
 //				int_t				returns								OUT
 //
 //	This call returns the number of arguments, this includes the arguments of its (nested) parents and inverse argumnets.
 //
+int_t		DECL STDC	engiGetEntityNoAttributes(
+									int_t				entity
+								);
+
+//
+//	DEPR4ECATED use engiGetEntityNoAttributes
+//
 int_t		DECL STDC	engiGetEntityNoArguments(
 									int_t				entity
 								);
 
 //
-//		engiGetArgumentType                         (http://rdf.bg/ifcdoc/CP64/engiGetArgumentType.html)
+//		engiGetAttributeType                         (http://rdf.bg/ifcdoc/CP64/engiGetAttributeType.html)
 //				int_t				argument							IN
 //
 //				int_t				returns								OUT
 //
 //	...
+//
+int_t		DECL STDC	engiGetAttributeType(
+									int_t				argument
+								);
+
+//
+//	DEPR4ECATED use engiGetAttributeType
 //
 int_t		DECL STDC	engiGetArgumentType(
 									int_t				argument
@@ -571,11 +743,39 @@ int_t		DECL STDC	engiGetArgumentType(
 //
 //				int_t				returns								OUT
 //
-//	Returns the direct parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
+//	Returns the first direct parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
 //
 int_t		DECL STDC	engiGetEntityParent(
 									int_t				entity
 								);
+
+
+//
+//		engiGetEntityNoParents                        
+//				int_t				entity								IN
+//
+//				int_t				returns								OUT
+//
+//	Returns number of direct parents entity
+//
+int_t		DECL STDC	engiGetEntityNoParents(
+									int_t				entity
+								);
+
+//
+//		engiGetEntityParentByInd
+//				int_t				entity								IN
+//				int_t               index                               IN
+//
+//				int_t				returns								OUT
+//
+//	Returns the N-th direct parent of entity or NULL if index exceeds number of parents
+//
+int_t		DECL STDC	engiGetEntityParentEx(
+									int_t				entity,
+									int_t               index
+								);
+
 
 //
 //		engiGetAttrOptional                         (http://rdf.bg/ifcdoc/CP64/engiGetAttrOptional.html)
@@ -704,39 +904,52 @@ void		DECL STDC	engiGetEnumerationValue(
 								);
 
 //
-//		engiGetEntityProperty                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityProperty.html)
-//				int_t				entity								IN
-//				int_t				index								IN
-//				char				** propertyName						IN / OUT
-//				int_t				* optional							IN / OUT
-//				int_t				* type								IN / OUT
-//				int_t				* _array							IN / OUT
-//				int_t				* set								IN / OUT
-//				int_t				* list								IN / OUT
-//				int_t				* bag								IN / OUT
-//				int_t				* min								IN / OUT
-//				int_t				* max								IN / OUT
-//				int_t				* referenceEntity					IN / OUT
-//				int_t				* inverse							IN / OUT
+//		engiGetEntityAttribute                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttribute.html)
+//				int_t					entity								IN
+//				int_t					index								IN
+//				char					** name								IN / OUT
+//				int_t					* definingEntity,					IN / OUT
+//				bool					* inverse,							IN / OUT
+//				enum_express_attr_type	* attrType,							IN / OUT
+//				int_t					* domainEntity,						IN / OUT
+// 				int_t					* aggregationDescriptor,			IN / OUT
+//				bool					* optional,							IN / OUT
+//				bool					* unique							IN / OUT
+//
+//				bool				returns
+//
+//
+bool		DECL STDC	engiGetEntityAttribute(
+									int_t					entity,
+									int_t					index,
+									const char				** name,
+									int_t					* definingEntity,
+									bool					* inverse,
+									enum_express_attr_type	* attrType,
+									int_t					* domainEntity,
+									int_t					* aggregationDescriptor,
+									bool					* optional,
+									bool					* unique
+								);
+
+//
+//		engiGetAggregation                          (http://rdf.bg/ifcdoc/CP64/engiGetAggregation.html)
+//				int_t				aggregationDescriptor				IN
+//				void				* aggrType							IN / OUT
+//				int_t				* cardinalityMin					IN / OUT
+//				int_t				* cardinalityMax					IN / OUT
+//				int_t				* nextAggregationLevelDescriptor	IN / OUT
 //
 //				void				returns
 //
 //	...
 //
-void		DECL STDC	engiGetEntityProperty(
-									int_t				entity,
-									int_t				index,
-									char				** propertyName,
-									int_t				* optional,
-									int_t				* type,
-									int_t				* _array,
-									int_t				* set,
-									int_t				* list,
-									int_t				* bag,
-									int_t				* min,
-									int_t				* max,
-									int_t				* referenceEntity,
-									int_t				* inverse
+void		DECL STDC engiGetAggregation(
+									int_t					aggregationDescriptor,
+									enum_express_aggr		* aggrType,
+									int_t					* cardinalityMin,
+									int_t					* cardinalityMax,
+									int_t					* nextAggregationLevelDescriptor
 								);
 
 //
@@ -887,11 +1100,11 @@ void		DECL STDC	sdaiGetADBTypePathx(
 //				int_t				valueType							IN
 //				void				* value								IN / OUT
 //
-//				void				returns
+//				void				* returns							OUT
 //
 //	...
 //
-void		DECL STDC	sdaiGetADBValue(
+void		DECL * STDC	sdaiGetADBValue(
 									const void			* ADB,
 									int_t				valueType,
 									void				* value
@@ -2012,7 +2225,7 @@ void		DECL * STDC	xxxxGetAttrDefinitionByValue(
 void		DECL STDC	xxxxGetAttrNameByIndex(
 									int_t				instance,
 									int_t				index,
-									char				** name
+									const char			** name
 								);
 
 //
@@ -2197,6 +2410,22 @@ void		DECL STDC	owlGetModel(
 void		DECL STDC	owlGetInstance(
 									int_t				model,
 									int_t				instance,
+									int64_t				* owlInstance
+								);
+
+//
+//		owlMaterialInstance                         (http://rdf.bg/ifcdoc/CP64/owlMaterialInstance.html)
+//				int_t				instanceBase						IN
+//				int_t				instanceContext						IN
+//				int64_t				* owlInstance						IN / OUT
+//
+//				void				returns
+//
+//	...
+//
+void		DECL STDC	owlMaterialInstance(
+									int_t				instanceBase,
+									int_t				instanceContext,
 									int64_t				* owlInstance
 								);
 

@@ -326,7 +326,6 @@ void	GenerateWireFrameGeometry(
 				ifcObject->noPrimitivesForPoints += noIndicesPoints / 1;
 
 				i = 0;
-				int32_t	lastItem = -1;
 				while (i < noIndicesConceptualFacesPolygons__) {
 					indicesForLinesWireFrame[2 * ifcObject->noPrimitivesForWireFrame + 0] = indices[startIndexConceptualFacesPolygons__ + i + 0];
 					indicesForLinesWireFrame[2 * ifcObject->noPrimitivesForWireFrame + 1] = indices[startIndexConceptualFacesPolygons__ + i + 1];
@@ -718,7 +717,7 @@ STRUCT__IFC__OBJECT	** GetChildrenRecursively(
 
 	if (cnt) {
 		wchar_t	* ifcParentEntityName = nullptr;
-		engiGetEntityName(ifcParentEntity, sdaiUNICODE, (char**) &ifcParentEntityName);
+		engiGetEntityName(ifcParentEntity, sdaiUNICODE, (const char**) &ifcParentEntityName);
 
 		firstFreeIfcObject = queryIfcObjects(ifcModel, firstFreeIfcObject, ifcParentEntityName, hide, segmentationParts);
 	}
@@ -844,7 +843,7 @@ bool	ParseIfcFile(
 			//	Get boundingBox
 			//
 
-			int_t	ifcAlignment_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCALIGNMENT");
+//			int_t	ifcAlignment_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCALIGNMENT");
 //			int_t	ifcAlignment_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCBRIDGE");
 
 			int_t	* ifcGeographicElementInstances = sdaiGetEntityExtentBN(ifcModel, (char*) L"IFCGEOGRAPHICELEMENT"),
@@ -899,9 +898,6 @@ bool	ParseIfcFile(
 						if (endVec.y < vertices[6 * i + 1]) { endVec.y = vertices[6 * i + 1]; }
 						if (endVec.z < vertices[6 * i + 2]) { endVec.z = vertices[6 * i + 2]; }
 					}
-
-
-					int u = 0;
 				}
 
 				//	480481  4553291  118

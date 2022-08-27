@@ -194,7 +194,7 @@ bool	IntersectTriangle(VECTOR3 * v0, VECTOR3 * v1, VECTOR3 * v2, double * pDista
 	if	(u < 0  ||  u > 1) { return  false; }
  
     // Prepare to test V parameter
-    D3DXVECTOR3 ;
+    //D3DXVECTOR3 ;
     VECTOR3CROSS(&qvec, &tvec, &edge1);
 
     // Calculate V parameter and test bounds
