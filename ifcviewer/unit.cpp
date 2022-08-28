@@ -205,6 +205,10 @@ void	UnitAddUnitType(STRUCT__SIUNIT * unit, wchar_t * unitType)
 		unit->type = VOLUMEUNIT;
 		unit->unitType = L"VOLUMEUNIT";
 	}
+	else if (equalStr(unitType, L".AMOUNTOFSUBSTANCEUNIT.")) {
+	unit->type = AMOUNTOFSUBSTANCEUNIT;
+	unit->unitType = L"AMOUNTOFSUBSTANCEUNIT";
+	}
 	else if (equalStr(unitType, L".USERDEFINED.")) {
 		unit->type = USERDEFINED;
 		unit->unitType = L"USERDEFINED";
