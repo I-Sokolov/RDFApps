@@ -5,6 +5,7 @@
 #include "ifcengine\include\engine.h"
 #include "GenericTreeItem.h"
 
+extern	int_t	globalIfcModel;
 
 bool				ParseIfcFile(
 							CWnd				* pParent

@@ -232,6 +232,7 @@
     <ClInclude Include="LeftPane.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="ModelCheckDlg.h" />
     <ClInclude Include="ProgressWnd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RightPane.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="LeftPane.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="material.cpp" />
+    <ClCompile Include="ModelCheckDlg.cpp" />
     <ClCompile Include="ProgressWnd.cpp" />
     <ClCompile Include="RightPane.cpp" />
     <ClCompile Include="stdafx.cpp">

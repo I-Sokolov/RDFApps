@@ -146,6 +146,9 @@
     <ClInclude Include="IfcSiteTranslation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelCheckDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ifcviewer.cpp">
@@ -210,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="IfcSiteTranslation.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelCheckDlg.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

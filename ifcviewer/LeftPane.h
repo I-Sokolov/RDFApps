@@ -2,7 +2,7 @@
 
 
 #include	"GenericTreeItem.h"
-
+#include	"ModelCheckDlg.h"
 
 // CLeftPane form view
 
@@ -46,4 +46,10 @@ protected:
 	afx_msg void OnGetInfoTip(NMHDR *pNMHDR, LRESULT *pResult);
 
 	DECLARE_MESSAGE_MAP()
+
+private:
+	CModelCheckDlg	m_wndModelChecker;
+public:
+	afx_msg void OnViewModelChecker();
+	afx_msg void OnUpdateViewModelChecker(CCmdUI* pCmdUI);
 };
