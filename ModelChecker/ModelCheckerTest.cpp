@@ -108,6 +108,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC4[] =
     {29,    "IfcIndexedPolyCurve",      "Segments",             1,      2,r32,          RDF::CModelChecker::IssueID::WrongArgumentType},
     {29,    "IfcIndexedPolyCurve",      "Segments",             1,      1,r2,           RDF::CModelChecker::IssueID::WrongAggregationSize},
     {7,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r2,           RDF::CModelChecker::IssueID::UnresolvedReference},
+    {19,    "IfcSpatialStructureElement",NULL,                  -1,     0,NULL,         RDF::CModelChecker::IssueID::AbstractEntity}
 };
 
 //

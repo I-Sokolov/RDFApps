@@ -24,5 +24,6 @@ DATA;
 #16 = IFCRELCONTAINEDINSPATIALSTRUCTURE('1o1ykWxGT4ZxPjHNe4gayR', $, $, $, (#8), #6);
 #17 = IFCBLOBTEXTURE(.T., .T., 'MODULATE', $, $, 'PNG', "1BCAB");
 #18 = IFCAPPLIEDVALUE($, $, IFCBINARY("1BCAB"), $, $, $, $, $, $, $);
+#19 = IFCSPATIALSTRUCTUREELEMENT('1o1ykWxGT4ZxPjHNe4gayR', $, 'My first storey', $, $, $, $, $, $);
 ENDSEC;
 END-ISO-10303-21;
