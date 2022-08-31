@@ -7,7 +7,7 @@ ENDSEC;
 DATA;
 #1 = IFCPROJECT('1o1ykWxGT4ZxPjHNe4gayR', $, 'HelloWall project', 'Example to demonstract early-binding abilities', $, $, $, $, $);
 #2 = IFCSITE('1o1ykWxGT4ZxPjHNe4gayR', $, 'HelloWall site', $, $, $, $, $, $, $, $, $, $, $);
-#3 = IFCRELAGGREGATES('1o1ykWxGT4ZxPjHNe4gayR', $, $, $, #1, (#2));
+#3 = IFCRELAGGREGATES('1o1ykWxGT4ZxPjHNe4gayR', $, $, $, #1, (#2,#2));
 #4 = IFCBUILDING('1o1ykWxGT4ZxPjHNe4gayR', $, 'HelloWall building', $, $, $, $, $, $, $, $, $);
 #5 = IFCRELAGGREGATES('1o1ykWxGT4ZxPjHNe4gayR', $, $, $, #2, (#4));
 #6 = IFCBUILDINGSTOREY('1o1ykWxGT4ZxPjHNe4gayR', $, 'My first storey', $, $, $, $, $, $, $);
