@@ -99,6 +99,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
     {172,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedAggregation},
     {230,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
     {231,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
+    {6,     "IfcApplication",       NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
 };
 
 

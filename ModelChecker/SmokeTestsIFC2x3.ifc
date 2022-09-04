@@ -25,6 +25,8 @@ DATA;
 #4 = IFCPERSON('ID001', 'Bonsma', 'Peter', $, $, $, $, $);
 #5 = IFCORGANIZATION($, 'TNO', 'TNO Building Innovation', $, $);
 #6 = IFCAPPLICATION(#5, '0.10', 'Test Application', 'TA 1001');
+#161 = IFCAPPLICATION(#5, '0.11', 'Test Application', 'TA 1002');
+#162 = IFCAPPLICATION(#5, '0.10', 'Test Application', 'TA 1003');
 #7 = IFCUNITASSIGNMENT((#8, #9, #10, #11, #15, #16, #17, #18, #19));
 #170 = IFCUNITASSIGNMENT((#8, #9, #10, 'S11', #15, $, #16, #17, #18, #19));
 #171 = IFCUNITASSIGNMENT((#8, #9, #10, *, #11, #15, #16, #17, #18, #19));
