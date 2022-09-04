@@ -99,7 +99,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
     {172,   "IfcUnitAssignment",    "Units",                    0,      1,r4,           RDF::CModelChecker::IssueID::UnexpectedAggregation},
     {230,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
     {231,   "IfcSite",              "RefLatitude",              9,      0,NULL,         RDF::CModelChecker::IssueID::WrongAggregationSize},
-    {6,     "IfcApplication",       NULL,                       -1,     0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
+    {6,     "IfcApplication",       "Version",                  1,      0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
 };
 
 
@@ -111,7 +111,7 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC4[] =
     {7,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r2,           RDF::CModelChecker::IssueID::UnresolvedReference},
     {3,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r1,           RDF::CModelChecker::IssueID::AggrElementValueNotUnique},
     {19,    "IfcSpatialStructureElement",NULL,                  -1,     0,NULL,         RDF::CModelChecker::IssueID::AbstractEntity},
-    {1,     "IfcRoot",                   NULL,                  -1,     0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
+    {1,     "IfcRoot",                   "GlobalId",            0,      0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
 };
 
 //
