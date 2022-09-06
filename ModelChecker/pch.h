@@ -7,4 +7,6 @@
 #include <assert.h>
 #include <string>
 
+#include <filesystem>
+
 #include <ifcengine.h>

@@ -9,6 +9,7 @@
 #define ASSERT assert
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath, RDF::CModelChecker::ModelCheckerLog* pLog);
+static int CheckModels(const char* filePath, const char* expressSchemaFilePath);
 static int RunSmokeTests();
 
 
@@ -21,7 +22,7 @@ int main(int argc, char* argv[])
     int level = 0;
 
     if (argc > 1) {
-        level = CheckModel(argv[1], argc > 2 ? argv[2] : NULL, NULL);
+        level = CheckModels(argv[1], argc > 2 ? argv[2] : NULL);
     }
     else {
         level = RunSmokeTests();
@@ -34,6 +35,34 @@ int main(int argc, char* argv[])
 }
 
 
+static int CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
+{
+    int res = 0;
+
+    const auto directory = std::filesystem::path {filePathWC}.parent_path();
+
+    WIN32_FIND_DATA ffd;
+    auto hFind = FindFirstFile(filePathWC, &ffd);
+    if (hFind == INVALID_HANDLE_VALUE) {
+        printf("\t\t<Failure call='FindFirstFile'>%s</Failure>\n", filePathWC);
+        return -13;
+    }
+
+    do {
+        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            //_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+        }
+        else {
+            std::filesystem::path filePath(directory);
+            filePath.append(ffd.cFileName);
+            res += CheckModel (filePath.string().c_str(), expressSchemaFilePath, NULL);
+        }
+    } while (FindNextFile(hFind, &ffd) != 0);
+
+    FindClose(hFind);
+
+    return res;
+}
 
 
 static int CheckModel(const char* filePath, const char* expressSchemaFilePath, RDF::CModelChecker::ModelCheckerLog* pLog)
@@ -53,7 +82,7 @@ static int CheckModel(const char* filePath, const char* expressSchemaFilePath, R
         //sdaiCloseModel(model);
     }
     else {
-        printf("\t\t<Failure>Can not open model</Failure>\n");
+        printf("\t\t<Failure call='sdaiOpenModelBN'>%s</Failure>\n", filePath);
         result = -13;
     }
 
