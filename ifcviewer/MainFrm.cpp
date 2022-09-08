@@ -4,6 +4,7 @@
 #include "MainFrm.h"
 #include "LeftPane.h"
 #include "RightPane.h"
+#include "ifcviewerDoc.h"
 
 
 #ifdef _DEBUG
@@ -11,7 +12,6 @@
 #endif
 
 
-extern	CWnd				* glLeftPane;
 extern	STRUCT__IFC__OBJECT	* highLightedIfcObject;
 
 bool	showFaces = true, showWireFrame = true, showLines = true, showPoints = true, enableOnOver = true;
@@ -145,12 +145,27 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 		return FALSE;
 	}
 
-	if ( !m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftPane), CSize(200, 200), pContext)  ||
-		 !m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRightPane), CSize(10, 10), pContext) )
-	{
+	if (!m_wndSplitter2.CreateStatic(&m_wndSplitter, 2, 1, WS_CHILD | WS_VISIBLE, m_wndSplitter.IdFromRowCol(0, 0))) {
+		return FALSE;
+	}
+
+	if (!m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CLeftPane), CSize(200, 200), pContext)  ||
+		!m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CEditView), CSize(200, 200), pContext)
+		) {
 		m_wndSplitter.DestroyWindow();
 		return	FALSE;
 	}
+
+	if ( //!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CLeftPane), CSize(200, 200), pContext)  ||
+		!m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CRightPane), CSize(200, 200), pContext)
+		) {
+		m_wndSplitter.DestroyWindow();
+		return	FALSE;
+	}
+
+	m_wndSplitter.SetColumnInfo(0, 200, 30);
+	m_wndSplitter2.SetRowInfo(0, 600, 30);
+	m_wndSplitter2.SetRowInfo(1, 200, 30);
 
 	return	true;
 }
@@ -192,7 +207,7 @@ void CMainFrame::OnViewPoints()
 		showPoints = true;
 	}
 
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 
@@ -207,7 +222,7 @@ void CMainFrame::OnViewLines()
 		showLines = true;
 	}
 
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 void CMainFrame::OnViewFaces()
@@ -220,7 +235,7 @@ void CMainFrame::OnViewFaces()
 		showFaces = true;
 	}
 
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 
@@ -234,7 +249,7 @@ void CMainFrame::OnViewWireframe()
 		showWireFrame = true;
 	}
 
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 
@@ -249,17 +264,17 @@ void CMainFrame::OnViewOnover()
 		enableOnOver = true;
 	}
 
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 void CMainFrame::OnResetFront()
 {
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_RESET_FRONT, 0, 0);
+	GetRightPane()->SendMessage(IDS_RESET_FRONT, 0, 0);
 }
 
 void CMainFrame::OnResetSide()
 {
-	glLeftPane->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_RESET_SIDE, 0, 0);
+	GetRightPane()->SendMessage(IDS_RESET_SIDE, 0, 0);
 }
 
 void CMainFrame::OnMouseBehaviourDefault()
@@ -581,4 +596,14 @@ void CMainFrame::OnEncodingShiftJIS_X_213()
 
 	//		 1   1   0   0   0   0		ENUM_ENCODING_SHIFT_JIS_X_213
 	encodingSetting = flagbit14 + flagbit15 + 0 + 0 + 0 + 0;
+}
+
+CWnd* CMainFrame::GetRightPane()
+{
+	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());
+	if (pDoc) {
+		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
+	}
+	assert(0);
+	return nullptr;
 }

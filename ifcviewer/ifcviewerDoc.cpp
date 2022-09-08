@@ -10,6 +10,8 @@
 #endif
 
 #include "ifcviewerDoc.h"
+#include "LeftPane.h"
+#include "RightPane.h"
 #include "ifcengine\include\engdef.h"
 #include "ifcengine\include\ifcengine.h"
 
@@ -20,8 +22,6 @@
 #endif
 
 extern	int_t	globalIfcModel;
-
-extern	CWnd	* glLeftPane;
 
 extern	wchar_t	ifcFileName[512];
 
@@ -87,16 +87,11 @@ void CifcviewerDoc::Serialize(CArchive& ar)
 
 //		InitializeDeviceBuffer();
 
-		CWnd * wnd = glLeftPane;
 //		...
-		if	(wnd) {
-			wnd->SendMessage(IDS_LOAD_IFC, 0, 0);
-			if (wnd->GetWindow(GW_HWNDNEXT)) {
-				wnd->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_LOAD_IFC, 0, 0);
-			}
-		}
-		else {
-			ParseIfcFile(0);
+		auto vp = GetFirstViewPosition();
+		while (vp){
+			auto v = GetNextView(vp);
+			v->SendMessage(IDS_LOAD_IFC, 0, 0);
 		}
 	}
 }
@@ -168,6 +163,19 @@ void CifcviewerDoc::Dump(CDumpContext& dc) const
 	CDocument::Dump(dc);
 }
 #endif //_DEBUG
+
+CWnd* CifcviewerDoc::GetPane(CRuntimeClass* pClass)
+{
+	auto viewpos = GetFirstViewPosition();
+	while (viewpos) {
+		auto view = GetNextView(viewpos);
+		if (view->GetRuntimeClass() == pClass) {
+			return view;
+		}
+	}
+	assert(false);
+	return NULL;
+}
 
 
 // CifcviewerDoc commands

@@ -14,6 +14,8 @@ protected: // create from serialization only
 // Attributes
 protected:
 	CSplitterWnd m_wndSplitter;
+	CSplitterWnd m_wndSplitter2;
+
 public:
 
 // Operations
@@ -31,6 +33,9 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
+
+private:
+	CWnd* GetRightPane();
 
 protected:  // control bar embedded members
 	CStatusBar        m_wndStatusBar;

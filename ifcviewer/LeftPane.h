@@ -48,6 +48,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
+	CWnd* GetRightPane();
+
+private:
 	CModelCheckDlg	m_wndModelChecker;
 public:
 	afx_msg void OnViewModelChecker();

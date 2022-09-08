@@ -40,8 +40,12 @@ namespace RDF
             WrongAggregationSize,
             UnexpectedValueType,
             UnresolvedReference,
+            AbstractEntity,
             InternalError,
-            InvalidParameter
+            UniqueRuleViolation,
+            AggrElementValueNotUnique,
+            InvalidParameter,
+            MissedComplexInstanceEntity
         };
 
         struct IssueInfo

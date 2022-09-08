@@ -5,7 +5,6 @@
 
 #pragma once
 
-
 class CifcviewerDoc : public CDocument
 {
 protected: // create from serialization only
@@ -14,6 +13,7 @@ protected: // create from serialization only
 
 // Attributes
 public:
+	CWnd* GetPane(CRuntimeClass* pClass);
 
 // Operations
 public:

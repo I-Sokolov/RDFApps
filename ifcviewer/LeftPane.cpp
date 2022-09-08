@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ifcviewer.h"
 #include "LeftPane.h"
+#include "RightPane.h"
+#include "ifcviewerDoc.h"
 #include "generic.h"
 #include "unit.h"
 #include "stringCreation.h"
@@ -9,7 +11,6 @@
 
 
 CImageList						* pImageList = nullptr;
-CWnd							* glLeftPane = nullptr;
 
 extern	STRUCT_TREE_ITEM		* topTreeItem, * topModelTreeItem, * topSpaceBoundaryTreeItem, * topNonReferencedTreeItem, * topGroupTreeItem;
 extern	STRUCT__IFC__OBJECT		* ifcObjectsLinkedList,
@@ -135,8 +136,6 @@ void CLeftPane::OnInitialUpdate()
 	}
 
 	CTreeCtrl *tst = &GetTreeCtrl();
-
-	glLeftPane = this;
 
 	::SetWindowLong(*tst, GWL_STYLE, TVS_EDITLABELS|TVS_LINESATROOT|TVS_HASLINES|TVS_HASBUTTONS|TVS_INFOTIP|::GetWindowLong(*tst, GWL_STYLE));
 
@@ -658,7 +657,7 @@ void	CLeftPane::OnRClick(NMHDR* pNMHDR, LRESULT* pResult)
 		//
 		//	Update Right Pane
 		//
-		this->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+		GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 	}
 }
 
@@ -744,7 +743,7 @@ void	CLeftPane::UpdateAllTrees(
 		}
 	}
 
-	this->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
 void	CLeftPane::OnClick(NMHDR* pNMHDR, LRESULT* pResult) 
@@ -828,7 +827,7 @@ void	CLeftPane::OnClick(NMHDR* pNMHDR, LRESULT* pResult)
 	//
 
 	if	(updated) {
-		this->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+		GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 	}
 
 	*pResult = 0;
@@ -845,7 +844,7 @@ void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 //	STRUCT__SELECTABLE__TREEITEM	* selectableTreeitem = (STRUCT__SELECTABLE__TREEITEM *) GetTreeCtrl().GetItemData(hItem);
 //	if	(selectableTreeitem->structType == STRUCT_TYPE_SELECTABLE_TREEITEM) {
 //		highLightedIfcObject = selectableTreeitem->ifcObject;
-//		this->GetWindow(GW_HWNDNEXT)->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+//		GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 //	}
 }
 
@@ -949,4 +948,14 @@ void CLeftPane::OnUpdateViewModelChecker(CCmdUI* pCmdUI)
 {
 	auto visible = m_wndModelChecker.GetSafeHwnd() && m_wndModelChecker.IsWindowVisible();
 	pCmdUI->SetCheck(visible);
+}
+
+CWnd* CLeftPane::GetRightPane()
+{
+	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetDocument());
+	if (pDoc) {
+		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
+	}
+	assert(0);
+	return nullptr;
 }
