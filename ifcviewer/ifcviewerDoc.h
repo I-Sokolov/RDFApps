@@ -1,9 +1,9 @@
 
 // ifcviewerDoc.h : interface of the CifcviewerDoc class
 //
-
-
 #pragma once
+
+class CLeftPane;
 
 class CifcviewerDoc : public CDocument
 {
@@ -14,6 +14,7 @@ protected: // create from serialization only
 // Attributes
 public:
 	CWnd* GetPane(CRuntimeClass* pClass);
+	CLeftPane* GetModelTreeView();
 
 // Operations
 public:
@@ -34,6 +35,12 @@ public:
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;
 #endif
+
+public:
+	enum class UpdateHint : LPARAM
+	{
+		SelectionChanged = 14
+	};
 
 protected:
 

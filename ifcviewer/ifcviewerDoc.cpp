@@ -177,5 +177,10 @@ CWnd* CifcviewerDoc::GetPane(CRuntimeClass* pClass)
 	return NULL;
 }
 
+CLeftPane* CifcviewerDoc::GetModelTreeView()
+{
+	return DYNAMIC_DOWNCAST(CLeftPane, GetPane(RUNTIME_CLASS(CLeftPane)));
+}
+
 
 // CifcviewerDoc commands

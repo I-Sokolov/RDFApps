@@ -149,6 +149,12 @@
     <ClInclude Include="ModelCheckDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InstanceInfoPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ifcviewer.cpp">
@@ -215,6 +221,12 @@
       <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="ModelCheckDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InstanceInfoPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InstanceInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,6 +25,9 @@ public:
 #endif
 
 public:
+	STRUCT_TREE_ITEM_IFCINSTANCE* GetSelectedInstance();
+
+public:
 	virtual void OnInitialUpdate();
 
 protected:

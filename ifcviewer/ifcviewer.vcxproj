@@ -229,6 +229,8 @@
     <ClInclude Include="ifcviewer.h" />
     <ClInclude Include="ifcviewerDoc.h" />
     <ClInclude Include="ifcviewerView.h" />
+    <ClInclude Include="InstanceInfo.h" />
+    <ClInclude Include="InstanceInfoPane.h" />
     <ClInclude Include="LeftPane.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="material.h" />
@@ -255,6 +257,8 @@
     <ClCompile Include="ifcviewer.cpp" />
     <ClCompile Include="ifcviewerDoc.cpp" />
     <ClCompile Include="ifcviewerView.cpp" />
+    <ClCompile Include="InstanceInfo.cpp" />
+    <ClCompile Include="InstanceInfoPane.cpp" />
     <ClCompile Include="LeftPane.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="material.cpp" />

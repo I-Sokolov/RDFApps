@@ -4,6 +4,7 @@
 #include "MainFrm.h"
 #include "LeftPane.h"
 #include "RightPane.h"
+#include "InstanceInfoPane.h"
 #include "ifcviewerDoc.h"
 
 
@@ -150,7 +151,7 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 	}
 
 	if (!m_wndSplitter2.CreateView(0, 0, RUNTIME_CLASS(CLeftPane), CSize(200, 200), pContext)  ||
-		!m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CEditView), CSize(200, 200), pContext)
+		!m_wndSplitter2.CreateView(1, 0, RUNTIME_CLASS(CInstanceInfoPane), CSize(200, 200), pContext)
 		) {
 		m_wndSplitter.DestroyWindow();
 		return	FALSE;

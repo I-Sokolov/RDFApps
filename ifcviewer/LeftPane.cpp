@@ -840,6 +840,9 @@ void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 
 	pResult = 0;
 	hItem = 0;
+
+	GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SelectionChanged);
+
 ////////////////////////////////////////	ASSERT(false);
 //	STRUCT__SELECTABLE__TREEITEM	* selectableTreeitem = (STRUCT__SELECTABLE__TREEITEM *) GetTreeCtrl().GetItemData(hItem);
 //	if	(selectableTreeitem->structType == STRUCT_TYPE_SELECTABLE_TREEITEM) {
@@ -957,5 +960,25 @@ CWnd* CLeftPane::GetRightPane()
 		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
 	}
 	assert(0);
+	return nullptr;
+}
+
+STRUCT_TREE_ITEM_IFCINSTANCE* CLeftPane::GetSelectedInstance()
+{
+	auto hItem = GetTreeCtrl().GetSelectedItem();
+	if (!hItem) {
+		return nullptr;
+	}
+
+	auto data = GetTreeCtrl().GetItemData(hItem);
+	auto pItem = (STRUCT_TREE_ITEM*) data;
+
+	while (pItem) {
+		if (pItem->type == TREE_ITEM_IFCINSTANCE) {
+			return (STRUCT_TREE_ITEM_IFCINSTANCE*) pItem;
+		}
+		pItem = pItem->parent;
+	}
+
 	return nullptr;
 }
