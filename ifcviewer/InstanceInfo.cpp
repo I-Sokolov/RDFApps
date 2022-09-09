@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ifcviewer.h"
 #include "LeftPane.h"
+#include "stringCreation.h"
 #include "InstanceInfo.h"
 
 
@@ -48,6 +49,7 @@ void CInstanceInfo::OnInitialUpdate()
 	CEditView::OnInitialUpdate();
 
 	GetEditCtrl().SetReadOnly();
+	//GetEditCtrl().ModifyStyle(0, ES_MULTILINE | ES_READONLY);
 }
 
 
@@ -61,12 +63,14 @@ void CInstanceInfo::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pH
 		return;
 	}
 
-	auto pItem = pTree->GetSelectedInstance();
-	if (!pItem) {
+	auto pInstance = pTree->GetSelectedInstance();
+	if (!pInstance) {
 		return;
 	}
 
-	SetWindowText(pItem->nameBuffer);
+	auto text = CreateToolTipText(pInstance->ifcInstance);
+	text.Replace (L"\n", L"\r\n");
+	SetWindowText(text);
 }
 
 
