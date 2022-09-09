@@ -22,6 +22,7 @@ CInstanceInfo::~CInstanceInfo()
 }
 
 BEGIN_MESSAGE_MAP(CInstanceInfo, CEditView)
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -44,12 +45,21 @@ void CInstanceInfo::Dump(CDumpContext& dc) const
 
 // CInstanceInfo message handlers
 
-void CInstanceInfo::OnInitialUpdate()
+int CInstanceInfo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	CEditView::OnInitialUpdate();
+	if (CEditView::OnCreate(lpCreateStruct) == -1)
+		return -1;
 
 	GetEditCtrl().SetReadOnly();
 	//GetEditCtrl().ModifyStyle(0, ES_MULTILINE | ES_READONLY);
+
+	return 0;
+}
+
+
+void CInstanceInfo::OnInitialUpdate()
+{
+	CEditView::OnInitialUpdate();
 }
 
 
@@ -72,5 +82,7 @@ void CInstanceInfo::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pH
 	text.Replace (L"\n", L"\r\n");
 	SetWindowText(text);
 }
+
+
 
 

@@ -27,6 +27,7 @@ protected:
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 public:
 	virtual void OnInitialUpdate();
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 
