@@ -5,6 +5,7 @@
 #include "ifcviewer.h"
 #include "InstanceInfoPane.h"
 #include "AttributesView.h"
+#include "IssuesView.h"
 
 
 // CInstanceInfoPane
@@ -52,7 +53,7 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Properties");
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
-	AddView(RUNTIME_CLASS(CEditView), L"Issues");
+	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
 
 	return 0;
 }
