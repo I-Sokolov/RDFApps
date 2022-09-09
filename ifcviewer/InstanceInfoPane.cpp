@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "ifcviewer.h"
 #include "InstanceInfoPane.h"
-#include "InstanceInfo.h"
+#include "AttributesView.h"
 
 
 // CInstanceInfoPane
@@ -49,7 +49,7 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CTabView::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	AddView(RUNTIME_CLASS(CInstanceInfo), L"Attributes");
+	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Properties");
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
 	AddView(RUNTIME_CLASS(CEditView), L"Issues");

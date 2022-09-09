@@ -5,23 +5,23 @@
 #include "ifcviewer.h"
 #include "LeftPane.h"
 #include "stringCreation.h"
-#include "InstanceInfo.h"
+#include "AttributesView.h"
 
 
 // CInstanceInfo
 
-IMPLEMENT_DYNCREATE(CInstanceInfo, CEditView)
+IMPLEMENT_DYNCREATE(CAttributesView, CEditView)
 
-CInstanceInfo::CInstanceInfo()
+CAttributesView::CAttributesView()
 {
 
 }
 
-CInstanceInfo::~CInstanceInfo()
+CAttributesView::~CAttributesView()
 {
 }
 
-BEGIN_MESSAGE_MAP(CInstanceInfo, CEditView)
+BEGIN_MESSAGE_MAP(CAttributesView, CEditView)
 	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
@@ -29,13 +29,13 @@ END_MESSAGE_MAP()
 // CInstanceInfo diagnostics
 
 #ifdef _DEBUG
-void CInstanceInfo::AssertValid() const
+void CAttributesView::AssertValid() const
 {
 	CEditView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
-void CInstanceInfo::Dump(CDumpContext& dc) const
+void CAttributesView::Dump(CDumpContext& dc) const
 {
 	CEditView::Dump(dc);
 }
@@ -45,7 +45,7 @@ void CInstanceInfo::Dump(CDumpContext& dc) const
 
 // CInstanceInfo message handlers
 
-int CInstanceInfo::OnCreate(LPCREATESTRUCT lpCreateStruct)
+int CAttributesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	if (CEditView::OnCreate(lpCreateStruct) == -1)
 		return -1;
@@ -57,13 +57,13 @@ int CInstanceInfo::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 
 
-void CInstanceInfo::OnInitialUpdate()
+void CAttributesView::OnInitialUpdate()
 {
 	CEditView::OnInitialUpdate();
 }
 
 
-void CInstanceInfo::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
 {
 	SetWindowText(L"");
 

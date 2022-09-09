@@ -4,13 +4,13 @@
 
 // CInstanceInfo view
 
-class CInstanceInfo : public CEditView
+class CAttributesView : public CEditView
 {
-	DECLARE_DYNCREATE(CInstanceInfo)
+	DECLARE_DYNCREATE(CAttributesView)
 
 protected:
-	CInstanceInfo();           // protected constructor used by dynamic creation
-	virtual ~CInstanceInfo();
+	CAttributesView();           // protected constructor used by dynamic creation
+	virtual ~CAttributesView();
 
 public:
 #ifdef _DEBUG

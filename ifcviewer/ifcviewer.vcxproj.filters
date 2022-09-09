@@ -152,7 +152,7 @@
     <ClInclude Include="InstanceInfoPane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InstanceInfo.h">
+    <ClInclude Include="AttributesView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -226,7 +226,7 @@
     <ClCompile Include="InstanceInfoPane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="InstanceInfo.cpp">
+    <ClCompile Include="AttributesView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
