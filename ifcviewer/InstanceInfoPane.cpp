@@ -6,6 +6,7 @@
 #include "InstanceInfoPane.h"
 #include "AttributesView.h"
 #include "IssuesView.h"
+#include "PropertiesView.h"
 
 
 // CInstanceInfoPane
@@ -51,7 +52,7 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		return -1;
 
 	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
-	AddView(RUNTIME_CLASS(CEditView), L"IFC Properties");
+	AddView(RUNTIME_CLASS(CPropertiesView), L"IFC Properties");
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
 	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
 

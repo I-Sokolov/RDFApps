@@ -237,6 +237,7 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="ModelCheckDlg.h" />
     <ClInclude Include="ProgressWnd.h" />
+    <ClInclude Include="PropertiesView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="RightPane.h" />
     <ClInclude Include="stdafx.h" />
@@ -266,6 +267,7 @@
     <ClCompile Include="material.cpp" />
     <ClCompile Include="ModelCheckDlg.cpp" />
     <ClCompile Include="ProgressWnd.cpp" />
+    <ClCompile Include="PropertiesView.cpp" />
     <ClCompile Include="RightPane.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
