@@ -21,6 +21,7 @@ CInstanceInfoPane::~CInstanceInfoPane()
 }
 
 BEGIN_MESSAGE_MAP(CInstanceInfoPane, CTabView)
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -43,13 +44,22 @@ void CInstanceInfoPane::Dump(CDumpContext& dc) const
 
 // CInstanceInfoPane message handlers
 
+int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CTabView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	AddView(RUNTIME_CLASS(CInstanceInfo), L"Attributes");
+	AddView(RUNTIME_CLASS(CEditView), L"IFC Properties");
+	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
+	AddView(RUNTIME_CLASS(CEditView), L"Issues");
+
+	return 0;
+}
 
 void CInstanceInfoPane::OnInitialUpdate()
 {
 	CTabView::OnInitialUpdate();
-
-	AddView(RUNTIME_CLASS(CInstanceInfo), L"#");
-	AddView(RUNTIME_CLASS(CEditView), L"IFC Properties");
-	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
-	AddView(RUNTIME_CLASS(CEditView), L"Issues");
 }
+
+

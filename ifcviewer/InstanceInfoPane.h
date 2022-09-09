@@ -23,6 +23,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void OnInitialUpdate();
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
 
