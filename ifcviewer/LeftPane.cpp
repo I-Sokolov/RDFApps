@@ -16,8 +16,6 @@ extern	STRUCT_TREE_ITEM		* topTreeItem, * topModelTreeItem, * topSpaceBoundaryTr
 extern	STRUCT__IFC__OBJECT		* ifcObjectsLinkedList,
 								* highLightedIfcObject;
 
-extern	STRUCT__SIUNIT			* units;
-
 
 // CLeftPane
 

@@ -40,6 +40,7 @@
 
 #include <afxcview.h>
 
+#include <memory>
 #include <list>
 
 #include "ifcengine\include\ifcengine.h"

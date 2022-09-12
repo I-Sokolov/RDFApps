@@ -115,3 +115,5 @@ bool			IfcInstanceHasProperties(
 						int_t					ifcModel,
 						int_t					ifcObjectInstance
 					);
+
+extern	STRUCT__SIUNIT* units;
