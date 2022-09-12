@@ -7,9 +7,6 @@
 
 #include "IFCEngineInteract.h"
 
-#define IFCENGINE_MODEL_CHECKER
-#include "ifcengine\include\ModelChecker.h"
-
 struct ModelCheckerLog : public RDF::CModelChecker::ModelCheckerLog
 {
 	ModelCheckerLog(CListCtrl& wndList) : m_wndList(wndList) { for (auto& w : rWidth) { w = 0; } }
@@ -142,7 +139,6 @@ void ModelCheckerLog::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 	}
 	if (!aggrIndex.IsEmpty()) {
 		aggrIndex.Append(L"]");
-		m_wndList.SetItemText(item, 3, aggrIndex);
 	}
 
 	CString attr(issue.attrName);

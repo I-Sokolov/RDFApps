@@ -40,7 +40,11 @@
 
 #include <afxcview.h>
 
+#include <list>
 
+#include "ifcengine\include\ifcengine.h"
+#define IFCENGINE_MODEL_CHECKER
+#include "ifcengine\include\ModelChecker.h"
 
 
 
