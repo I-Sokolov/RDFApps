@@ -308,8 +308,10 @@ namespace GEOM
     template <typename TList, typename TElem> void ListToArray(const TList& values, TElem** arr, int64_t* count)
     {
         *count = 0;
+        const TElem* supress_compilation_warningC4189 = NULL;
         for (const TElem v : values) {
             (*count)++;
+            supress_compilation_warningC4189 = &v;
         }
 
         if (*count) {

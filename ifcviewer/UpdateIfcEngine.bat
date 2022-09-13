@@ -8,9 +8,11 @@ copy %RDF_IFC_ENGINE_INCLUDE%..\ToolBox\ModelChecker.h IfcEngine\include /Y
 
 echo Check IFC engine binaries
 if .%RDF_IFC_ENGINE_LIB%.==.. goto LibUpdated
-echo Update IFC engine binaries
-copy %RDF_IFC_ENGINE_LIB%Debug\ifcengine.lib ifcengine\lib\x64 /Y
+echo Update ifcengine\lib\x64\ifcengine.lib
+copy %RDF_IFC_ENGINE_LIB%Debug\ifcengine.lib ifcengine\lib\x64\ifcengine.lib /Y
+echo Update ifcengine\lib\x64\%2\ifcengine.dll
+copy %RDF_IFC_ENGINE_LIB%%2\ifcengine.dll ifcengine\lib\x64\%2\ifcengine.dll /Y
 if .%1.==.. goto LibUpdated
-copy %RDF_IFC_ENGINE_LIB%Debug\ifcengine.dll %1Debug /Y
-REM copy %RDF_IFC_ENGINE_LIB%Release\ifcengine.dll %1Release /Y
+echo Update %1%2\ifcengine.dll
+copy ifcengine\lib\x64\%2\ifcengine.dll %1%2\ifcengine.dll /Y
 :LibUpdated

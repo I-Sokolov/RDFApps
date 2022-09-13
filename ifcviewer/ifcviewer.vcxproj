@@ -138,7 +138,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat $(SolutionDir)$(Platform)\</Command>
+      <Command>call UpdateIfcEngine.bat $(SolutionDir)$(Platform)\  $(Configuration)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Update ifcEngine</Message>
@@ -196,6 +196,12 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>call UpdateIfcEngine.bat $(SolutionDir)$(Platform)\  $(Configuration)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Update ifcEngine</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ifcviewer.reg" />
