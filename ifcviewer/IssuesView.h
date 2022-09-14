@@ -13,6 +13,13 @@ public:
 	{
 		RDF::CModelChecker::IssueInfo	info;
 		CString							descr;
+		std::list<int_t>                arrgegation;
+
+		const std::set<int_t>&			RelatedInstances();
+
+	private:
+		bool                            m_relatedInsancesCollected = false;
+		std::set<int_t>                 m_relatedInstances;
 	};
 
 	typedef std::list<Issue> IssueList;

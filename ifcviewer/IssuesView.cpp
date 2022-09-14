@@ -55,7 +55,7 @@ int CIssuesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	wndList.ModifyStyle(LVS_ICON | LVS_SMALLICON | LVS_LIST, LVS_REPORT);
 	
-	const wchar_t* rTitle[] = {L"Attribute", L"Issue"};
+	const wchar_t* rTitle[] = {L"#", L"Entity", L"Attribute", L"Issue"};
 	for (int i = 0; i < _countof(rTitle); i++) {
 		GetListCtrl().InsertColumn(i, rTitle[i]);
 
@@ -75,6 +75,10 @@ struct IssuesCollector : public RDF::CModelChecker::ModelCheckerLog
 		m_list.push_back(CIssuesView::Issue());
 		m_list.back().info = issue;
 		m_list.back().descr = issue.text;
+
+		for (int_t i = 0; i < issue.aggrLevel; i++) {
+			m_list.back().arrgegation.push_back(issue.aggrIndArray[i]);
+		}
 	}
 
 	CIssuesView::IssueList& m_list;
@@ -112,18 +116,29 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHin
 		return;
 	}
 
-	auto stepid = internalGetP21Line (pInstance->ifcInstance);
+	//auto stepid = internalGetP21Line (pInstance->ifcInstance);
 
-	int rWidth[2] = {0,0};
-	for (int i = 0; i < 2; i++) {
+	int rWidth[4] = {0,0,0,0};
+	for (int i = 0; i < 4; i++) {
 		rWidth[i] = GetListCtrl().GetColumnWidth(i);
 	}
 
 	for (auto& issue : m_lstIssues) {
-		if (issue.info.stepId == stepid) {
+
+		if (issue.RelatedInstances().find(pInstance->ifcInstance) != issue.RelatedInstances().end()) {
+
+			CString id;
+			id.Format(L"%lld", issue.info.stepId);
+			auto item = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), id);
+			rWidth[0] = max(rWidth[0], GetListCtrl().GetStringWidth(id));
+
+			CString entity(issue.info.entity);
+			GetListCtrl().SetItemText(item, 1, entity);
+			rWidth[1] = max(rWidth[1], GetListCtrl().GetStringWidth(entity));
+
 
 			CString aggrIndex;
-			for (int i = 0; i < issue.info.aggrLevel; i++) {
+			for (auto i : issue.arrgegation) {
 				if (aggrIndex.IsEmpty()) {
 					aggrIndex.Append(L"[");
 				}
@@ -132,7 +147,7 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHin
 				}
 
 				CString ind;
-				ind.Format(L"%I64d", issue.info.aggrIndArray[i]);
+				ind.Format(L"%I64d", i);
 				aggrIndex.Append(ind);
 			}
 			if (!aggrIndex.IsEmpty()) {
@@ -143,17 +158,47 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHin
 			if (!aggrIndex.IsEmpty())
 				attr += aggrIndex;
 
-			auto item = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), attr);
-			rWidth[0] = max(rWidth[0], GetListCtrl().GetStringWidth(attr));
+			GetListCtrl().SetItemText (item, 2, attr);
+			rWidth[2] = max(rWidth[2], GetListCtrl().GetStringWidth(attr));
 
-			GetListCtrl().SetItemText(item, 1, issue.descr);
-			rWidth[1] = max(rWidth[1], GetListCtrl().GetStringWidth(issue.descr));
+			GetListCtrl().SetItemText(item, 3, issue.descr);
+			rWidth[3] = max(rWidth[3], GetListCtrl().GetStringWidth(issue.descr));
 		}
 	}
 
-	for (int i = 0; i < 2; i++) {
-		GetListCtrl().SetColumnWidth(i, rWidth[i] + 10 * GetSystemMetrics(SM_CXBORDER));
+	for (int i = 0; i < 4; i++) {
+		GetListCtrl().SetColumnWidth(i, rWidth[i] + 15 * GetSystemMetrics(SM_CXBORDER));
 	}
 
 	Invalidate();
+}
+
+
+
+/// <summary>
+/// 
+
+
+/// <summary>
+/// 
+/// </summary>
+const std::set<int_t>& CIssuesView::Issue::RelatedInstances()
+{
+	if (!m_relatedInsancesCollected) {
+		m_relatedInsancesCollected = true;
+
+		auto instance = internalGetInstanceFromP21Line(globalIfcModel, info.stepId);
+		ASSERT(instance);
+		if (instance) {
+
+			int_t searchEntities[3] = {
+			sdaiGetEntity(globalIfcModel, (char*) L"IfcProduct"),
+			sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
+			0};
+
+			RDF::CModelChecker::CollectReferencingInstancesRecirsive(m_relatedInstances, instance, searchEntities);
+		}
+	}
+
+	return m_relatedInstances;
 }

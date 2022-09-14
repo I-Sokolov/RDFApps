@@ -81,10 +81,19 @@ namespace RDF
             ModelCheckerProgress () : m_limit(0), m_pos(0) {}
         };
 
+        interface InstanceVisitor
+        {
+            virtual void OnVisitInstance(int_t instance) = NULL;
+        };
+
     public:
         static ErrorLevel CheckModel(int_t model, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
 
         static ErrorLevel CheckInstance(int_t instance, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
+        
+        static void VisitAllInstances(int_t model, InstanceVisitor& visitor);
+
+        static void CollectReferencingInstancesRecirsive (std::set<int_t>& referencingInstances, int_t referencedInstance, int_t* searchEntities /*NULL-terminated array*/);
     };
 }
 

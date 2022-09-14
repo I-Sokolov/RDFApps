@@ -32,3 +32,4 @@ private:
 private:
 	CListCtrl m_wndIssueList;
 };
+

@@ -173,7 +173,7 @@ CWnd* CifcviewerDoc::GetPane(CRuntimeClass* pClass)
 			return view;
 		}
 	}
-	assert(false);
+	ASSERT(false);
 	return NULL;
 }
 

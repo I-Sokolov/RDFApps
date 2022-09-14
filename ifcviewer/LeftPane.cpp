@@ -957,7 +957,7 @@ CWnd* CLeftPane::GetRightPane()
 	if (pDoc) {
 		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
 	}
-	assert(0);
+	ASSERT(0);
 	return nullptr;
 }
 

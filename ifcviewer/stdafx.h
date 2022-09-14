@@ -42,6 +42,7 @@
 
 #include <memory>
 #include <list>
+#include <set>
 
 #include "ifcengine\include\ifcengine.h"
 #define IFCENGINE_MODEL_CHECKER
