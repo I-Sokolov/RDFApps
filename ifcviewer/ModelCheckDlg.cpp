@@ -33,6 +33,8 @@ IMPLEMENT_DYNAMIC(CModelCheckDlg, CDialog)
 /// </summary>
 CModelCheckDlg::CModelCheckDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_MODELCHECK, pParent)
+	, m_nSortColumn(-1)
+	, m_bSortAscending(false)
 {
 
 }
@@ -118,7 +120,7 @@ void CModelCheckDlg::FillIssueList()
 		RDF::CModelChecker::CheckModel(globalIfcModel, &log);
 
 		for (int i = 0; i < 4; i++) {
-			m_wndIssueList.SetColumnWidth(i, log.rWidth[i] + 10 * GetSystemMetrics(SM_CXBORDER));
+			m_wndIssueList.SetColumnWidth(i, log.rWidth[i] + 20 * GetSystemMetrics(SM_CXBORDER));
 		}
 	}
 }
@@ -177,11 +179,45 @@ void CModelCheckDlg::OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 	*pResult = 0;
 }
 
+int CALLBACK CModelCheckDlg::SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamMe)
+{
+	CModelCheckDlg& me = *(CModelCheckDlg*) lParamMe;
+
+	CString s1 = me.m_wndIssueList.GetItemText((int)lParam1, me.m_nSortColumn);
+	CString s2 = me.m_wndIssueList.GetItemText((int)lParam2, me.m_nSortColumn);
+
+	if (me.m_nSortColumn == 1) {
+		int a1 = _wtoi(s1);
+		int a2 = _wtoi(s2);
+
+		if (a1 > a2)
+			return me.m_bSortAscending ? 1 : -1;
+		else if (a2 > a1)
+			return me.m_bSortAscending ? -1 : 1;
+		else
+			return 0;
+	}
+	else {
+		if (me.m_bSortAscending)
+			return s1.Compare(s2);
+		else
+			return s2.Compare(s1);
+	}
+}
 
 void CModelCheckDlg::OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+	
+	if (pNMLV->iSubItem == m_nSortColumn) {
+		m_bSortAscending = !m_bSortAscending;
+	}
+	else {
+		m_nSortColumn = pNMLV->iSubItem;
+		m_bSortAscending = true;
+	}
+
+	m_wndIssueList.SortItemsEx(SortFunc, (DWORD_PTR)this);
 	*pResult = 0;
 }
 

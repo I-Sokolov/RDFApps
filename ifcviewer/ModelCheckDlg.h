@@ -29,8 +29,14 @@ private:
 	void FormatIssueList();
 	void FillIssueList();
 
+	static int CALLBACK SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamMe);
+
 private:
 	CListCtrl m_wndIssueList;
+
+	int       m_nSortColumn;
+	bool      m_bSortAscending;
+
 public:
 	afx_msg void OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
