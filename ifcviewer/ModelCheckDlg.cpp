@@ -17,6 +17,13 @@ struct ModelCheckerLog : public RDF::CModelChecker::ModelCheckerLog
 	int        rWidth[4];
 };
 
+struct IssueData
+{
+	int_t stepId = -1;
+	std::set<int_t> relatingInstances;
+	bool relatingInstancesCollected = false;
+};
+
 // CModelCheckDlg dialog
 
 IMPLEMENT_DYNAMIC(CModelCheckDlg, CDialog)
@@ -59,6 +66,9 @@ void CModelCheckDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CModelCheckDlg, CDialog)
+	ON_NOTIFY(LVN_DELETEITEM, IDC_ISSUELIST, &CModelCheckDlg::OnDeleteitemIssuelist)
+	ON_NOTIFY(LVN_COLUMNCLICK, IDC_ISSUELIST, &CModelCheckDlg::OnColumnclickIssuelist)
+	ON_NOTIFY(NM_DBLCLK, IDC_ISSUELIST, &CModelCheckDlg::OnDblclkIssuelist)
 END_MESSAGE_MAP()
 
 
@@ -85,7 +95,7 @@ BOOL CModelCheckDlg::OnInitDialog()
 /// </summary>
 void CModelCheckDlg::FormatIssueList()
 {
-	const wchar_t* rTitle[] = {L"#", L"Entity", L"Attribute", L"Description"};
+	const wchar_t* rTitle[] = {L"Description", L"#", L"Entity", L"Attribute"};
 	
 	for (int i = 0; i < _countof(rTitle); i++) {
 		m_wndIssueList.InsertColumn(i, rTitle[i]);
@@ -115,14 +125,18 @@ void CModelCheckDlg::FillIssueList()
 
 void ModelCheckerLog::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 {
+	CString text(issue.text);
+	auto item = m_wndList.InsertItem(0, text);
+	rWidth[0] = max(rWidth[0], m_wndList.GetStringWidth(text));
+
 	CString id;
 	id.Format(L"%I64d", issue.stepId);
-	auto item = m_wndList.InsertItem(0, id);
-	rWidth[0] = max(rWidth[0], m_wndList.GetStringWidth(id));
+	m_wndList.SetItemText(item, 1, id);
+	rWidth[1] = max(rWidth[1], m_wndList.GetStringWidth(id));
 
 	CString entity(issue.entity);
-	m_wndList.SetItemText(item, 1, entity);
-	rWidth[1] = max(rWidth[1], m_wndList.GetStringWidth(entity));
+	m_wndList.SetItemText(item, 2, entity);
+	rWidth[2] = max(rWidth[2], m_wndList.GetStringWidth(entity));
 
 	CString aggrIndex;
 	for (int i = 0; i < issue.aggrLevel; i++) {
@@ -144,10 +158,59 @@ void ModelCheckerLog::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 	CString attr(issue.attrName);
 	if (!aggrIndex.IsEmpty())
 		attr += aggrIndex;
-	m_wndList.SetItemText(item, 2, attr);
-	rWidth[2] = max(rWidth[2], m_wndList.GetStringWidth(attr));
+	m_wndList.SetItemText(item, 3, attr);
+	rWidth[3] = max(rWidth[3], m_wndList.GetStringWidth(attr));
 
-	CString text(issue.text);
-	m_wndList.SetItemText(item, 3, text);
-	rWidth[3] = max(rWidth[3], m_wndList.GetStringWidth(text));
+	auto data = new IssueData();
+	data->stepId = issue.stepId;
+	m_wndList.SetItemData(item, (DWORD_PTR)data);
+}
+
+void CModelCheckDlg::OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	auto data = m_wndIssueList.GetItemData (pNMLV->iItem);
+	if (data) {
+		auto p = (IssueData*) data;
+		delete p;
+	}
+	*pResult = 0;
+}
+
+
+void CModelCheckDlg::OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	*pResult = 0;
+}
+
+
+
+
+void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	auto item = pNMItemActivate->iItem;
+	auto data = m_wndIssueList.GetItemData(item);
+	if (data) {
+		auto p = (IssueData*) data;
+		if (!p->relatingInstancesCollected) {
+			p->relatingInstancesCollected = true;
+			auto instance = internalGetInstanceFromP21Line(globalIfcModel, p->stepId);
+			ASSERT(instance);
+			if (instance) {
+
+				int_t searchEntities[3] = {
+				sdaiGetEntity(globalIfcModel, (char*) L"IfcProduct"),
+				sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
+				0};
+
+				RDF::CModelChecker::CollectReferencingInstancesRecirsive(p->relatingInstances, instance, searchEntities);
+			}
+
+		}
+	}
+
+	*pResult = 0;
 }

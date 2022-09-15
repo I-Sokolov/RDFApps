@@ -31,5 +31,9 @@ private:
 
 private:
 	CListCtrl m_wndIssueList;
+public:
+	afx_msg void OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
