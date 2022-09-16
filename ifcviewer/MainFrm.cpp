@@ -164,9 +164,10 @@ BOOL CMainFrame::OnCreateClient(LPCREATESTRUCT /*lpcs*/,
 		return	FALSE;
 	}
 
-	m_wndSplitter.SetColumnInfo(0, 200, 30);
-	m_wndSplitter2.SetRowInfo(0, 600, 30);
-	m_wndSplitter2.SetRowInfo(1, 200, 30);
+	m_wndSplitter.SetColumnInfo(0, 400, 30);
+	m_wndSplitter.SetColumnInfo(0, 600, 30);
+	m_wndSplitter2.SetRowInfo(0, 400, 30);
+	m_wndSplitter2.SetRowInfo(1, 400, 30);
 
 	return	true;
 }
