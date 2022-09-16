@@ -46,8 +46,6 @@ BEGIN_MESSAGE_MAP(CLeftPane, CTreeView)
 	ON_NOTIFY_REFLECT(TVN_GETINFOTIP, OnGetInfoTip)
 	ON_NOTIFY_REFLECT(TVN_ITEMEXPANDING, OnBeforeExpand)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, OnSelectionChanged) 
-	ON_COMMAND(ID_VIEW_MODELCHECKER, &CLeftPane::OnViewModelChecker)
-	ON_UPDATE_COMMAND_UI(ID_VIEW_MODELCHECKER, &CLeftPane::OnUpdateViewModelChecker)
 END_MESSAGE_MAP()
 
 
@@ -141,8 +139,6 @@ void CLeftPane::OnInitialUpdate()
 	GetTreeCtrl().DeleteAllItems();
 
 	BuildTreeItem(topTreeItem);
-
-	m_wndModelChecker.OnNewModel();
 }
 
 void	CLeftPane::BuildTreeItem(STRUCT_TREE_ITEM * treeItem)
@@ -929,27 +925,6 @@ void CLeftPane::Dump(CDumpContext& dc) const
 }
 #endif
 #endif //_DEBUG
-
-
-void CLeftPane::OnViewModelChecker()
-{
-	if (m_wndModelChecker.GetSafeHwnd() && m_wndModelChecker.IsWindowVisible()) {
-		m_wndModelChecker.ShowWindow(SW_HIDE);
-	}
-	else {
-		if (!m_wndModelChecker.GetSafeHwnd()) {
-			m_wndModelChecker.Create(IDD_MODELCHECK);
-		}
-		m_wndModelChecker.ShowWindow(SW_SHOW);
-	}
-}
-
-
-void CLeftPane::OnUpdateViewModelChecker(CCmdUI* pCmdUI)
-{
-	auto visible = m_wndModelChecker.GetSafeHwnd() && m_wndModelChecker.IsWindowVisible();
-	pCmdUI->SetCheck(visible);
-}
 
 CWnd* CLeftPane::GetRightPane()
 {

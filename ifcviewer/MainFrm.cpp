@@ -103,6 +103,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_ENCODING_ISO8859_16, &CMainFrame::OnEncodingISO8859_16)
 	ON_COMMAND(ID_ENCODING_MACINTOSH_CENTRAL_EUROPEAN, &CMainFrame::OnEncodingMacintosCentralEuropean)
 	ON_COMMAND(ID_ENCODING_SHIFT_JIS_X_213, &CMainFrame::OnEncodingShiftJIS_X_213)
+
+	ON_COMMAND(ID_VIEW_MODELCHECKER, &CMainFrame::OnViewModelChecker)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_MODELCHECKER, &CMainFrame::OnUpdateViewModelChecker)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -619,4 +622,32 @@ CWnd* CMainFrame::GetRightPane()
 	}
 	ASSERT(0);
 	return nullptr;
+}
+
+void CMainFrame::OnViewModelChecker()
+{
+	if (m_wndModelChecker.GetSafeHwnd() && m_wndModelChecker.IsWindowVisible()) {
+		m_wndModelChecker.ShowWindow(SW_HIDE);
+	}
+	else {
+		if (!m_wndModelChecker.GetSafeHwnd()) {
+			m_wndModelChecker.Create(IDD_MODELCHECK);
+		}
+		m_wndModelChecker.ShowWindow(SW_SHOW);
+	}
+}
+
+
+void CMainFrame::OnUpdateViewModelChecker(CCmdUI* pCmdUI)
+{
+	auto visible = m_wndModelChecker.GetSafeHwnd() && m_wndModelChecker.IsWindowVisible();
+	pCmdUI->SetCheck(visible);
+}
+
+
+void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+	CFrameWnd::OnUpdateFrameTitle(bAddToTitle);
+
+	m_wndModelChecker.OnNewModel();
 }

@@ -1,8 +1,6 @@
 #pragma once
 
-
-
-
+#include	"ModelCheckDlg.h"
 
 class CMainFrame : public CFrameWnd
 {
@@ -15,6 +13,7 @@ protected: // create from serialization only
 protected:
 	CSplitterWnd m_wndSplitter;
 	CSplitterWnd m_wndSplitter2;
+	CModelCheckDlg	m_wndModelChecker;
 
 public:
 
@@ -48,6 +47,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	afx_msg void OnViewModelChecker();
+	afx_msg void OnUpdateViewModelChecker(CCmdUI* pCmdUI);
 	afx_msg void OnViewPoints();
 	afx_msg void OnViewLines();
 	afx_msg void OnViewFaces();
@@ -89,4 +90,5 @@ public:
 	afx_msg void OnEncodingISO8859_16();
 	afx_msg void OnEncodingMacintosCentralEuropean();
 	afx_msg void OnEncodingShiftJIS_X_213();
+	virtual void OnUpdateFrameTitle(BOOL bAddToTitle);
 };

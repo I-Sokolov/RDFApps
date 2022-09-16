@@ -2,7 +2,6 @@
 
 
 #include	"GenericTreeItem.h"
-#include	"ModelCheckDlg.h"
 
 // CLeftPane form view
 
@@ -56,10 +55,4 @@ private:
 	CWnd* GetRightPane();
 
 	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
-
-private:
-	CModelCheckDlg	m_wndModelChecker;
-public:
-	afx_msg void OnViewModelChecker();
-	afx_msg void OnUpdateViewModelChecker(CCmdUI* pCmdUI);
 };

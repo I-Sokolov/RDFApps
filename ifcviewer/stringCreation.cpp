@@ -397,8 +397,10 @@ wchar_t	* GetTreeItemName_ifcInstance(
 	int_t	ifcInstanceType = sdaiGetInstanceType(ifcInstance);
 	engiGetEntityName(ifcInstanceType, sdaiUNICODE, (const char**) &ifcType);
 
-	sdaiGetAttrBN(ifcInstance, (char*)L"name", sdaiUNICODE, &name);
-	sdaiGetAttrBN(ifcInstance, (char*)L"description", sdaiUNICODE, &description);
+	if (ifcInstance) {
+		sdaiGetAttrBN(ifcInstance, (char*) L"name", sdaiUNICODE, &name);
+		sdaiGetAttrBN(ifcInstance, (char*) L"description", sdaiUNICODE, &description);
+	}
 
 	size_t	i = 0, size = 0;
 	if (ifcType) {
