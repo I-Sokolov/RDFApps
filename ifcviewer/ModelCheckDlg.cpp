@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CModelCheckDlg, CDialog)
 	ON_NOTIFY(LVN_DELETEITEM, IDC_ISSUELIST, &CModelCheckDlg::OnDeleteitemIssuelist)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_ISSUELIST, &CModelCheckDlg::OnColumnclickIssuelist)
 	ON_NOTIFY(NM_DBLCLK, IDC_ISSUELIST, &CModelCheckDlg::OnDblclkIssuelist)
+	ON_NOTIFY(NM_CLICK, IDC_ISSUELIST, &CModelCheckDlg::OnClickIssuelist)
 END_MESSAGE_MAP()
 
 
@@ -223,18 +224,16 @@ void CModelCheckDlg::OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 }
 
 
-
-
-void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+void CModelCheckDlg::OnActivateListItem(int iItem)
 {
-	*pResult = 0;
+	auto pFrame = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
+	ASSERT(pFrame); if (!pFrame) return;
 
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	auto item = pNMItemActivate->iItem;
-	if (item >= 0) {
-		auto data = m_wndIssueList.GetItemData(item);
+	if (iItem >= 0) {
+		auto data = m_wndIssueList.GetItemData(iItem);
 		if (data) {
 			auto p = (IssueData*) data;
+
 			if (!p->relatingInstancesCollected) {
 				p->relatingInstancesCollected = true;
 				auto instance = internalGetInstanceFromP21Line(globalIfcModel, p->stepId);
@@ -251,16 +250,30 @@ void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 
 			}
 
-			auto pFrame = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
-			if (pFrame) {
-				for (auto inst : p->relatingInstances) {
-					if (pFrame->SelectInstance(inst)) {
-						return; //>>>>
-					}
+			for (auto inst : p->relatingInstances) {
+				if (pFrame->SelectInstance(inst)) {
+					return; //>>>>
 				}
-				//nothing found
-				pFrame->SelectInstance(NULL);
 			}
 		}
 	}
+
+	//nothing found
+	pFrame->SelectInstance(NULL);
+}
+
+
+void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	//OnActivateListItem(pNMItemActivate->iItem);
+	*pResult = 0;
+}
+
+
+void CModelCheckDlg::OnClickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	OnActivateListItem(pNMItemActivate->iItem);
+	*pResult = 0;
 }

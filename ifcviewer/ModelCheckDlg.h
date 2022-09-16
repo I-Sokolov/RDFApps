@@ -31,6 +31,8 @@ private:
 
 	static int CALLBACK SortFunc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamMe);
 
+	void OnActivateListItem(int iItem);
+
 private:
 	CListCtrl m_wndIssueList;
 
@@ -41,5 +43,6 @@ public:
 	afx_msg void OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnClickIssuelist(NMHDR* pNMHDR, LRESULT* pResult);
 };
 
