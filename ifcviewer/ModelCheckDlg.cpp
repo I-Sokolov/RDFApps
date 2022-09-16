@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "ifcviewer.h"
+#include "MainFrm.h"
 #include "ModelCheckDlg.h"
 
 #include "IFCEngineInteract.h"
@@ -226,27 +227,40 @@ void CModelCheckDlg::OnColumnclickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 {
+	*pResult = 0;
+
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	auto item = pNMItemActivate->iItem;
-	auto data = m_wndIssueList.GetItemData(item);
-	if (data) {
-		auto p = (IssueData*) data;
-		if (!p->relatingInstancesCollected) {
-			p->relatingInstancesCollected = true;
-			auto instance = internalGetInstanceFromP21Line(globalIfcModel, p->stepId);
-			ASSERT(instance);
-			if (instance) {
+	if (item >= 0) {
+		auto data = m_wndIssueList.GetItemData(item);
+		if (data) {
+			auto p = (IssueData*) data;
+			if (!p->relatingInstancesCollected) {
+				p->relatingInstancesCollected = true;
+				auto instance = internalGetInstanceFromP21Line(globalIfcModel, p->stepId);
+				ASSERT(instance);
+				if (instance) {
 
-				int_t searchEntities[3] = {
-				sdaiGetEntity(globalIfcModel, (char*) L"IfcProduct"),
-				sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
-				0};
+					int_t searchEntities[3] = {
+					sdaiGetEntity(globalIfcModel, (char*) L"IfcProduct"),
+					sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
+					0};
 
-				RDF::CModelChecker::CollectReferencingInstancesRecirsive(p->relatingInstances, instance, searchEntities);
+					RDF::CModelChecker::CollectReferencingInstancesRecirsive(p->relatingInstances, instance, searchEntities);
+				}
+
 			}
 
+			auto pFrame = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
+			if (pFrame) {
+				for (auto inst : p->relatingInstances) {
+					if (pFrame->SelectInstance(inst)) {
+						return; //>>>>
+					}
+				}
+				//nothing found
+				pFrame->SelectInstance(NULL);
+			}
 		}
 	}
-
-	*pResult = 0;
 }

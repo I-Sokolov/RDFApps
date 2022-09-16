@@ -135,7 +135,7 @@ void CLeftPane::OnInitialUpdate()
 
 	CTreeCtrl *tst = &GetTreeCtrl();
 
-	::SetWindowLong(*tst, GWL_STYLE, TVS_EDITLABELS|TVS_LINESATROOT|TVS_HASLINES|TVS_HASBUTTONS|TVS_INFOTIP|::GetWindowLong(*tst, GWL_STYLE));
+	::SetWindowLong(*tst, GWL_STYLE, TVS_SHOWSELALWAYS|TVS_EDITLABELS|TVS_LINESATROOT|TVS_HASLINES|TVS_HASBUTTONS|TVS_INFOTIP|::GetWindowLong(*tst, GWL_STYLE));
 
 	GetTreeCtrl().SetImageList(pImageList, TVSIL_NORMAL);
 	GetTreeCtrl().DeleteAllItems();
@@ -979,4 +979,58 @@ STRUCT_TREE_ITEM_IFCINSTANCE* CLeftPane::GetSelectedInstance()
 	}
 
 	return nullptr;
+}
+
+STRUCT_TREE_ITEM_IFCINSTANCE* CLeftPane::FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom)
+{
+	if (!hStartFrom) {
+		return nullptr;
+	}
+
+	auto dwData = GetTreeCtrl().GetItemData(hStartFrom);
+	auto pData = (STRUCT_TREE_ITEM*) dwData;
+	if (pData && pData->type == ENUM_TREE_ITEM_TYPES::TREE_ITEM_IFCINSTANCE) {
+		auto pInst = (STRUCT_TREE_ITEM_IFCINSTANCE*) pData;
+		if (pInst && pInst->ifcInstance == instance) {
+			//FOUND!
+			if (pItem)
+				*pItem = hStartFrom;
+			return pInst; //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+		}
+	}
+
+	if (pData && pData->child) {
+		if (pData->child->hTreeItem == 0) {
+			BuildTreeItem(pData->child);
+		}
+	}
+
+	STRUCT_TREE_ITEM_IFCINSTANCE* pFound = FindInstance(instance, pItem, GetTreeCtrl().GetNextSiblingItem(hStartFrom));
+	if (pFound) {
+		return pFound;
+	}
+
+	return FindInstance(instance, pItem, GetTreeCtrl().GetChildItem(hStartFrom));
+}
+
+bool CLeftPane::SelectInstance(int_t instance)
+{
+	if (!instance) {
+		auto res = GetTreeCtrl().Select(nullptr, TVGN_CARET);
+		return res;
+	}
+
+	HTREEITEM hItem = nullptr;
+	auto pItem = FindInstance(instance, &hItem, GetTreeCtrl().GetRootItem());
+	
+	if (!pItem)
+		return false; 
+
+	auto res = GetTreeCtrl().Select(hItem, TVGN_CARET);
+
+	return res;
+
+/*	if (highLightedIfcObject) {
+		this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_SELECT_ITEM, 0, 0);
+	}*/
 }

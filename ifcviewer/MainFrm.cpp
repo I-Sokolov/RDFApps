@@ -599,6 +599,17 @@ void CMainFrame::OnEncodingShiftJIS_X_213()
 	encodingSetting = flagbit14 + flagbit15 + 0 + 0 + 0 + 0;
 }
 
+bool CMainFrame::SelectInstance(int_t instance)
+{
+	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());
+	if (!pDoc) return true;
+
+	auto pTreeView = DYNAMIC_DOWNCAST (CLeftPane, pDoc->GetPane(RUNTIME_CLASS(CLeftPane)));
+	if (!pTreeView) return true;
+
+	return pTreeView->SelectInstance(instance);
+}
+
 CWnd* CMainFrame::GetRightPane()
 {
 	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());

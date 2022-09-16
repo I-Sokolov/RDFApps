@@ -34,6 +34,8 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
+	bool SelectInstance(int_t instance);
+
 private:
 	CWnd* GetRightPane();
 

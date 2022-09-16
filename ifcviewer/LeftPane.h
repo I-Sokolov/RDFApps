@@ -26,6 +26,8 @@ public:
 
 public:
 	STRUCT_TREE_ITEM_IFCINSTANCE* GetSelectedInstance();
+	
+	bool SelectInstance(int_t instance);
 
 public:
 	virtual void OnInitialUpdate();
@@ -52,6 +54,8 @@ protected:
 
 private:
 	CWnd* GetRightPane();
+
+	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
 
 private:
 	CModelCheckDlg	m_wndModelChecker;
