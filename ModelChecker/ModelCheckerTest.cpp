@@ -99,6 +99,8 @@ static int_t r2[] = {2};
 static int_t r3[] = {3};
 static int_t r4[] = {4};
 static int_t r6[] = {6};
+static int_t r7[] = {7};
+static int_t r9[] = {9};
 static int_t r32[] = {3,2};
 
 static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC2x3[] =
@@ -140,7 +142,9 @@ static RDF::CModelChecker::IssueInfo rExpectedIssuesIFC4[] =
     {7,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r2,           RDF::CModelChecker::IssueID::UnresolvedReference},
     {3,     "IfcRelAggregates",         "RelatedObjects",       5,      1,r1,           RDF::CModelChecker::IssueID::AggrElementValueNotUnique},
     {19,    "IfcSpatialStructureElement",NULL,                  -1,     0,NULL,         RDF::CModelChecker::IssueID::AbstractEntity},
-    {1,     "IfcRoot",                   "GlobalId",            0,      0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation}
+    {1,     "IfcRoot",                   "GlobalId",            0,      0,NULL,         RDF::CModelChecker::IssueID::UniqueRuleViolation},
+    {21,    "IfcPropertyListValue",      "ListValues",          2,      1,r7,           RDF::CModelChecker::IssueID::WrongArgumentType},
+    {21,    "IfcPropertyListValue",      "ListValues",          2,      1,r9,           RDF::CModelChecker::IssueID::WrongArgumentType}
 };
 
 //
