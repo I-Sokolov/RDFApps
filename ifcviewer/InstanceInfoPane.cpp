@@ -56,12 +56,33 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
 	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
 
+	//GetTabControl().EnableInPlaceEdit(false);
+	//GetTabControl().EnableTabDocumentsMenu(false);
+	//GetTabControl().HideInactiveWindow(false);
+
+	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D);
+	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ONENOTE);
+	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ROUNDED);
+	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ROUNDED_SCROLL);
+	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_FLAT);
+	
+	// Nicely hack to access protected member
+	class CMFCTabCtrlEx : public CMFCTabCtrl
+	{
+	public:
+		void SetDisableScroll() { m_bScroll = FALSE; }
+	};
+
+	// One-Liner to Disable navigation control
+	((CMFCTabCtrlEx*) &GetTabControl())->SetDisableScroll();
+
 	return 0;
 }
 
 void CInstanceInfoPane::OnInitialUpdate()
 {
 	CTabView::OnInitialUpdate();
+	Invalidate();
 }
 
 

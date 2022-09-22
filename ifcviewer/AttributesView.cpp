@@ -75,7 +75,7 @@ void CAttributesView::OnInitialUpdate()
 	item.pszText = L"Attribute";
 	header.SetItem(0, &item);
 
-	//m_wndProps.
+	Invalidate();
 }
 
 
