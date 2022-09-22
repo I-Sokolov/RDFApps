@@ -114,6 +114,7 @@ void CAttributesView::AddStepId(int_t instance)
 	strId.Format(L"%lld", nId);
 
 	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(L"#", strId);
+	pProp->AllowEdit(false);
 	m_wndProps.AddProperty(pProp);
 }
 
@@ -122,6 +123,7 @@ void CAttributesView::AddEntityName(int_t entity)
 	wchar_t* entityName = nullptr;
 	engiGetEntityName(entity, sdaiUNICODE, (const char**) &entityName);
 	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(L"Entity", entityName);
+	pProp->AllowEdit(false);
 	m_wndProps.AddProperty(pProp);
 }
 
@@ -143,6 +145,7 @@ void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t
 		engiGetEntityName(entity, sdaiUNICODE, (const char**) &entityName);
 
 		auto pSet = new CMFCPropertyGridProperty(entityName);
+		pSet->AllowEdit(false);
 
 		for (int_t ia = 0; ia < NA; ia++) {
 			auto attr = engiGetEntityAttributeByIndex(entity, ia, false, true);
@@ -164,6 +167,7 @@ void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t
 			auto value = NestedPropertyValue(instance, CString(attrName), propType, 0);
 
 			CMFCPropertyGridProperty* pProp(new CMFCPropertyGridProperty(attrIndName, value));
+			pProp->AllowEdit(false);
 			pSet->AddSubItem(pProp);
 		}
 
