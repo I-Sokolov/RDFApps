@@ -15,7 +15,21 @@ int_t			ifcRelAggregates_TYPE = 0,
 extern	int_t			ifcSpace_TYPE;
 
 
-STRUCT_TREE_ITEM	* CreateTreeItem_ifcObjectDecomposedBy(
+static void AddChild(STRUCT_TREE_ITEM* parent, STRUCT_TREE_ITEM* child)
+{
+	if (!parent->child) {
+		parent->child = child;
+	}
+	else {
+		auto last = parent->child;
+		while (last->next) {
+			last = last->next;
+		}
+		last->next = child;
+	}
+}
+
+void PopulateTreeItems_ifcObjectDecomposedBy(
 							int_t				ifcModel,
 							int_t				ifcObjectInstance,
 							STRUCT_TREE_ITEM	* parent,
@@ -92,10 +106,12 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObjectDecomposedBy(
 		}
 	}
 
-	return	decomposedByTreeItem;
+	if (decomposedByTreeItem) {
+		AddChild(parent, decomposedByTreeItem);
+	}
 }
 
-STRUCT_TREE_ITEM	* CreateTreeItem_ifcObjectContains(
+void PopulateTreeItems_ifcObjectContains(
 							int_t				ifcModel,
 							int_t				ifcObjectInstance,
 							STRUCT_TREE_ITEM	* parent,
@@ -135,7 +151,9 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObjectContains(
 		}
 	}
 
-	return	containsTreeItem;
+	if (containsTreeItem) {
+		AddChild(parent, containsTreeItem);
+	}
 }
 
 STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
@@ -151,17 +169,18 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 
 	STRUCT_TREE_ITEM	* treeItem = CreateTreeItem__IFCINSTANCE_model(parent, ifcModel, ifcObjectInstance);
 
-	treeItem->child = CreateTreeItem__GEOMETRY(treeItem);
-	treeItem->child->next = CreateTreeItem__PROPERTIES(treeItem);
+#if 1
+	AddChild (treeItem, CreateTreeItem__GEOMETRY(treeItem));
+#endif
 
-	treeItem->child->next->next = CreateTreeItem_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, treeItem, depth);
-	if (treeItem->child->next->next) {
-		treeItem->child->next->next->next = CreateTreeItem_ifcObjectContains(ifcModel, ifcObjectInstance, treeItem, depth);
-	}
-	else {
-		treeItem->child->next->next = CreateTreeItem_ifcObjectContains(ifcModel, ifcObjectInstance, treeItem, depth);
-	}
+#if 1
+	AddChild (treeItem, CreateTreeItem__PROPERTIES(treeItem));
+#endif
 
+	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, treeItem, depth);
+
+	PopulateTreeItems_ifcObjectContains(ifcModel, ifcObjectInstance, treeItem, depth);
+	
 	return	treeItem;
 }
 
