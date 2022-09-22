@@ -97,8 +97,63 @@ void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet)
 {
 	auto pSet = new CMFCPropertyGridProperty(propertySet->name);
 
+	CString description;
+	description.Format(L"#%lld", internalGetP21Line(propertySet->ifcInstance));
+
+	const char* typeName = nullptr;
+	engiGetEntityName(sdaiGetInstanceType(propertySet->ifcInstance), sdaiSTRING, &typeName);
+	if (typeName && *typeName) {
+		description += "=";
+		description += typeName;
+	}
+
+	if (propertySet->description && *propertySet->description) {
+		description += ", ";
+		description += propertySet->description;
+	}
+
+	pSet->SetDescription(description);
+
 	for (auto prop = propertySet->properties; prop; prop = prop->next) {
-		CMFCPropertyGridProperty* pProp(new CMFCPropertyGridProperty(prop->name, L"TODO: add value", L"TODO: add details"));
+
+		CString value;
+		if (prop->nominalValue)
+			value += prop->nominalValue;
+		if (prop->lengthValue)
+			value += prop->lengthValue;
+		if (prop->areaValue)
+			value += prop->areaValue;
+		if (prop->volumeValue)
+			value += prop->volumeValue;
+		if (prop->countValue)
+			value += prop->countValue;
+		if (prop->weigthValue)
+			value += prop->weigthValue;
+		if (prop->timeValue)
+			value += prop->timeValue;
+
+		if (prop->unitName && *prop->unitName) {
+			value += " ";
+			value += prop->unitName;
+		}
+
+		description.Format(L"#%lld", internalGetP21Line(prop->ifcInstance));
+
+		typeName = nullptr;
+		engiGetEntityName(sdaiGetInstanceType(prop->ifcInstance), sdaiSTRING, &typeName);
+		if (typeName && *typeName) {
+			description += "=";
+			description += typeName;
+		}
+
+		if (prop->description && *prop->description) {
+			description += ", ";
+			description += prop->description;
+		}
+
+		CMFCPropertyGridProperty* pProp(new CMFCPropertyGridProperty(prop->name, value, description));
+
+		pProp->AllowEdit(false);
 		pSet->AddSubItem(pProp);
 	}
 

@@ -24,7 +24,7 @@ bool	equalStr(wchar_t * txtI, wchar_t * txtII)
 	return	true;
 }
 
-wchar_t	* copyStr(wchar_t * txt)
+wchar_t	* copyStr(const wchar_t * txt)
 {
 	if (txt) {
 		int_t	i = 0;
@@ -508,6 +508,20 @@ wchar_t	* GetUnit(STRUCT__SIUNIT * units, wchar_t * unitType)
 	return	nullptr;
 }
 
+void	CreateIfcPropertyTODO(int_t ifcPropertyInstance, STRUCT__PROPERTY* ifcProperty)
+{
+	auto type = sdaiGetInstanceType(ifcPropertyInstance);
+
+	const char* typeName = nullptr;
+	engiGetEntityName(type, sdaiSTRING, &typeName);
+
+	CString todo;
+	todo.Format(L"TODO: %hs", typeName);
+
+	ifcProperty->nominalValue = copyStr(todo);
+	ifcProperty->unitName = nullptr;
+}
+
 void	CreateIfcPropertySingleValue(int_t ifcPropertySingleValue, STRUCT__PROPERTY * ifcProperty, STRUCT__SIUNIT * units)
 {
 	wchar_t	* nominalValue = nullptr,
@@ -636,7 +650,8 @@ void	CreateIfcPropertySingleValue(int_t ifcPropertySingleValue, STRUCT__PROPERTY
 				unitName = GetUnit(units, L"???");
 			}
 			else {
-//				ASSERT(false);
+				unitName = copyStr(L"unit TODO (not implemented yet)");
+				//ASSERT(false);
 			}
 		}
 		else {
@@ -925,16 +940,20 @@ void	CreateIfcPropertySet(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets,
 
 			ASSERT((* ppProperty) == 0);
 
-			if (sdaiGetInstanceType(ifcPropertyInstance) == ifcPropertySingleValue_TYPE) {
+			auto type = sdaiGetInstanceType(ifcPropertyInstance);
+			if (type == ifcPropertySingleValue_TYPE) {
 				(*ppProperty) = CreateIfcProperty(ifcPropertyInstance, propertyName, propertyDescription);
 				CreateIfcPropertySingleValue(ifcPropertyInstance, (* ppProperty), units);
 				ppProperty = &(*ppProperty)->next;
 			}
-			else if (sdaiGetInstanceType(ifcPropertyInstance) == ifcComplexProperty_TYPE) {
+			else if (type == ifcComplexProperty_TYPE) {
 				ppProperty = CreateIfcComplexProperty(ifcModel, ifcPropertyInstance, ppProperty, units);
 			}
 			else {
-				ASSERT(false);
+				(*ppProperty) = CreateIfcProperty(ifcPropertyInstance, propertyName, propertyDescription);
+				CreateIfcPropertyTODO(ifcPropertyInstance, (*ppProperty));
+				ppProperty = &(*ppProperty)->next;
+				//ASSERT(false && typeName);s
 			}
 		}
 	}
