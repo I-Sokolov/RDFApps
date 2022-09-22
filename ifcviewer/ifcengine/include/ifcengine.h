@@ -582,6 +582,24 @@ int_t		DECL STDC	engiGetEntityAttributeIndex(
 								);
 
 //
+//		engiGetEntityAttributeIndexEx                 (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndexEx.html)
+//				int_t				entity								IN
+//				const char			* argumentName						IN
+//				bool				countedWithParents					IN
+//				bool				countedWithInverse					IN
+//
+//				int_t				returns								OUT
+//
+//	...
+//
+int_t		DECL STDC	engiGetEntityAttributeIndexEx(
+									int_t				entity,
+									const char			* argumentName,
+									bool				countedWithParents,
+									bool				countedWithInverse
+								);
+
+//
 //		engiGetEntityArgumentIndex                  (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
 //				int_t				entity								IN
 //				const char			* argumentName						IN
@@ -710,6 +728,23 @@ void		DECL STDC	engiGetEntityName(
 int_t		DECL STDC	engiGetEntityNoAttributes(
 									int_t				entity
 								);
+
+//
+//		engiGetEntityNoAttributesEx                    (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributesEx.html)
+//				int_t				entity								IN
+//				bool				includePatent						IN
+//				bool				includeInverse						IN
+//
+//				int_t				returns								OUT
+//
+//	This call returns the number of attributes, inclusion of parents and inverse depeds on includeParent and includeInverse values
+//
+int_t		DECL STDC	engiGetEntityNoAttributesEx(
+									int_t				entity,
+									bool				includeParent,
+									bool				includeInverse
+								);
+
 
 //
 //	DEPR4ECATED use engiGetEntityNoAttributes
@@ -904,24 +939,39 @@ void		DECL STDC	engiGetEnumerationValue(
 								);
 
 //
-//		engiGetEntityAttribute                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttribute.html)
+//		engiGetEntityAttributeByIndex                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
 //				int_t					entity								IN
 //				int_t					index								IN
-//				char					** name								IN / OUT
-//				int_t					* definingEntity,					IN / OUT
-//				bool					* inverse,							IN / OUT
-//				enum_express_attr_type	* attrType,							IN / OUT
-//				int_t					* domainEntity,						IN / OUT
-// 				int_t					* aggregationDescriptor,			IN / OUT
-//				bool					* optional,							IN / OUT
-//				bool					* unique							IN / OUT
+//				bool					countedWithParents					IN
+//				bool					countedWithInverse					IN
 //
-//				bool				returns
+//				int_t					returns
 //
+//		Return attribute definition from attribute index
 //
-bool		DECL STDC	engiGetEntityAttribute(
+int_t		DECL STDC	engiGetEntityAttributeByIndex(
 									int_t					entity,
 									int_t					index,
+									bool					countedWithParents,
+									bool					countedWithInverse
+								);
+
+//
+//		engiGetAttributeTraits                       (http://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
+//				int_t					attribute								IN
+//				char					** name								    OUT
+//				int_t					* definingEntity					    OUT
+//				bool					* inverse							    OUT
+//				enum_express_attr_type	* attrType							    OUT
+//				int_t					* domainEntity						    OUT
+// 				int_t					* aggregationDescriptor				    OUT
+//				bool					* optional							    OUT
+//				bool					* unique							    OUT
+//
+//
+//
+void		DECL STDC	engiGetAttributeTraits(
+									int_t					attribute,
 									const char				** name,
 									int_t					* definingEntity,
 									bool					* inverse,

@@ -2,7 +2,7 @@
 #include "stringCreation.h"
 
 
-CString	NestedPropertyValue(int_t ifcEntityInstance, wchar_t * propertyName, int_t propertyType, int_t * ifcAggregate)
+CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyName, int_t propertyType, int_t * ifcAggregate)
 {
 	CString	rValue = 0;
 

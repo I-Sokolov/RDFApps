@@ -10,9 +10,10 @@
 
 // CInstanceInfo
 
-IMPLEMENT_DYNCREATE(CAttributesView, CEditView)
+IMPLEMENT_DYNCREATE(CAttributesView, CFormView)
 
 CAttributesView::CAttributesView()
+	: CFormView(IDD_PropertiesView)
 {
 
 }
@@ -21,7 +22,14 @@ CAttributesView::~CAttributesView()
 {
 }
 
-BEGIN_MESSAGE_MAP(CAttributesView, CEditView)
+void CAttributesView::DoDataExchange(CDataExchange* pDX)
+{
+	CFormView::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_PROPERTYGRID, m_wndProps);
+}
+
+
+BEGIN_MESSAGE_MAP(CAttributesView, CFormView)
 	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
@@ -31,13 +39,13 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CAttributesView::AssertValid() const
 {
-	CEditView::AssertValid();
+	CFormView::AssertValid();
 }
 
 #ifndef _WIN32_WCE
 void CAttributesView::Dump(CDumpContext& dc) const
 {
-	CEditView::Dump(dc);
+	CFormView::Dump(dc);
 }
 #endif
 #endif //_DEBUG
@@ -47,11 +55,8 @@ void CAttributesView::Dump(CDumpContext& dc) const
 
 int CAttributesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CEditView::OnCreate(lpCreateStruct) == -1)
+	if (CFormView::OnCreate(lpCreateStruct) == -1)
 		return -1;
-
-	GetEditCtrl().SetReadOnly();
-	//GetEditCtrl().ModifyStyle(0, ES_MULTILINE | ES_READONLY);
 
 	return 0;
 }
@@ -59,13 +64,24 @@ int CAttributesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CAttributesView::OnInitialUpdate()
 {
-	CEditView::OnInitialUpdate();
+	CFormView::OnInitialUpdate();
+
+	CMFCHeaderCtrl& header = m_wndProps.GetHeaderCtrl();
+	ASSERT(2 == header.GetItemCount());
+
+	HDITEMW item;
+	memset(&item, 0, sizeof(item));
+	item.mask = HDI_TEXT;
+	item.pszText = L"Attribute";
+	header.SetItem(0, &item);
+
+	//m_wndProps.
 }
 
 
 void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
 {
-	SetWindowText(L"");
+	m_wndProps.RemoveAll();
 
 	auto pTree  = GetViewerDoc()->GetModelTreeView();
 	if (!pTree) {
@@ -78,9 +94,81 @@ void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*
 		return;
 	}
 
-	auto text = CreateToolTipText(pInstance->ifcInstance);
-	text.Replace (L"\n", L"\r\n");
-	SetWindowText(text);
+	AddStepId(pInstance->ifcInstance);
+
+	int_t	entity = sdaiGetInstanceType(pInstance->ifcInstance);
+	ASSERT(entity); if (!entity) return;
+
+	AddEntityName(entity);
+
+	std::set<int_t> visitedEntities;
+	AddAttributes(entity, pInstance->ifcInstance, visitedEntities);
+
+	Invalidate();
+}
+
+void CAttributesView::AddStepId(int_t instance)
+{
+	int_t nId = internalGetP21Line(instance);
+	CString strId;
+	strId.Format(L"%lld", nId);
+
+	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(L"#", strId);
+	m_wndProps.AddProperty(pProp);
+}
+
+void CAttributesView::AddEntityName(int_t entity)
+{
+	wchar_t* entityName = nullptr;
+	engiGetEntityName(entity, sdaiUNICODE, (const char**) &entityName);
+	CMFCPropertyGridProperty* pProp = new CMFCPropertyGridProperty(L"Entity", entityName);
+	m_wndProps.AddProperty(pProp);
+}
+
+void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t>& visitedEntities)
+{
+	if (!visitedEntities.insert(entity).second) {
+		return; //already here
+	}
+
+	auto NP = engiGetEntityNoParents(entity);
+	for (int_t ip = 0; ip < NP; ip++) {
+		auto parent = engiGetEntityParentEx(entity, ip);
+		AddAttributes(parent, instance, visitedEntities);
+	}
+
+	auto NA = engiGetEntityNoAttributesEx(entity, false, true);	
+	if (NA) {
+		const wchar_t* entityName = nullptr;
+		engiGetEntityName(entity, sdaiUNICODE, (const char**) &entityName);
+
+		auto pSet = new CMFCPropertyGridProperty(entityName);
+
+		for (int_t ia = 0; ia < NA; ia++) {
+			auto attr = engiGetEntityAttributeByIndex(entity, ia, false, true);
+
+			const char* attrName = nullptr;
+			bool inverse = false;
+			engiGetAttributeTraits(attr, &attrName, nullptr, &inverse, nullptr, nullptr, nullptr, nullptr, nullptr);
+
+			CString attrIndName;
+			if (!inverse) {
+				auto ind = engiGetEntityAttributeIndexEx(entity, (const char*) (const wchar_t*) CString(attrName), true, false);
+				attrIndName.Format(L"%lld: %hs", ind+1, attrName);
+			}
+			else {
+				attrIndName.Format(L"INV: %hs", attrName);
+			}
+
+			auto propType = engiGetAttributeType(attr);
+			auto value = NestedPropertyValue(instance, CString(attrName), propType, 0);
+
+			CMFCPropertyGridProperty* pProp(new CMFCPropertyGridProperty(attrIndName, value));
+			pSet->AddSubItem(pProp);
+		}
+
+		m_wndProps.AddProperty(pSet);
+	}
 }
 
 
