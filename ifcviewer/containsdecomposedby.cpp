@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "containsdecomposedby.h"
 
-
+#define PRODUCE_FLAT_TREE 1
 
 extern	STRUCT_TREE_ITEM	* topTreeItem, * topModelTreeItem, * topSpaceBoundaryTreeItem, * topNonReferencedTreeItem, * topGroupTreeItem;
 extern	STRUCT__IFC__OBJECT	* ifcObjectsLinkedList;
@@ -17,6 +17,10 @@ extern	int_t			ifcSpace_TYPE;
 
 static void AddChild(STRUCT_TREE_ITEM* parent, STRUCT_TREE_ITEM* child)
 {
+	if (parent == child) {
+		return;
+	}
+
 	if (!parent->child) {
 		parent->child = child;
 	}
@@ -37,6 +41,13 @@ void PopulateTreeItems_ifcObjectDecomposedBy(
 						)
 {
 	STRUCT_TREE_ITEM	* decomposedByTreeItem = nullptr, ** ppChild = nullptr;
+	
+#if PRODUCE_FLAT_TREE
+	decomposedByTreeItem = parent;
+	ppChild = &decomposedByTreeItem->child;
+	while (*ppChild)
+		ppChild = &((*ppChild)->next);
+#endif
 
 	{
 		int_t	* ifcRelDecomposesInstances = nullptr, ifcRelDecomposesInstancesCnt;
@@ -120,6 +131,13 @@ void PopulateTreeItems_ifcObjectContains(
 {
 	STRUCT_TREE_ITEM	* containsTreeItem = nullptr, ** ppChild = nullptr;
 
+#if PRODUCE_FLAT_TREE
+	containsTreeItem = parent;
+	ppChild = &containsTreeItem->child;
+	while (*ppChild)
+		ppChild = &((*ppChild)->next);
+#endif
+
 	int_t	* ifcRelContainedInSpatialStructureInstances = nullptr;
 	sdaiGetAttrBN(ifcObjectInstance, (char*) L"ContainsElements", sdaiAGGR, &ifcRelContainedInSpatialStructureInstances);
 	int_t	ifcRelContainedInSpatialStructureInstancesCnt = sdaiGetMemberCount(ifcRelContainedInSpatialStructureInstances);
@@ -173,7 +191,7 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 	AddChild (treeItem, CreateTreeItem__GEOMETRY(treeItem));
 #endif
 
-#if 1
+#if 0
 	AddChild (treeItem, CreateTreeItem__PROPERTIES(treeItem));
 #endif
 
