@@ -501,6 +501,28 @@ void	InitializeTreeItems(
 					} else {
 						ASSERT(treeItemSelectable->type == TREE_ITEM_IFCINSTANCE);
 					}
+				
+#if PRODUCE_FLAT_TREE //there is no geoemetry child item in this case
+					if (treeItemSelectable->type == TREE_ITEM_IFCINSTANCE) {
+						auto pInstance = (STRUCT_TREE_ITEM_IFCINSTANCE*) treeItemSelectable;
+						if (pInstance->ifcInstance && sdaiIsKindOfBN(pInstance->ifcInstance, (char*)L"IfcProduct")) {
+							switch (treeItemSelectable->selectState) {
+								case TI_CHECKED:
+									checked = true;
+									break;
+								case TI_UNCHECKED:
+									unchecked = true;
+									break;
+								case TI_NONE:
+									break;
+								default:
+									ASSERT(false);
+									break;
+							}
+
+						}
+					}
+#endif
 
 					if (checked) {
 						(*pChecked) = true;

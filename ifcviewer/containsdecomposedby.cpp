@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "containsdecomposedby.h"
 
-#define PRODUCE_FLAT_TREE 1
-
 extern	STRUCT_TREE_ITEM	* topTreeItem, * topModelTreeItem, * topSpaceBoundaryTreeItem, * topNonReferencedTreeItem, * topGroupTreeItem;
 extern	STRUCT__IFC__OBJECT	* ifcObjectsLinkedList;
 
@@ -187,11 +185,8 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 
 	STRUCT_TREE_ITEM	* treeItem = CreateTreeItem__IFCINSTANCE_model(parent, ifcModel, ifcObjectInstance);
 
-#if 1
+#if !PRODUCE_FLAT_TREE
 	AddChild (treeItem, CreateTreeItem__GEOMETRY(treeItem));
-#endif
-
-#if 0
 	AddChild (treeItem, CreateTreeItem__PROPERTIES(treeItem));
 #endif
 

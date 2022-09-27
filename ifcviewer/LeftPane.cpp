@@ -369,8 +369,10 @@ void	CLeftPane::UpdateChildren(
 			case TREE_ITEM_DECOMPOSEDBY:
 			case TREE_ITEM_GROUPEDBY:
 			case TREE_ITEM_SPACEBOUNDARIES:
-			case TREE_ITEM_IFCINSTANCE:
 			case TREE_ITEM_IFCENTITY:
+#if !PRODUCE_FLAT_TREE
+			case TREE_ITEM_IFCINSTANCE:
+#endif 
 				{
 					if (treeItemSelectable->selectState != selectState  &&  treeItemSelectable->selectState != TI_NONE) {
 						treeItemSelectable->selectState = selectState;
@@ -382,6 +384,39 @@ void	CLeftPane::UpdateChildren(
 					}
 				}
 				break;
+#if PRODUCE_FLAT_TREE
+			case TREE_ITEM_IFCINSTANCE:
+			{
+				if (treeItemSelectable->selectState != selectState && treeItemSelectable->selectState != TI_NONE) {
+					auto pInstance = (STRUCT_TREE_ITEM_IFCINSTANCE*) treeItemSelectable;
+					if (pInstance->ifcObject) {
+						//	THIS IS NOT ALWAYS TRUE AS SPACEBOUNDARY TREE CONTAINS THE SAME OBJECT MORE THAN ONCE							ASSERT(((STRUCT_TREE_ITEM_IFCINSTANCE*)treeItemSelectable->parent)->ifcObject->selectState == treeItemSelectable->selectState);
+						pInstance->ifcObject->selectState = selectState;
+						treeItemSelectable->selectState = selectState;
+						if (treeItemSelectable->hTreeItem) {
+							GetTreeCtrl().SetItemImage(treeItemSelectable->hTreeItem, selectState, selectState);
+						}
+					}
+					else {
+						ASSERT(treeItemSelectable->selectState == TI_NONE);
+					}
+				}
+				else {
+					auto pInstance = (STRUCT_TREE_ITEM_IFCINSTANCE*) treeItemSelectable;
+					if (pInstance->ifcObject) {
+						ASSERT(pInstance->ifcObject->selectState == treeItemSelectable->selectState);
+					}
+					else {
+						ASSERT(treeItemSelectable->selectState == TI_NONE);
+					}
+				}
+
+				if (treeItemSelectable->child == nullptr) {
+					UpdateChildren(treeItemSelectable, selectState);
+				}
+			}
+			break;
+#endif 
 			case TREE_ITEM_GEOMETRY:
 				{
 					if (treeItemSelectable->selectState != selectState  &&  treeItemSelectable->selectState != TI_NONE) {
