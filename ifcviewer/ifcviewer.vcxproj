@@ -222,6 +222,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="containsdecomposedby.h" />
     <ClInclude Include="DesignTree.h" />
+    <ClInclude Include="DlgReferenceTree.h" />
     <ClInclude Include="dx9\include\d3d9.h" />
     <ClInclude Include="dx9\include\d3dx9.h" />
     <ClInclude Include="generic.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="containsdecomposedby.cpp" />
     <ClCompile Include="DesignTree.cpp" />
+    <ClCompile Include="DlgReferenceTree.cpp" />
     <ClCompile Include="generic.cpp" />
     <ClCompile Include="GenericTreeItem.cpp" />
     <ClCompile Include="headerInfo.cpp" />

@@ -55,4 +55,7 @@ private:
 	CWnd* GetRightPane();
 
 	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
+public:
+	afx_msg void OnViewReferences();
+	afx_msg void OnUpdateViewReferences(CCmdUI* pCmdUI);
 };

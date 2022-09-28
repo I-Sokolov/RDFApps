@@ -53,7 +53,6 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
 	AddView(RUNTIME_CLASS(CPropertiesView), L"IFC Properties");
-	AddView(RUNTIME_CLASS(CEditView), L"IFC Relationships");
 	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
 
 	//GetTabControl().EnableInPlaceEdit(false);

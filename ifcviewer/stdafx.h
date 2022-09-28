@@ -42,6 +42,7 @@
 
 
 #include <afxcview.h>
+#include <afxdialogex.h>
 
 #include <memory>
 #include <list>

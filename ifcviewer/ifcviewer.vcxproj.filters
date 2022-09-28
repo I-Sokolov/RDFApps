@@ -161,6 +161,9 @@
     <ClInclude Include="PropertiesView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DlgReferenceTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ifcviewer.cpp">
@@ -239,6 +242,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PropertiesView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgReferenceTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

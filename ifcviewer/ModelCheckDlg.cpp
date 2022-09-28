@@ -263,9 +263,9 @@ void CModelCheckDlg::OnActivateListItem(int iItem)
 }
 
 
-void CModelCheckDlg::OnDblclkIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
+void CModelCheckDlg::OnDblclkIssuelist(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	//LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	//OnActivateListItem(pNMItemActivate->iItem);
 	*pResult = 0;
 }

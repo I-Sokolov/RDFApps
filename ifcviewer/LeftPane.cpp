@@ -6,6 +6,7 @@
 #include "generic.h"
 #include "unit.h"
 #include "stringCreation.h"
+#include "DlgReferenceTree.h"
 
 #include "ifcengine\include\ifcengine.h"
 
@@ -46,6 +47,8 @@ BEGIN_MESSAGE_MAP(CLeftPane, CTreeView)
 	ON_NOTIFY_REFLECT(TVN_GETINFOTIP, OnGetInfoTip)
 	ON_NOTIFY_REFLECT(TVN_ITEMEXPANDING, OnBeforeExpand)
 	ON_NOTIFY_REFLECT(TVN_SELCHANGED, OnSelectionChanged) 
+	ON_COMMAND(ID_VIEW_REFERENCES, &CLeftPane::OnViewReferences)
+	ON_UPDATE_COMMAND_UI(ID_VIEW_REFERENCES, &CLeftPane::OnUpdateViewReferences)
 END_MESSAGE_MAP()
 
 
@@ -1043,4 +1046,21 @@ bool CLeftPane::SelectInstance(int_t instance)
 /*	if (highLightedIfcObject) {
 		this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_SELECT_ITEM, 0, 0);
 	}*/
+}
+
+
+void CLeftPane::OnViewReferences()
+{
+	auto pInstance = GetSelectedInstance();
+	if (pInstance) {
+		auto pDlg = new CDlgReferenceTree(pInstance->ifcInstance, AfxGetMainWnd());
+		pDlg->Create(IDD_REFERENCEVIEW);
+		pDlg->ShowWindow(SW_SHOW);
+	}
+}
+
+
+void CLeftPane::OnUpdateViewReferences(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(GetSelectedInstance()!=NULL);
 }
