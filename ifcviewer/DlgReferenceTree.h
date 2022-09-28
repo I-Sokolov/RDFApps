@@ -24,7 +24,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
-	void CheckInsertReferencingInstance(int_t instance, int_t referencedInstance, HTREEITEM hParent);
+	void CheckInsertReferencingInstance(int_t instance, int_t referencedInstance, HTREEITEM hParent, int& childCounter, int childLimit);
 
 private:
 	virtual BOOL OnInitDialog();
@@ -33,13 +33,19 @@ private:
 
 	afx_msg void OnDeleteitemReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDblclkReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnSelchangedReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
-	void InsertTreeItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent);
-	void InsertReferencedInstances(HTREEITEM hItem, TreeItemData* pData);
-	void InsertReferencingInstances(HTREEITEM hItem, TreeItemData* pData);
-	void InsertAggregationElements(HTREEITEM hItem, TreeItemData* pData);
+	void InsertRegularItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent);
+	void InsertAddMoreItem(HTREEITEM hParent);
+
+	int AddChildItemsWithNewLimit(HTREEITEM hItem, TreeItemData& data);
+	void IncreaseChildLimit(HTREEITEM hAddItem);
+
+	void InsertReferencedInstances(HTREEITEM hItem, TreeItemData& data);
+	void InsertReferencingInstances(HTREEITEM hItem, TreeItemData& data);
+	void InsertAggregationElements(HTREEITEM hItem, TreeItemData& data);
 
 	bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance = 0);
 

@@ -7,19 +7,23 @@
 #include "IFCEngineInteract.h"
 #include "DlgReferenceTree.h"
 
+#define CHILD_LIMIT1	5
+#define CHILD_LIMIT2    10
+
 //
 
 struct TreeItemData
 {
-	enum class Type	{Undef, Instance, Aggregation, AddMore};
+	enum class Type	{Regular, AddMore};
 
-	Type type = Type::Undef;
+	Type type = Type::Regular;
 
 	int_t instance = 0;		//this item reflects instance
 	int_t* aggregation = 0; //this item reflects aggregation
 
-	HTREEITEM cyclicParent = NULL;
-	bool expanded = false;  //item was expanded
+	HTREEITEM cyclicParent = NULL; 
+	
+	int childLimit = 0;  //item was expanded
 };
 
 // CDlgReferenceTree dialog
@@ -47,6 +51,7 @@ BEGIN_MESSAGE_MAP(CDlgReferenceTree, CDialogEx)
 	ON_NOTIFY(TVN_DELETEITEM, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnDeleteitemReferenceTree)
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnItemexpandingReferenceTree)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnSelchangedReferenceTree)
+	ON_NOTIFY(NM_DBLCLK, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnDblclkReferenceTree)
 END_MESSAGE_MAP()
 
 
@@ -64,14 +69,14 @@ BOOL CDlgReferenceTree::OnInitDialog()
 	m_refDir.Create(IDB_REFERENCE_DIRECTION, 16, 1, RGB(255, 255, 255));
 	m_wndTree.SetImageList(&m_refDir, TVSIL_NORMAL);
 
-	InsertTreeItem (m_rootInstance, nullptr, 0, false, TVI_ROOT);
+	InsertRegularItem (m_rootInstance, nullptr, 0, false, TVI_ROOT);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
 }
 
 
-void CDlgReferenceTree::InsertTreeItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent)
+void CDlgReferenceTree::InsertRegularItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent)
 {	
 	HTREEITEM hCyclicParent = FindParentWithInstance(hParent, instance);
 	if (hCyclicParent && inverseReference) {
@@ -133,9 +138,18 @@ void CDlgReferenceTree::InsertTreeItem(int_t instance, int_t* aggregation, int_t
 	m_wndTree.SetItemImage(hItem, image, image);
 
 	if (!pData->cyclicParent) {
-		auto hAdd = m_wndTree.InsertItem(L"Double-click to see more...", hItem);
-		m_wndTree.SetItemImage(hAdd, 3, 3);
+		InsertAddMoreItem(hItem);
 	}
+}
+
+void CDlgReferenceTree::InsertAddMoreItem(HTREEITEM hParent)
+{
+	auto hAdd = m_wndTree.InsertItem(L"Double-click to see more...", hParent);
+	m_wndTree.SetItemImage(hAdd, 4, 4);
+
+	auto pData = new TreeItemData;
+	pData->type = TreeItemData::Type::AddMore;
+	m_wndTree.SetItemData(hAdd, (DWORD_PTR) pData);
 }
 
 
@@ -162,14 +176,76 @@ void CDlgReferenceTree::OnDeleteitemReferenceTree(NMHDR* pNMHDR, LRESULT* pResul
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 	
-	auto data = m_wndTree.GetItemData(pNMTreeView->itemOld.hItem);
-
-	if (data) {
-		auto pData = (TreeItemData*) data;
-		delete pData;
+	if (pNMTreeView->itemOld.mask & TVIF_HANDLE) {
+		auto data = m_wndTree.GetItemData(pNMTreeView->itemOld.hItem);
+		if (data) {
+			auto pData = (TreeItemData*) data;
+			delete pData;
+		}
+	}
+	else {
+		assert(0);
 	}
 
 	*pResult = 0;
+}
+
+int CDlgReferenceTree::AddChildItemsWithNewLimit(HTREEITEM hItem, TreeItemData& data)
+{
+	int oldChilds = 0;
+
+	if (data.type == TreeItemData::Type::Regular) {
+
+		while (auto hStubChild = m_wndTree.GetChildItem(hItem)) {
+			oldChilds++;
+			m_wndTree.DeleteItem(hStubChild);
+		}
+
+		if (data.instance) {
+			InsertReferencedInstances(hItem, data);
+			InsertReferencingInstances(hItem, data);
+		}
+
+		if (data.aggregation) {
+			InsertAggregationElements(hItem, data);
+		}
+	}
+	else assert(false);
+
+	return oldChilds;
+}
+
+void CDlgReferenceTree::IncreaseChildLimit(HTREEITEM hAddItem)
+{
+	auto hItem = m_wndTree.GetParentItem(hAddItem);
+	assert(hItem); if (!hItem) return;
+
+	auto dwdata = m_wndTree.GetItemData(hItem);
+	assert(dwdata); if (!dwdata) return;
+
+	TreeItemData& data = *((TreeItemData*) dwdata);
+	assert(data.type == TreeItemData::Type::Regular); if (data.type != TreeItemData::Type::Regular) return;
+
+	m_wndTree.SelectItem(hItem);
+
+	if (data.childLimit < CHILD_LIMIT2)
+		data.childLimit = CHILD_LIMIT2;
+	else
+		data.childLimit *= 10;
+
+	auto childNum = AddChildItemsWithNewLimit(hItem, data);
+
+	//set selection
+	auto hSelect = m_wndTree.GetChildItem(hItem);
+	
+	while (hSelect && childNum > 1) {
+		hSelect = m_wndTree.GetNextSiblingItem(hSelect);
+		childNum--;
+	}
+
+	if (hSelect) {
+		m_wndTree.SelectItem(hSelect);
+	}
 }
 
 
@@ -177,28 +253,15 @@ void CDlgReferenceTree::OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pRe
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
 
-	auto hItem = pNMTreeView->itemNew.hItem;
-	auto data = m_wndTree.GetItemData(hItem);
-	if (data) {
-		auto pData = (TreeItemData*) data;
-		if (pData && !pData->expanded) {
-			pData->expanded = true;
-			
-			auto hStubChild = m_wndTree.GetChildItem(hItem);
-			if (hStubChild) {
-				m_wndTree.DeleteItem(hStubChild);
-			}
-			else {
-				assert(false);
-			}
-
-			if (pData->instance) {
-				InsertReferencedInstances(hItem, pData);
-				InsertReferencingInstances(hItem, pData);
-			}
-
-			if (pData->aggregation) {
-				InsertAggregationElements(hItem, pData);
+	if (pNMTreeView->itemNew.mask & TVIF_HANDLE) {
+		auto hItem = pNMTreeView->itemNew.hItem;
+		auto data = m_wndTree.GetItemData(hItem);
+		if (data) {
+			auto pData = (TreeItemData*) data;
+			if (pData && pData->type == TreeItemData::Type::Regular && !pData->childLimit) {
+				//first expansion
+				pData->childLimit = CHILD_LIMIT1;
+				AddChildItemsWithNewLimit(hItem, *pData);
 			}
 		}
 	}
@@ -206,9 +269,25 @@ void CDlgReferenceTree::OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pRe
 	*pResult = 0;
 }
 
-void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData* pData)
+void CDlgReferenceTree::OnDblclkReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	auto entity = sdaiGetInstanceType(pData->instance);
+	auto hItem = m_wndTree.GetSelectedItem();
+	if (hItem) {
+		auto data = m_wndTree.GetItemData(hItem);
+		if (data) {
+			auto pData = (TreeItemData*) data;
+			if (pData->type == TreeItemData::Type::AddMore) {
+				IncreaseChildLimit(hItem);
+			}
+		}
+	}
+	*pResult = 0;
+}
+
+
+void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData& data)
+{
+	auto entity = sdaiGetInstanceType(data.instance);
 
 	auto NAttr = engiGetEntityNoAttributesEx(entity, true, false);
 	for (int i = 0; i < NAttr; i++) {
@@ -218,9 +297,9 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData*
 			case sdaiINSTANCE:
 			{
 				int_t inst = 0;
-				sdaiGetAttr(pData->instance, (void*) attr, sdaiINSTANCE, &inst);
+				sdaiGetAttr(data.instance, (void*) attr, sdaiINSTANCE, &inst);
 				if (inst) {
-					InsertTreeItem(inst, 0, attr, false, hItem);
+					InsertRegularItem(inst, 0, attr, false, hItem);
 				}
 				break;
 			}
@@ -228,9 +307,9 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData*
 			case sdaiAGGR:
 			{
 				int_t* aggr = nullptr;
-				sdaiGetAttr(pData->instance, (void*) attr, sdaiAGGR, &aggr);
+				sdaiGetAttr(data.instance, (void*) attr, sdaiAGGR, &aggr);
 				if (aggr && AggregationContainsInstance(aggr)) {
-					InsertTreeItem(0, aggr, attr, false, hItem);
+					InsertRegularItem(0, aggr, attr, false, hItem);
 				}
 				break;
 			}
@@ -238,20 +317,20 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData*
 	}
 }
 
-void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData* pData)
+void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData& data)
 {
 	int_t sdaiType = -1;
-	engiGetAggrType(pData->aggregation, &sdaiType);
+	engiGetAggrType(data.aggregation, &sdaiType);
 
-	auto N = sdaiGetMemberCount(pData->aggregation);
-	for (int_t i = 0; i < N; i++) {
-		switch (sdaiType) 			{
+	auto N = sdaiGetMemberCount(data.aggregation);
+	for (int_t i = 0; i < N && i < data.childLimit; i++) {
+		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{
 				int_t inst = 0;
-				engiGetAggrElement(pData->aggregation, i, sdaiINSTANCE, &inst);
+				engiGetAggrElement(data.aggregation, i, sdaiINSTANCE, &inst);
 				if (inst) {
-					InsertTreeItem(inst, nullptr, 0, false, hItem);
+					InsertRegularItem(inst, nullptr, 0, false, hItem);
 				}
 				break;
 			}
@@ -259,9 +338,9 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData*
 			case sdaiAGGR:
 			{
 				int_t* aggr = nullptr;
-				engiGetAggrElement(pData->aggregation, i, sdaiAGGR, &aggr);
+				engiGetAggrElement(data.aggregation, i, sdaiAGGR, &aggr);
 				if (aggr) {
-					InsertTreeItem(0, aggr, 0, false, hItem);
+					InsertRegularItem(0, aggr, 0, false, hItem);
 				}
 				break;
 			}
@@ -275,6 +354,9 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData*
 		}
 	}
 	
+	if (N > data.childLimit) {
+		InsertAddMoreItem(hItem);
+	}
 }
 
 bool CDlgReferenceTree::AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
@@ -316,7 +398,7 @@ bool CDlgReferenceTree::AggregationContainsInstance(int_t* aggregation, int_t ch
 	return false;
 }
 
-void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t referencedInstance,HTREEITEM hParent)
+void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t referencedInstance,HTREEITEM hParent, int& childCounter, int childLimit)
 {
 	int_t refAttr = 0;
 
@@ -350,34 +432,44 @@ void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t ref
 	}
 
 	if (refAttr) {
-		InsertTreeItem(instance, 0, refAttr, true, hParent);
+		childCounter++;
+		if (childCounter < childLimit) {
+			InsertRegularItem(instance, 0, refAttr, true, hParent);
+		}
+		else {
+			InsertAddMoreItem(hParent);
+		}
 	}
 }
 
 
 struct ReferenceSearch : public RDF::CModelChecker::InstanceVisitor
 {
-	ReferenceSearch (CDlgReferenceTree& me, int_t refInstance, HTREEITEM hParent)
+	ReferenceSearch (CDlgReferenceTree& me, int_t refInstance, HTREEITEM hParent, int childLimit)
 		: m_me (me)
 		, m_refInstance (refInstance)
 		, m_hParent (hParent)
+		, m_childCounter (0)
+		, m_childLimit (childLimit)
 	{}
 
 	virtual void OnVisitInstance(int_t instance) override
 	{
-		if (instance != m_refInstance) {
-			m_me.CheckInsertReferencingInstance(instance, m_refInstance, m_hParent);
+		if (m_childCounter < m_childLimit && instance != m_refInstance) {
+			m_me.CheckInsertReferencingInstance(instance, m_refInstance, m_hParent, m_childCounter, m_childLimit);
 		}
 	}
 
 	CDlgReferenceTree&	m_me;
 	int_t				m_refInstance;
 	HTREEITEM           m_hParent;
+	int					m_childCounter;
+	int                 m_childLimit;
 };
 
-void CDlgReferenceTree::InsertReferencingInstances(HTREEITEM hItem, TreeItemData* pData)
+void CDlgReferenceTree::InsertReferencingInstances(HTREEITEM hItem, TreeItemData& data)
 {
-	ReferenceSearch visitor (*this, pData->instance, hItem);
+	ReferenceSearch visitor (*this, data.instance, hItem, data.childLimit);
 	RDF::CModelChecker::VisitAllInstances(globalIfcModel, visitor);
 }
 
@@ -401,3 +493,5 @@ void CDlgReferenceTree::PostNcDestroy()
 	CDialogEx::PostNcDestroy();
 	delete this;
 }
+
+
