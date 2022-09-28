@@ -5,6 +5,7 @@
 #include "ifcviewer.h"
 #include "stringCreation.h"
 #include "IFCEngineInteract.h"
+#include "ifcviewerDoc.h"
 #include "DlgReferenceTree.h"
 
 #define CHILD_LIMIT1	5
@@ -62,7 +63,7 @@ BOOL CDlgReferenceTree::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	auto hIcon = ::LoadIcon(NULL, MAKEINTRESOURCE(IDI_QUESTION));
+	auto hIcon = ::LoadIcon(NULL, IDI_QUESTION);
 	SetIcon(hIcon, true);
 	SetIcon(hIcon, false);
 
@@ -269,7 +270,7 @@ void CDlgReferenceTree::OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pRe
 	*pResult = 0;
 }
 
-void CDlgReferenceTree::OnDblclkReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
+void CDlgReferenceTree::OnDblclkReferenceTree(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 	auto hItem = m_wndTree.GetSelectedItem();
 	if (hItem) {
@@ -480,7 +481,27 @@ void CDlgReferenceTree::InsertReferencingInstances(HTREEITEM hItem, TreeItemData
 void CDlgReferenceTree::OnSelchangedReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
-	// TODO: Add your control notification handler code here
+	
+	if (pNMTreeView->itemNew.mask & TVIF_HANDLE) {
+		auto hItem = pNMTreeView->itemNew.hItem;
+		auto data = m_wndTree.GetItemData(hItem);
+		if (data) {
+			auto pData = (TreeItemData*) data;
+			if (pData && pData->type == TreeItemData::Type::Regular && pData->instance) {
+				auto pMainWnd = DYNAMIC_DOWNCAST(CFrameWnd, AfxGetMainWnd());
+				if (pMainWnd) {
+					auto pDoc = pMainWnd->GetActiveDocument();
+					if (pDoc) {
+						CifcviewerDoc::ActiveInstanceHint hint(pData->instance);
+						pDoc->UpdateAllViews(nullptr, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
+					}
+					else assert(false);
+				}
+				else assert(false);
+			}
+		}
+	}
+
 	*pResult = 0;
 }
 

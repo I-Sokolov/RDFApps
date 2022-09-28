@@ -98,23 +98,20 @@ void CIssuesView::OnInitialUpdate()
 }
 
 
-void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
+	int_t instance = 0;
+	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
+		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
+		if (pInstance) {
+			instance = pInstance->GetIntstance();
+		}
+	}
+	if (!instance)
+		return;
+
 	auto& wndList = GetListCtrl();
-	wndList.Invalidate();
-
 	wndList.DeleteAllItems();
-
-	auto pTree = GetViewerDoc()->GetModelTreeView();
-	if (!pTree) {
-		ASSERT(false);
-		return;
-	}
-
-	auto pInstance = pTree->GetSelectedInstance();
-	if (!pInstance) {
-		return;
-	}
 
 	//auto stepid = internalGetP21Line (pInstance->ifcInstance);
 
@@ -125,7 +122,7 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHin
 
 	for (auto& issue : m_lstIssues) {
 
-		if (issue.RelatedInstances().find(pInstance->ifcInstance) != issue.RelatedInstances().end()) {
+		if (issue.RelatedInstances().find(instance) != issue.RelatedInstances().end()) {
 
 			CString id;
 			id.Format(L"%lld", issue.info.stepId);
@@ -170,6 +167,7 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHin
 		GetListCtrl().SetColumnWidth(i, rWidth[i] + 15 * GetSystemMetrics(SM_CXBORDER));
 	}
 
+	wndList.Invalidate();
 	Invalidate();
 }
 

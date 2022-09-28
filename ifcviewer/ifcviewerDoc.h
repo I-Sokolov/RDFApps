@@ -39,7 +39,16 @@ public:
 public:
 	enum class UpdateHint : LPARAM
 	{
-		SelectionChanged = 14
+		SetActiveInstance = 14
+	};
+
+	class ActiveInstanceHint : public CObject
+	{
+	public:
+		ActiveInstanceHint(int_t instance) : m_instance(instance) {}
+		int_t GetIntstance() { return m_instance; }
+	private:
+		int_t m_instance;
 	};
 
 protected:

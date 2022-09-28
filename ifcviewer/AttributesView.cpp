@@ -81,32 +81,31 @@ void CAttributesView::OnInitialUpdate()
 }
 
 
-void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
-	m_wndProps.RemoveAll();
+	if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::SetActiveInstance) {		
+		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
+		
+		if (pInstance) {
+			auto instance = pInstance->GetIntstance();
 
-	auto pTree  = GetViewerDoc()->GetModelTreeView();
-	if (!pTree) {
-		ASSERT(false);
-		return;
+			if (instance) {
+				m_wndProps.RemoveAll();
+
+				AddStepId(instance);
+
+				int_t	entity = sdaiGetInstanceType(instance);
+				ASSERT(entity); if (!entity) return;
+
+				AddEntityName(entity);
+
+				std::set<int_t> visitedEntities;
+				AddAttributes(entity, instance, visitedEntities);
+
+				Invalidate();
+			}
+		}
 	}
-
-	auto pInstance = pTree->GetSelectedInstance();
-	if (!pInstance) {
-		return;
-	}
-
-	AddStepId(pInstance->ifcInstance);
-
-	int_t	entity = sdaiGetInstanceType(pInstance->ifcInstance);
-	ASSERT(entity); if (!entity) return;
-
-	AddEntityName(entity);
-
-	std::set<int_t> visitedEntities;
-	AddAttributes(entity, pInstance->ifcInstance, visitedEntities);
-
-	Invalidate();
 }
 
 void CAttributesView::AddStepId(int_t instance)

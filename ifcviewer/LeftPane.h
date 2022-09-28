@@ -23,9 +23,7 @@ public:
 #endif
 #endif
 
-public:
-	STRUCT_TREE_ITEM_IFCINSTANCE* GetSelectedInstance();
-	
+public:	
 	bool SelectInstance(int_t instance);
 
 public:
@@ -55,6 +53,9 @@ private:
 	CWnd* GetRightPane();
 
 	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
+	
+	STRUCT_TREE_ITEM_IFCINSTANCE* GetSelectedInstance();
+
 public:
 	afx_msg void OnViewReferences();
 	afx_msg void OnUpdateViewReferences(CCmdUI* pCmdUI);

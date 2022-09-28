@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "ifcviewer.h"
 #include "LeftPane.h"
+#include "IFCEngineInteract.h"
 #include "PropertiesView.h"
 
 
@@ -67,30 +68,29 @@ void CPropertiesView::OnInitialUpdate()
 }
 
 
-void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
-	m_wndProps.RemoveAll();
+	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
+		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
 
-	auto pTree = GetViewerDoc()->GetModelTreeView();
-	if (!pTree) {
-		ASSERT(false);
-		return;
+		if (pInstance) {
+			auto instance = pInstance->GetIntstance();
+
+			if (instance) {
+				m_wndProps.RemoveAll();
+
+				STRUCT__PROPERTY__SET* propertySets = nullptr;
+				CreateIfcInstanceProperties(globalIfcModel, &propertySets, instance, units);
+				if (propertySets) {
+					AddPropertySet(propertySets);
+
+					DeleteIfcInstanceProperties(propertySets);
+				}
+
+				Invalidate();
+			}
+		}
 	}
-
-	auto pInstance = pTree->GetSelectedInstance();
-	if (!pInstance) {
-		return;
-	}
-
-	STRUCT__PROPERTY__SET* propertySets = nullptr;
-	CreateIfcInstanceProperties(pInstance->ifcModel, &propertySets, pInstance->ifcInstance, units);
-	if (propertySets) {
-		AddPropertySet(propertySets);
-
-		DeleteIfcInstanceProperties(propertySets);
-	}
-
-	Invalidate();
 }
 
 void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet)

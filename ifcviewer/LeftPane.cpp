@@ -873,7 +873,11 @@ void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 	pResult = 0;
 	hItem = 0;
 
-	GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SelectionChanged);
+	auto pInstance = GetSelectedInstance();
+	if (pInstance) {
+		CifcviewerDoc::ActiveInstanceHint hint(pInstance->ifcInstance);
+		GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
+	}
 
 ////////////////////////////////////////	ASSERT(false);
 //	STRUCT__SELECTABLE__TREEITEM	* selectableTreeitem = (STRUCT__SELECTABLE__TREEITEM *) GetTreeCtrl().GetItemData(hItem);
