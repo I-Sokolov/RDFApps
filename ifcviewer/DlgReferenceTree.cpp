@@ -11,11 +11,14 @@
 
 struct TreeItemData
 {
+	enum class Type	{Undef, Instance, Aggregation, AddMore};
+
+	Type type = Type::Undef;
+
 	int_t instance = 0;		//this item reflects instance
 	int_t* aggregation = 0; //this item reflects aggregation
 
-	int_t attrToIgnore = 0; //ignore this attribute when expand this instance
-	
+	HTREEITEM cyclicParent = NULL;
 	bool expanded = false;  //item was expanded
 };
 
@@ -54,6 +57,9 @@ BOOL CDlgReferenceTree::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_refDir.Create(IDB_REFERENCE_DIRECTION, 16, 1, RGB(255, 255, 255));
+	m_wndTree.SetImageList(&m_refDir, TVSIL_NORMAL);
+
 	InsertTreeItem (m_rootInstance, nullptr, 0, false, TVI_ROOT);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -62,9 +68,7 @@ BOOL CDlgReferenceTree::OnInitDialog()
 
 
 void CDlgReferenceTree::InsertTreeItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent)
-{
-	//need to check cycles?
-
+{	
 	CString itemText;
 
 	if (instance) {
@@ -81,26 +85,69 @@ void CDlgReferenceTree::InsertTreeItem(int_t instance, int_t* aggregation, int_t
 		itemText.Format (L"[aggregation size %lld]", N);
 	}
 
+	CString attrName;
 	if (attr) {
-		const char* attrName = nullptr;
-		engiGetAttributeTraits(attr, &attrName, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
-		CString strName(attrName);
-		
-		itemText = strName + (inverseReference ? "<-" : ": ") + itemText;
+		const char* name = nullptr;
+		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+		attrName = name;
 	}
 
-	auto hItem = m_wndTree.InsertItem(itemText, hParent);
+	CString text;
+	if (inverseReference) {
+		text.Format(L"%s references parent by %s", itemText.GetString(), attrName.GetString());
+	}
+	else {
+		text.Format(L"%s: %s", attrName.GetString(), itemText.GetString());
+	}
+
+	auto hItem = m_wndTree.InsertItem(text, hParent);
 
 	auto pData = new TreeItemData;
 	pData->instance = instance;
 	pData->aggregation = aggregation;
-	if (attr && inverseReference) {
-		pData->attrToIgnore = attr;
+	
+	if (instance) {
+		pData->cyclicParent = FindParentWithInstance(hParent, instance);
 	}
+
 	m_wndTree.SetItemData(hItem, (DWORD_PTR) pData);
 
-	m_wndTree.InsertItem(L"... to be expanded ....", hItem);
+	int image = 0;
+	if (hParent != TVI_ROOT) {
+		if (pData->cyclicParent) {
+			image = 3;
+		}
+		else {
+			image = inverseReference ? 2 : 1;
+		}
+	}
+	m_wndTree.SetItemImage(hItem, image, image);
+
+	if (!pData->cyclicParent) {
+		auto hAdd = m_wndTree.InsertItem(L"Double-click to see more...", hItem);
+		m_wndTree.SetItemImage(hAdd, 3, 3);
+	}
 }
+
+
+HTREEITEM CDlgReferenceTree::FindParentWithInstance(HTREEITEM hParent, int_t instance)
+{
+	while (hParent && hParent != TVI_ROOT) {
+
+		auto data = m_wndTree.GetItemData(hParent);
+		if (data) {
+			auto pData = (TreeItemData*) data;
+			if (pData->instance == instance) {
+				return hParent;
+			}
+		}
+
+		hParent = m_wndTree.GetNextItem(hParent, TVGN_PARENT);
+	}
+
+	return nullptr;
+}
+
 
 void CDlgReferenceTree::OnDeleteitemReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
 {
@@ -157,28 +204,26 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData*
 	auto NAttr = engiGetEntityNoAttributesEx(entity, true, false);
 	for (int i = 0; i < NAttr; i++) {
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
-		if (attr != pData->attrToIgnore) {
-			auto sdaiType = engiGetAttributeType(attr);
-			switch (sdaiType) {
-				case sdaiINSTANCE:
-				{
-					int_t inst = 0;
-					sdaiGetAttr(pData->instance, (void*) attr, sdaiINSTANCE, &inst);
-					if (inst) {
-						InsertTreeItem (inst, 0, attr, false, hItem);
-					}
-					break;
+		auto sdaiType = engiGetAttributeType(attr);
+		switch (sdaiType) {
+			case sdaiINSTANCE:
+			{
+				int_t inst = 0;
+				sdaiGetAttr(pData->instance, (void*) attr, sdaiINSTANCE, &inst);
+				if (inst) {
+					InsertTreeItem(inst, 0, attr, false, hItem);
 				}
+				break;
+			}
 
-				case sdaiAGGR:
-				{
-					int_t* aggr = nullptr;
-					sdaiGetAttr(pData->instance, (void*) attr, sdaiAGGR, &aggr);
-					if (aggr && AggregationContainsInstance(aggr)) {
-						InsertTreeItem(0, aggr, attr, false, hItem);
-					}
-					break;
+			case sdaiAGGR:
+			{
+				int_t* aggr = nullptr;
+				sdaiGetAttr(pData->instance, (void*) attr, sdaiAGGR, &aggr);
+				if (aggr && AggregationContainsInstance(aggr)) {
+					InsertTreeItem(0, aggr, attr, false, hItem);
 				}
+				break;
 			}
 		}
 	}

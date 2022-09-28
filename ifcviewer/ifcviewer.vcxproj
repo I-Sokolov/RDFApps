@@ -291,6 +291,10 @@
   <ItemGroup>
     <ResourceCompile Include="ifcviewer.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\bitmap3.bmp" />
+    <Image Include="res\ReferenceDirection.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

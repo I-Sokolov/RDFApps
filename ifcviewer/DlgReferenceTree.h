@@ -28,6 +28,9 @@ public:
 
 private:
 	virtual BOOL OnInitDialog();
+	virtual void OnCancel();
+	virtual void PostNcDestroy();
+
 	afx_msg void OnDeleteitemReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnSelchangedReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
@@ -40,9 +43,12 @@ private:
 
 	bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance = 0);
 
+	HTREEITEM FindParentWithInstance(HTREEITEM hParent, int_t instance);
+
+
 private:
-	CTreeCtrl m_wndTree;
-	int_t m_rootInstance;
-	virtual void OnCancel();
-	virtual void PostNcDestroy();
+	CTreeCtrl	m_wndTree;
+	CImageList	m_refDir;
+	int_t		m_rootInstance;
+
 };
