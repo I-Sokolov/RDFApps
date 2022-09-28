@@ -279,6 +279,9 @@ void CDlgReferenceTree::OnDblclkReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
 			if (pData->type == TreeItemData::Type::AddMore) {
 				IncreaseChildLimit(hItem);
 			}
+			else if (pData->cyclicParent) {
+				m_wndTree.SelectItem(pData->cyclicParent);
+			}
 		}
 	}
 	*pResult = 0;
