@@ -57,6 +57,10 @@ BOOL CDlgReferenceTree::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	auto hIcon = ::LoadIcon(NULL, MAKEINTRESOURCE(IDI_QUESTION));
+	SetIcon(hIcon, true);
+	SetIcon(hIcon, false);
+
 	m_refDir.Create(IDB_REFERENCE_DIRECTION, 16, 1, RGB(255, 255, 255));
 	m_wndTree.SetImageList(&m_refDir, TVSIL_NORMAL);
 
@@ -69,6 +73,11 @@ BOOL CDlgReferenceTree::OnInitDialog()
 
 void CDlgReferenceTree::InsertTreeItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent)
 {	
+	HTREEITEM hCyclicParent = FindParentWithInstance(hParent, instance);
+	if (hCyclicParent && inverseReference) {
+		return; //do not include cyclic parent for inverse reference
+	}
+
 	CString itemText;
 
 	if (instance) {
