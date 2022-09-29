@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CDlgReferenceTree, CDialogEx)
 	ON_NOTIFY(TVN_ITEMEXPANDING, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnItemexpandingReferenceTree)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnSelchangedReferenceTree)
 	ON_NOTIFY(NM_DBLCLK, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnDblclkReferenceTree)
+	ON_NOTIFY(TVN_GETINFOTIP, IDC_REFERENCE_TREE, &CDlgReferenceTree::OnGetinfotipReferenceTree)
 END_MESSAGE_MAP()
 
 
@@ -519,3 +520,26 @@ void CDlgReferenceTree::PostNcDestroy()
 }
 
 
+
+
+void CDlgReferenceTree::OnGetinfotipReferenceTree(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMTVGETINFOTIP pGetInfoTip = reinterpret_cast<LPNMTVGETINFOTIP>(pNMHDR);
+	
+	auto pData = (TreeItemData*) pGetInfoTip->lParam;
+
+	CString tip;
+
+	if (pData) {
+		if (pData->type == TreeItemData::Type::AddMore) {
+			tip.LoadString(IDS_REFTREE_ADDMORE_TIP);
+		}
+		else if (pData->cyclicParent) {
+			tip.LoadString(IDS_REFTREE_CYCLIC_TIP);
+		}
+	}
+
+	wcscpy_s(pGetInfoTip->pszText, pGetInfoTip->cchTextMax - 1, tip);
+
+	*pResult = 0;
+}

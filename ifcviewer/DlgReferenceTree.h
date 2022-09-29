@@ -57,4 +57,6 @@ private:
 	CImageList	m_refDir;
 	int_t		m_rootInstance;
 
+public:
+	afx_msg void OnGetinfotipReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 };
