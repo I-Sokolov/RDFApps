@@ -502,7 +502,7 @@ void	InitializeTreeItems(
 						ASSERT(treeItemSelectable->type == TREE_ITEM_IFCINSTANCE);
 					}
 				
-#if PRODUCE_FLAT_TREE //there is no geoemetry child item in this case
+#if 0 //PRODUCE_FLAT_TREE //there is no geoemetry child item in this case
 					if (treeItemSelectable->type == TREE_ITEM_IFCINSTANCE) {
 						auto pInstance = (STRUCT_TREE_ITEM_IFCINSTANCE*) treeItemSelectable;
 						if (pInstance->ifcInstance && sdaiIsKindOfBN(pInstance->ifcInstance, (char*)L"IfcProduct")) {

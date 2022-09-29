@@ -185,8 +185,8 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 
 	STRUCT_TREE_ITEM	* treeItem = CreateTreeItem__IFCINSTANCE_model(parent, ifcModel, ifcObjectInstance);
 
+	AddChild(treeItem, CreateTreeItem__GEOMETRY(treeItem));
 #if !PRODUCE_FLAT_TREE
-	AddChild (treeItem, CreateTreeItem__GEOMETRY(treeItem));
 	AddChild (treeItem, CreateTreeItem__PROPERTIES(treeItem));
 #endif
 

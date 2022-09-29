@@ -373,9 +373,9 @@ void	CLeftPane::UpdateChildren(
 			case TREE_ITEM_GROUPEDBY:
 			case TREE_ITEM_SPACEBOUNDARIES:
 			case TREE_ITEM_IFCENTITY:
-#if !PRODUCE_FLAT_TREE
+//#if !PRODUCE_FLAT_TREE
 			case TREE_ITEM_IFCINSTANCE:
-#endif 
+//#endif 
 				{
 					if (treeItemSelectable->selectState != selectState  &&  treeItemSelectable->selectState != TI_NONE) {
 						treeItemSelectable->selectState = selectState;
@@ -387,7 +387,7 @@ void	CLeftPane::UpdateChildren(
 					}
 				}
 				break;
-#if PRODUCE_FLAT_TREE
+#if 0 //PRODUCE_FLAT_TREE
 			case TREE_ITEM_IFCINSTANCE:
 			{
 				if (treeItemSelectable->selectState != selectState && treeItemSelectable->selectState != TI_NONE) {
