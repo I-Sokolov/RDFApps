@@ -5,6 +5,7 @@
 #include "ifcviewer.h"
 #include "LeftPane.h"
 #include "stringCreation.h"
+#include "ifcviewerDoc.h"
 #include "AttributesView.h"
 
 
@@ -84,7 +85,7 @@ void CAttributesView::OnInitialUpdate()
 void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
 	if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::SetActiveInstance) {		
-		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
+		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
 		
 		if (pInstance) {
 			auto instance = pInstance->GetIntstance();

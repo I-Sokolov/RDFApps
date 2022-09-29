@@ -71,7 +71,7 @@ void CPropertiesView::OnInitialUpdate()
 void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
 	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
-		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
+		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
 
 		if (pInstance) {
 			auto instance = pInstance->GetIntstance();

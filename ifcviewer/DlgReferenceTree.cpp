@@ -186,7 +186,7 @@ void CDlgReferenceTree::OnDeleteitemReferenceTree(NMHDR* pNMHDR, LRESULT* pResul
 		}
 	}
 	else {
-		assert(0);
+		ASSERT(0);
 	}
 
 	*pResult = 0;
@@ -212,7 +212,7 @@ int CDlgReferenceTree::AddChildItemsWithNewLimit(HTREEITEM hItem, TreeItemData& 
 			InsertAggregationElements(hItem, data);
 		}
 	}
-	else assert(false);
+	else ASSERT(false);
 
 	return oldChilds;
 }
@@ -220,13 +220,13 @@ int CDlgReferenceTree::AddChildItemsWithNewLimit(HTREEITEM hItem, TreeItemData& 
 void CDlgReferenceTree::IncreaseChildLimit(HTREEITEM hAddItem)
 {
 	auto hItem = m_wndTree.GetParentItem(hAddItem);
-	assert(hItem); if (!hItem) return;
+	ASSERT(hItem); if (!hItem) return;
 
 	auto dwdata = m_wndTree.GetItemData(hItem);
-	assert(dwdata); if (!dwdata) return;
+	ASSERT(dwdata); if (!dwdata) return;
 
 	TreeItemData& data = *((TreeItemData*) dwdata);
-	assert(data.type == TreeItemData::Type::Regular); if (data.type != TreeItemData::Type::Regular) return;
+	ASSERT(data.type == TreeItemData::Type::Regular); if (data.type != TreeItemData::Type::Regular) return;
 
 	m_wndTree.SelectItem(hItem);
 
@@ -351,11 +351,11 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData&
 			}
 
 			case sdaiADB:
-				assert(0); //TODO
+				ASSERT(0); //TODO
 				break;
 
 			default:
-				assert(false);
+				ASSERT(false);
 		}
 	}
 	
@@ -496,9 +496,9 @@ void CDlgReferenceTree::OnSelchangedReferenceTree(NMHDR* pNMHDR, LRESULT* pResul
 						CifcviewerDoc::ActiveInstanceHint hint(pData->instance);
 						pDoc->UpdateAllViews(nullptr, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
 					}
-					else assert(false);
+					else ASSERT(false);
 				}
-				else assert(false);
+				else ASSERT(false);
 			}
 		}
 	}

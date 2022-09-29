@@ -102,7 +102,7 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
 	int_t instance = 0;
 	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
-		auto pInstance = DYNAMIC_DOWNCAST(CifcviewerDoc::ActiveInstanceHint, pHint);
+		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
 		if (pInstance) {
 			instance = pInstance->GetIntstance();
 		}
