@@ -733,10 +733,57 @@ STRUCT__IFC__OBJECT	** GetChildrenRecursively(
 	return	firstFreeIfcObject;
 }
 
+
+static CString GetSchemaFilePath()
+{
+	CString exeFile;
+	AfxGetModuleFileName(NULL, exeFile);
+
+	wchar_t drive[_MAX_DRIVE];
+	wchar_t dir[4*_MAX_PATH];
+	wchar_t fname[_MAX_PATH];
+	wchar_t ext[_MAX_PATH];
+	_wsplitpath_s(exeFile, drive, dir, fname, ext);
+
+	wchar_t wildcard[4 * MAX_PATH];
+	_wmakepath_s(wildcard, drive, dir, L"*", L"exp");
+
+	wchar_t schemaFile[4 * MAX_PATH] = L"";
+
+	WIN32_FIND_DATA ffd;
+	auto hFind = FindFirstFile(wildcard, &ffd);
+	if (hFind != INVALID_HANDLE_VALUE) {
+
+		do {
+			if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+				//_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+			}
+			else {
+				CString prompt;
+				prompt.Format(L"Would you like to use schema %s?", ffd.cFileName);
+				auto res = AfxMessageBox(prompt, MB_YESNOCANCEL);
+				if (res == IDYES) {
+					_wmakepath_s(schemaFile, drive, dir, ffd.cFileName, L"");
+					break;
+				}
+				else if (res == IDCANCEL) {
+					break;
+				}
+			}
+		} while (FindNextFile(hFind, &ffd) != 0);
+
+		FindClose(hFind);
+	}
+
+	return schemaFile;
+}
+
 bool	ParseIfcFile(
 				CWnd	* pParent
 			)
 {
+	CString schemaFileName = GetSchemaFilePath();
+
 	CProgressWnd wndProgress(pParent);
 
 	wndProgress.SetRange(0,100);
@@ -750,7 +797,7 @@ bool	ParseIfcFile(
 	CleanupIfcFile();
 
 	setStringUnicode(1);
-	int_t	ifcModel = sdaiOpenModelBNUnicode(0, (wchar_t*) ifcFileName, (wchar_t*) L"");
+	int_t	ifcModel = sdaiOpenModelBNUnicode(0, (const wchar_t*) ifcFileName, (const wchar_t*) schemaFileName);
 	ifcModelGlobalTmp = ifcModel;
 
 	for (int m = 0; m < 2; m++) {
