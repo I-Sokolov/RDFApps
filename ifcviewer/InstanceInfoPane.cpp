@@ -54,16 +54,6 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
 	AddView(RUNTIME_CLASS(CPropertiesView), L"IFC Properties");
 	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
-
-	//GetTabControl().EnableInPlaceEdit(false);
-	//GetTabControl().EnableTabDocumentsMenu(false);
-	//GetTabControl().HideInactiveWindow(false);
-
-	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D);
-	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ONENOTE);
-	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ROUNDED);
-	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_3D_ROUNDED_SCROLL);
-	//GetTabControl().ModifyTabStyle(CMFCTabCtrl::Style::STYLE_FLAT);
 	
 	// Nicely hack to access protected member
 	class CMFCTabCtrlEx : public CMFCTabCtrl
@@ -85,3 +75,8 @@ void CInstanceInfoPane::OnInitialUpdate()
 }
 
 
+
+
+void CInstanceInfoPane::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+{
+}

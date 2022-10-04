@@ -78,21 +78,23 @@ void CAttributesView::OnInitialUpdate()
 
 	m_wndProps.EnableDescriptionArea(false);
 
+	m_wndProps.RemoveAll();
+
 	Invalidate();
 }
 
 
 void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
-	if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::SetActiveInstance) {		
+	if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::SetActiveInstance) {				
 		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
-		
+
+		m_wndProps.RemoveAll();
+
 		if (pInstance) {
 			auto instance = pInstance->GetIntstance();
 
 			if (instance) {
-				m_wndProps.RemoveAll();
-
 				AddStepId(instance);
 
 				int_t	entity = sdaiGetInstanceType(instance);
@@ -102,11 +104,11 @@ void CAttributesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 				std::set<int_t> visitedEntities;
 				AddAttributes(entity, instance, visitedEntities);
-
-				Invalidate();
 			}
 		}
 	}
+
+	Invalidate();
 }
 
 void CAttributesView::AddStepId(int_t instance)

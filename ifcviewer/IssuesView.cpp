@@ -89,6 +89,9 @@ void CIssuesView::OnInitialUpdate()
 {
 	CListView::OnInitialUpdate();
 
+	auto& wndList = GetListCtrl();
+	wndList.DeleteAllItems();
+
 	m_lstIssues.clear();
 
 	if (globalIfcModel) {
@@ -100,18 +103,23 @@ void CIssuesView::OnInitialUpdate()
 
 void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 {
+	auto& wndList = GetListCtrl();
+
 	int_t instance = 0;
 	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
 		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
+
+		wndList.DeleteAllItems();
+
 		if (pInstance) {
 			instance = pInstance->GetIntstance();
 		}
 	}
-	if (!instance)
-		return;
 
-	auto& wndList = GetListCtrl();
-	wndList.DeleteAllItems();
+	if (!instance) {
+		Invalidate();
+		return;
+	}
 
 	//auto stepid = internalGetP21Line (pInstance->ifcInstance);
 

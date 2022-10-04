@@ -65,6 +65,7 @@ int CPropertiesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CPropertiesView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
+	m_wndProps.RemoveAll();
 }
 
 
@@ -73,11 +74,12 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
 		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
 
+		m_wndProps.RemoveAll();
+
 		if (pInstance) {
 			auto instance = pInstance->GetIntstance();
 
 			if (instance) {
-				m_wndProps.RemoveAll();
 
 				STRUCT__PROPERTY__SET* propertySets = nullptr;
 				CreateIfcInstanceProperties(globalIfcModel, &propertySets, instance, units);
@@ -86,11 +88,11 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 					DeleteIfcInstanceProperties(propertySets);
 				}
-
-				Invalidate();
 			}
 		}
 	}
+
+	Invalidate();
 }
 
 void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet)

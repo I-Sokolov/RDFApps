@@ -88,6 +88,9 @@ void CifcviewerDoc::Serialize(CArchive& ar)
 //		InitializeDeviceBuffer();
 
 //		...
+		CifcviewerDoc::ActiveInstanceHint hint(0);
+		UpdateAllViews(nullptr, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
+
 		auto vp = GetFirstViewPosition();
 		while (vp){
 			auto v = GetNextView(vp);
