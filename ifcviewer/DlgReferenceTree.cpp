@@ -9,7 +9,7 @@
 #include "DlgReferenceTree.h"
 
 #define CHILD_LIMIT1	5
-#define CHILD_LIMIT2    10
+#define CHILD_LIMIT2    25
 
 //
 
@@ -528,7 +528,7 @@ void CDlgReferenceTree::OnGetinfotipReferenceTree(NMHDR* pNMHDR, LRESULT* pResul
 	
 	auto pData = (TreeItemData*) pGetInfoTip->lParam;
 
-	CString tip;
+	static CString tip;
 
 	if (pData) {
 		if (pData->type == TreeItemData::Type::AddMore) {
