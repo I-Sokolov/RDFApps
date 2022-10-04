@@ -627,6 +627,17 @@ void	CLeftPane::OnRClick(NMHDR* pNMHDR, LRESULT* pResult)
 		engiGetEntityName(currentIfcEntity, sdaiUNICODE, (const char**) &entityName);
 		::AppendMenu(hMenu, flags, i++, entityName);
 	}
+
+	int_t cmdViewReferences = -1;
+	auto instance = GetInstance(&pta);
+	if (instance) {
+		cmdViewReferences = i++;
+		::AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
+		CString strViewRefereneces;
+		strViewRefereneces.LoadString(IDS_VIEW_REFERENCES);
+		::AppendMenu(hMenu, 0, cmdViewReferences, strViewRefereneces);
+	}
+
 	int_t sel = ::TrackPopupMenuEx(hMenu, 
 		TPM_CENTERALIGN | TPM_RETURNCMD,
 		pta.x,//pt.x + r.right,
@@ -634,7 +645,11 @@ void	CLeftPane::OnRClick(NMHDR* pNMHDR, LRESULT* pResult)
 		GetTreeCtrl(),
 		NULL);
 	::DestroyMenu(hMenu);
-	if	(sel > 0) {
+
+	if (sel == cmdViewReferences) {
+		OpenRefereneceTree(instance);
+	}
+	else if (sel > 0) {
 		ifcObject = ifcObjectsLinkedList;
 		while  (ifcObject) {
 			int_t	currentIfcEntity = ifcObject->ifcEntity;
@@ -778,6 +793,7 @@ void	CLeftPane::UpdateAllTrees(
 	GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
 }
 
+
 void	CLeftPane::OnClick(NMHDR* pNMHDR, LRESULT* pResult) 
 {
 	pNMHDR = pNMHDR;
@@ -873,7 +889,7 @@ void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 	pResult = 0;
 	hItem = 0;
 
-	auto instance = GetSelectedInstance();
+	auto instance = GetInstance();
 	CifcviewerDoc::ActiveInstanceHint hint(instance);
 	GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
 
@@ -976,9 +992,36 @@ CWnd* CLeftPane::GetRightPane()
 	return nullptr;
 }
 
-SdaiInstance CLeftPane::GetSelectedInstance()
+HTREEITEM CLeftPane::ItemFromScreenPoint(CPoint pt)
 {
-	auto hItem = GetTreeCtrl().GetSelectedItem();
+	auto& wndTree = GetTreeCtrl();
+
+	wndTree.ScreenToClient(&pt);
+
+	HTREEITEM hItem = wndTree.GetFirstVisibleItem();
+	while (hItem) {
+		CRect r;
+		GetTreeCtrl().GetItemRect(hItem, &r, true);
+		if (r.PtInRect(pt)) {
+			return hItem;
+		}
+
+		hItem = wndTree.GetNextVisibleItem(hItem);
+	}
+
+	return NULL;
+}
+
+SdaiInstance CLeftPane::GetInstance(const CPoint* ppt)
+{
+	HTREEITEM hItem = NULL;
+	if (ppt) {
+		hItem = ItemFromScreenPoint(*ppt);
+	}
+	else {
+		hItem = GetTreeCtrl().GetSelectedItem();
+	}
+
 	if (!hItem) {
 		return NULL;
 	}
@@ -1063,10 +1106,8 @@ bool CLeftPane::SelectInstance(int_t instance)
 	}*/
 }
 
-
-void CLeftPane::OnViewReferences()
+void CLeftPane::OpenRefereneceTree(int_t instance)
 {
-	auto instance = GetSelectedInstance();
 	if (instance) {
 		auto pDlg = new CDlgReferenceTree(instance, AfxGetMainWnd());
 		pDlg->Create(IDD_REFERENCEVIEW);
@@ -1075,7 +1116,13 @@ void CLeftPane::OnViewReferences()
 }
 
 
+void CLeftPane::OnViewReferences()
+{
+	auto instance = GetInstance();
+	OpenRefereneceTree(instance);
+}
+
 void CLeftPane::OnUpdateViewReferences(CCmdUI* pCmdUI)
 {
-	pCmdUI->Enable(GetSelectedInstance()!=NULL);
+	pCmdUI->Enable(GetInstance()!=NULL);
 }

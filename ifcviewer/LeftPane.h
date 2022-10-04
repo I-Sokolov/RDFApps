@@ -51,10 +51,10 @@ protected:
 
 private:
 	CWnd* GetRightPane();
-
-	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
-	
-	SdaiInstance GetSelectedInstance();
+	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);	
+	HTREEITEM ItemFromScreenPoint(CPoint pt);
+	SdaiInstance GetInstance(const CPoint* ppt = NULL/*if !ppt ->selected*/);
+	void OpenRefereneceTree(int_t instance);
 
 public:
 	afx_msg void OnViewReferences();
