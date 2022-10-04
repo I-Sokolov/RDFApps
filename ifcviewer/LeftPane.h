@@ -54,7 +54,7 @@ private:
 
 	STRUCT_TREE_ITEM_IFCINSTANCE* FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom);
 	
-	STRUCT_TREE_ITEM_IFCINSTANCE* GetSelectedInstance();
+	SdaiInstance GetSelectedInstance();
 
 public:
 	afx_msg void OnViewReferences();

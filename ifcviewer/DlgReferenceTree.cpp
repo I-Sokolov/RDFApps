@@ -529,6 +529,7 @@ void CDlgReferenceTree::OnGetinfotipReferenceTree(NMHDR* pNMHDR, LRESULT* pResul
 	auto pData = (TreeItemData*) pGetInfoTip->lParam;
 
 	static CString tip;
+	tip.Empty();
 
 	if (pData) {
 		if (pData->type == TreeItemData::Type::AddMore) {

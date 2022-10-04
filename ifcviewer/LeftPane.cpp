@@ -873,11 +873,9 @@ void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 	pResult = 0;
 	hItem = 0;
 
-	auto pInstance = GetSelectedInstance();
-	if (pInstance) {
-		CifcviewerDoc::ActiveInstanceHint hint(pInstance->ifcInstance);
-		GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
-	}
+	auto instance = GetSelectedInstance();
+	CifcviewerDoc::ActiveInstanceHint hint(instance);
+	GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
 
 ////////////////////////////////////////	ASSERT(false);
 //	STRUCT__SELECTABLE__TREEITEM	* selectableTreeitem = (STRUCT__SELECTABLE__TREEITEM *) GetTreeCtrl().GetItemData(hItem);
@@ -978,24 +976,37 @@ CWnd* CLeftPane::GetRightPane()
 	return nullptr;
 }
 
-STRUCT_TREE_ITEM_IFCINSTANCE* CLeftPane::GetSelectedInstance()
+SdaiInstance CLeftPane::GetSelectedInstance()
 {
 	auto hItem = GetTreeCtrl().GetSelectedItem();
 	if (!hItem) {
-		return nullptr;
+		return NULL;
 	}
 
 	auto data = GetTreeCtrl().GetItemData(hItem);
 	auto pItem = (STRUCT_TREE_ITEM*) data;
 
+	const wchar_t* attrName = NULL;
+
 	while (pItem) {
 		if (pItem->type == TREE_ITEM_IFCINSTANCE) {
-			return (STRUCT_TREE_ITEM_IFCINSTANCE*) pItem;
+			auto pInst = (STRUCT_TREE_ITEM_IFCINSTANCE*) pItem;
+			if (attrName) {
+				SdaiInstance inst = NULL;
+				sdaiGetAttrBN(pInst->ifcInstance, (char*)attrName, sdaiINSTANCE, &inst);
+				return inst;
+			}
+			else {
+				return pInst->ifcInstance;
+			}
+		}
+		else if (pItem->type == TREE_ITEM_GEOMETRY) {
+			attrName = L"Representation";
 		}
 		pItem = pItem->parent;
 	}
 
-	return nullptr;
+	return NULL;
 }
 
 STRUCT_TREE_ITEM_IFCINSTANCE* CLeftPane::FindInstance(int_t instance, HTREEITEM* pItem, HTREEITEM hStartFrom)
@@ -1055,9 +1066,9 @@ bool CLeftPane::SelectInstance(int_t instance)
 
 void CLeftPane::OnViewReferences()
 {
-	auto pInstance = GetSelectedInstance();
-	if (pInstance) {
-		auto pDlg = new CDlgReferenceTree(pInstance->ifcInstance, AfxGetMainWnd());
+	auto instance = GetSelectedInstance();
+	if (instance) {
+		auto pDlg = new CDlgReferenceTree(instance, AfxGetMainWnd());
 		pDlg->Create(IDD_REFERENCEVIEW);
 		pDlg->ShowWindow(SW_SHOW);
 	}
