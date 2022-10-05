@@ -959,7 +959,7 @@ void	CreateIfcPropertySet(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets,
 	}
 }
 
-void	CreateTypeObjectInstance(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets, int_t ifcTypeObjectInstance, STRUCT__SIUNIT * units)
+void	CreateTypeObjectProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets, int_t ifcTypeObjectInstance, STRUCT__SIUNIT * units)
 {
 	if	(ifcTypeObjectInstance) {
 		int_t	* hasPropertySets = 0, hasPropertySetsCnt,
@@ -1009,7 +1009,7 @@ void	CreateRelDefinesByProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** prope
 	}
 }
 
-void			DeleteIfcInstanceProperties(
+void			DeletePropertySets(
 						STRUCT__PROPERTY__SET	* propertySet
 					)
 {
@@ -1089,7 +1089,7 @@ void	CreateIfcInstanceProperties(
 
 				sdaiGetAttrBN(isDefinedByInstance, (char*) L"RelatingType", sdaiINSTANCE, &typeObjectInstance);
 
-				CreateTypeObjectInstance(ifcModel, propertySets, typeObjectInstance, units);
+				CreateTypeObjectProperties(ifcModel, propertySets, typeObjectInstance, units);
 			}
 			else if (sdaiGetInstanceType(isDefinedByInstance) == ifcRelDefinesByProperties_TYPE) {
 				CreateRelDefinesByProperties(ifcModel, propertySets, isDefinedByInstance, units);

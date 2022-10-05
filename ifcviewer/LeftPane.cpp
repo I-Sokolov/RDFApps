@@ -925,7 +925,7 @@ void	CLeftPane::OnBeforeExpand(NMHDR* pNMHDR, LRESULT* pResult)
 		CreateIfcInstanceProperties(ifcModel, &propertySets, ifcInstance, units);
 		CreateTreeItems(treeItem, propertySets);
 
-		DeleteIfcInstanceProperties(propertySets);
+		DeletePropertySets(propertySets);
 	} else if (treeItem->type == TREE_ITEM_GROUPS) {
 		ASSERT(treeItem == topGroupTreeItem);
 		UpdateTree((STRUCT_TREE_ITEM_SELECTABLE*) treeItem);

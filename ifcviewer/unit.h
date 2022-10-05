@@ -108,7 +108,15 @@ void			CreateIfcInstanceProperties(
 						bool					addTypeObjectProperties = true
 					);
 
-void			DeleteIfcInstanceProperties(
+void			CreateTypeObjectProperties(
+						int_t					ifcModel, 
+						STRUCT__PROPERTY__SET	** propertySets, 
+						int_t					ifcTypeObjectInstance, 
+						STRUCT__SIUNIT			* units
+					);
+
+
+void			DeletePropertySets(
 						STRUCT__PROPERTY__SET	* propertySet
 					);
 

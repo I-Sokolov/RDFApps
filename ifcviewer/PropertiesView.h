@@ -42,8 +42,8 @@ public:
 
 private:
 	void AddTypeObjectsOf(SdaiInstance instance);
-	void AddPropertySets(SdaiInstance instance);
-	void AddPropertySet(STRUCT__PROPERTY__SET* propertySets);
+	void AddPropertySetsOf(SdaiInstance instance);
+	void AddPropertySet(STRUCT__PROPERTY__SET* propertySets, CMFCPropertyGridProperty* pGroup = NULL);
 
 private:
 	CMFCPropertyGridCtrl m_wndProps;

@@ -80,7 +80,7 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 			auto instance = pInstance->GetIntstance();
 
 			if (instance) {
-				AddPropertySets(instance);
+				AddPropertySetsOf(instance);
 				AddTypeObjectsOf(instance);
 			}
 		}
@@ -162,11 +162,20 @@ void CPropertiesView::AddTypeObject(SdaiInstance typeObject)
 	auto pPropTO = new CMFCPropertyGridProperty(typeName);
 	pPropTO->SetDescription(descr);
 
+	STRUCT__PROPERTY__SET* propertySets = nullptr;
+	CreateTypeObjectProperties(globalIfcModel, &propertySets, typeObject, units);
+
+	if (propertySets) {
+		AddPropertySet(propertySets, pPropTO);
+
+		DeletePropertySets(propertySets);
+	}
+
 	m_wndProps.AddProperty(pPropTO);
 }
 
 
-void CPropertiesView::AddPropertySets(SdaiInstance instance)
+void CPropertiesView::AddPropertySetsOf(SdaiInstance instance)
 {
 	STRUCT__PROPERTY__SET* propertySets = nullptr;
 	CreateIfcInstanceProperties(globalIfcModel, &propertySets, instance, units, false);
@@ -174,11 +183,11 @@ void CPropertiesView::AddPropertySets(SdaiInstance instance)
 	if (propertySets) {
 		AddPropertySet(propertySets);
 
-		DeleteIfcInstanceProperties(propertySets);
+		DeletePropertySets(propertySets);
 	}
 }
 
-void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet)
+void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet, CMFCPropertyGridProperty* pGroup)
 {
 	auto pSet = new CMFCPropertyGridProperty(propertySet->name);
 
@@ -216,7 +225,12 @@ void CPropertiesView::AddPropertySet(STRUCT__PROPERTY__SET* propertySet)
 		pSet->AddSubItem(pProp);
 	}
 
-	m_wndProps.AddProperty(pSet);
+	if (pGroup) {
+		pGroup->AddSubItem(pSet);
+	}
+	else {
+		m_wndProps.AddProperty(pSet);
+	}
 
 	if (propertySet->next) {
 		AddPropertySet(propertySet->next);
