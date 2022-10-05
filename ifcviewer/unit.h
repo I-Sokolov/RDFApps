@@ -104,7 +104,8 @@ void			CreateIfcInstanceProperties(
 						int_t					ifcModel,
 						STRUCT__PROPERTY__SET	** propertySets,
 						int_t					ifcObjectInstance,
-						STRUCT__SIUNIT			* units
+						STRUCT__SIUNIT			* units,
+						bool					addTypeObjectProperties = true
 					);
 
 void			DeleteIfcInstanceProperties(
@@ -115,5 +116,12 @@ bool			IfcInstanceHasProperties(
 						int_t					ifcModel,
 						int_t					ifcObjectInstance
 					);
+
+bool			AggregationContainsInstance(
+						int_t* aggregation, 
+						int_t checkInstance = 0
+				    );
+
+
 
 extern	STRUCT__SIUNIT* units;

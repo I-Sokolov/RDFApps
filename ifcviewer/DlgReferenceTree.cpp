@@ -364,44 +364,6 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData&
 	}
 }
 
-bool CDlgReferenceTree::AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
-{
-	int_t sdaiType = -1;
-	engiGetAggrType(aggregation, &sdaiType);
-
-	auto N = sdaiGetMemberCount(aggregation);
-	for (int_t i = 0; i < N; i++) {
-		switch (sdaiType) {
-			case sdaiINSTANCE:
-			{
-				int_t inst = 0;
-				engiGetAggrElement(aggregation, i, sdaiINSTANCE, &inst);
-				if ((checkInstance && inst == checkInstance) || (!checkInstance && inst != 0)) {
-					return true; //>>>>>>>>>>>>>.
-				}
-				break;
-			}
-
-			case sdaiAGGR:
-			{
-				int_t* aggr = nullptr;
-				engiGetAggrElement(aggregation, i, sdaiAGGR, &aggr);
-				if (aggr) {
-					if (AggregationContainsInstance(aggr, checkInstance)) {
-						return true; //>>>>>>>>>>>>>.
-					}
-				}
-				break;
-			}
-
-			case sdaiADB:
-				//TODO
-				break;
-		}
-	}
-
-	return false;
-}
 
 void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t referencedInstance,HTREEITEM hParent, int& childCounter, int childLimit)
 {
@@ -458,11 +420,13 @@ struct ReferenceSearch : public RDF::CModelChecker::InstanceVisitor
 		, m_childLimit (childLimit)
 	{}
 
-	virtual void OnVisitInstance(int_t instance) override
+	virtual bool OnVisitInstance(int_t instance) override
 	{
 		if (m_childCounter < m_childLimit && instance != m_refInstance) {
 			m_me.CheckInsertReferencingInstance(instance, m_refInstance, m_hParent, m_childCounter, m_childLimit);
 		}
+
+		return m_childCounter < m_childLimit;
 	}
 
 	CDlgReferenceTree&	m_me;

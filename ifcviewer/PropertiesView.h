@@ -37,7 +37,12 @@ public:
 	virtual void OnInitialUpdate();
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 
+public:
+	void AddTypeObject(SdaiInstance typeObject);
+
 private:
+	void AddTypeObjectsOf(SdaiInstance instance);
+	void AddPropertySets(SdaiInstance instance);
 	void AddPropertySet(STRUCT__PROPERTY__SET* propertySets);
 
 private:

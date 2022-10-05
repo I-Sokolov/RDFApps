@@ -1064,7 +1064,13 @@ void			DeleteIfcInstanceProperties(
 	}
 }
 
-void	CreateIfcInstanceProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets, int_t ifcObjectInstance, STRUCT__SIUNIT * units)
+void	CreateIfcInstanceProperties(
+		int_t					ifcModel, 
+		STRUCT__PROPERTY__SET	** propertySets, 
+		int_t					ifcObjectInstance, 
+		STRUCT__SIUNIT			* units,
+		bool					addTypeObjectProperties
+)
 {
 	int_t	* isDefinedByInstances = 0,
 			ifcRelDefinesByType_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCRELDEFINESBYTYPE"),
@@ -1078,7 +1084,7 @@ void	CreateIfcInstanceProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** proper
 			int_t	isDefinedByInstance = 0;
 			engiGetAggrElement(isDefinedByInstances, i, sdaiINSTANCE, &isDefinedByInstance);
 
-			if (sdaiGetInstanceType(isDefinedByInstance) == ifcRelDefinesByType_TYPE) {
+			if (sdaiGetInstanceType(isDefinedByInstance) == ifcRelDefinesByType_TYPE && addTypeObjectProperties) {
 				int_t	typeObjectInstance = 0;
 
 				sdaiGetAttrBN(isDefinedByInstance, (char*) L"RelatingType", sdaiINSTANCE, &typeObjectInstance);
@@ -1127,3 +1133,46 @@ bool	IfcInstanceHasProperties(
 	return	false;
 }
  
+bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
+{
+	if (!aggregation) {
+		return false;
+	}
+
+	int_t sdaiType = -1;
+	engiGetAggrType(aggregation, &sdaiType);
+
+	auto N = sdaiGetMemberCount(aggregation);
+	for (int_t i = 0; i < N; i++) {
+		switch (sdaiType) {
+			case sdaiINSTANCE:
+			{
+				int_t inst = 0;
+				engiGetAggrElement(aggregation, i, sdaiINSTANCE, &inst);
+				if ((checkInstance && inst == checkInstance) || (!checkInstance && inst != 0)) {
+					return true; //>>>>>>>>>>>>>.
+				}
+				break;
+			}
+
+			case sdaiAGGR:
+			{
+				assert(0); //TODO: test
+				int_t* aggr = nullptr;
+				engiGetAggrElement(aggregation, i, sdaiAGGR, &aggr);
+				if (aggr) {
+					if (AggregationContainsInstance(aggr, checkInstance)) {
+						return true; //>>>>>>>>>>>>>.
+					}
+				}
+				break;
+			}
+
+			case sdaiADB:
+				assert(0); //TODO: implement
+				break;
+		}
+	}
+
+	return false;
+}

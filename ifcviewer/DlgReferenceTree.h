@@ -47,8 +47,6 @@ private:
 	void InsertReferencingInstances(HTREEITEM hItem, TreeItemData& data);
 	void InsertAggregationElements(HTREEITEM hItem, TreeItemData& data);
 
-	bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance = 0);
-
 	HTREEITEM FindParentWithInstance(HTREEITEM hParent, int_t instance);
 
 

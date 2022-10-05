@@ -83,17 +83,17 @@ namespace RDF
 
         interface InstanceVisitor
         {
-            virtual void OnVisitInstance(int_t instance) = NULL;
+            virtual bool OnVisitInstance(SdaiInstance instance) = NULL; //return false to stop enumeration
         };
 
     public:
-        static ErrorLevel CheckModel(int_t model, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
+        static ErrorLevel CheckModel(SdaiModel model, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
 
-        static ErrorLevel CheckInstance(int_t instance, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
+        static ErrorLevel CheckInstance(SdaiInstance instance, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
         
-        static void VisitAllInstances(int_t model, InstanceVisitor& visitor);
+        static void VisitAllInstances(SdaiModel model, InstanceVisitor& visitor);
 
-        static void CollectReferencingInstancesRecirsive (std::set<int_t>& referencingInstances, int_t referencedInstance, int_t* searchEntities /*NULL-terminated array*/);
+        static void CollectReferencingInstancesRecirsive (std::set<SdaiInstance>& referencingInstances, SdaiInstance referencedInstance, SdaiEntity* searchEntities /*NULL-terminated array*/);
     };
 }
 
