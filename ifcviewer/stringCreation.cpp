@@ -4,6 +4,13 @@
 
 CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyName, int_t propertyType, int_t * ifcAggregate)
 {
+	if (propertyType & engiTypeFlagAggrOption) {
+		propertyType = sdaiADB;
+	}
+	else if (propertyType & engiTypeFlagAggr) {
+		propertyType = sdaiAGGR;
+	}
+
 	CString	rValue = 0;
 
 	if (ifcAggregate) {

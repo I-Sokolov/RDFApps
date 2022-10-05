@@ -52,7 +52,8 @@
 #define		engiGLOBALID			sdaiEXPRESSSTRING + 1
 #define		sdaiNUMBER				engiGLOBALID + 1
 
-#define		engiArrgegationFlag		128
+#define		engiTypeFlagAggr		128
+#define		engiTypeFlagAggrOption	32
 
 #define		SdaiAccessMode			int_t
 #define		SdaiSession				int_t

@@ -257,13 +257,15 @@ void CDlgReferenceTree::OnItemexpandingReferenceTree(NMHDR* pNMHDR, LRESULT* pRe
 
 	if (pNMTreeView->itemNew.mask & TVIF_HANDLE) {
 		auto hItem = pNMTreeView->itemNew.hItem;
-		auto data = m_wndTree.GetItemData(hItem);
-		if (data) {
-			auto pData = (TreeItemData*) data;
-			if (pData && pData->type == TreeItemData::Type::Regular && !pData->childLimit) {
-				//first expansion
-				pData->childLimit = CHILD_LIMIT1;
-				AddChildItemsWithNewLimit(hItem, *pData);
+		if (m_wndTree.GetItem(&(pNMTreeView->itemNew))) {
+			auto data = m_wndTree.GetItemData(hItem);
+			if (data) {
+				auto pData = (TreeItemData*) data;
+				if (pData && pData->type == TreeItemData::Type::Regular && !pData->childLimit) {
+					//first expansion
+					pData->childLimit = CHILD_LIMIT1;
+					AddChildItemsWithNewLimit(hItem, *pData);
+				}
 			}
 		}
 	}
@@ -297,7 +299,15 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData&
 	auto NAttr = engiGetEntityNoAttributesEx(entity, true, false);
 	for (int i = 0; i < NAttr; i++) {
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
-		auto sdaiType = engiGetAttributeType((int_t)attr);
+
+		auto sdaiType = engiGetAttrType(attr);
+		if (sdaiType & engiTypeFlagAggr) {
+			sdaiType = sdaiAGGR;
+		}
+		else if (sdaiType & engiTypeFlagAggrOption) {
+			sdaiType = sdaiADB;
+		}
+
 		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{
@@ -380,7 +390,14 @@ void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t ref
 		//const char* attrName = NULL;
 		//engiGetAttributeTraits(attr, &attrName, 0, 0, 0, 0, 0, 0, 0);
 
-		auto sdaiType = engiGetAttributeType((int_t)attr);
+		auto sdaiType = engiGetAttrType(attr);
+		if (sdaiType & engiTypeFlagAggr) {
+			sdaiType = sdaiAGGR;
+		}
+		else if (sdaiType & engiTypeFlagAggrOption) {
+			sdaiType = sdaiADB;
+		}
+
 		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{
