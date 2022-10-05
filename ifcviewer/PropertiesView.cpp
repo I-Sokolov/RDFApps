@@ -81,7 +81,7 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 			if (instance) {
 				AddPropertySetsOf(instance);
-				AddTypeObjectsOf(instance);
+				AddRelationshipsOf(instance);
 			}
 		}
 	}
@@ -89,43 +89,68 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	Invalidate();
 }
 
-struct TypeObjectCollector : public RDF::CModelChecker::InstanceVisitor
+struct RelationshipsVisitor : public RDF::CModelChecker::InstanceVisitor
 {
-	TypeObjectCollector (CPropertiesView& me, SdaiInstance instance) : m_me(me), m_inst (instance)
+	RelationshipsVisitor(CPropertiesView& me, SdaiInstance instance) : m_me(me), m_inst(instance)
 	{
 		m_entityRelDefinesByType = sdaiGetEntity(globalIfcModel, (char*) L"IFCRELDEFINESBYTYPE");
-		m_attrRelatedObjects = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatedObjects");
+		m_attrRelatedObjectsDBT = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatedObjects");
 		m_attrRelatingType = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatingType");
+
+		m_entityRelAssociatesClassification = sdaiGetEntity(globalIfcModel, (char*) L"IfcRelAssociatesClassification");
+		m_attrRelatedObjectsAC = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatedObjects");
+		m_attrRelatingClassification = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatingClassification");
+	}
+
+	SdaiInstance GetRelating(SdaiInstance visiting, SdaiEntity relEntyity, void* attrRelated, void* attrRelating)
+	{
+		SdaiInstance relating = NULL;
+
+		if (sdaiIsKindOf(visiting, relEntyity)) {
+			SdaiAggr relatedObjects = NULL;
+			sdaiGetAttr(visiting, attrRelated, sdaiAGGR, &relatedObjects);
+			if (AggregationContainsInstance(relatedObjects, m_inst)) {
+				sdaiGetAttr(visiting, attrRelating, sdaiINSTANCE, &relating);
+			}
+		}
+		
+		return relating;
 	}
 
 	virtual bool OnVisitInstance(SdaiInstance visiting) override
 	{
-		if (sdaiIsKindOf(visiting, m_entityRelDefinesByType)) {
-			SdaiAggr relatedObjects = NULL;
-			sdaiGetAttr(visiting, m_attrRelatedObjects, sdaiAGGR, &relatedObjects);
-			if (AggregationContainsInstance(relatedObjects, m_inst)) {
-				SdaiInstance typeObject = NULL;
-				sdaiGetAttr(visiting, m_attrRelatingType, sdaiINSTANCE, &typeObject);
-				if (typeObject) {
-					m_me.AddTypeObject(typeObject);
-				}
-			}
+		auto relating = GetRelating(visiting, m_entityRelDefinesByType, m_attrRelatedObjectsDBT, m_attrRelatingType);
+		if (relating) {
+			m_me.AddTypeObject(relating);
+			return true;
 		}
+
+		relating = GetRelating(visiting, m_entityRelAssociatesClassification, m_attrRelatedObjectsAC, m_attrRelatingClassification);
+		if (relating) {
+			m_me.AddClassification(relating);
+			return true;
+		}
+
 		return true;
 	}
 
 private:
 	CPropertiesView& m_me;
 	SdaiInstance	 m_inst;
+
 	SdaiEntity		 m_entityRelDefinesByType;
-	void*			 m_attrRelatedObjects;
+	void*			 m_attrRelatedObjectsDBT;
 	void*			 m_attrRelatingType;
+
+	SdaiEntity		 m_entityRelAssociatesClassification;
+	void*			 m_attrRelatedObjectsAC;
+	void*		     m_attrRelatingClassification;
 };
 
-void CPropertiesView::AddTypeObjectsOf(SdaiInstance instance)
+void CPropertiesView::AddRelationshipsOf(SdaiInstance instance)
 {
-	TypeObjectCollector toc(*this, instance);
-	RDF::CModelChecker::VisitAllInstances(globalIfcModel, toc);
+	RelationshipsVisitor v(*this, instance);
+	RDF::CModelChecker::VisitAllInstances(globalIfcModel, v);
 }
 
 static CString GetInstanceDescription(SdaiInstance instance)
@@ -150,6 +175,19 @@ static CString GetInstanceDescription(SdaiInstance instance)
 	}
 
 	return description;
+}
+
+void CPropertiesView::AddClassification(SdaiInstance classificationSelect)
+{
+	const wchar_t* clsName = nullptr;
+	sdaiGetAttrBN(classificationSelect, (char*) L"Name", sdaiUNICODE, &clsName);
+
+	CString descr = GetInstanceDescription(classificationSelect);
+
+	auto pPropClassif = new CMFCPropertyGridProperty(clsName);
+	pPropClassif->SetDescription(descr);
+
+	m_wndProps.AddProperty(pPropClassif);
 }
 
 void CPropertiesView::AddTypeObject(SdaiInstance typeObject)

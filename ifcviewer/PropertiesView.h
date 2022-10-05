@@ -39,9 +39,11 @@ public:
 
 public:
 	void AddTypeObject(SdaiInstance typeObject);
+	void AddClassification(SdaiInstance classificationSelect);
 
 private:
-	void AddTypeObjectsOf(SdaiInstance instance);
+	void AddRelationshipsOf(SdaiInstance instance);
+
 	void AddPropertySetsOf(SdaiInstance instance);
 	void AddPropertySet(STRUCT__PROPERTY__SET* propertySets, CMFCPropertyGridProperty* pGroup = NULL);
 
