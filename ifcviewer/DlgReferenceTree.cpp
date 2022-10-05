@@ -78,7 +78,7 @@ BOOL CDlgReferenceTree::OnInitDialog()
 }
 
 
-void CDlgReferenceTree::InsertRegularItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent)
+void CDlgReferenceTree::InsertRegularItem(int_t instance, int_t* aggregation, void* attr, bool inverseReference, HTREEITEM hParent)
 {	
 	HTREEITEM hCyclicParent = FindParentWithInstance(hParent, instance);
 	if (hCyclicParent && inverseReference) {
@@ -297,7 +297,7 @@ void CDlgReferenceTree::InsertReferencedInstances(HTREEITEM hItem, TreeItemData&
 	auto NAttr = engiGetEntityNoAttributesEx(entity, true, false);
 	for (int i = 0; i < NAttr; i++) {
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
-		auto sdaiType = engiGetAttributeType(attr);
+		auto sdaiType = engiGetAttributeType((int_t)attr);
 		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{
@@ -367,14 +367,20 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData&
 
 void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t referencedInstance,HTREEITEM hParent, int& childCounter, int childLimit)
 {
-	int_t refAttr = 0;
+	//auto stepId = internalGetP21Line(instance);
+
+	void* refAttr = 0;
 
 	auto entity = sdaiGetInstanceType(instance);
 	auto NAttr = engiGetEntityNoAttributesEx(entity, true, false);
 	
 	for (int i = 0; !refAttr && i < NAttr; i++) {
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
-		auto sdaiType = engiGetAttributeType(attr);
+
+		//const char* attrName = NULL;
+		//engiGetAttributeTraits(attr, &attrName, 0, 0, 0, 0, 0, 0, 0);
+
+		auto sdaiType = engiGetAttributeType((int_t)attr);
 		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{

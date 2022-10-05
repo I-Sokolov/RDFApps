@@ -1157,7 +1157,6 @@ bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
 
 			case sdaiAGGR:
 			{
-				assert(0); //TODO: test
 				int_t* aggr = nullptr;
 				engiGetAggrElement(aggregation, i, sdaiAGGR, &aggr);
 				if (aggr) {
@@ -1169,7 +1168,7 @@ bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
 			}
 
 			case sdaiADB:
-				assert(0); //TODO: implement
+				//assert(0); //TODO: implement
 				break;
 		}
 	}

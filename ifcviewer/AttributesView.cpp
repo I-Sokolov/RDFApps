@@ -167,7 +167,7 @@ void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t
 				attrIndName.Format(L"INV: %hs", attrName);
 			}
 
-			auto propType = engiGetAttributeType(attr);
+			auto propType = engiGetAttributeType((int_t)attr);
 			auto value = NestedPropertyValue(instance, CString(attrName), propType, 0);
 
 			CMFCPropertyGridProperty* pProp(new CMFCPropertyGridProperty(attrIndName, value));

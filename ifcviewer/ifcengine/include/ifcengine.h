@@ -52,6 +52,8 @@
 #define		engiGLOBALID			sdaiEXPRESSSTRING + 1
 #define		sdaiNUMBER				engiGLOBALID + 1
 
+#define		engiArrgegationFlag		128
+
 #define		SdaiAccessMode			int_t
 #define		SdaiSession				int_t
 #define		SdaiRep					int_t
@@ -747,13 +749,15 @@ int_t		DECL STDC	engiGetEntityNoAttributesEx(
 
 
 //
-//	DEPR4ECATED use engiGetEntityNoAttributes
+//	DEPRECATED use engiGetEntityNoAttributes
 //
 int_t		DECL STDC	engiGetEntityNoArguments(
 									int_t				entity
 								);
 
 //
+//	DEPRECATED use engiGetAttrType
+// 
 //		engiGetAttributeType                         (http://rdf.bg/ifcdoc/CP64/engiGetAttributeType.html)
 //				int_t				argument							IN
 //
@@ -766,11 +770,13 @@ int_t		DECL STDC	engiGetAttributeType(
 								);
 
 //
-//	DEPR4ECATED use engiGetAttributeType
+//	DEPRECATED use engiGetAttrType
 //
 int_t		DECL STDC	engiGetArgumentType(
 									int_t				argument
 								);
+
+
 
 //
 //		engiGetEntityParent                         (http://rdf.bg/ifcdoc/CP64/engiGetEntityParent.html)
@@ -945,11 +951,11 @@ void		DECL STDC	engiGetEnumerationValue(
 //				bool					countedWithParents					IN
 //				bool					countedWithInverse					IN
 //
-//				int_t					returns
+//				void					* returns
 //
 //		Return attribute definition from attribute index
 //
-int_t		DECL STDC	engiGetEntityAttributeByIndex(
+void	DECL * STDC	engiGetEntityAttributeByIndex(
 									int_t					entity,
 									int_t					index,
 									bool					countedWithParents,
@@ -958,7 +964,7 @@ int_t		DECL STDC	engiGetEntityAttributeByIndex(
 
 //
 //		engiGetAttributeTraits                       (http://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
-//				int_t					attribute								IN
+//				void					* attribute								IN
 //				char					** name								    OUT
 //				int_t					* definingEntity					    OUT
 //				bool					* inverse							    OUT
@@ -971,7 +977,7 @@ int_t		DECL STDC	engiGetEntityAttributeByIndex(
 //
 //
 void		DECL STDC	engiGetAttributeTraits(
-									int_t					attribute,
+									void					* attribute,
 									const char				** name,
 									int_t					* definingEntity,
 									bool					* inverse,
@@ -1415,15 +1421,13 @@ int_t		DECL STDC	sdaiIsKindOfBN(
 
 //
 //		engiGetAttrType                             (http://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
-//				int_t				instance							IN
+// 
 //				const void			* attribute							IN
-//
 //				int_t				returns								OUT
 //
 //	...
 //
 int_t		DECL STDC	engiGetAttrType(
-									int_t				instance,
 									const void			* attribute
 								);
 

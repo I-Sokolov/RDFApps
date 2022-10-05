@@ -37,7 +37,7 @@ private:
 	afx_msg void OnSelchangedReferenceTree(NMHDR* pNMHDR, LRESULT* pResult);
 
 private:
-	void InsertRegularItem(int_t instance, int_t* aggregation, int_t attr, bool inverseReference, HTREEITEM hParent);
+	void InsertRegularItem(int_t instance, int_t* aggregation, void* attr, bool inverseReference, HTREEITEM hParent);
 	void InsertAddMoreItem(HTREEITEM hParent);
 
 	int AddChildItemsWithNewLimit(HTREEITEM hItem, TreeItemData& data);
