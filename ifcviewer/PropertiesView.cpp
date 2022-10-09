@@ -177,15 +177,55 @@ static CString GetInstanceDescription(SdaiInstance instance)
 	return description;
 }
 
+
+static void AddAttributes(SdaiInstance inst, CMFCPropertyGridProperty& parent, LPCWSTR prefix, LPCWSTR descr)
+{
+	auto entity = sdaiGetInstanceType(inst);
+	auto NA = engiGetEntityNoAttributesEx(entity, true, false);
+
+	for (int_t i = 0; i < NA; i++) {
+
+		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
+
+		const char* name = nullptr;
+		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+
+		const wchar_t* val = nullptr;
+		sdaiGetAttr(inst, attr, sdaiUNICODE, &val);
+
+		if (val && *val) {
+			CString showName (prefix);
+			showName.Append(CString(name));
+			auto pProp = new CMFCPropertyGridProperty(showName, val, descr);
+			parent.AddSubItem(pProp);
+		}
+	}
+}
+
+
 void CPropertiesView::AddClassification(SdaiInstance classificationSelect)
 {
-	const wchar_t* clsName = nullptr;
-	sdaiGetAttrBN(classificationSelect, (char*) L"Name", sdaiUNICODE, &clsName);
+	CString sourceName = L"Unknown classification";
+	CString sourceDescr;
+	SdaiInstance source = 0;
+	sdaiGetAttrBN(classificationSelect, (char*) L"ReferencedSource", sdaiINSTANCE, &source);
+	if (source) {
+		const wchar_t* name = nullptr;
+		sdaiGetAttrBN(source, (char*) L"Name", sdaiUNICODE, &name);
+		if (name) {
+			sourceName = name;
+		}
+
+		sourceDescr = GetInstanceDescription(source);
+	}
 
 	CString descr = GetInstanceDescription(classificationSelect);
 
-	auto pPropClassif = new CMFCPropertyGridProperty(clsName);
-	pPropClassif->SetDescription(descr);
+	auto pPropClassif = new CMFCPropertyGridProperty(sourceName);
+	pPropClassif->SetDescription(descr + L"; " + sourceDescr);
+
+	AddAttributes(classificationSelect, *pPropClassif, L"", descr);
+	AddAttributes(source, *pPropClassif, L"ReferencedSource.", sourceDescr);
 
 	m_wndProps.AddProperty(pPropClassif);
 }

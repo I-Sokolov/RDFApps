@@ -52,7 +52,7 @@
 #define		engiGLOBALID			sdaiEXPRESSSTRING + 1
 #define		sdaiNUMBER				engiGLOBALID + 1
 
-#define		engiTypeFlagAggr		128
+#define		engiTypeFlagAggr		128 
 #define		engiTypeFlagAggrOption	32
 
 #define		SdaiAccessMode			int_t
@@ -965,7 +965,7 @@ void	DECL * STDC	engiGetEntityAttributeByIndex(
 
 //
 //		engiGetAttributeTraits                       (http://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
-//				void					* attribute								IN
+//				const void				* attribute								IN
 //				char					** name								    OUT
 //				int_t					* definingEntity					    OUT
 //				bool					* inverse							    OUT
@@ -978,7 +978,7 @@ void	DECL * STDC	engiGetEntityAttributeByIndex(
 //
 //
 void		DECL STDC	engiGetAttributeTraits(
-									void					* attribute,
+									const void				* attribute,
 									const char				** name,
 									int_t					* definingEntity,
 									bool					* inverse,
@@ -1424,24 +1424,66 @@ int_t		DECL STDC	sdaiIsKindOfBN(
 //		engiGetAttrType                             (http://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
 // 
 //				const void			* attribute							IN
+// 
 //				int_t				returns								OUT
 //
-//	...
+//		Retturns primitive SDAI data type for the attribute according to schema, e.g. sdaiINTEGER
+// 
+//		In case of aggregation if will return base primitive type combined with engiTypeFlagAggr, e.g. sdaiINTEGER|engiTypeFlagAggr
+// 
+//		For SELECT it will return sdaiINSTANCE if all options are instances or aggegation of instances, either sdaiADB
+//		In case of SELECT and sdaiINSTANCE, return value will be combined with engiTypeFlagAggrOption if some options are aggregation
+//		or engiTypeFlagAggr if all options are aggregations of instances
+// 
+//		It works for direct and inverse attributes
 //
 int_t		DECL STDC	engiGetAttrType(
+									const void			* attribute
+								); 
+
+//
+//		engiGetAttrTypeBN                           (http://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
+//				int_t				entity							IN
+//				const char			* attributeName						IN
+//
+//				int_t				returns								OUT
+//
+//		Combines sdaiGetAttrDefinition and engiGetAttrType
+//
+int_t		DECL STDC	engiGetAttrTypeBN(
+									int_t				entity,
+									const char			* attributeName
+								);
+
+
+//
+//		engiGetInstanceAttrType                           
+//				int_t				instance							IN
+//				const void			* attribute							IN
+//
+//				int_t				returns								OUT
+//
+//		Returns SDAI type for actual data stored in the instance for the attribute
+//		It may be primitive type, sdaiAGGR or sdaiADB
+//		Returns 0 for $ and * 
+//
+//
+int_t		DECL STDC	engiGetInstanceAttrType(
+									int_t				instance,
 									const void			* attribute
 								);
 
 //
-//		engiGetAttrTypeBN                           (http://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
+//		engiGetInstanceAttrTypeBN                           
 //				int_t				instance							IN
 //				const char			* attributeName						IN
 //
 //				int_t				returns								OUT
 //
-//	...
+//		Combines sdaiGetAttrDefinition and engiGetInstanceAttrType
 //
-int_t		DECL STDC	engiGetAttrTypeBN(
+//
+int_t		DECL STDC	engiGetInstanceAttrTypeBN(
 									int_t				instance,
 									const char			* attributeName
 								);
