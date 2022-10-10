@@ -74,18 +74,24 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)-C++_32bit_Unicode_DEBUG</TargetName>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetName>$(ProjectName)-C++_64bit_Unicode_DEBUG</TargetName>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-C++_32bit_Unicode</TargetName>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-C++_64bit_Unicode</TargetName>
+    <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,7 +144,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat $(SolutionDir)$(Platform)\  $(Configuration)</Command>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Update ifcEngine</Message>
@@ -197,7 +203,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat $(SolutionDir)$(Platform)\  $(Configuration)</Command>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
       <Message>Update ifcEngine</Message>
