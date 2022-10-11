@@ -124,6 +124,15 @@ BOOL CifcviewerApp::InitInstance()
 
 	// Dispatch commands specified on the command line.  Will return FALSE if
 	// app was launched with /RegServer, /Register, /Unregserver or /Unregister.
+
+	//ifcViewer initialization specific: it can not open file before first show winodow, 
+	//but need call to ProsessShellCommand before showing window
+	CString fileToOpen;
+	if (cmdInfo.m_nShellCommand == CCommandLineInfo::FileOpen) {
+		fileToOpen = cmdInfo.m_strFileName;
+		cmdInfo.m_nShellCommand = CCommandLineInfo::FileNew;
+	}
+	//
 	if (!ProcessShellCommand(cmdInfo))
 		return FALSE;
 
@@ -134,6 +143,11 @@ BOOL CifcviewerApp::InitInstance()
 	//  In an SDI app, this should occur after ProcessShellCommand
 	// Enable drag/drop open
 	m_pMainWnd->DragAcceptFiles();
+
+	if (!fileToOpen.IsEmpty()) {
+		return OpenDocumentFile(fileToOpen)!=nullptr;
+	}
+
 	return TRUE;
 }
 
