@@ -212,7 +212,7 @@ static void AddAttributes(SdaiInstance inst, CMFCPropertyGridProperty& parent, L
 
 void CPropertiesView::AddClassification(SdaiInstance classificationSelect)
 {
-	CString sourceName = L"Unknown classification";
+	CString sourceName = L"Unknown";
 	CString sourceDescr;
 	SdaiInstance source = 0;
 	sdaiGetAttrBN(classificationSelect, (char*) L"ReferencedSource", sdaiINSTANCE, &source);
@@ -228,7 +228,7 @@ void CPropertiesView::AddClassification(SdaiInstance classificationSelect)
 
 	CString descr = GetInstanceDescription(classificationSelect);
 
-	auto pPropClassif = new CMFCPropertyGridProperty(sourceName);
+	auto pPropClassif = new CMFCPropertyGridProperty(L"Classification " + sourceName);
 	pPropClassif->SetDescription(descr + L"; " + sourceDescr);
 
 	AddAttributes(classificationSelect, *pPropClassif, L"", descr);
@@ -239,12 +239,19 @@ void CPropertiesView::AddClassification(SdaiInstance classificationSelect)
 
 void CPropertiesView::AddTypeObject(SdaiInstance typeObject)
 {
+	const wchar_t* typeEntityName = nullptr;
+	engiGetEntityName(sdaiGetInstanceType(typeObject), sdaiUNICODE, (const char**)&typeEntityName);
+
 	const wchar_t* typeName = nullptr;
 	sdaiGetAttrBN(typeObject, (char*) L"Name", sdaiUNICODE, &typeName);
 
+	CString name(typeEntityName);
+	name += " ";
+	name += typeName;
+
 	CString descr = GetInstanceDescription(typeObject);
 
-	auto pPropTO = new CMFCPropertyGridProperty(typeName);
+	auto pPropTO = new CMFCPropertyGridProperty(name);
 	pPropTO->SetDescription(descr);
 
 	STRUCT__PROPERTY__SET* propertySets = nullptr;
