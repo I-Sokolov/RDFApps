@@ -54,6 +54,7 @@ END_MESSAGE_MAP()
 
 void CLeftPane::OnGetInfoTip(NMHDR *pNMHDR, LRESULT *pResult)
 {
+#if 0
 	LPNMTVGETINFOTIP	pGetInfoTip = (LPNMTVGETINFOTIP)pNMHDR;
 	STRUCT_TREE_ITEM	* treeItem = (STRUCT_TREE_ITEM*) GetTreeCtrl().GetItemData(pGetInfoTip->hItem);
 
@@ -95,7 +96,7 @@ void CLeftPane::OnGetInfoTip(NMHDR *pNMHDR, LRESULT *pResult)
 		strItemTxt = strItemTxt.Left(pGetInfoTip->cchTextMax - 1);
 		StrCpyW(pGetInfoTip->pszText, strItemTxt);
 	}
-
+#endif
 	*pResult = 0;
 }
 
