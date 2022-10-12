@@ -81,19 +81,12 @@ namespace RDF
             ModelCheckerProgress () : m_limit(0), m_pos(0) {}
         };
 
-        interface InstanceVisitor
-        {
-            virtual bool OnVisitInstance(SdaiInstance instance) = NULL; //return false to stop enumeration
-        };
-
     public:
         static ErrorLevel CheckModel(SdaiModel model, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
 
         static ErrorLevel CheckInstance(SdaiInstance instance, ModelCheckerLog* pLog = nullptr, ModelCheckerProgress* pProgress = nullptr);
         
-        static void VisitAllInstances(SdaiModel model, InstanceVisitor& visitor);
-
-        static void CollectReferencingInstancesRecirsive (std::set<SdaiInstance>& referencingInstances, SdaiInstance referencedInstance, SdaiEntity* searchEntities /*NULL-terminated array*/);
+        static void CollectReferencingInstancesRecursive (std::set<SdaiInstance>& referencingInstances, SdaiInstance referencedInstance, SdaiEntity* searchEntities /*NULL-terminated array*/);
     };
 }
 

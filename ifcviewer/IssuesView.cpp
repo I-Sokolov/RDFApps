@@ -202,7 +202,7 @@ const std::set<int_t>& CIssuesView::Issue::RelatedInstances()
 			sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 			0};
 
-			RDF::CModelChecker::CollectReferencingInstancesRecirsive(m_relatedInstances, instance, searchEntities);
+			RDF::CModelChecker::CollectReferencingInstancesRecursive(m_relatedInstances, instance, searchEntities);
 		}
 	}
 

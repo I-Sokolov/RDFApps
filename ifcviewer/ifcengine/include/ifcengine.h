@@ -2241,7 +2241,6 @@ int_t		DECL STDC	getFilter(
 
 //
 //		xxxxGetEntityAndSubTypesExtent              (http://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtent.html)
-//				int_t				model								IN
 //				int_t				entity								IN
 //
 //				int_t				* returns							OUT
@@ -2249,7 +2248,6 @@ int_t		DECL STDC	getFilter(
 //	...
 //
 int_t		DECL * STDC	xxxxGetEntityAndSubTypesExtent(
-									int_t				model,
 									int_t				entity
 								);
 
@@ -2265,6 +2263,18 @@ int_t		DECL * STDC	xxxxGetEntityAndSubTypesExtent(
 int_t		DECL * STDC	xxxxGetEntityAndSubTypesExtentBN(
 									int_t				model,
 									const char			* entityName
+								);
+
+//
+//		xxxxGetAllInstances              (http://rdf.bg/ifcdoc/CP64/xxxxGetAllInstances.html)
+//				int_t				model								IN
+//
+//				int_t				* returns							OUT
+//
+//	...
+//
+int_t		DECL * STDC	xxxxGetAllInstances(
+									int_t				model
 								);
 
 //

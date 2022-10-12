@@ -43,12 +43,22 @@ public:
 
 private:
 	void AddRelationshipsOf(SdaiInstance instance);
+	bool CheckRelationship(SdaiInstance current, SdaiInstance visiting);
 
 	void AddPropertySetsOf(SdaiInstance instance);
 	void AddPropertySet(STRUCT__PROPERTY__SET* propertySets, CMFCPropertyGridProperty* pGroup = NULL);
 
 private:
 	CMFCPropertyGridCtrl m_wndProps;
+
+	SdaiEntity		 m_entityRelDefinesByType;
+	void*			 m_attrRelatedObjectsDBT;
+	void*			 m_attrRelatingType;
+
+	SdaiEntity		 m_entityRelAssociatesClassification;
+	void*			 m_attrRelatedObjectsAC;
+	void*		     m_attrRelatingClassification;
+
 };
 
 

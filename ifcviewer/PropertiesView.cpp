@@ -15,7 +15,13 @@ IMPLEMENT_DYNCREATE(CPropertiesView, CFormView)
 CPropertiesView::CPropertiesView()
 	: CFormView(IDD_PropertiesView)
 {
+	m_entityRelDefinesByType = 0;
+	m_attrRelatedObjectsDBT = 0;
+	m_attrRelatingType = 0;
 
+	m_entityRelAssociatesClassification = 0;
+	m_attrRelatedObjectsAC = 0;
+	m_attrRelatingClassification = 0;
 }
 
 CPropertiesView::~CPropertiesView()
@@ -66,6 +72,25 @@ void CPropertiesView::OnInitialUpdate()
 {
 	CFormView::OnInitialUpdate();
 	m_wndProps.RemoveAll();
+
+	if (globalIfcModel) {
+		m_entityRelDefinesByType = sdaiGetEntity(globalIfcModel, (char*) L"IFCRELDEFINESBYTYPE");
+		m_attrRelatedObjectsDBT = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatedObjects");
+		m_attrRelatingType = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatingType");
+
+		m_entityRelAssociatesClassification = sdaiGetEntity(globalIfcModel, (char*) L"IfcRelAssociatesClassification");
+		m_attrRelatedObjectsAC = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatedObjects");
+		m_attrRelatingClassification = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatingClassification");
+	}
+	else {
+		m_entityRelDefinesByType = 0;
+		m_attrRelatedObjectsDBT = 0;
+		m_attrRelatingType = 0;
+
+		m_entityRelAssociatesClassification = 0;
+		m_attrRelatedObjectsAC = 0;
+		m_attrRelatingClassification = 0;
+	}
 }
 
 
@@ -89,68 +114,50 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	Invalidate();
 }
 
-struct RelationshipsVisitor : public RDF::CModelChecker::InstanceVisitor
+static SdaiInstance GetRelating(SdaiInstance current, SdaiInstance visiting, SdaiEntity relEntyity, void* attrRelated, void* attrRelating)
 {
-	RelationshipsVisitor(CPropertiesView& me, SdaiInstance instance) : m_me(me), m_inst(instance)
-	{
-		m_entityRelDefinesByType = sdaiGetEntity(globalIfcModel, (char*) L"IFCRELDEFINESBYTYPE");
-		m_attrRelatedObjectsDBT = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatedObjects");
-		m_attrRelatingType = sdaiGetAttrDefinition(m_entityRelDefinesByType, (char*) L"RelatingType");
+	SdaiInstance relating = NULL;
 
-		m_entityRelAssociatesClassification = sdaiGetEntity(globalIfcModel, (char*) L"IfcRelAssociatesClassification");
-		m_attrRelatedObjectsAC = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatedObjects");
-		m_attrRelatingClassification = sdaiGetAttrDefinition(m_entityRelAssociatesClassification, (char*) L"RelatingClassification");
+	if (sdaiIsKindOf(visiting, relEntyity)) {
+		SdaiAggr relatedObjects = NULL;
+		sdaiGetAttr(visiting, attrRelated, sdaiAGGR, &relatedObjects);
+		if (AggregationContainsInstance(relatedObjects, current)) {
+			sdaiGetAttr(visiting, attrRelating, sdaiINSTANCE, &relating);
+		}
 	}
 
-	SdaiInstance GetRelating(SdaiInstance visiting, SdaiEntity relEntyity, void* attrRelated, void* attrRelating)
-	{
-		SdaiInstance relating = NULL;
+	return relating;
+}
 
-		if (sdaiIsKindOf(visiting, relEntyity)) {
-			SdaiAggr relatedObjects = NULL;
-			sdaiGetAttr(visiting, attrRelated, sdaiAGGR, &relatedObjects);
-			if (AggregationContainsInstance(relatedObjects, m_inst)) {
-				sdaiGetAttr(visiting, attrRelating, sdaiINSTANCE, &relating);
-			}
-		}
-		
-		return relating;
-	}
-
-	virtual bool OnVisitInstance(SdaiInstance visiting) override
-	{
-		auto relating = GetRelating(visiting, m_entityRelDefinesByType, m_attrRelatedObjectsDBT, m_attrRelatingType);
-		if (relating) {
-			m_me.AddTypeObject(relating);
-			return true;
-		}
-
-		relating = GetRelating(visiting, m_entityRelAssociatesClassification, m_attrRelatedObjectsAC, m_attrRelatingClassification);
-		if (relating) {
-			m_me.AddClassification(relating);
-			return true;
-		}
-
+bool CPropertiesView::CheckRelationship(SdaiInstance current, SdaiInstance visiting)
+{
+	auto relating = GetRelating(current, visiting, m_entityRelDefinesByType, m_attrRelatedObjectsDBT, m_attrRelatingType);
+	if (relating) {
+		AddTypeObject(relating);
 		return true;
 	}
 
-private:
-	CPropertiesView& m_me;
-	SdaiInstance	 m_inst;
+	relating = GetRelating(current, visiting, m_entityRelAssociatesClassification, m_attrRelatedObjectsAC, m_attrRelatingClassification);
+	if (relating) {
+		AddClassification(relating);
+		return true;
+	}
 
-	SdaiEntity		 m_entityRelDefinesByType;
-	void*			 m_attrRelatedObjectsDBT;
-	void*			 m_attrRelatingType;
+	return true;
+}
 
-	SdaiEntity		 m_entityRelAssociatesClassification;
-	void*			 m_attrRelatedObjectsAC;
-	void*		     m_attrRelatingClassification;
-};
 
 void CPropertiesView::AddRelationshipsOf(SdaiInstance instance)
 {
-	RelationshipsVisitor v(*this, instance);
-	RDF::CModelChecker::VisitAllInstances(globalIfcModel, v);
+	auto visitall = xxxxGetAllInstances(globalIfcModel);
+	auto N = sdaiGetMemberCount(visitall);
+	for (int_t i = 0; i < N; i++) {
+		int_t inst;
+		engiGetAggrElement(visitall, i, sdaiINSTANCE, &inst);
+		if (instance) {
+			CheckRelationship(instance, inst);
+		}
+	}
 }
 
 static CString GetInstanceDescription(SdaiInstance instance)

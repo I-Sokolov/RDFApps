@@ -245,7 +245,7 @@ void CModelCheckDlg::OnActivateListItem(int iItem)
 					sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 					0};
 
-					RDF::CModelChecker::CollectReferencingInstancesRecirsive(p->relatingInstances, instance, searchEntities);
+					RDF::CModelChecker::CollectReferencingInstancesRecursive(p->relatingInstances, instance, searchEntities);
 				}
 
 			}
