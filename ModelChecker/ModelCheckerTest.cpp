@@ -8,7 +8,12 @@
 
 #define ASSERT assert
 
-static int CheckModel(const char* filePath, const char* expressSchemaFilePath, RDF::CModelChecker::ModelCheckerLog* pLog);
+struct IssueHandler
+{
+    virtual void OnIssue(RDF::ModelChecker::IssueInfo* issue) = NULL;
+};
+
+static int CheckModel(const char* filePath, const char* expressSchemaFilePath, IssueHandler* pIssueHandler);
 static int CheckModels(const char* filePath, const char* expressSchemaFilePath);
 static int RunSmokeTests();
 
@@ -35,46 +40,48 @@ int main(int argc, char* argv[])
 }
 
 /// <summary>
-/// Default reporting 
+/// Issue reporting 
 /// </summary>
-void CModelChecker::ModelCheckerLog::ReportIssue(IssueInfo& issue)
+struct PrintIssue : public IssueHandler
 {
-    printf(INDENT "<Issue");
+    virtual void OnIssue(RDF::ModelChecker::IssueInfo* issue) override
+    {
+        printf(INDENT "<Issue");
 
-    if (issue.stepId > 0) {
-        printf(" stepId='#%lld'", issue.stepId);
-    }
-
-    if (issue.entity) {
-        printf(" entity='%s'", issue.entity);
-    }
-
-    if (issue.attrName) {
-        printf(" attribute='%s'", issue.attrName);
-    }
-
-    if (issue.attrIndex >= 0) {
-        printf(" attributeIndex='%lld'", (int64_t) issue.attrIndex);
-    }
-
-    for (int_t i = 0; i < issue.aggrLevel; i++) {
-        if (i == 0) {
-            printf(" aggregationIndex='%lld'", (int64_t) issue.aggrIndArray[i]);
+        if (issue.stepId > 0) {
+            printf(" stepId='#%lld'", issue.stepId);
         }
-        else {
-            printf(" aggregationIndex_%lld='%lld'", (int64_t) i, (int64_t) issue.aggrIndArray[i]);
+
+        if (issue.entity) {
+            printf(" entity='%s'", issue.entity);
         }
+
+        if (issue.attrName) {
+            printf(" attribute='%s'", issue.attrName);
+        }
+
+        if (issue.attrIndex >= 0) {
+            printf(" attributeIndex='%lld'", (int64_t) issue.attrIndex);
+        }
+
+        for (int_t i = 0; i < issue.aggrLevel; i++) {
+            if (i == 0) {
+                printf(" aggregationIndex='%lld'", (int64_t) issue.aggrIndArray[i]);
+            }
+            else {
+                printf(" aggregationIndex_%lld='%lld'", (int64_t) i, (int64_t) issue.aggrIndArray[i]);
+            }
+        }
+
+        printf(" issueId='%d' issueLevel='%d'>\n", (int) issue.issueId, issue.level);
+
+        if (issue.text) {
+            printf(INDENT INDENT "%s\n", issue.text);
+        }
+
+        printf(INDENT "</Issue>\n");
     }
-
-    printf(" issueId='%d' issueLevel='%d'>\n", (int) issue.issueId, issue.level);
-
-    if (issue.text) {
-        printf(INDENT INDENT "%s\n", issue.text);
-    }
-
-    printf(INDENT "</Issue>\n");
-}
-
+};
 
 static int CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
 {
