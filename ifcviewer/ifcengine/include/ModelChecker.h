@@ -25,7 +25,7 @@ namespace RDF
 {
     namespace ModelChecker
     {
-        typedef int ErrorLevel;
+        typedef unsigned int ErrorLevel;
 
         enum class IssueID : unsigned char
         {
