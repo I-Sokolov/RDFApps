@@ -34,6 +34,47 @@ int main(int argc, char* argv[])
     return level;
 }
 
+/// <summary>
+/// Default reporting 
+/// </summary>
+void CModelChecker::ModelCheckerLog::ReportIssue(IssueInfo& issue)
+{
+    printf(INDENT "<Issue");
+
+    if (issue.stepId > 0) {
+        printf(" stepId='#%lld'", issue.stepId);
+    }
+
+    if (issue.entity) {
+        printf(" entity='%s'", issue.entity);
+    }
+
+    if (issue.attrName) {
+        printf(" attribute='%s'", issue.attrName);
+    }
+
+    if (issue.attrIndex >= 0) {
+        printf(" attributeIndex='%lld'", (int64_t) issue.attrIndex);
+    }
+
+    for (int_t i = 0; i < issue.aggrLevel; i++) {
+        if (i == 0) {
+            printf(" aggregationIndex='%lld'", (int64_t) issue.aggrIndArray[i]);
+        }
+        else {
+            printf(" aggregationIndex_%lld='%lld'", (int64_t) i, (int64_t) issue.aggrIndArray[i]);
+        }
+    }
+
+    printf(" issueId='%d' issueLevel='%d'>\n", (int) issue.issueId, issue.level);
+
+    if (issue.text) {
+        printf(INDENT INDENT "%s\n", issue.text);
+    }
+
+    printf(INDENT "</Issue>\n");
+}
+
 
 static int CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
 {

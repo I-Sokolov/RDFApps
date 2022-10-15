@@ -8,16 +8,6 @@
 
 #include "IFCEngineInteract.h"
 
-struct ModelCheckerLog : public RDF::CModelChecker::ModelCheckerLog
-{
-	ModelCheckerLog(CListCtrl& wndList) : m_wndList(wndList) { for (auto& w : rWidth) { w = 0; } }
-
-	virtual void ReportIssue(RDF::CModelChecker::IssueInfo& issue) override;
-	
-	CListCtrl& m_wndList;
-	int        rWidth[4];
-};
-
 struct IssueData
 {
 	int_t stepId = -1;
@@ -118,32 +108,40 @@ void CModelCheckDlg::FillIssueList()
 
 	if (globalIfcModel) {
 
-		ModelCheckerLog log(m_wndIssueList);
-		RDF::CModelChecker::CheckModel(globalIfcModel, &log);
+		auto checks = RDF::ModelChecker::CheckModel(globalIfcModel);
+
+		int rWidth[4] = {0,0,0,0};
+	
+		for (auto issue = RDF::ModelChecker::FirstIssue(checks); issue; issue = RDF::ModelChecker::NextIssue (issue))
+		{
+			AddIssue(issue, rWidth);
+		}
+
+		RDF::ModelChecker::DisposeResults(checks);
 
 		for (int i = 0; i < 4; i++) {
-			m_wndIssueList.SetColumnWidth(i, log.rWidth[i] + 20 * GetSystemMetrics(SM_CXBORDER));
+			m_wndIssueList.SetColumnWidth(i, rWidth[i] + 20 * GetSystemMetrics(SM_CXBORDER));
 		}
 	}
 }
 
-void ModelCheckerLog::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
+void CModelCheckDlg::AddIssue(RDF::ModelChecker::IssueInfo* issue, int rWidth[4])
 {
-	CString text(issue.text);
-	auto item = m_wndList.InsertItem(0, text);
-	rWidth[0] = max(rWidth[0], m_wndList.GetStringWidth(text));
+	CString text (RDF::ModelChecker::Description(issue));
+	auto item = m_wndIssueList.InsertItem(0, text);
+	rWidth[0] = max(rWidth[0], m_wndIssueList.GetStringWidth(text));
 
 	CString id;
-	id.Format(L"%I64d", issue.stepId);
-	m_wndList.SetItemText(item, 1, id);
-	rWidth[1] = max(rWidth[1], m_wndList.GetStringWidth(id));
+	id.Format(L"%I64d", RDF::ModelChecker::StepId (issue));
+	m_wndIssueList.SetItemText(item, 1, id);
+	rWidth[1] = max(rWidth[1], m_wndIssueList.GetStringWidth(id));
 
-	CString entity(issue.entity);
-	m_wndList.SetItemText(item, 2, entity);
-	rWidth[2] = max(rWidth[2], m_wndList.GetStringWidth(entity));
+	CString entity(RDF::ModelChecker::EntityName (issue));
+	m_wndIssueList.SetItemText(item, 2, entity);
+	rWidth[2] = max(rWidth[2], m_wndIssueList.GetStringWidth(entity));
 
 	CString aggrIndex;
-	for (int i = 0; i < issue.aggrLevel; i++) {
+	for (int i = 0; i < RDF::ModelChecker::AggrLevel (issue); i++) {
 		if (aggrIndex.IsEmpty()) {
 			aggrIndex.Append(L"[");
 		}
@@ -152,22 +150,22 @@ void ModelCheckerLog::ReportIssue(RDF::CModelChecker::IssueInfo& issue)
 		}
 
 		CString ind;
-		ind.Format(L"%I64d", issue.aggrIndArray[i]);
+		ind.Format(L"%I64d", RDF::ModelChecker::AggrIndArray (issue)[i]);
 		aggrIndex.Append(ind);
 	}
 	if (!aggrIndex.IsEmpty()) {
 		aggrIndex.Append(L"]");
 	}
 
-	CString attr(issue.attrName);
+	CString attr(RDF::ModelChecker::AttrName (issue));
 	if (!aggrIndex.IsEmpty())
 		attr += aggrIndex;
-	m_wndList.SetItemText(item, 3, attr);
-	rWidth[3] = max(rWidth[3], m_wndList.GetStringWidth(attr));
+	m_wndIssueList.SetItemText(item, 3, attr);
+	rWidth[3] = max(rWidth[3], m_wndIssueList.GetStringWidth(attr));
 
 	auto data = new IssueData();
-	data->stepId = issue.stepId;
-	m_wndList.SetItemData(item, (DWORD_PTR)data);
+	data->stepId = RDF::ModelChecker::StepId (issue);
+	m_wndIssueList.SetItemData(item, (DWORD_PTR)data);
 }
 
 void CModelCheckDlg::OnDeleteitemIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
@@ -245,7 +243,7 @@ void CModelCheckDlg::OnActivateListItem(int iItem)
 					sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 					0};
 
-					RDF::CModelChecker::CollectReferencingInstancesRecursive(p->relatingInstances, instance, searchEntities);
+					RDF::ModelChecker::CollectReferencingInstancesRecursive(p->relatingInstances, instance, searchEntities);
 				}
 
 			}

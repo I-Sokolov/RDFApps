@@ -33,6 +33,8 @@ private:
 
 	void OnActivateListItem(int iItem);
 
+	void AddIssue(RDF::ModelChecker::IssueInfo* issue, int rColWidth[4]);
+
 private:
 	CListCtrl m_wndIssueList;
 

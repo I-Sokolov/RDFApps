@@ -11,17 +11,22 @@ class CIssuesView : public CListView
 public:
 	struct Issue
 	{
-		RDF::CModelChecker::IssueInfo	info;
-		CString							descr;
-		std::list<int_t>                arrgegation;
+		RDF::ModelChecker::IssueID		issueId;
+		int64_t							stepId;
+		CString							entityName;
+		CString							attrName;
+		int_t							attrIndex;
+		std::list<int_t>				arrgegation;
+		RDF::ModelChecker::ErrorLevel	level;
+		CString							text;
 
-		const std::set<int_t>&			RelatedInstances();
+		const std::set<int_t>& RelatedInstances();
 
 	private:
 		bool                            m_relatedInsancesCollected = false;
 		std::set<int_t>                 m_relatedInstances;
 	};
-
+	
 	typedef std::list<Issue> IssueList;
 
 protected:
@@ -46,7 +51,10 @@ public:
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 
 private:
-	IssueList m_lstIssues;
+	void GetIssues(RDF::ModelChecker::CheckResults* results);
+
+private:
+	IssueList						 m_lstIssues;
 };
 
 

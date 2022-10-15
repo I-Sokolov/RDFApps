@@ -66,24 +66,33 @@ int CIssuesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	return 0;
 }
 
-struct IssuesCollector : public RDF::CModelChecker::ModelCheckerLog
+
+void CIssuesView::GetIssues(RDF::ModelChecker::CheckResults* results)
 {
-	IssuesCollector(CIssuesView::IssueList& list) : m_list(list) {}
+	auto issue = RDF::ModelChecker::FirstIssue(results);
+	while (issue) {
 
-	virtual void ReportIssue(RDF::CModelChecker::IssueInfo& issue) override
-	{
-		m_list.push_back(CIssuesView::Issue());
-		m_list.back().info = issue;
-		m_list.back().descr = issue.text;
-
-		for (int_t i = 0; i < issue.aggrLevel; i++) {
-			m_list.back().arrgegation.push_back(issue.aggrIndArray[i]);
+		m_lstIssues.push_back(CIssuesView::Issue());
+		auto& i = m_lstIssues.back();
+		
+		i.issueId = RDF::ModelChecker::IssueId(issue);
+		i.stepId = RDF::ModelChecker::StepId(issue);
+		i.entityName = RDF::ModelChecker::EntityName(issue);
+		i.attrName = RDF::ModelChecker::AttrName(issue);
+		i.attrIndex = RDF::ModelChecker::AttrIndex(issue);
+		
+		auto aggrLevel = RDF::ModelChecker::AggrLevel(issue);
+		auto aggrIndArray = RDF::ModelChecker::AggrIndArray(issue);
+		for (int_t j = 0; j < aggrLevel; j++) {
+			i.arrgegation.push_back(aggrIndArray[j]);
 		}
+
+		i.level = RDF::ModelChecker::Level(issue);
+		i.text = RDF::ModelChecker::Description(issue);
+
+		issue = RDF::ModelChecker::NextIssue(issue);
 	}
-
-	CIssuesView::IssueList& m_list;
-};
-
+}
 
 void CIssuesView::OnInitialUpdate()
 {
@@ -95,8 +104,9 @@ void CIssuesView::OnInitialUpdate()
 	m_lstIssues.clear();
 
 	if (globalIfcModel) {
-		IssuesCollector log(m_lstIssues);
-		RDF::CModelChecker::CheckModel(globalIfcModel, &log);
+		auto checkRes = RDF::ModelChecker::CheckModel(globalIfcModel);
+		GetIssues(checkRes);
+		RDF::ModelChecker::DisposeResults(checkRes);
 	}
 }
 
@@ -133,11 +143,11 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 		if (issue.RelatedInstances().find(instance) != issue.RelatedInstances().end()) {
 
 			CString id;
-			id.Format(L"%lld", issue.info.stepId);
+			id.Format(L"%lld", issue.stepId);
 			auto item = GetListCtrl().InsertItem(GetListCtrl().GetItemCount(), id);
 			rWidth[0] = max(rWidth[0], GetListCtrl().GetStringWidth(id));
 
-			CString entity(issue.info.entity);
+			CString entity(issue.entityName);
 			GetListCtrl().SetItemText(item, 1, entity);
 			rWidth[1] = max(rWidth[1], GetListCtrl().GetStringWidth(entity));
 
@@ -159,15 +169,15 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 				aggrIndex.Append(L"]");
 			}
 
-			CString attr(issue.info.attrName);
+			CString attr(issue.attrName);
 			if (!aggrIndex.IsEmpty())
 				attr += aggrIndex;
 
 			GetListCtrl().SetItemText (item, 2, attr);
 			rWidth[2] = max(rWidth[2], GetListCtrl().GetStringWidth(attr));
 
-			GetListCtrl().SetItemText(item, 3, issue.descr);
-			rWidth[3] = max(rWidth[3], GetListCtrl().GetStringWidth(issue.descr));
+			GetListCtrl().SetItemText(item, 3, issue.text);
+			rWidth[3] = max(rWidth[3], GetListCtrl().GetStringWidth(issue.text));
 		}
 	}
 
@@ -193,7 +203,7 @@ const std::set<int_t>& CIssuesView::Issue::RelatedInstances()
 	if (!m_relatedInsancesCollected) {
 		m_relatedInsancesCollected = true;
 
-		auto instance = internalGetInstanceFromP21Line(globalIfcModel, info.stepId);
+		auto instance = internalGetInstanceFromP21Line(globalIfcModel, stepId);
 		ASSERT(instance);
 		if (instance) {
 
@@ -202,7 +212,7 @@ const std::set<int_t>& CIssuesView::Issue::RelatedInstances()
 			sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 			0};
 
-			RDF::CModelChecker::CollectReferencingInstancesRecursive(m_relatedInstances, instance, searchEntities);
+			RDF::ModelChecker::CollectReferencingInstancesRecursive(m_relatedInstances, instance, searchEntities);
 		}
 	}
 
