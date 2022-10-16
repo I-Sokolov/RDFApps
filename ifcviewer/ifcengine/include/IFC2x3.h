@@ -9,7 +9,6 @@
 #include    <string>
 
 #include	"ifcengine.h"
-#include    "engineinline.h"
 
 namespace IFC2x3
 {

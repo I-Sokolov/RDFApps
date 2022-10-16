@@ -6,7 +6,6 @@
 
 #include    <assert.h>
 #include	"engine.h"
-#include    "engineinline.h"
 
 namespace GEOM
 {

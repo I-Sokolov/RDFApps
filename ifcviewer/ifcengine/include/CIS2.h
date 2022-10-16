@@ -9,7 +9,6 @@
 #include    <string>
 
 #include	"ifcengine.h"
-#include    "engineinline.h"
 
 namespace CIS2
 {
@@ -5400,6 +5399,8 @@ namespace CIS2
     template <typename TList> class set_of_document_representation_typeSerializer : public AggrSerializerInstance<TList, document_representation_type> {};
     typedef std::list<connected_edge_set> set_of_connected_edge_set;
     template <typename TList> class set_of_connected_edge_setSerializer : public AggrSerializerInstance<TList, connected_edge_set> {};
+    typedef std::list<oriented_edge> list_of_oriented_edge;
+    template <typename TList> class list_of_oriented_edgeSerializer : public AggrSerializerInstance<TList, oriented_edge> {};
     typedef std::list<element_node_connectivity> set_of_element_node_connectivity;
     template <typename TList> class set_of_element_node_connectivitySerializer : public AggrSerializerInstance<TList, element_node_connectivity> {};
     typedef std::list<section_profile> list_of_section_profile;
@@ -5492,8 +5493,6 @@ namespace CIS2
     template <typename TList> class set_of_value_qualifierSerializer : public AggrSerializerSelect<TList, value_qualifier> {};
     typedef std::list<person_and_organization> list_of_person_and_organization;
     template <typename TList> class list_of_person_and_organizationSerializer : public AggrSerializerInstance<TList, person_and_organization> {};
-    typedef std::list<oriented_edge> list_of_oriented_edge;
-    template <typename TList> class list_of_oriented_edgeSerializer : public AggrSerializerInstance<TList, oriented_edge> {};
     typedef std::list<organization> set_of_organization;
     template <typename TList> class set_of_organizationSerializer : public AggrSerializerInstance<TList, organization> {};
     typedef std::list<StringValue> list_of_label;
