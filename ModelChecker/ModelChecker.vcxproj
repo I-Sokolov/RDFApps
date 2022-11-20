@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\ToolBox;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\ToolBoxEx;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -178,10 +178,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SmokeTestsIFC4.ifc" />
-    <None Include="SmokeTestsIFC2x3.ifc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

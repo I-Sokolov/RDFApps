@@ -3,7 +3,7 @@ echo Check IFC engine includes
 if .%RDF_IFC_ENGINE_INCLUDE%.==.. goto IncUpdated
 echo echo Update IFC engine includes 
 xcopy %RDF_IFC_ENGINE_INCLUDE% IfcEngine\include /F /Y
-xcopy %RDF_IFC_ENGINE_INCLUDE%..\ToolBox\ModelChecker.h IfcEngine\include /F /Y
+xcopy %RDF_IFC_ENGINE_INCLUDE%..\ToolBoxEx\ModelCheckerAPI.h IfcEngine\include /F /Y
 :IncUpdated
 
 echo Check IFC engine binaries

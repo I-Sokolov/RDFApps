@@ -49,8 +49,7 @@
 #include <set>
 
 #include "ifcengine\include\ifcengine.h"
-#define IFCENGINE_MODEL_CHECKER
-#include "ifcengine\include\ModelChecker.h"
+#include "ifcengine\include\ModelCheckerAPI.h"
 
 
 

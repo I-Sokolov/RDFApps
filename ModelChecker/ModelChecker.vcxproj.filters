@@ -27,8 +27,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SmokeTestsIFC2x3.ifc" />
-    <None Include="SmokeTestsIFC4.ifc" />
-  </ItemGroup>
 </Project>

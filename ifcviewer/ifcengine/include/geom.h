@@ -82,6 +82,7 @@ namespace GEOM
     class Line3D;
     class Line3Dn;
     class Line3DSet;
+    class Line4D;
     class LineByFace;
     class Material;
     class Mathematics;
@@ -97,10 +98,12 @@ namespace GEOM
     class Point3D;
     class Point3DSet;
     class Point3DSetByGeometricItem;
+    class Point4D;
     class PointLight;
     class PointLoop;
     class Polygon2D;
     class Polygon3D;
+    class Polygon4D;
     class PolyLine3D;
     class Prism;
     class Profile;
@@ -566,6 +569,18 @@ namespace GEOM
         AdvancedFace3D(int64_t instance, const char* checkClassName)
             : AdvancedFace(instance, checkClassName)
         {}
+
+    public:
+       //
+       // Properties with known cardinality restrictions to AdvancedFace3D
+       //
+
+        ///<summary>Sets values of isOuterBound. OWL cardinality 0..-1</summary>
+        bool set_isOuterBound(const bool* values, int64_t count) { return SetDatatypeProperty ("isOuterBound", values, count); }
+        ///<summary>Sets values of isOuterBound from enumerable collection (std::vector, std::list, etc.) of elements convertible to bool. OWL cardinality 0..-1</summary>
+        template <typename TList> bool set_isOuterBound(const TList& values) { bool* arr = NULL; int64_t count = 0; ListToArray(values, &arr, &count); bool ok = set_isOuterBound(arr, count); if (arr) delete[] arr; return ok; }
+        ///<summary>Gets values array of isOuterBound. OWL cardinality 0..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const bool* get_isOuterBound(int64_t* pCount) { return GetDatatypeProperty<bool>("isOuterBound", pCount); }
     };
 
     /// <summary>
@@ -1892,6 +1907,10 @@ namespace GEOM
         template <typename TList> bool set_textureIndices(const TList& values) { int64_t* arr = NULL; int64_t count = 0; ListToArray(values, &arr, &count); bool ok = set_textureIndices(arr, count); if (arr) delete[] arr; return ok; }
         ///<summary>Gets values array of textureIndices. OWL cardinality 0..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
         const int64_t* get_textureIndices(int64_t* pCount) { return GetDatatypeProperty<int64_t>("textureIndices", pCount); }
+        ///<summary>Sets value of vertexEpsilon</summary>
+        bool set_vertexEpsilon(double value) { return SetDatatypeProperty ("vertexEpsilon", &value, 1); }
+        ///<summary>Gets a value of vertexEpsilon, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const double* get_vertexEpsilon() { return GetDatatypeProperty<double>("vertexEpsilon", NULL); }
         ///<summary>Sets values of vertices. OWL cardinality 0..-1</summary>
         bool set_vertices(const double* values, int64_t count) { return SetDatatypeProperty ("vertices", values, count); }
         ///<summary>Sets values of vertices from enumerable collection (std::vector, std::list, etc.) of elements convertible to double. OWL cardinality 0..-1</summary>
@@ -2545,6 +2564,10 @@ namespace GEOM
         bool set_representsSolid(bool value) { return SetDatatypeProperty ("representsSolid", &value, 1); }
         ///<summary>Gets a value of representsSolid, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
         const bool* get_representsSolid() { return GetDatatypeProperty<bool>("representsSolid", NULL); }
+        ///<summary>Sets value of vertexEpsilon</summary>
+        bool set_vertexEpsilon(double value) { return SetDatatypeProperty ("vertexEpsilon", &value, 1); }
+        ///<summary>Gets a value of vertexEpsilon, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const double* get_vertexEpsilon() { return GetDatatypeProperty<double>("vertexEpsilon", NULL); }
     };
 
     /// <summary>
@@ -4865,6 +4888,59 @@ namespace GEOM
     };
 
     /// <summary>
+    /// Provides utility methods to interact with an instance of OWL class Line4D
+    /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
+    /// </summary>
+    class Line4D : public Curve
+    {
+    public:
+        /// <summary>
+        /// Create new instace of OWL class Line4D and returns object of this C++ class to interact with
+        /// </summary>
+        /// <param name="model">The handle to the model</param>
+        /// <param name="name">This attribute represents the name of the instance (given as char array / ASCII). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Line4D Create(int64_t model, const char* name=NULL) { return Line4D(Instance::Create(model, "Line4D", name, NULL), "Line4D");}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="name">This attribute represents the name of the instance (given as wchar_t array / Unicode). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Line4D CreateW(int64_t model, const wchar_t* name = NULL) { return Line4D(Instance::Create(model, "Line4D", NULL, name), "Line4D"); }
+
+    public:
+        /// <summary>
+        /// Constructs object of this C++ class that wraps existing OWL instance
+        /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        ///
+        Line4D(int64_t instance = NULL)
+            : Curve(instance, "Line4D")
+        {}
+
+    protected:
+        Line4D(int64_t instance, const char* checkClassName)
+            : Curve(instance, checkClassName)
+        {}
+
+    public:
+       //
+       // Properties with known cardinality restrictions to Line4D
+       //
+
+        ///<summary>Sets relationship from this instance to an instance of Point</summary>
+        bool set_firstPoint(const Point& instance) { return SetObjectProperty<Point>("firstPoint", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Point* get_firstPoint() { return GetObjectProperty<Point>("firstPoint", NULL); }
+        ///<summary>Sets relationship from this instance to an instance of Point</summary>
+        bool set_secondPoint(const Point& instance) { return SetObjectProperty<Point>("secondPoint", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Point* get_secondPoint() { return GetObjectProperty<Point>("secondPoint", NULL); }
+    };
+
+    /// <summary>
     /// Provides utility methods to interact with an instance of OWL class LineByFace
     /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
     /// </summary>
@@ -5550,6 +5626,63 @@ namespace GEOM
     };
 
     /// <summary>
+    /// Provides utility methods to interact with an instance of OWL class Point4D
+    /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
+    /// </summary>
+    class Point4D : public Point
+    {
+    public:
+        /// <summary>
+        /// Create new instace of OWL class Point4D and returns object of this C++ class to interact with
+        /// </summary>
+        /// <param name="model">The handle to the model</param>
+        /// <param name="name">This attribute represents the name of the instance (given as char array / ASCII). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Point4D Create(int64_t model, const char* name=NULL) { return Point4D(Instance::Create(model, "Point4D", name, NULL), "Point4D");}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="name">This attribute represents the name of the instance (given as wchar_t array / Unicode). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Point4D CreateW(int64_t model, const wchar_t* name = NULL) { return Point4D(Instance::Create(model, "Point4D", NULL, name), "Point4D"); }
+
+    public:
+        /// <summary>
+        /// Constructs object of this C++ class that wraps existing OWL instance
+        /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        ///
+        Point4D(int64_t instance = NULL)
+            : Point(instance, "Point4D")
+        {}
+
+    protected:
+        Point4D(int64_t instance, const char* checkClassName)
+            : Point(instance, checkClassName)
+        {}
+
+    public:
+       //
+       // Properties with known cardinality restrictions to Point4D
+       //
+
+        ///<summary>Sets relationship from this instance to an instance of Vector3</summary>
+        bool set_normal(const Vector3& instance) { return SetObjectProperty<Vector3>("normal", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Vector3* get_normal() { return GetObjectProperty<Vector3>("normal", NULL); }
+        ///<summary>Sets relationship from this instance to an instance of Point3D</summary>
+        bool set_point(const Point3D& instance) { return SetObjectProperty<Point3D>("point", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Point3D* get_point() { return GetObjectProperty<Point3D>("point", NULL); }
+        ///<summary>Sets relationship from this instance to an instance of Vector3</summary>
+        bool set_tangent(const Vector3& instance) { return SetObjectProperty<Vector3>("tangent", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Vector3* get_tangent() { return GetObjectProperty<Vector3>("tangent", NULL); }
+    };
+
+    /// <summary>
     /// Provides utility methods to interact with an instance of OWL class PointLight
     /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
     /// </summary>
@@ -5768,6 +5901,59 @@ namespace GEOM
     };
 
     /// <summary>
+    /// Provides utility methods to interact with an instance of OWL class Polygon4D
+    /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
+    /// </summary>
+    class Polygon4D : public Curve
+    {
+    public:
+        /// <summary>
+        /// Create new instace of OWL class Polygon4D and returns object of this C++ class to interact with
+        /// </summary>
+        /// <param name="model">The handle to the model</param>
+        /// <param name="name">This attribute represents the name of the instance (given as char array / ASCII). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Polygon4D Create(int64_t model, const char* name=NULL) { return Polygon4D(Instance::Create(model, "Polygon4D", name, NULL), "Polygon4D");}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="name">This attribute represents the name of the instance (given as wchar_t array / Unicode). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static Polygon4D CreateW(int64_t model, const wchar_t* name = NULL) { return Polygon4D(Instance::Create(model, "Polygon4D", NULL, name), "Polygon4D"); }
+
+    public:
+        /// <summary>
+        /// Constructs object of this C++ class that wraps existing OWL instance
+        /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        ///
+        Polygon4D(int64_t instance = NULL)
+            : Curve(instance, "Polygon4D")
+        {}
+
+    protected:
+        Polygon4D(int64_t instance, const char* checkClassName)
+            : Curve(instance, checkClassName)
+        {}
+
+    public:
+       //
+       // Properties with known cardinality restrictions to Polygon4D
+       //
+
+        ///<summary>Sets relationships from this instance to an array of Curve. OWL cardinality 1..-1</summary>
+        bool set_lineParts(const Curve* instances, int64_t count) { return SetObjectProperty<Curve>("lineParts", instances, count); }
+        ///<summary>Sets relationships from this instance to an array of int64_t. OWL cardinality 1..-1</summary>
+        bool set_lineParts(const int64_t* instances, int64_t count) { return SetObjectProperty<int64_t>("lineParts", instances, count); }
+        ///<summary>Get an array of related instances. OWL cardinality 1..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const Curve* get_lineParts(int64_t* pCount) { return GetObjectProperty<Curve>("lineParts", pCount); }
+        ///<summary>Get an array of related instance handles. OWL cardinality 1..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const int64_t* get_lineParts_int64(int64_t* pCount) { return GetObjectProperty<int64_t>("lineParts", pCount); }
+    };
+
+    /// <summary>
     /// Provides utility methods to interact with an instance of OWL class PolyLine3D
     /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
     /// </summary>
@@ -5830,12 +6016,12 @@ namespace GEOM
         template <typename TList> bool set_points(const TList& values) { double* arr = NULL; int64_t count = 0; ListToArray(values, &arr, &count); bool ok = set_points(arr, count); if (arr) delete[] arr; return ok; }
         ///<summary>Gets values array of points. OWL cardinality 0..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
         const double* get_points(int64_t* pCount) { return GetDatatypeProperty<double>("points", pCount); }
-        ///<summary>Sets values of tangent. OWL cardinality 0..-1</summary>
-        bool set_tangent(const double* values, int64_t count) { return SetDatatypeProperty ("tangent", values, count); }
-        ///<summary>Sets values of tangent from enumerable collection (std::vector, std::list, etc.) of elements convertible to double. OWL cardinality 0..-1</summary>
-        template <typename TList> bool set_tangent(const TList& values) { double* arr = NULL; int64_t count = 0; ListToArray(values, &arr, &count); bool ok = set_tangent(arr, count); if (arr) delete[] arr; return ok; }
-        ///<summary>Gets values array of tangent. OWL cardinality 0..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
-        const double* get_tangent(int64_t* pCount) { return GetDatatypeProperty<double>("tangent", pCount); }
+        ///<summary>Sets values of tangentArray. OWL cardinality 0..-1</summary>
+        bool set_tangentArray(const double* values, int64_t count) { return SetDatatypeProperty ("tangentArray", values, count); }
+        ///<summary>Sets values of tangentArray from enumerable collection (std::vector, std::list, etc.) of elements convertible to double. OWL cardinality 0..-1</summary>
+        template <typename TList> bool set_tangentArray(const TList& values) { double* arr = NULL; int64_t count = 0; ListToArray(values, &arr, &count); bool ok = set_tangentArray(arr, count); if (arr) delete[] arr; return ok; }
+        ///<summary>Gets values array of tangentArray. OWL cardinality 0..-1. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const double* get_tangentArray(int64_t* pCount) { return GetDatatypeProperty<double>("tangentArray", pCount); }
     };
 
     /// <summary>
@@ -6767,6 +6953,10 @@ namespace GEOM
        // Properties with known cardinality restrictions to SphericalSurface
        //
 
+        ///<summary>Sets value of invert</summary>
+        bool set_invert(bool value) { return SetDatatypeProperty ("invert", &value, 1); }
+        ///<summary>Gets a value of invert, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const bool* get_invert() { return GetDatatypeProperty<bool>("invert", NULL); }
         ///<summary>Sets value of radius</summary>
         bool set_radius(double value) { return SetDatatypeProperty ("radius", &value, 1); }
         ///<summary>Gets a value of radius, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>

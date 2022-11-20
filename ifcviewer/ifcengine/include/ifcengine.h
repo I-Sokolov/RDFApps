@@ -946,6 +946,39 @@ void		DECL STDC	engiGetEnumerationValue(
 								);
 
 //
+//		TO BE REMOVED!
+//		TO BE REMOVED!
+//		TO BE REMOVED!
+//
+//		engiGetEntityAttribute                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttribute.html)
+//				int_t					entity								IN
+//				int_t					index								IN
+//				char					** name								IN / OUT
+//				int_t					* definingEntity,					IN / OUT
+//				bool					* inverse,							IN / OUT
+//				enum_express_attr_type	* attrType,							IN / OUT
+//				int_t					* domainEntity,						IN / OUT
+// 				int_t					* aggregationDescriptor,			IN / OUT
+//				bool					* optional,							IN / OUT
+//				bool					* unique							IN / OUT
+//
+//				bool				returns
+//
+/*
+bool		DECL STDC	engiGetEntityAttribute(
+									int_t					entity,
+									int_t					index,
+									const char				** name,
+									int_t					* definingEntity,
+									bool					* inverse,
+									enum_express_attr_type	* attrType,
+									int_t					* domainEntity,
+									int_t					* aggregationDescriptor,
+									bool					* optional,
+									bool					* unique
+								);	//	*/
+
+//
 //		engiGetEntityAttributeByIndex                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
 //				int_t					entity								IN
 //				int_t					index								IN
@@ -1422,9 +1455,8 @@ int_t		DECL STDC	sdaiIsKindOfBN(
 
 //
 //		engiGetAttrType                             (http://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
-// 
 //				const void			* attribute							IN
-// 
+//
 //				int_t				returns								OUT
 //
 //		Retturns primitive SDAI data type for the attribute according to schema, e.g. sdaiINTEGER
@@ -1439,11 +1471,11 @@ int_t		DECL STDC	sdaiIsKindOfBN(
 //
 int_t		DECL STDC	engiGetAttrType(
 									const void			* attribute
-								); 
+								);
 
 //
 //		engiGetAttrTypeBN                           (http://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
-//				int_t				entity							IN
+//				int_t				entity								IN
 //				const char			* attributeName						IN
 //
 //				int_t				returns								OUT
@@ -1454,7 +1486,6 @@ int_t		DECL STDC	engiGetAttrTypeBN(
 									int_t				entity,
 									const char			* attributeName
 								);
-
 
 //
 //		engiGetInstanceAttrType                           
@@ -2248,6 +2279,7 @@ int_t		DECL STDC	getFilter(
 //	...
 //
 int_t		DECL * STDC	xxxxGetEntityAndSubTypesExtent(
+									int_t				model,		//		this input parameters is irrelevant, but is required for backwards compatibility
 									int_t				entity
 								);
 
