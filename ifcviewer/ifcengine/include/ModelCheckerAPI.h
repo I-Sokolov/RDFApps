@@ -46,7 +46,8 @@ namespace RDF
             UniqueRuleViolation,
             AggrElementValueNotUnique,
             InvalidParameter,
-            MissedComplexInstanceEntity
+            MissedComplexInstanceEntity,
+            WhereRule
         };
 
         struct CheckResults;
