@@ -184,6 +184,11 @@ int main(int argc, char* argv[])
         printf("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         printf("<RDFExpressModelChecker>\n");
 
+        validateSetOptions(-1, -1, true, 0, 0);
+        if (argc > 3 && _stricmp(argv[3], "--all")) {
+            validateSetOptions(-1, -1, false, 0, 0);
+        }
+
         auto   level = CheckModels(argv[1], argc > 2 ? argv[2] : NULL);
 
         printf("\t<Finished errorLevel='%I64d' />\n", level);
@@ -192,7 +197,7 @@ int main(int argc, char* argv[])
         return (int)level;
     }
     else {
-        printf("USAGE: %s <CheckFileWildCard> [<SchemaFile>]\n", argv[0]);
+        printf("USAGE: %s <CheckFileWildCard> [<SchemaFile>] [--all]\n", argv[0]);
         return -1;
     }
 }
