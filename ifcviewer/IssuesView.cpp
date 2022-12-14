@@ -67,30 +67,30 @@ int CIssuesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 
 
-void CIssuesView::GetIssues(RDF::ModelChecker::CheckResults* results)
+void CIssuesView::GetIssues(ValidationResults* results)
 {
-	auto issue = RDF::ModelChecker::FirstIssue(results);
+	auto issue = validateGetFirstIssue(results);
 	while (issue) {
 
 		m_lstIssues.push_back(CIssuesView::Issue());
 		auto& i = m_lstIssues.back();
 		
-		i.issueId = RDF::ModelChecker::IssueId(issue);
-		i.stepId = RDF::ModelChecker::StepId(issue);
-		i.entityName = RDF::ModelChecker::EntityName(issue);
-		i.attrName = RDF::ModelChecker::AttrName(issue);
-		i.attrIndex = RDF::ModelChecker::AttrIndex(issue);
+		i.issueId = GetIssueId(issue);
+		i.stepId = GetStepId(issue);
+		i.entityName = GetEntityName(issue);
+		i.attrName = GetAttrName(issue);
+		i.attrIndex = GetAttrIndex(issue);
 		
-		auto aggrLevel = RDF::ModelChecker::AggrLevel(issue);
-		auto aggrIndArray = RDF::ModelChecker::AggrIndArray(issue);
+		auto aggrLevel = validateGetAggrLevel(issue);
+		auto aggrIndArray = validateGetAggrIndArray(issue);
 		for (int_t j = 0; j < aggrLevel; j++) {
 			i.arrgegation.push_back(aggrIndArray[j]);
 		}
 
-		i.level = RDF::ModelChecker::Level(issue);
-		i.text = RDF::ModelChecker::Description(issue);
+		i.level = validateGetIssueLevel(issue);
+		i.text = validateGetDescription(issue);
 
-		issue = RDF::ModelChecker::NextIssue(issue);
+		issue = validateGetNextIssue(issue);
 	}
 }
 
@@ -104,9 +104,10 @@ void CIssuesView::OnInitialUpdate()
 	m_lstIssues.clear();
 
 	if (globalIfcModel) {
-		auto checkRes = RDF::ModelChecker::CheckModel(globalIfcModel);
+		validateSetOptions(1, -1, false, 0, 0);
+		auto checkRes = validateModel(globalIfcModel);
 		GetIssues(checkRes);
-		RDF::ModelChecker::DisposeResults(checkRes);
+		validateFreeResults(checkRes);
 	}
 }
 
@@ -190,11 +191,6 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 }
 
 
-
-/// <summary>
-/// 
-
-
 /// <summary>
 /// 
 /// </summary>
@@ -212,7 +208,7 @@ const std::set<int_t>& CIssuesView::Issue::RelatedInstances()
 			sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 			0};
 
-			RDF::ModelChecker::CollectReferencingInstancesRecursive(m_relatedInstances, instance, searchEntities);
+			CollectReferencingInstancesRecursive(m_relatedInstances, instance, searchEntities);
 		}
 	}
 

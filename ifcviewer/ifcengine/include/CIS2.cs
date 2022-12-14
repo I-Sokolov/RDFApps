@@ -1,6 +1,10 @@
 //
 // Early-binding C# API for SDAI (CE wrappers)
 //
+
+#pragma warning disable CS1587
+#pragma warning disable CS1591
+
 using System;
 using System.Diagnostics;
 using System.Collections;
@@ -434,6 +438,7 @@ namespace CIS2
             return FromSdaiAggr(inst, aggr);
         }
     }
+
     /// <summary>
     /// 
     /// </summary>
@@ -465,6 +470,23 @@ namespace CIS2
         protected override void AppendAggrElement(SdaiInstance inst, SdaiAggr aggr, double elem)
         {
             ifcengine.sdaiAppend(aggr, ifcengine.sdaiREAL, ref elem);
+        }
+    };
+
+    /// <summary>
+    /// 
+    /// </summary>
+    class AggrSerializer_bool<TElem, TList> : AggrSerializer<bool, TList>
+        where TList : List<bool>, new()
+    {
+        protected override bool GetAggrElement(SdaiInstance inst, SdaiAggr aggr, IntValue i, out bool elem)
+        {
+            ifcengine.engiGetAggrElement(aggr, i, ifcengine.sdaiBOOLEAN, out elem);
+            return true;
+        }
+        protected override void AppendAggrElement(SdaiInstance inst, SdaiAggr aggr, bool elem)
+        {
+            ifcengine.sdaiAppend(aggr, ifcengine.sdaiBOOLEAN, ref elem);
         }
     };
 

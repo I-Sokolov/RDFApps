@@ -133,6 +133,30 @@ enum class enum_express_aggr : unsigned char
 	__SET
 };
 
+struct ValidationResults;
+struct ValidationIssue;
+typedef int_t ValidationIssueLevel;
+
+enum class ValidationIssueType : uint64_t
+{
+	Undef = 0,
+	WrongNumberOfArguments			= 1,
+	WrongArgumentType				= 1 << 1,
+	MissedNonOptionalArgument		= 1 << 2,
+	UnexpectedStar					= 1 << 3,
+	ExpectedAggregation				= 1 << 4,
+	UnexpectedAggregation			= 1 << 5,
+	WrongAggregationSize			= 1 << 6,
+	UnexpectedValueType				= 1 << 7,
+	UnresolvedReference				= 1 << 8,
+	AbstractEntity					= 1 << 9,
+	InternalError					= 1 << 10,
+	UniqueRuleViolation				= 1 << 11,
+	AggrElementValueNotUnique		= 1 << 12,
+	InvalidParameter				= 1 << 13,
+	MissedComplexInstanceEntity     = 1 << 14,
+	WhereRuleViolation				= 1 << 15
+};
 
 
 #ifdef __cplusplus
@@ -397,6 +421,18 @@ void		DECL STDC	sdaiSaveModelAsJsonBN(
 void		DECL STDC	sdaiSaveModelAsJsonBNUnicode(
 									int_t				model,
 									const wchar_t		* fileName
+								);
+
+//
+//		engiSaveSchemaBN                (http://rdf.bg/ifcdoc/CP64/engiSaveSchemaBN.html)
+//				SdaiModel			model								IN
+//				const wchar_t		* fileName							IN
+//
+//				bool				returns
+//
+bool		DECL STDC	engiSaveSchemaBN(
+									SdaiModel			model, 
+									const char			* filePath
 								);
 
 //
@@ -3243,10 +3279,88 @@ int_t		DECL STDC	initializeModellingInstanceEx(
 //
 //	This call is deprecated, please contact us if you use this call.
 //
-void		DECL STDC	exportModellingAsOWL(
+void			DECL STDC	exportModellingAsOWL(
 									int_t				model,
 									const char			* fileName
 								);
+
+//
+// Model validation
+//
+//
+//void UsageExample(SdaiModel model)
+//{
+//	//set oprions if you need
+//	validateSetOptions(10, 100, 0, ValidationIssueType::WhereRuleViolation); //limit the work by 10 secs and first 100 issues,
+//																			 //exclude where rules check
+//
+//	ValidationResults* results = validateModel(model);
+//
+//	for (ValidationIssue* issue = validateGetFirstIssue(results); issue; issue = validateGetNextIssue(issue)) {
+//		SdaiInstance inst = validateGetInstance(issue);
+//		const char* descr = validateGetDescription(issue);
+//		...	
+//	}
+//
+//	if (!validateIsComplete(results)) {
+//		printf("There may be more issues, increase limits\n");
+//	}
+//
+//	validateFreeResults(results);
+//}
+
+
+void             DECL STDC   validateSetOptions(
+                                    int_t                timeLimitSeconds,  
+                                    int_t                issueCntLimit,
+									bool				 showEachIssueOnce,
+                                    uint64_t             issueTypes,
+                                    uint64_t             mask
+								);
+
+uint64_t         DECL STDC   validateGetOptions(
+                                    int_t				 * timeLimitSeconds,  
+                                    int_t                * issueCntLimit,		  
+									bool				 * showEachIssueOnce,
+                                    uint64_t             mask
+								);
+
+
+ValidationResults	DECL * STDC	validateModel(
+									SdaiModel				model
+								);
+
+ValidationResults	DECL * STDC	validateInstance(
+									SdaiInstance			instance
+								);
+
+void				DECL STDC	validateFreeResults(
+									ValidationResults		* results
+								);
+
+ValidationIssue	    DECL * STDC	validateGetFirstIssue(
+									ValidationResults		* results
+								);
+
+ValidationIssue	    DECL * STDC	validateGetNextIssue(
+									ValidationIssue			* issue
+								);
+
+bool				DECL STDC	validateIsComplete(
+									ValidationResults		* results
+								);
+
+
+ValidationIssueType  DECL STDC		validateGetIssueType	(ValidationIssue * issue);
+SdaiInstance		 DECL STDC		validateGetInstance		(ValidationIssue * issue);   //step instace where the issue is happend or 0
+SdaiInstance		 DECL STDC		validateGetInstanceRelated(ValidationIssue* issue);   
+SdaiEntity			 DECL STDC		validateGetEntity	    (ValidationIssue * issue);   //entity or NULL
+SdaiAttr			 DECL STDC		validateGetAttr			(ValidationIssue * issue);    //attribute or NULL
+ValidationIssueLevel DECL STDC		validateGetAggrLevel	(ValidationIssue * issue);    //specifies nesting level of aggregation or 0
+const int_t 		 DECL * STDC	validateGetAggrIndArray	(ValidationIssue * issue); //array of indecies for each aggregation lsize is aggrLevel
+int_t				 DECL STDC		validateGetIssueLevel	(ValidationIssue * issue);
+const char			 DECL * STDC	validateGetDescription	(ValidationIssue * issue);  //description text
+
 
 
 #ifdef __cplusplus

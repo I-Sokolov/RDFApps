@@ -43,7 +43,7 @@ CModelCheckDlg::~CModelCheckDlg()
 void CModelCheckDlg::OnNewModel()
 {
 	if (m_wndIssueList.GetSafeHwnd()) {
-		FillIssueList();
+		FillIssueList(false);
 	}
 }
 
@@ -55,6 +55,7 @@ void CModelCheckDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_ISSUELIST, m_wndIssueList);
+	DDX_Control(pDX, IDC_VIEW_ALL_ISSUES, m_btnViewAll);
 }
 
 
@@ -63,6 +64,7 @@ BEGIN_MESSAGE_MAP(CModelCheckDlg, CDialog)
 	ON_NOTIFY(LVN_COLUMNCLICK, IDC_ISSUELIST, &CModelCheckDlg::OnColumnclickIssuelist)
 	ON_NOTIFY(NM_DBLCLK, IDC_ISSUELIST, &CModelCheckDlg::OnDblclkIssuelist)
 	ON_NOTIFY(NM_CLICK, IDC_ISSUELIST, &CModelCheckDlg::OnClickIssuelist)
+	ON_BN_CLICKED(IDC_VIEW_ALL_ISSUES, &CModelCheckDlg::OnClickedViewAllIssues)
 END_MESSAGE_MAP()
 
 
@@ -77,7 +79,7 @@ BOOL CModelCheckDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	FormatIssueList();
-	FillIssueList();
+	FillIssueList(false);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // EXCEPTION: OCX Property Pages should return FALSE
@@ -102,22 +104,31 @@ void CModelCheckDlg::FormatIssueList()
 /// <summary>
 /// 
 /// </summary>
-void CModelCheckDlg::FillIssueList()
+void CModelCheckDlg::FillIssueList(bool all)
 {
 	m_wndIssueList.DeleteAllItems();
 
 	if (globalIfcModel) {
 
-		auto checks = RDF::ModelChecker::CheckModel(globalIfcModel);
+		m_btnViewAll.EnableWindow(!all);
+
+		if (all) {
+			validateSetOptions(-1, -1, false, 0, 0);
+		}
+		else {
+			validateSetOptions(5, 100, true, 0, 0);
+		}
+
+		auto checks = validateModel(globalIfcModel);
 
 		int rWidth[4] = {0,0,0,0};
 	
-		for (auto issue = RDF::ModelChecker::FirstIssue(checks); issue; issue = RDF::ModelChecker::NextIssue (issue))
+		for (auto issue = validateGetFirstIssue(checks); issue; issue = validateGetNextIssue (issue))
 		{
 			AddIssue(issue, rWidth);
 		}
 
-		RDF::ModelChecker::DisposeResults(checks);
+		validateFreeResults(checks);
 
 		for (int i = 0; i < 4; i++) {
 			m_wndIssueList.SetColumnWidth(i, rWidth[i] + 20 * GetSystemMetrics(SM_CXBORDER));
@@ -125,23 +136,23 @@ void CModelCheckDlg::FillIssueList()
 	}
 }
 
-void CModelCheckDlg::AddIssue(RDF::ModelChecker::IssueInfo* issue, int rWidth[4])
+void CModelCheckDlg::AddIssue(ValidationIssue* issue, int rWidth[4])
 {
-	CString text (RDF::ModelChecker::Description(issue));
+	CString text (validateGetDescription(issue));
 	auto item = m_wndIssueList.InsertItem(0, text);
 	rWidth[0] = max(rWidth[0], m_wndIssueList.GetStringWidth(text));
 
 	CString id;
-	id.Format(L"%I64d", RDF::ModelChecker::StepId (issue));
+	id.Format(L"%I64d", GetStepId (issue));
 	m_wndIssueList.SetItemText(item, 1, id);
 	rWidth[1] = max(rWidth[1], m_wndIssueList.GetStringWidth(id));
 
-	CString entity(RDF::ModelChecker::EntityName (issue));
+	CString entity(GetEntityName (issue));
 	m_wndIssueList.SetItemText(item, 2, entity);
 	rWidth[2] = max(rWidth[2], m_wndIssueList.GetStringWidth(entity));
 
 	CString aggrIndex;
-	for (int i = 0; i < RDF::ModelChecker::AggrLevel (issue); i++) {
+	for (int i = 0; i < validateGetAggrLevel (issue); i++) {
 		if (aggrIndex.IsEmpty()) {
 			aggrIndex.Append(L"[");
 		}
@@ -150,21 +161,21 @@ void CModelCheckDlg::AddIssue(RDF::ModelChecker::IssueInfo* issue, int rWidth[4]
 		}
 
 		CString ind;
-		ind.Format(L"%I64d", RDF::ModelChecker::AggrIndArray (issue)[i]);
+		ind.Format(L"%I64d", validateGetAggrIndArray (issue)[i]);
 		aggrIndex.Append(ind);
 	}
 	if (!aggrIndex.IsEmpty()) {
 		aggrIndex.Append(L"]");
 	}
 
-	CString attr(RDF::ModelChecker::AttrName (issue));
+	CString attr(GetAttrName (issue));
 	if (!aggrIndex.IsEmpty())
 		attr += aggrIndex;
 	m_wndIssueList.SetItemText(item, 3, attr);
 	rWidth[3] = max(rWidth[3], m_wndIssueList.GetStringWidth(attr));
 
 	auto data = new IssueData();
-	data->stepId = RDF::ModelChecker::StepId (issue);
+	data->stepId = GetStepId (issue);
 	m_wndIssueList.SetItemData(item, (DWORD_PTR)data);
 }
 
@@ -243,7 +254,7 @@ void CModelCheckDlg::OnActivateListItem(int iItem)
 					sdaiGetEntity(globalIfcModel, (char*) L"IfcProject"),
 					0};
 
-					RDF::ModelChecker::CollectReferencingInstancesRecursive(p->relatingInstances, instance, searchEntities);
+					CollectReferencingInstancesRecursive(p->relatingInstances, instance, searchEntities);
 				}
 
 			}
@@ -274,4 +285,15 @@ void CModelCheckDlg::OnClickIssuelist(NMHDR* pNMHDR, LRESULT* pResult)
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 	OnActivateListItem(pNMItemActivate->iItem);
 	*pResult = 0;
+}
+
+
+void CModelCheckDlg::OnClickedViewAllIssues()
+{
+	auto dlgres = AfxMessageBox(L"Getting all issues may take significant time. Are you sure to proceed?", MB_OKCANCEL);
+	if (dlgres == IDOK) {
+		BeginWaitCursor();
+		FillIssueList(true);
+		EndWaitCursor();
+	}
 }

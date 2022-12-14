@@ -1,6 +1,10 @@
 //
 // Early-binding C# API for SDAI (CE wrappers)
 //
+
+#pragma warning disable CS1587
+#pragma warning disable CS1591
+
 using System;
 using System.Diagnostics;
 using System.Collections;

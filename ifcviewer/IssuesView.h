@@ -11,13 +11,13 @@ class CIssuesView : public CListView
 public:
 	struct Issue
 	{
-		RDF::ModelChecker::IssueID		issueId;
+		const char*					    issueId;
 		int64_t							stepId;
 		CString							entityName;
 		CString							attrName;
 		int_t							attrIndex;
 		std::list<int_t>				arrgegation;
-		RDF::ModelChecker::ErrorLevel	level;
+		ValidationIssueLevel			level;
 		CString							text;
 
 		const std::set<int_t>& RelatedInstances();
@@ -51,7 +51,7 @@ public:
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 
 private:
-	void GetIssues(RDF::ModelChecker::CheckResults* results);
+	void GetIssues(ValidationResults* results);
 
 private:
 	IssueList						 m_lstIssues;
