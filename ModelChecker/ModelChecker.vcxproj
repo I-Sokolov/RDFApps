@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\ToolBoxEx;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\include;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -154,7 +154,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;WIN64;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\ToolBox;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)IFCEngine\ifcengine\Code\include;$(SolutionDir)IFCEngine\ifcengine\Code\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>

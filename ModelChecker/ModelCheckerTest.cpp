@@ -3,41 +3,91 @@
 
 #include "pch.h"
 
-#include "ModelCheckerAPI.h"
+#include "ifcengine.h"
 
 #define ASSERT assert
 #define INDENT "\t\t"
+
+static int64_t GetStepId(ValidationIssue* issue)
+{
+    auto inst = validateGetInstance(issue);
+    if (inst) {
+        return internalGetP21Line(inst);
+    }
+    else {
+        return -1;
+    }
+}
+
+static const char* GetEntityName(ValidationIssue* issue)
+{
+    auto ent = validateGetEntity(issue);
+    if (ent) {
+        const char* name = 0;
+        engiGetEntityName(ent, sdaiSTRING, &name);
+        return name;
+    }
+    else {
+        return NULL;
+    }
+}
+
+static const char* GetAttrName(ValidationIssue* issue)
+{
+    auto attr = validateGetAttr(issue);
+    if (attr) {
+        const char* name = 0;
+        engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
+        return name;
+    }
+    else {
+        return NULL;
+    }
+}
+
+
+static int_t GetAttrIndex(ValidationIssue* issue)
+{
+    auto ent = validateGetEntity(issue);
+    const char* name = GetAttrName(issue);
+    if (ent && name) {
+        return engiGetEntityAttributeIndexEx(ent, name, true, false);
+    }
+    else {
+        return -1;
+    }
+}
 
 
 /// <summary>
 /// Issue reporting 
 /// </summary>
-static void PrintIssue(RDF::ModelChecker::IssueInfo* issue)
+static void PrintIssue(ValidationIssue* issue)
 {
     printf(INDENT "<Issue");
 
-    auto stepId = RDF::ModelChecker::StepId(issue);
+    auto stepId = GetStepId(issue);
     if (stepId > 0) {
         printf(" stepId='#%lld'", stepId);
     }
 
-    auto entity = RDF::ModelChecker::EntityName(issue);
+    auto entity = GetEntityName(issue);
     if (entity) {
         printf(" entity='%s'", entity);
     }
 
-    auto attrName = RDF::ModelChecker::AttrName(issue);
+    auto attrName = GetAttrName(issue);
     if (attrName) {
         printf(" attribute='%s'", attrName);
     }
 
-    auto attrIndex = RDF::ModelChecker::AttrIndex(issue);
+    auto attrIndex = GetAttrIndex(issue);
     if (attrIndex >= 0) {
         printf(" attributeIndex='%lld'", (int64_t)attrIndex);
     }
 
-    auto aggrLevel = RDF::ModelChecker::AggrLevel(issue);
-    auto aggrIndArray = RDF::ModelChecker::AggrIndArray(issue);
+    auto aggrLevel = validateGetAggrLevel(issue);
+    auto aggrIndArray = validateGetAggrIndArray(issue);
     for (int_t i = 0; i < aggrLevel; i++) {
         if (i == 0) {
             printf(" aggregationIndex='%lld'", (int64_t)aggrIndArray[i]);
@@ -47,11 +97,11 @@ static void PrintIssue(RDF::ModelChecker::IssueInfo* issue)
         }
     }
 
-    auto issueId = RDF::ModelChecker::IssueId(issue);
-    auto level = RDF::ModelChecker::Level(issue);
-    printf(" issueId='%d' issueLevel='%d'>\n", (int)issueId, level);
+    auto issueId = validateGetIssueType(issue);
+    auto level = validateGetIssueLevel(issue);
+    printf(" issueId='%x' issueLevel='%I64d'>\n", (unsigned int)issueId, level);
 
-    auto text = RDF::ModelChecker::Description(issue);
+    auto text = validateGetDescription(issue);
     if (text) {
         printf(INDENT INDENT "%s\n", text);
     }
@@ -62,7 +112,7 @@ static void PrintIssue(RDF::ModelChecker::IssueInfo* issue)
 /// <summary>
 /// 
 /// </summary>
-static RDF::ModelChecker::ErrorLevel CheckModel(const char* filePath, const char* expressSchemaFilePath)
+static ValidationIssueLevel CheckModel(const char* filePath, const char* expressSchemaFilePath)
 {
     printf("\t<CheckModel file='%s'", filePath);
     
@@ -71,16 +121,16 @@ static RDF::ModelChecker::ErrorLevel CheckModel(const char* filePath, const char
     else
         printf(" embedded_schema='true'>\n");
 
-    RDF::ModelChecker::ErrorLevel result = 0;
+    ValidationIssueLevel result = 0;
 
     SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
     if (model) {
-        auto checks = RDF::ModelChecker::CheckModel(model);
-        for (auto issue = RDF::ModelChecker::FirstIssue(checks); issue; issue = RDF::ModelChecker::NextIssue(issue)) {
+        auto checks = validateModel(model);
+        for (auto issue = validateGetFirstIssue(checks); issue; issue = validateGetNextIssue(issue)) {
             PrintIssue(issue);
-            result = max(result, RDF::ModelChecker::Level(issue));
+            result = max(result, validateGetIssueLevel(issue));
         }
-        RDF::ModelChecker::DisposeResults(checks);
+        validateFreeResults(checks);
         //sdaiCloseModel(model);
     }
     else {
@@ -96,9 +146,9 @@ static RDF::ModelChecker::ErrorLevel CheckModel(const char* filePath, const char
 /// <summary>
 /// 
 /// </summary>
-static RDF::ModelChecker::ErrorLevel CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
+static ValidationIssueLevel CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
 {
-    RDF::ModelChecker::ErrorLevel res = 0;
+    ValidationIssueLevel res = 0;
 
     const auto directory = std::filesystem::path{ filePathWC }.parent_path();
 
@@ -136,10 +186,10 @@ int main(int argc, char* argv[])
 
         auto   level = CheckModels(argv[1], argc > 2 ? argv[2] : NULL);
 
-        printf("\t<Finished errorLevel='%d' />\n", level);
+        printf("\t<Finished errorLevel='%I64d' />\n", level);
         printf("</RDFExpressModelChecker>\n");
 
-        return level;
+        return (int)level;
     }
     else {
         printf("USAGE: %s <CheckFileWildCard> [<SchemaFile>]\n", argv[0]);
