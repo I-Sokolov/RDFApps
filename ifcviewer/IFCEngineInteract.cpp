@@ -1202,22 +1202,22 @@ extern const char* GetIssueId(ValidationIssue* issue)
 {
 	auto type = validateGetIssueType(issue);
 	switch (type) {
-		case ValidationIssueType::WrongNumberOfArguments:		return "WrongNumberOfArguments";
-		case ValidationIssueType::WrongArgumentType:			return "WrongArgumentType";
-		case ValidationIssueType::MissedNonOptionalArgument:	return "MissedNonOptionalArgument";
-		case ValidationIssueType::UnexpectedStar:				return "UnexpectedStar";
-		case ValidationIssueType::ExpectedAggregation:			return "ExpectedAggregation";
-		case ValidationIssueType::UnexpectedAggregation:		return "UnexpectedAggregation";
-		case ValidationIssueType::WrongAggregationSize:			return "WrongAggregationSize";
-		case ValidationIssueType::UnexpectedValueType:			return "UnexpectedValueType";
-		case ValidationIssueType::UnresolvedReference:			return "UnresolvedReference";
-		case ValidationIssueType::AbstractEntity:				return "AbstractEntity";
-		case ValidationIssueType::InternalError:				return "InternalError";
-		case ValidationIssueType::UniqueRuleViolation:			return "UniqueRuleViolation";
-		case ValidationIssueType::AggrElementValueNotUnique:	return "AggrElementValueNotUnique";
-		case ValidationIssueType::InvalidParameter:				return "InvalidParameter";
-		case ValidationIssueType::MissedComplexInstanceEntity:	return "MissedComplexInstanceEntity";
-		case ValidationIssueType::WhereRuleViolation:			return "WhereRuleViolation";
+		case enum_validation_type::__NO_OF_ARGUMENTS: return "number of arguments";
+		case enum_validation_type::__ARGUMENT_EXPRESS_TYPE: return "argument value is correct entity, defined type or enumeration value";
+		case enum_validation_type::__ARGUMENT_PRIM_TYPE: return "argument value has correct primitive type";
+		case enum_validation_type::__REQUIRED_ARGUMENTS: return "non-optional arguments values are provided";
+		case enum_validation_type::__ARRGEGATION_EXPECTED: return "aggregation is provided when expected";
+		case enum_validation_type::__AGGREGATION_NOT_EXPECTED: return "aggregation is not used when not expected";
+		case enum_validation_type::__AGGREGATION_SIZE: return "aggregation size";
+		case enum_validation_type::__AGGREGATION_UNIQUE: return "elements in aggregations are unique when required";
+		case enum_validation_type::__COMPLEX_INSTANCE: return "complex instances contains full parent chains";
+		case enum_validation_type::__REFERENCE_EXISTS: return "referenced instance exists";
+		case enum_validation_type::__ABSTRACT_ENTITY: return "abstract entity should not instantiate";
+		case enum_validation_type::__WHERE_RULE: return "where-rule check";
+		case enum_validation_type::__UNIQUE_RULE: return "unique-rule check";
+		case enum_validation_type::__STAR_USAGE: return "* is used only for derived arguments";
+		case enum_validation_type::__CALL_ARGUMENT: return "validateModel/validateInstance function argument should be model/instance";
+		case enum_validation_type::__INTERNAL_ERROR: return "unspecified error";
 		default:
 			assert(0);
 			return "Unknown";

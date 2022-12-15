@@ -100,7 +100,7 @@ typedef	char			* SdaiString;
 
 enum class enum_express_declaration : unsigned char
 {
-	__UNDEF = 0,
+	__NONE = 0,
 	__ENTITY,
 	__ENUM,
 	__SELECT,
@@ -137,32 +137,32 @@ struct ValidationResults;
 struct ValidationIssue;
 typedef int_t ValidationIssueLevel;
 
-enum class ValidationIssueType : uint64_t
+enum class enum_validation_type : uint64_t
 {
-	Undef = 0,
-	WrongNumberOfArguments			= 1,
-	WrongArgumentType				= 1 << 1,
-	MissedNonOptionalArgument		= 1 << 2,
-	UnexpectedStar					= 1 << 3,
-	ExpectedAggregation				= 1 << 4,
-	UnexpectedAggregation			= 1 << 5,
-	WrongAggregationSize			= 1 << 6,
-	UnexpectedValueType				= 1 << 7,
-	UnresolvedReference				= 1 << 8,
-	AbstractEntity					= 1 << 9,
-	InternalError					= 1 << 10,
-	UniqueRuleViolation				= 1 << 11,
-	AggrElementValueNotUnique		= 1 << 12,
-	InvalidParameter				= 1 << 13,
-	MissedComplexInstanceEntity     = 1 << 14,
-	WhereRuleViolation				= 1 << 15
+	__NONE						= 0,
+	__NO_OF_ARGUMENTS			= 1 << 0,	//number of arguments
+	__ARGUMENT_EXPRESS_TYPE		= 1 << 1,	//argument value is correct entity, defined type or enumeration value
+	__ARGUMENT_PRIM_TYPE		= 1 << 2,	//argument value has correct primitive type
+	__REQUIRED_ARGUMENTS		= 1 << 3,	//non-optional arguments values are provided
+	__ARRGEGATION_EXPECTED		= 1 << 4,	//aggregation is provided when expected
+	__AGGREGATION_NOT_EXPECTED	= 1 << 5,   //aggregation is not used when not expected
+	__AGGREGATION_SIZE			= 1 << 6,   //aggregation size
+	__AGGREGATION_UNIQUE		= 1 << 7,	//elements in aggregations are unique when required
+	__COMPLEX_INSTANCE			= 1 << 8,	//complex instances contains full parent chains
+	__REFERENCE_EXISTS			= 1 << 9,	//referenced instance exists
+	__ABSTRACT_ENTITY			= 1 << 10,  //abstract entity should not instantiate
+	__WHERE_RULE				= 1 << 11,  //where-rule check
+	__UNIQUE_RULE				= 1 << 12,	//unique-rule check
+	__STAR_USAGE				= 1 << 13,  //* is used only for derived arguments
+	__CALL_ARGUMENT				= 1 << 14,  //validateModel/validateInstance function argument should be model/instance
+	__INTERNAL_ERROR			= 1 << 15   //unspecified error
 };
 
 enum class enum_validation_status : unsigned char
 {
-	__UNDEF = 0,
+	__NONE = 0,
 	__COMPLETE_ALL,		//all issues proceed
-	__COMPLETE_NOT_ALL, //CompleteSelected, //completed but some issues were excluded by option settings
+	__COMPLETE_NOT_ALL, //completed but some issues were excluded by option settings
 	__TIME_EXCEED,		//validation was finished because of reach time limit
 	__COUNT_EXCEED	    //validation was finished because of reach of issue's numbers limit
 };
@@ -3299,7 +3299,7 @@ void			DECL STDC	exportModellingAsOWL(
 //void UsageExample(SdaiModel model)
 //{
 //	//set oprions if you need
-//	validateSetOptions(10, 100, 0, ValidationIssueType::WhereRuleViolation); //limit the work by 10 secs and first 100 issues,
+//	validateSetOptions(10, 100, 0, enum_validation_type::__WHERE_RULE); //limit the work by 10 secs and first 100 issues,
 //																			 //exclude where rules check
 //
 //	ValidationResults* results = validateModel(model);
@@ -3359,7 +3359,7 @@ enum_validation_status	DECL STDC	validateGetStatus(
 								);
 
 
-ValidationIssueType  DECL STDC		validateGetIssueType	(ValidationIssue * issue);
+enum_validation_type  DECL STDC		validateGetIssueType	(ValidationIssue * issue);
 SdaiInstance		 DECL STDC		validateGetInstance		(ValidationIssue * issue);   //step instace where the issue is happend or 0
 SdaiInstance		 DECL STDC		validateGetInstanceRelated(ValidationIssue* issue);   
 SdaiEntity			 DECL STDC		validateGetEntity	    (ValidationIssue * issue);   //entity or NULL
