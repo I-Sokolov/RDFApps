@@ -22,10 +22,14 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+
 public:
 	virtual void OnInitialUpdate() override;
 	virtual BOOL IsScrollBar() const override { return FALSE; }
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
+
+private:
+	int m_nIssueView;
 };
 
 

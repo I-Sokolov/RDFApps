@@ -39,7 +39,8 @@ public:
 public:
 	enum class UpdateHint : LPARAM
 	{
-		SetActiveInstance = 14
+		SetActiveInstance = 14,
+		ValidationResults = 15
 	};
 
 	class ActiveInstanceHint : public CObject
@@ -49,6 +50,15 @@ public:
 		int_t GetIntstance() { return m_instance; }
 	private:
 		int_t m_instance;
+	};
+
+	class ValidationResultsHint : public CObject
+	{
+	public:
+		ValidationResultsHint(ValidationResults* results) : m_results(results) {}
+		ValidationResults* GetResults() { return m_results; }
+	private:
+		ValidationResults* m_results;
 	};
 
 protected:

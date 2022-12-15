@@ -69,6 +69,8 @@ int CIssuesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CIssuesView::GetIssues(ValidationResults* results)
 {
+	ASSERT(m_lstIssues.empty());
+
 	auto issue = validateGetFirstIssue(results);
 	while (issue) {
 
@@ -102,17 +104,10 @@ void CIssuesView::OnInitialUpdate()
 	wndList.DeleteAllItems();
 
 	m_lstIssues.clear();
-
-	if (globalIfcModel) {
-		validateSetOptions(1, -1, false, 0, 0);
-		auto checkRes = validateModel(globalIfcModel);
-		GetIssues(checkRes);
-		validateFreeResults(checkRes);
-	}
 }
 
 
-void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
+void CIssuesView::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
 	auto& wndList = GetListCtrl();
 
@@ -124,6 +119,14 @@ void CIssuesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 
 		if (pInstance) {
 			instance = pInstance->GetIntstance();
+		}
+	}
+	else if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::ValidationResults) {
+		if (pSender) {
+			auto pResults = dynamic_cast<CifcviewerDoc::ValidationResultsHint*>(pHint);
+			if (pResults) {
+				GetIssues(pResults->GetResults());
+			}
 		}
 	}
 

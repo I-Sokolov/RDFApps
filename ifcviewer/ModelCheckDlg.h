@@ -38,6 +38,8 @@ private:
 	CListCtrl m_wndIssueList;
 	CButton   m_btnViewAll;
 
+	SdaiModel m_model;
+
 	int       m_nSortColumn;
 	bool      m_bSortAscending;
 

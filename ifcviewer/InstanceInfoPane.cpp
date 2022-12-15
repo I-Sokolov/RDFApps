@@ -53,7 +53,8 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	AddView(RUNTIME_CLASS(CAttributesView), L"Attributes");
 	AddView(RUNTIME_CLASS(CPropertiesView), L"IFC Properties");
-	AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
+	
+	m_nIssueView = -1;	
 	
 	// Nicely hack to access protected member
 	class CMFCTabCtrlEx : public CMFCTabCtrl
@@ -71,12 +72,38 @@ int CInstanceInfoPane::OnCreate(LPCREATESTRUCT lpCreateStruct)
 void CInstanceInfoPane::OnInitialUpdate()
 {
 	CTabView::OnInitialUpdate();
+
+	if (m_nIssueView >= 0) {
+		RemoveView(m_nIssueView);
+		m_nIssueView = -1;
+	}
+
 	Invalidate();
 }
 
 
 
 
-void CInstanceInfoPane::OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/)
+void CInstanceInfoPane::OnUpdate(CView* pSender, LPARAM lHint, CObject* pHint)
 {
+	if (lHint == (LPARAM)CifcviewerDoc::UpdateHint::ValidationResults && pSender != this) {
+
+		if (m_nIssueView >= 0) {
+			ASSERT(false);
+			RemoveView(m_nIssueView);
+			m_nIssueView = -1;
+		}
+
+		auto pResults = dynamic_cast<CifcviewerDoc::ValidationResultsHint*> (pHint);
+
+		if (pResults) {
+			m_nIssueView = AddView(RUNTIME_CLASS(CIssuesView), L"Issues");
+			GetDocument()->UpdateAllViews(this, lHint, pHint);
+		}
+		else {
+			ASSERT(false);
+		}
+
+		Invalidate();
+	}
 }

@@ -5,7 +5,7 @@
 #include "ifcviewer.h"
 #include "MainFrm.h"
 #include "ModelCheckDlg.h"
-
+#include "ifcviewerDoc.h"
 #include "IFCEngineInteract.h"
 
 struct IssueData
@@ -26,6 +26,7 @@ CModelCheckDlg::CModelCheckDlg(CWnd* pParent /*=nullptr*/)
 	: CDialog(IDD_MODELCHECK, pParent)
 	, m_nSortColumn(-1)
 	, m_bSortAscending(false)
+	, m_model (NULL)
 {
 
 }
@@ -42,7 +43,7 @@ CModelCheckDlg::~CModelCheckDlg()
 /// </summary>
 void CModelCheckDlg::OnNewModel()
 {
-	if (m_wndIssueList.GetSafeHwnd()) {
+	if (m_wndIssueList.GetSafeHwnd() && m_model != globalIfcModel) {
 		FillIssueList(false);
 	}
 }
@@ -106,11 +107,16 @@ void CModelCheckDlg::FormatIssueList()
 /// </summary>
 void CModelCheckDlg::FillIssueList(bool all)
 {
+	if (!all && m_model == globalIfcModel) {
+		return; //do not reload existing model
+	}
+
+	m_model = globalIfcModel;
+
 	m_wndIssueList.DeleteAllItems();
+	m_btnViewAll.EnableWindow(!all);
 
 	if (globalIfcModel) {
-
-		m_btnViewAll.EnableWindow(!all);
 
 		if (all) {
 			validateSetOptions(-1, -1, false, 0, 0);
@@ -126,6 +132,19 @@ void CModelCheckDlg::FillIssueList(bool all)
 		for (auto issue = validateGetFirstIssue(checks); issue; issue = validateGetNextIssue (issue))
 		{
 			AddIssue(issue, rWidth);
+		}
+
+		if (all) {
+			auto pMainWnd = DYNAMIC_DOWNCAST(CFrameWnd, AfxGetMainWnd());
+			if (pMainWnd) {
+				auto pDoc = pMainWnd->GetActiveDocument();
+				if (pDoc) {
+					CifcviewerDoc::ValidationResultsHint hint(checks);
+					pDoc->UpdateAllViews(nullptr, (LPARAM)CifcviewerDoc::UpdateHint::ValidationResults, &hint);
+				}
+				else ASSERT(false);
+			}
+			else ASSERT(false);
 		}
 
 		validateFreeResults(checks);
