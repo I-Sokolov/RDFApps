@@ -158,6 +158,14 @@ enum class ValidationIssueType : uint64_t
 	WhereRuleViolation				= 1 << 15
 };
 
+enum class enum_validation_status : unsigned char
+{
+	__UNDEF = 0,
+	__COMPLETE_ALL,		//all issues proceed
+	__COMPLETE_NOT_ALL, //CompleteSelected, //completed but some issues were excluded by option settings
+	__TIME_EXCEED,		//validation was finished because of reach time limit
+	__COUNT_EXCEED	    //validation was finished because of reach of issue's numbers limit
+};
 
 #ifdef __cplusplus
 	extern "C" {
@@ -3302,7 +3310,7 @@ void			DECL STDC	exportModellingAsOWL(
 //		...	
 //	}
 //
-//	if (!validateIsComplete(results)) {
+//	if (validateGetStatus(results)!=enum_validation_status::__COMPLETE_ALL) {
 //		printf("There may be more issues, increase limits\n");
 //	}
 //
@@ -3346,7 +3354,7 @@ ValidationIssue	    DECL * STDC	validateGetNextIssue(
 									ValidationIssue			* issue
 								);
 
-bool				DECL STDC	validateIsComplete(
+enum_validation_status	DECL STDC	validateGetStatus(
 									ValidationResults		* results
 								);
 
