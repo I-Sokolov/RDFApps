@@ -1043,21 +1043,19 @@ struct ReferencingInstancesCollector
 		//if this instance of desired class - get it and stop
 		if (referencedInstance) {
 			for (int i = 0; m_searchEntities[i]; i++) {
-					if (sdaiIsKindOf (referencedInstance, m_searchEntities[i])) {
-						m_referencingInstances.insert(referencedInstance);
-						return; //>>>>>>>>>>>>>>>>>>>>
-					}
-				
-				else assert(false);
+				if (sdaiIsKindOf(referencedInstance, m_searchEntities[i])) {
+					m_referencingInstances.insert(referencedInstance);
+					return; //>>>>>>>>>>>>>>>>>>>>
+				}
 			}
 		}
-		else assert(false);
 
 		//now check all instances referencing thius
 		m_referenceStack.push_back(referencedInstance);
 
 		auto entity = sdaiGetInstanceType(referencedInstance);
-		auto allInst = xxxxGetAllInstances(entity);
+		auto model = engiGetEntityModel(entity);
+		auto allInst = xxxxGetAllInstances(model);
 		auto NInst = sdaiGetMemberCount(allInst);
 		for (int i = 0; i < NInst; i++) {
 			int_t instance = 0;
