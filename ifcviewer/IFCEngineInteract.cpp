@@ -1022,3 +1022,206 @@ bool	ParseIfcFile(
 		return	false;
 	}
 }
+
+///
+struct ReferencingInstancesCollector
+{
+	/// <summary>
+	/// 
+	/// </summary>
+	ReferencingInstancesCollector(std::set<int_t>& referencingInstances, int_t* searchEntities)
+		: m_referencingInstances(referencingInstances)
+		, m_searchEntities(searchEntities)
+	{
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	void CollectReferencingTo(SdaiInstance referencedInstance)
+	{
+		//if this instance of desired class - get it and stop
+		if (referencedInstance) {
+			for (int i = 0; m_searchEntities[i]; i++) {
+					if (sdaiIsKindOf (referencedInstance, m_searchEntities[i])) {
+						m_referencingInstances.insert(referencedInstance);
+						return; //>>>>>>>>>>>>>>>>>>>>
+					}
+				
+				else assert(false);
+			}
+		}
+		else assert(false);
+
+		//now check all instances referencing thius
+		m_referenceStack.push_back(referencedInstance);
+
+		auto entity = sdaiGetInstanceType(referencedInstance);
+		auto allInst = xxxxGetAllInstances(entity);
+		auto NInst = sdaiGetMemberCount(allInst);
+		for (int i = 0; i < NInst; i++) {
+			int_t instance = 0;
+			engiGetAggrElement(allInst, i, sdaiINSTANCE, &instance);
+			if (instance) {
+				VisitInstance(instance);
+			}
+		}
+
+		m_referenceStack.pop_back();
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+private:
+	bool VisitInstance(SdaiInstance thisInstance)
+	{
+		//if this instance on call stack - do not process it
+		for (auto inst : m_referenceStack) {
+			if (inst == thisInstance) {
+				return true;
+			}
+		}
+
+		//check if this item referencing top one
+		auto referencedInstance = m_referenceStack.back();
+
+		bool referencing = false;
+		auto thisEntity = sdaiGetInstanceType(thisInstance);
+		auto NArg = engiGetEntityNoAttributesEx(thisEntity, true, false);
+		for (int_t i = 0; i < NArg && !referencing; i++) {
+			SdaiAttr attr = engiGetEntityAttributeByIndex(thisEntity, i, true, false);
+			referencing = DoArgumentsReferenceTo(thisInstance, attr, referencedInstance);
+		}
+
+		//collect if referencing
+		if (referencing) {
+			CollectReferencingTo(thisInstance);
+		}
+
+		return true;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+private:
+	bool DoArgumentsReferenceTo(SdaiInstance thisInstance, SdaiAttr attr, SdaiInstance referencedInstance)
+	{
+		auto type = engiGetInstanceAttrType(thisInstance, attr);
+		switch (type) {
+			case sdaiINSTANCE:
+			{
+				SdaiInstance inst = 0;
+				sdaiGetAttr(thisInstance, attr, sdaiINSTANCE, &inst);
+				return inst == referencedInstance;
+			}
+			case sdaiAGGR:
+			{
+				bool refers = false;
+				SdaiAggr aggr = 0;
+				sdaiGetAttr(thisInstance, attr, sdaiAGGR, &aggr);
+				auto cnt = sdaiGetMemberCount(aggr);
+				for (int_t i = 0; i < cnt && !refers; i++) {
+					SdaiInstance inst = 0;
+					engiGetAggrElement(aggr, i, sdaiINSTANCE, &inst);
+					refers = (inst == referencedInstance);
+				}
+				return refers;
+			}
+			default:
+				return false;
+		}
+	}
+
+private:
+	std::set<int_t>& m_referencingInstances;
+	SdaiEntity* m_searchEntities;
+	std::list<SdaiInstance> m_referenceStack;
+};
+
+
+/// <summary>
+/// 
+/// </summary>
+extern void CollectReferencingInstancesRecursive(std::set<SdaiInstance>& referencingInstances, SdaiInstance referencedInstance, SdaiEntity* searchEntities /*NULL-terminated array*/)
+{
+	ReferencingInstancesCollector collector(referencingInstances, searchEntities);
+	collector.CollectReferencingTo(referencedInstance);
+}
+
+extern const char* GetEntityName(ValidationIssue* issue)
+{
+	auto ent = validateGetEntity(issue);
+	if (ent) {
+		const char* name = 0;
+		engiGetEntityName(ent, sdaiSTRING, &name);
+		return name;
+	}
+	else {
+		return NULL;
+	}
+}
+
+extern const char* GetAttrName(ValidationIssue* issue)
+{
+	auto attr = validateGetAttr(issue);
+	if (attr) {
+		const char* name = 0;
+		engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
+		return name;
+	}
+	else {
+		return NULL;
+	}
+}
+
+extern int_t GetAttrIndex(ValidationIssue* issue)
+{
+	auto ent = validateGetEntity(issue);
+	const char* name = GetAttrName(issue);
+	if (ent && name) {
+		CString str(name);
+		return engiGetEntityAttributeIndexEx(ent, (char*)str.GetBuffer(), true, false);
+	}
+	else {
+		return -1;
+	}
+}
+
+extern int64_t GetStepId(ValidationIssue* issue)
+{
+	auto inst = validateGetInstance(issue);
+	if (inst) {
+		return internalGetP21Line(inst);
+	}
+	else {
+		return -1;
+	}
+}
+
+extern const char* GetIssueId(ValidationIssue* issue)
+{
+	auto type = validateGetIssueType(issue);
+	switch (type) {
+		case ValidationIssueType::WrongNumberOfArguments:		return "WrongNumberOfArguments";
+		case ValidationIssueType::WrongArgumentType:			return "WrongArgumentType";
+		case ValidationIssueType::MissedNonOptionalArgument:	return "MissedNonOptionalArgument";
+		case ValidationIssueType::UnexpectedStar:				return "UnexpectedStar";
+		case ValidationIssueType::ExpectedAggregation:			return "ExpectedAggregation";
+		case ValidationIssueType::UnexpectedAggregation:		return "UnexpectedAggregation";
+		case ValidationIssueType::WrongAggregationSize:			return "WrongAggregationSize";
+		case ValidationIssueType::UnexpectedValueType:			return "UnexpectedValueType";
+		case ValidationIssueType::UnresolvedReference:			return "UnresolvedReference";
+		case ValidationIssueType::AbstractEntity:				return "AbstractEntity";
+		case ValidationIssueType::InternalError:				return "InternalError";
+		case ValidationIssueType::UniqueRuleViolation:			return "UniqueRuleViolation";
+		case ValidationIssueType::AggrElementValueNotUnique:	return "AggrElementValueNotUnique";
+		case ValidationIssueType::InvalidParameter:				return "InvalidParameter";
+		case ValidationIssueType::MissedComplexInstanceEntity:	return "MissedComplexInstanceEntity";
+		case ValidationIssueType::WhereRuleViolation:			return "WhereRuleViolation";
+		default:
+			assert(0);
+			return "Unknown";
+	}
+}
