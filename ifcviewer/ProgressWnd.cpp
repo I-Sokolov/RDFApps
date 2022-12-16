@@ -204,7 +204,7 @@ void CProgressWnd::Show()
 	if	(!::IsWindow(GetSafeHwnd()))
 		return;
 
-	if	(!IsWindowVisible()) {
+	if	(!IsWindowVisible() && !IsDebuggerPresent()) {
 		ModifyStyle(0, WS_VISIBLE);
 		ShowWindow(SW_SHOWNA);
 		RedrawWindow(NULL,NULL,RDW_ERASE|RDW_FRAME|RDW_INVALIDATE|RDW_UPDATENOW);
