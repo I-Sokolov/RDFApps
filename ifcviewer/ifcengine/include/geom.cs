@@ -9140,6 +9140,8 @@ namespace GEOM
         /// <summary>
         /// Constructs object that wraps existing OWL instance
         /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        /// <param name="checkClassName">Expected OWL class of the instance, used for diagnostic (optionally)</param>
         public Instance(Int64 instance, string cls)
         {
             m_instance = instance;
