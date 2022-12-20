@@ -116,10 +116,10 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat</Command>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration) $(Platform)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Update ifcEngine</Message>
+      <Message>Update IfcEngine</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -144,10 +144,10 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration)</Command>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration) $(Platform)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Update ifcEngine</Message>
+      <Message>Update IfcEngine</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -176,6 +176,12 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PreBuildEvent>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration) $(Platform)</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Update IfcEngine</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -203,10 +209,10 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <PreBuildEvent>
-      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration)</Command>
+      <Command>call UpdateIfcEngine.bat $(OutputPath)  $(Configuration) $(Platform)</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>Update ifcEngine</Message>
+      <Message>Update IfcEngine</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
