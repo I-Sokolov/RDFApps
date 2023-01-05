@@ -3318,57 +3318,80 @@ void			DECL STDC	exportModellingAsOWL(
 //}
 
 
-void             DECL STDC   validateSetOptions(
-                                    int_t                timeLimitSeconds,  
-                                    int_t                issueCntLimit,
-									bool				 showEachIssueOnce,
-                                    uint64_t             issueTypes,
-                                    uint64_t             mask
-								);
+void					DECL STDC	validateSetOptions(
+											int_t				timeLimitSeconds,  
+											int_t				issueCntLimit,
+											bool				showEachIssueOnce,
+											uint64_t			issueTypes,
+											uint64_t			mask
+										);
 
-uint64_t         DECL STDC   validateGetOptions(
-                                    int_t				 * timeLimitSeconds,  
-                                    int_t                * issueCntLimit,		  
-									bool				 * showEachIssueOnce,
-                                    uint64_t             mask
-								);
+uint64_t				DECL STDC   validateGetOptions(
+											int_t				* timeLimitSeconds,  
+											int_t				* issueCntLimit,		  
+											bool				* showEachIssueOnce,
+											uint64_t			mask
+										);
 
+ValidationResults		DECL * STDC	validateModel(
+											SdaiModel			model
+										);
 
-ValidationResults	DECL * STDC	validateModel(
-									SdaiModel				model
-								);
+ValidationResults		DECL * STDC	validateInstance(
+											SdaiInstance		instance
+										);
 
-ValidationResults	DECL * STDC	validateInstance(
-									SdaiInstance			instance
-								);
+void					DECL STDC	validateFreeResults(
+											ValidationResults	* results
+										);
 
-void				DECL STDC	validateFreeResults(
-									ValidationResults		* results
-								);
+ValidationIssue			DECL * STDC	validateGetFirstIssue(
+											ValidationResults	* results
+										);
 
-ValidationIssue	    DECL * STDC	validateGetFirstIssue(
-									ValidationResults		* results
-								);
-
-ValidationIssue	    DECL * STDC	validateGetNextIssue(
-									ValidationIssue			* issue
-								);
+ValidationIssue			DECL * STDC	validateGetNextIssue(
+											ValidationIssue		* issue
+										);
 
 enum_validation_status	DECL STDC	validateGetStatus(
-									ValidationResults		* results
-								);
+											ValidationResults	* results
+										);
 
+enum_validation_type	DECL STDC	validateGetIssueType(
+											ValidationIssue		* issue
+										);
 
-enum_validation_type  DECL STDC		validateGetIssueType	(ValidationIssue * issue);
-SdaiInstance		 DECL STDC		validateGetInstance		(ValidationIssue * issue);   //step instace where the issue is happend or 0
-SdaiInstance		 DECL STDC		validateGetInstanceRelated(ValidationIssue* issue);   
-SdaiEntity			 DECL STDC		validateGetEntity	    (ValidationIssue * issue);   //entity or NULL
-SdaiAttr			 DECL STDC		validateGetAttr			(ValidationIssue * issue);    //attribute or NULL
-ValidationIssueLevel DECL STDC		validateGetAggrLevel	(ValidationIssue * issue);    //specifies nesting level of aggregation or 0
-const int_t 		 DECL * STDC	validateGetAggrIndArray	(ValidationIssue * issue); //array of indecies for each aggregation lsize is aggrLevel
-int_t				 DECL STDC		validateGetIssueLevel	(ValidationIssue * issue);
-const char			 DECL * STDC	validateGetDescription	(ValidationIssue * issue);  //description text
+SdaiInstance			DECL STDC	validateGetInstance(
+											ValidationIssue		* issue		//	step instace where the issue is happend or 0
+										);
 
+SdaiInstance			DECL STDC	validateGetInstanceRelated(
+											ValidationIssue		* issue
+										);
+
+SdaiEntity				DECL STDC	validateGetEntity(
+											ValidationIssue		* issue		//	entity or NULL
+										);
+
+SdaiAttr				DECL STDC	validateGetAttr(
+											ValidationIssue		* issue		//	attribute or NULL
+										);
+
+ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
+											ValidationIssue		* issue		//	specifies nesting level of aggregation or 0
+										);
+
+const int_t 			DECL * STDC	validateGetAggrIndArray(
+											ValidationIssue		* issue		//	array of indecies for each aggregation lsize is aggrLevel
+										);
+
+int_t					DECL STDC	validateGetIssueLevel(
+											ValidationIssue		* issue
+										);
+
+const char				DECL * STDC	validateGetDescription(
+											ValidationIssue		* issue		//	description text
+										);
 
 
 #ifdef __cplusplus
