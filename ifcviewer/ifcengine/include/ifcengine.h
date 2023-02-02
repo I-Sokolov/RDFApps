@@ -1459,14 +1459,14 @@ int_t		DECL STDC	sdaiGetInstanceType(
 
 //
 //		sdaiGetMemberCount                          (http://rdf.bg/ifcdoc/CP64/sdaiGetMemberCount.html)
-//				const int_t			* aggregate							IN
+//				const SdaiAggr		aggregate							IN
 //
 //				int_t				returns								OUT
 //
 //	...
 //
 int_t		DECL STDC	sdaiGetMemberCount(
-									const int_t			* aggregate
+									const SdaiAggr			aggregate
 								);
 
 //

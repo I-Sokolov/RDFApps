@@ -136,6 +136,7 @@ namespace GEOM
     class SweptAreaSolidSet;
     class SweptAreaSolidTapered;
     class SweptBlend;
+    class SweptDiskSolid;
     class Texture;
     class ToroidalSurface;
     class Torus;
@@ -218,7 +219,7 @@ namespace GEOM
             if (propId) {
                 int64_t clsId = GetInstanceClass(m_instance);
                 int64_t minCard = 0, maxCard = 0;
-                GetPropertyRestrictionsConsolidated(clsId, propId, &minCard, &maxCard);
+                GetClassPropertyAggregatedCardinalityRestriction(clsId, propId, &minCard, &maxCard);
                 if (minCard < 0) {
                     propId = NULL; //property is not assigned to the class
                 }
@@ -7583,6 +7584,67 @@ namespace GEOM
         bool set_usesAbsolutePlacement(bool value) { return SetDatatypeProperty ("usesAbsolutePlacement", &value, 1); }
         ///<summary>Gets a value of usesAbsolutePlacement, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
         const bool* get_usesAbsolutePlacement() { return GetDatatypeProperty<bool>("usesAbsolutePlacement", NULL); }
+    };
+
+    /// <summary>
+    /// Provides utility methods to interact with an instance of OWL class SweptDiskSolid
+    /// You also can use object of this C++ class instead of int64_t handle of the OWL instance in any place where the handle is required
+    /// </summary>
+    class SweptDiskSolid : public Solid
+    {
+    public:
+        /// <summary>
+        /// Create new instace of OWL class SweptDiskSolid and returns object of this C++ class to interact with
+        /// </summary>
+        /// <param name="model">The handle to the model</param>
+        /// <param name="name">This attribute represents the name of the instance (given as char array / ASCII). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static SweptDiskSolid Create(int64_t model, const char* name=NULL) { return SweptDiskSolid(Instance::Create(model, "SweptDiskSolid", name, NULL), "SweptDiskSolid");}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="name">This attribute represents the name of the instance (given as wchar_t array / Unicode). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        static SweptDiskSolid CreateW(int64_t model, const wchar_t* name = NULL) { return SweptDiskSolid(Instance::Create(model, "SweptDiskSolid", NULL, name), "SweptDiskSolid"); }
+
+    public:
+        /// <summary>
+        /// Constructs object of this C++ class that wraps existing OWL instance
+        /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        ///
+        SweptDiskSolid(int64_t instance = NULL)
+            : Solid(instance, "SweptDiskSolid")
+        {}
+
+    protected:
+        SweptDiskSolid(int64_t instance, const char* checkClassName)
+            : Solid(instance, checkClassName)
+        {}
+
+    public:
+       //
+       // Properties with known cardinality restrictions to SweptDiskSolid
+       //
+
+        ///<summary>Sets value of innerRadius</summary>
+        bool set_innerRadius(double value) { return SetDatatypeProperty ("innerRadius", &value, 1); }
+        ///<summary>Gets a value of innerRadius, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const double* get_innerRadius() { return GetDatatypeProperty<double>("innerRadius", NULL); }
+        ///<summary>Sets relationship from this instance to an instance of Curve</summary>
+        bool set_path(const Curve& instance) { return SetObjectProperty<Curve>("path", &instance, 1); }
+        ///<summary>Get related instance. The method returns pointer to inernal buffer, a caller should not free or change it</summary>
+        const Curve* get_path() { return GetObjectProperty<Curve>("path", NULL); }
+        ///<summary>Sets value of radius</summary>
+        bool set_radius(double value) { return SetDatatypeProperty ("radius", &value, 1); }
+        ///<summary>Gets a value of radius, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const double* get_radius() { return GetDatatypeProperty<double>("radius", NULL); }
+        ///<summary>Sets value of segmentationParts</summary>
+        bool set_segmentationParts(int64_t value) { return SetDatatypeProperty ("segmentationParts", &value, 1); }
+        ///<summary>Gets a value of segmentationParts, returns NULL is the property was not set. The method returns pointer to inernal buffer, a caller should not free or change it.</summary>
+        const int64_t* get_segmentationParts() { return GetDatatypeProperty<int64_t>("segmentationParts", NULL); }
     };
 
     /// <summary>

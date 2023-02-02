@@ -3658,14 +3658,22 @@ namespace RDF
 		[DllImport(enginedll, EntryPoint = "GetPropertyRestrictionsConsolidated")]
 		public static extern void GetPropertyRestrictionsConsolidated(Int64 owlClass, Int64 rdfProperty, out Int64 minCard, out Int64 maxCard);
 
-		/// <summary>
-		///		GetVertexColor                              (http://rdf.bg/gkdoc/CS64/GetVertexColor.html)
-		///
-		///	Returns vertex color
-		///	requiredColor is one of the control vertex data bits applied to colors (FORMAT_VERTEX_COLOR...) 
-		///	If vertex format does provide required color, the model default color will be used
-		/// </summary>
-		[DllImport(enginedll, EntryPoint = "GetVertexColor")]
+        /// <summary>
+        ///		GetClassPropertyAggregatedCardinalityRestriction         (http://rdf.bg/gkdoc/CS64/GetClassPropertyAggregatedCardinalityRestriction.html)
+        ///
+        ///	...
+        /// </summary>
+        [DllImport(enginedll, EntryPoint = "GetClassPropertyAggregatedCardinalityRestriction")]
+        public static extern void GetClassPropertyAggregatedCardinalityRestriction(Int64 owlClass, Int64 rdfProperty, out Int64 minCard, out Int64 maxCard);
+
+        /// <summary>
+        ///		GetVertexColor                              (http://rdf.bg/gkdoc/CS64/GetVertexColor.html)
+        ///
+        ///	Returns vertex color
+        ///	requiredColor is one of the control vertex data bits applied to colors (FORMAT_VERTEX_COLOR...) 
+        ///	If vertex format does provide required color, the model default color will be used
+        /// </summary>
+        [DllImport(enginedll, EntryPoint = "GetVertexColor")]
 		public static extern void GetVertexColor(Int64 model, ref float vertexBuffer, Int64 vertexIndex, Int64 setting, out UInt32 ambient, out UInt32 diffuse, out UInt32 emissive, out UInt32 specular);
 
 		[DllImport(enginedll, EntryPoint = "GetVertexColor")]

@@ -137,6 +137,7 @@ namespace GEOM
 //     SweptAreaSolidSet
 //     SweptAreaSolidTapered
 //     SweptBlend
+//     SweptDiskSolid
 //     Texture
 //     ToroidalSurface
 //     Torus
@@ -8363,6 +8364,76 @@ namespace GEOM
 
 
     /// <summary>
+    /// Provides utility methods to interact with an instance of OWL class SweptDiskSolid
+    /// You also can use object of this C# class instead of Int64 handle of the OWL instance in any place where the handle is required
+    /// </summary>
+    public class SweptDiskSolid : Solid
+    {
+        /// <summary>
+        /// Create new instace of OWL class SweptDiskSolid and returns object of this C# class to interact with
+        /// </summary>
+        /// <param name="model">The handle to the model</param>
+        /// <param name="name">This attribute represents the name of the instance (given as char array / ASCII). The name is given by the host and the attribute is not changed</param>
+        /// <returns></returns>
+        public static new SweptDiskSolid Create(Int64 model, string name=null) { return new SweptDiskSolid(Instance.Create(model, "SweptDiskSolid", name), "SweptDiskSolid");}
+        
+        /// <summary>
+        /// Constructs object of this C# class that wraps existing OWL instance
+        /// </summary>
+        /// <param name="instance">OWL instance to interact with</param>
+        /// <param name="checkClassName">Expected OWL class of the instance, used for diagnostic (optionally)</param>
+        public SweptDiskSolid(Int64 instance, string checkClassName = null) 
+            : base (instance, (checkClassName!=null) ? checkClassName : "SweptDiskSolid") 
+        {            
+        }
+
+        public static implicit operator SweptDiskSolid(Int64 instance) => new SweptDiskSolid(instance);
+
+
+        //
+        // Properties with known cardinality restrictions to SweptDiskSolid
+        //
+
+        ///<summary>Sets value of innerRadius</summary>
+        public bool set_innerRadius(double value) { return SetDatatypeProperty ("innerRadius", value); }
+        ///<summary>Gets value of innerRadius, returns null is the property was not set</summary>
+        public double? get_innerRadius() { var arr = GetDatatypeProperty_double("innerRadius"); return (arr != null && arr.Length > 0) ? (double?)arr[0] : null; }
+        ///<summary>Sets relationship from this instance to an instance of Curve</summary>
+        public bool set_path(Curve instance) { return SetObjectProperty("path", instance); }
+        ///<summary>Get related instance</summary>
+        public Curve get_path() 
+        {
+            var propId = GetPropertyId("path");
+
+            Int64 card = 0;
+            IntPtr valuesPtr = IntPtr.Zero;
+            var res = engine.GetObjectProperty(m_instance, propId, out valuesPtr, out card);
+            System.Diagnostics.Debug.Assert(res == 0);
+
+            if (card > 0)
+            {
+                var values = new Int64[1];
+                System.Runtime.InteropServices.Marshal.Copy(valuesPtr, values, 0, (int)1);
+
+                return new Curve(values[0], null);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        ///<summary>Sets value of radius</summary>
+        public bool set_radius(double value) { return SetDatatypeProperty ("radius", value); }
+        ///<summary>Gets value of radius, returns null is the property was not set</summary>
+        public double? get_radius() { var arr = GetDatatypeProperty_double("radius"); return (arr != null && arr.Length > 0) ? (double?)arr[0] : null; }
+        ///<summary>Sets value of segmentationParts</summary>
+        public bool set_segmentationParts(Int64 value) { return SetDatatypeProperty ("segmentationParts", value); }
+        ///<summary>Gets value of segmentationParts, returns null is the property was not set</summary>
+        public Int64? get_segmentationParts() { var arr = GetDatatypeProperty_Int64("segmentationParts"); return (arr != null && arr.Length > 0) ? (Int64?)arr[0] : null; }
+    }
+
+
+    /// <summary>
     /// Provides utility methods to interact with an instance of OWL class Texture
     /// You also can use object of this C# class instead of Int64 handle of the OWL instance in any place where the handle is required
     /// </summary>
@@ -9140,8 +9211,6 @@ namespace GEOM
         /// <summary>
         /// Constructs object that wraps existing OWL instance
         /// </summary>
-        /// <param name="instance">OWL instance to interact with</param>
-        /// <param name="checkClassName">Expected OWL class of the instance, used for diagnostic (optionally)</param>
         public Instance(Int64 instance, string cls)
         {
             m_instance = instance;
@@ -9168,7 +9237,7 @@ namespace GEOM
             {
                 var clsId = engine.GetInstanceClass(m_instance);
                 Int64 minCard = 0, maxCard = 0;
-                engine.GetPropertyRestrictionsConsolidated(clsId, propId, out minCard, out maxCard);
+                engine.GetClassPropertyAggregatedCardinalityRestriction(clsId, propId, out minCard, out maxCard);
                 if (minCard < 0)
                 {
                     propId = 0; //property is not assigned to the class
