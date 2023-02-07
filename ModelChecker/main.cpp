@@ -8,7 +8,7 @@
 #define ASSERT assert
 #define INDENT "\t\t"
 
-static int64_t GetStepId(ValidationIssue* issue)
+static int64_t GetStepId(ValidationIssue issue)
 {
     auto inst = validateGetInstance(issue);
     if (inst) {
@@ -19,7 +19,7 @@ static int64_t GetStepId(ValidationIssue* issue)
     }
 }
 
-static const char* GetEntityName(ValidationIssue* issue)
+static const char* GetEntityName(ValidationIssue issue)
 {
     auto ent = validateGetEntity(issue);
     if (ent) {
@@ -32,7 +32,7 @@ static const char* GetEntityName(ValidationIssue* issue)
     }
 }
 
-static const char* GetAttrName(ValidationIssue* issue)
+static const char* GetAttrName(ValidationIssue issue)
 {
     auto attr = validateGetAttr(issue);
     if (attr) {
@@ -46,7 +46,7 @@ static const char* GetAttrName(ValidationIssue* issue)
 }
 
 
-static int_t GetAttrIndex(ValidationIssue* issue)
+static int_t GetAttrIndex(ValidationIssue issue)
 {
     auto ent = validateGetEntity(issue);
     const char* name = GetAttrName(issue);
@@ -62,7 +62,7 @@ static int_t GetAttrIndex(ValidationIssue* issue)
 /// <summary>
 /// Issue reporting 
 /// </summary>
-static void PrintIssue(ValidationIssue* issue)
+static void PrintIssue(ValidationIssue issue)
 {
     printf(INDENT "<Issue");
 
