@@ -55,10 +55,10 @@ public:
 	class ValidationResultsHint : public CObject
 	{
 	public:
-		ValidationResultsHint(ValidationResults* results) : m_results(results) {}
-		ValidationResults* GetResults() { return m_results; }
+		ValidationResultsHint(ValidationResults results) : m_results(results) {}
+		ValidationResults GetResults() { return m_results; }
 	private:
-		ValidationResults* m_results;
+		ValidationResults m_results;
 	};
 
 protected:

@@ -21,10 +21,10 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 							int_t				depth
 						);
 
-extern const char* GetEntityName(ValidationIssue* issue);
-extern const char* GetAttrName(ValidationIssue* issue);
-extern int_t GetAttrIndex(ValidationIssue* issue);
-extern int64_t GetStepId(ValidationIssue* issue);
-extern const char* GetIssueId(ValidationIssue* issue);
+extern const char* GetEntityName(ValidationIssue issue);
+extern const char* GetAttrName(ValidationIssue issue);
+extern int_t GetAttrIndex(ValidationIssue issue);
+extern int64_t GetStepId(ValidationIssue issue);
+extern const char* GetIssueId(ValidationIssue issue);
 
 extern void CollectReferencingInstancesRecursive(std::set<SdaiInstance>& referencingInstances, SdaiInstance referencedInstance, SdaiEntity* searchEntities /*NULL-terminated array*/);

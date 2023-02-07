@@ -1148,7 +1148,7 @@ extern void CollectReferencingInstancesRecursive(std::set<SdaiInstance>& referen
 	collector.CollectReferencingTo(referencedInstance);
 }
 
-extern const char* GetEntityName(ValidationIssue* issue)
+extern const char* GetEntityName(ValidationIssue issue)
 {
 	auto ent = validateGetEntity(issue);
 	if (ent) {
@@ -1161,7 +1161,7 @@ extern const char* GetEntityName(ValidationIssue* issue)
 	}
 }
 
-extern const char* GetAttrName(ValidationIssue* issue)
+extern const char* GetAttrName(ValidationIssue issue)
 {
 	auto attr = validateGetAttr(issue);
 	if (attr) {
@@ -1174,7 +1174,7 @@ extern const char* GetAttrName(ValidationIssue* issue)
 	}
 }
 
-extern int_t GetAttrIndex(ValidationIssue* issue)
+extern int_t GetAttrIndex(ValidationIssue issue)
 {
 	auto ent = validateGetEntity(issue);
 	const char* name = GetAttrName(issue);
@@ -1187,7 +1187,7 @@ extern int_t GetAttrIndex(ValidationIssue* issue)
 	}
 }
 
-extern int64_t GetStepId(ValidationIssue* issue)
+extern int64_t GetStepId(ValidationIssue issue)
 {
 	auto inst = validateGetInstance(issue);
 	if (inst) {
@@ -1198,7 +1198,7 @@ extern int64_t GetStepId(ValidationIssue* issue)
 	}
 }
 
-extern const char* GetIssueId(ValidationIssue* issue)
+extern const char* GetIssueId(ValidationIssue issue)
 {
 	auto type = validateGetIssueType(issue);
 	switch (type) {

@@ -133,9 +133,9 @@ enum class enum_express_aggr : unsigned char
 	__SET
 };
 
-struct ValidationResults;
-struct ValidationIssue;
-typedef int_t ValidationIssueLevel;
+typedef void		* ValidationResults;
+typedef void		* ValidationIssue;
+typedef int_t		ValidationIssueLevel;
 
 enum class enum_validation_type : uint64_t
 {
@@ -3302,9 +3302,9 @@ void			DECL STDC	exportModellingAsOWL(
 //	validateSetOptions(10, 100, 0, enum_validation_type::__WHERE_RULE); //limit the work by 10 secs and first 100 issues,
 //																			 //exclude where rules check
 //
-//	ValidationResults* results = validateModel(model);
+//	ValidationResults results = validateModel(model);
 //
-//	for (ValidationIssue* issue = validateGetFirstIssue(results); issue; issue = validateGetNextIssue(issue)) {
+//	for (ValidationIssue issue = validateGetFirstIssue(results); issue; issue = validateGetNextIssue(issue)) {
 //		SdaiInstance inst = validateGetInstance(issue);
 //		const char* descr = validateGetDescription(issue);
 //		...	
@@ -3333,64 +3333,64 @@ uint64_t				DECL STDC   validateGetOptions(
 											uint64_t			mask
 										);
 
-ValidationResults		DECL * STDC	validateModel(
+ValidationResults		DECL STDC	validateModel(
 											SdaiModel			model
 										);
 
-ValidationResults		DECL * STDC	validateInstance(
+ValidationResults		DECL STDC	validateInstance(
 											SdaiInstance		instance
 										);
 
 void					DECL STDC	validateFreeResults(
-											ValidationResults	* results
+											ValidationResults	results
 										);
 
-ValidationIssue			DECL * STDC	validateGetFirstIssue(
-											ValidationResults	* results
+ValidationIssue			DECL STDC	validateGetFirstIssue(
+											ValidationResults	results
 										);
 
-ValidationIssue			DECL * STDC	validateGetNextIssue(
-											ValidationIssue		* issue
+ValidationIssue			DECL STDC	validateGetNextIssue(
+											ValidationIssue		issue
 										);
 
 enum_validation_status	DECL STDC	validateGetStatus(
-											ValidationResults	* results
+											ValidationResults	results
 										);
 
 enum_validation_type	DECL STDC	validateGetIssueType(
-											ValidationIssue		* issue
+											ValidationIssue		issue
 										);
 
 SdaiInstance			DECL STDC	validateGetInstance(
-											ValidationIssue		* issue		//	step instace where the issue is happend or 0
+											ValidationIssue		issue		//	step instace where the issue is happend or 0
 										);
 
 SdaiInstance			DECL STDC	validateGetInstanceRelated(
-											ValidationIssue		* issue
+											ValidationIssue		issue
 										);
 
 SdaiEntity				DECL STDC	validateGetEntity(
-											ValidationIssue		* issue		//	entity or NULL
+											ValidationIssue		issue		//	entity or NULL
 										);
 
 SdaiAttr				DECL STDC	validateGetAttr(
-											ValidationIssue		* issue		//	attribute or NULL
+											ValidationIssue		issue		//	attribute or NULL
 										);
 
 ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
-											ValidationIssue		* issue		//	specifies nesting level of aggregation or 0
+											ValidationIssue		issue		//	specifies nesting level of aggregation or 0
 										);
 
 const int_t 			DECL * STDC	validateGetAggrIndArray(
-											ValidationIssue		* issue		//	array of indecies for each aggregation lsize is aggrLevel
+											ValidationIssue		issue		//	array of indecies for each aggregation lsize is aggrLevel
 										);
 
 int_t					DECL STDC	validateGetIssueLevel(
-											ValidationIssue		* issue
+											ValidationIssue		issue
 										);
 
 const char				DECL * STDC	validateGetDescription(
-											ValidationIssue		* issue		//	description text
+											ValidationIssue		issue		//	description text
 										);
 
 

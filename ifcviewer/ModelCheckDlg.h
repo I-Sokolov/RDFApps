@@ -32,7 +32,7 @@ private:
 
 	void OnActivateListItem(int iItem);
 
-	void AddIssue(ValidationIssue* issue, int rColWidth[4]);
+	void AddIssue(ValidationIssue issue, int rColWidth[4]);
 
 private:
 	CListCtrl m_wndIssueList;

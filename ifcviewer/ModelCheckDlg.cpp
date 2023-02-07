@@ -155,7 +155,7 @@ void CModelCheckDlg::FillIssueList(bool all)
 	}
 }
 
-void CModelCheckDlg::AddIssue(ValidationIssue* issue, int rWidth[4])
+void CModelCheckDlg::AddIssue(ValidationIssue issue, int rWidth[4])
 {
 	CString text (validateGetDescription(issue));
 	auto item = m_wndIssueList.InsertItem(0, text);

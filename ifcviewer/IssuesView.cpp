@@ -67,7 +67,7 @@ int CIssuesView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 }
 
 
-void CIssuesView::GetIssues(ValidationResults* results)
+void CIssuesView::GetIssues(ValidationResults results)
 {
 	ASSERT(m_lstIssues.empty());
 

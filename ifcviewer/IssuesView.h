@@ -51,7 +51,7 @@ public:
 	virtual void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/);
 
 private:
-	void GetIssues(ValidationResults* results);
+	void GetIssues(ValidationResults results);
 
 private:
 	IssueList						 m_lstIssues;
