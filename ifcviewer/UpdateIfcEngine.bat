@@ -10,6 +10,8 @@ if .%RDF_IFC_ENGINE_LIB%.==.. goto LibUpdated
 echo Update lib and dll
 xcopy %RDF_IFC_ENGINE_LIB%Debug\ifcengine.lib ifcengine\lib\%3\ /F /Y
 xcopy %RDF_IFC_ENGINE_LIB%%2\ifcengine.dll ifcengine\lib\%3\%2\ /F /Y
+:LibUpdated
+
 echo Copy dll to output
 xcopy ifcengine\lib\%3\%2\ifcengine.dll %1 /F /Y
-:LibUpdated
+xcopy dx9\lib\%3\D3DX9_43.dll %1 /F /Y
