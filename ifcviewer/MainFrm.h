@@ -2,6 +2,9 @@
 
 #include	"ModelCheckDlg.h"
 
+class CLeftPane;
+class CRightPane;
+
 class CMainFrame : public CFrameWnd
 {
 	
@@ -35,8 +38,9 @@ public:
 
 	bool SelectInstance(int_t instance);
 
-private:
-	CWnd* GetRightPane();
+public:
+	CLeftPane*  GetLeftPane();
+	CRightPane* GetRightPane();
 
 protected:  // control bar embedded members
 	CStatusBar        m_wndStatusBar;

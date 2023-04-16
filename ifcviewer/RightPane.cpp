@@ -4,6 +4,8 @@
 
 #include "camera.h"
 #include "IFCEngineInteract.h"
+#include "mainfrm.h"
+#include "LeftPane.h"
 
 #include <list>
 
@@ -702,7 +704,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			iZoomMouseY = iMouseY;
 			onHoverOverItem(iMouseX, iMouseY);
 			if (highLightedIfcObject) {
-				this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_SELECT_ITEM, 0, 0);
+				GetLeftPane()->SendMessage(IDS_SELECT_ITEM, 0, 0);
 			}
 			break;
 		case WM_RBUTTONDOWN:
@@ -710,7 +712,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			iZoomMouseY = iMouseY;
 			onHoverOverItem(iMouseX, iMouseY);
 			if (highLightedIfcObject) {
-				this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_SELECT_ITEM, 0, 0);
+				GetLeftPane()->SendMessage(IDS_SELECT_ITEM, 0, 0);
 
 				HMENU	hMenu = ::CreatePopupMenu();
 				wchar_t	menuItemString[255];
@@ -744,7 +746,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 				switch (sel) {
 					case  1:
-						this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_DISABLE_ITEM, 0, 0);
+						GetLeftPane()->SendMessage(IDS_DISABLE_ITEM, 0, 0);
 						highLightedIfcObject = 0;
 						break;
 					case  2:
@@ -2053,3 +2055,14 @@ bool	CRightPane::SetupMatrices()
 
 	return	false;
 }
+
+
+CWnd* CRightPane::GetLeftPane()
+	{	
+	auto pFrame = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
+	if (pFrame)
+		{
+		return pFrame->GetLeftPane();
+		}
+	return nullptr;
+	}

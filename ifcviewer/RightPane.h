@@ -89,4 +89,6 @@ protected:
 	void	Pan(int32_t iMouseX, int32_t iMouseY);
 	void	Rotate(int32_t iMouseX, int32_t iMouseY);
 	void	Zoom(int32_t iMouseX, int32_t iMouseY);
+
+	CWnd* GetLeftPane();
 };

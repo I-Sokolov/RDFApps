@@ -605,24 +605,34 @@ void CMainFrame::OnEncodingShiftJIS_X_213()
 
 bool CMainFrame::SelectInstance(int_t instance)
 {
-	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());
-	if (!pDoc) return true;
-
-	auto pTreeView = DYNAMIC_DOWNCAST (CLeftPane, pDoc->GetPane(RUNTIME_CLASS(CLeftPane)));
+	auto pTreeView = GetLeftPane();
 	if (!pTreeView) return true;
 
 	return pTreeView->SelectInstance(instance);
 }
 
-CWnd* CMainFrame::GetRightPane()
+
+CLeftPane* CMainFrame::GetLeftPane()
+	{
+	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());
+	if (pDoc)
+		{
+		return DYNAMIC_DOWNCAST(CLeftPane, pDoc->GetPane(RUNTIME_CLASS(CLeftPane)));
+		}
+	ASSERT(0);
+	return nullptr;
+	}
+
+CRightPane* CMainFrame::GetRightPane()
 {
 	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetActiveDocument());
 	if (pDoc) {
-		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
+		return DYNAMIC_DOWNCAST(CRightPane, pDoc->GetPane(RUNTIME_CLASS(CRightPane)));
 	}
 	ASSERT(0);
 	return nullptr;
 }
+
 
 void CMainFrame::OnViewModelChecker()
 {

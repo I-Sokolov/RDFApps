@@ -2,6 +2,7 @@
 #include "ifcviewer.h"
 #include "LeftPane.h"
 #include "RightPane.h"
+#include "mainfrm.h"
 #include "ifcviewerDoc.h"
 #include "generic.h"
 #include "unit.h"
@@ -985,13 +986,13 @@ void CLeftPane::Dump(CDumpContext& dc) const
 
 CWnd* CLeftPane::GetRightPane()
 {
-	auto pDoc = DYNAMIC_DOWNCAST(CifcviewerDoc, GetDocument());
-	if (pDoc) {
-		return pDoc->GetPane(RUNTIME_CLASS(CRightPane));
-	}
-	ASSERT(0);
+	auto pFrame = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
+	if (pFrame)
+		{
+		return pFrame->GetRightPane();
+		}
 	return nullptr;
-}
+	}
 
 HTREEITEM CLeftPane::ItemFromScreenPoint(CPoint pt)
 {
@@ -1103,7 +1104,7 @@ bool CLeftPane::SelectInstance(int_t instance)
 	return res;
 
 /*	if (highLightedIfcObject) {
-		this->GetWindow(GW_HWNDPREV)->SendMessage(IDS_SELECT_ITEM, 0, 0);
+		GetRightPane()->SendMessage(IDS_SELECT_ITEM, 0, 0);
 	}*/
 }
 
