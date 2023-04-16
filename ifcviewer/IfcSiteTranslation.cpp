@@ -28,7 +28,7 @@ int_t	GetUniqueIfcSiteInstance(
 
 	if (noIfcSiteInstances == 1) {
 		int_t	ifcSiteInstance = 0;
-		engiGetAggrElement(ifcSiteInstances, 0, sdaiINSTANCE, &ifcSiteInstance);
+		sdaiGetAggrByIndex(ifcSiteInstances, 0, sdaiINSTANCE, &ifcSiteInstance);
 		return	ifcSiteInstance;
 	}
 
@@ -121,13 +121,13 @@ bool	GetSiteTranslation(
 
 				int_t	noCoordinatesAGGR = sdaiGetMemberCount(coordinatesAGGR);
 				if (noCoordinatesAGGR > 0) {
-					engiGetAggrElement(coordinatesAGGR, 0, sdaiREAL, &translation[0]);
+					sdaiGetAggrByIndex(coordinatesAGGR, 0, sdaiREAL, &translation[0]);
 				}
 				if (noCoordinatesAGGR > 1) {
-					engiGetAggrElement(coordinatesAGGR, 1, sdaiREAL, &translation[1]);
+					sdaiGetAggrByIndex(coordinatesAGGR, 1, sdaiREAL, &translation[1]);
 				}
 				if (noCoordinatesAGGR > 2) {
-					engiGetAggrElement(coordinatesAGGR, 2, sdaiREAL, &translation[2]);
+					sdaiGetAggrByIndex(coordinatesAGGR, 2, sdaiREAL, &translation[2]);
 				}
 
 				return	true;

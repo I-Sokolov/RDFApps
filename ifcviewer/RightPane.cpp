@@ -761,7 +761,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 //								setFilter(ifcModelGlobalTmp, 1024, 1024);
 
 								int64_t	owlInstance = 0;
-								createGeometryConversion(highLightedIfcObject->ifcInstance, &owlInstance);
+								owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(highLightedIfcObject->ifcInstance)), highLightedIfcObject->ifcInstance, &owlInstance);
 
 //								setFilter(ifcModelGlobalTmp, 0, 1024);
 
@@ -774,7 +774,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 									i++;
 								}
 								fileNameChar[i] = 0;
-								SaveModel(ifcModelGlobalTmp, fileNameChar);
+								SaveInstanceTree(owlInstance, fileNameChar);
 
 								cleanMemory(ifcModelGlobalTmp, 1);
 							}
@@ -794,7 +794,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 								setFilter(ifcModelGlobalTmp, 1024, 1024);
 
 								int64_t	owlInstance = 0;
-								createGeometryConversion(highLightedIfcObject->ifcInstance, &owlInstance);
+								owlBuildInstance(engiGetEntityModel(sdaiGetInstanceType(highLightedIfcObject->ifcInstance)), highLightedIfcObject->ifcInstance, &owlInstance);
 
 								setFilter(ifcModelGlobalTmp, 0, 1024);
 
@@ -807,7 +807,7 @@ LRESULT CRightPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 									i++;
 								}
 								fileNameChar[i] = 0;
-								SaveModel(ifcModelGlobalTmp, fileNameChar);
+								SaveInstanceTree(owlInstance, fileNameChar);
 
 								cleanMemory(ifcModelGlobalTmp, 1);
 							}

@@ -342,8 +342,8 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData&
 		switch (sdaiType) {
 			case sdaiINSTANCE:
 			{
-				int_t inst = 0;
-				engiGetAggrElement(data.aggregation, i, sdaiINSTANCE, &inst);
+				int_t	inst = 0;
+				sdaiGetAggrByIndex(data.aggregation, i, sdaiINSTANCE, &inst);
 				if (inst) {
 					InsertRegularItem(inst, nullptr, 0, false, hItem);
 				}
@@ -352,8 +352,8 @@ void CDlgReferenceTree::InsertAggregationElements(HTREEITEM hItem, TreeItemData&
 
 			case sdaiAGGR:
 			{
-				int_t* aggr = nullptr;
-				engiGetAggrElement(data.aggregation, i, sdaiAGGR, &aggr);
+				int_t	* aggr = nullptr;
+				sdaiGetAggrByIndex(data.aggregation, i, sdaiAGGR, &aggr);
 				if (aggr) {
 					InsertRegularItem(0, aggr, 0, false, hItem);
 				}
@@ -441,7 +441,7 @@ void CDlgReferenceTree::InsertReferencingInstances(HTREEITEM hItem, TreeItemData
 	int childCounter = 0;
 	for (int_t i = 0; i < N; i++) {
 		int_t instance = 0;
-		engiGetAggrElement(all, i, sdaiINSTANCE, &instance);
+		sdaiGetAggrByIndex(all, i, sdaiINSTANCE, &instance);
 		if (instance && instance != data.instance) {
 			CheckInsertReferencingInstance(instance, data.instance, hItem, childCounter, data.childLimit);
 			if (childCounter >= data.childLimit)

@@ -923,7 +923,7 @@ void	CLeftPane::OnBeforeExpand(NMHDR* pNMHDR, LRESULT* pResult)
 				ifcInstance = ((STRUCT_TREE_ITEM_IFCINSTANCE*) treeItem->parent)->ifcInstance;
 
 		STRUCT__PROPERTY__SET	* propertySets = nullptr;
-		CreateIfcInstanceProperties(ifcModel, &propertySets, ifcInstance, units);
+		CreateIfcInstanceProperties(ifcModel, &propertySets, ifcInstance, unitsGlobal);
 		CreateTreeItems(treeItem, propertySets);
 
 		DeletePropertySets(propertySets);

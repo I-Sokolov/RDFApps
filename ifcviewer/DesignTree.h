@@ -6,7 +6,7 @@
 
 
 
-__int64		UpdateDesignTree(
-					__int64		owlModel,
-					__int64		owlInstance
+int64_t		UpdateDesignTree(
+					int64_t		owlModel,
+					int64_t		owlInstance
 				);

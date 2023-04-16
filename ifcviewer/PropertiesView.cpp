@@ -153,7 +153,7 @@ void CPropertiesView::AddRelationshipsOf(SdaiInstance instance)
 	auto N = sdaiGetMemberCount(visitall);
 	for (int_t i = 0; i < N; i++) {
 		int_t inst;
-		engiGetAggrElement(visitall, i, sdaiINSTANCE, &inst);
+		sdaiGetAggrByIndex(visitall, i, sdaiINSTANCE, &inst);
 		if (instance) {
 			CheckRelationship(instance, inst);
 		}
@@ -255,7 +255,7 @@ void CPropertiesView::AddTypeObject(SdaiInstance typeObject)
 	pPropTO->SetDescription(descr);
 
 	STRUCT__PROPERTY__SET* propertySets = nullptr;
-	CreateTypeObjectProperties(globalIfcModel, &propertySets, typeObject, units);
+	CreateTypeObjectProperties(globalIfcModel, &propertySets, typeObject, unitsGlobal);
 
 	if (propertySets) {
 		AddPropertySet(propertySets, pPropTO);
@@ -270,7 +270,7 @@ void CPropertiesView::AddTypeObject(SdaiInstance typeObject)
 void CPropertiesView::AddPropertySetsOf(SdaiInstance instance)
 {
 	STRUCT__PROPERTY__SET* propertySets = nullptr;
-	CreateIfcInstanceProperties(globalIfcModel, &propertySets, instance, units, false);
+	CreateIfcInstanceProperties(globalIfcModel, &propertySets, instance, unitsGlobal, false);
 
 	if (propertySets) {
 		AddPropertySet(propertySets);

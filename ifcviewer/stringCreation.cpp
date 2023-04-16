@@ -54,7 +54,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char *)propertyName, sdaiAGGR, &ifcInstanceAggr);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiAGGR, &ifcInstanceAggr);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiAGGR, &ifcInstanceAggr);
 		}
 		if (ifcInstanceAggr) {
 			ifcInstanceAggrCnt = sdaiGetMemberCount(ifcInstanceAggr);
@@ -82,7 +82,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char*)propertyName, sdaiUNICODE, &buffer);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiUNICODE, &buffer);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiUNICODE, &buffer);
 		}
 
 		if (buffer  &&  buffer[0]) {
@@ -97,7 +97,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char *)propertyName, sdaiINSTANCE, &ifcInstance);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiINSTANCE, &ifcInstance);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiINSTANCE, &ifcInstance);
 		}
 		if (ifcInstance) {
 			lineNo = internalGetP21Line(ifcInstance);
@@ -119,7 +119,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char *)propertyName, sdaiINTEGER, &integer);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiINTEGER, &integer);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiINTEGER, &integer);
 		}
 #ifdef	WIN64
 		_i64tow_s(integer, buff, 500, 10);
@@ -134,7 +134,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char*)propertyName, sdaiUNICODE, &buffer);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiUNICODE, &buffer);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiUNICODE, &buffer);
 		}
 
 		if (buffer  &&  buffer[0]) {
@@ -149,7 +149,7 @@ CString	NestedPropertyValue(int_t ifcEntityInstance, const wchar_t * propertyNam
 			sdaiGetAttrBN(ifcEntityInstance, (char*)propertyName, sdaiUNICODE, &buffer);
 		}
 		else {
-			engiGetAggrElement(ifcAggregate, 0, sdaiUNICODE, &buffer);
+			sdaiGetAggrByIndex(ifcAggregate, 0, sdaiUNICODE, &buffer);
 		}
 
 		rValue += '\'';

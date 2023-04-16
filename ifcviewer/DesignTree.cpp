@@ -9,30 +9,30 @@
 
 
 
-static __int64 flagbit0__64bit = 1;				// 2^^0    0000.0000..0000.0001
-static __int64 flagbit1__64bit = 2;				// 2^^1    0000.0000..0000.0010
-static __int64 flagbit2__64bit = 4;				// 2^^2    0000.0000..0000.0100
-static __int64 flagbit3__64bit = 8;				// 2^^3    0000.0000..0000.1000
+static int64_t flagbit0__64bit = 1;				// 2^^0    0000.0000..0000.0001
+static int64_t flagbit1__64bit = 2;				// 2^^1    0000.0000..0000.0010
+static int64_t flagbit2__64bit = 4;				// 2^^2    0000.0000..0000.0100
+static int64_t flagbit3__64bit = 8;				// 2^^3    0000.0000..0000.1000
 
-static __int64 flagbit4__64bit = 16;			// 2^^4    0000.0000..0001.0000
-static __int64 flagbit5__64bit = 32;			// 2^^5    0000.0000..0010.0000
-static __int64 flagbit6__64bit = 64;			// 2^^6    0000.0000..0100.0000
-static __int64 flagbit7__64bit = 128;			// 2^^7    0000.0000..1000.0000
+static int64_t flagbit4__64bit = 16;			// 2^^4    0000.0000..0001.0000
+static int64_t flagbit5__64bit = 32;			// 2^^5    0000.0000..0010.0000
+static int64_t flagbit6__64bit = 64;			// 2^^6    0000.0000..0100.0000
+static int64_t flagbit7__64bit = 128;			// 2^^7    0000.0000..1000.0000
 
-static __int64 flagbit8__64bit = 256;			// 2^^8    0000.0001..0000.0000
-static __int64 flagbit9__64bit = 512;			// 2^^9    0000.0010..0000.0000
-static __int64 flagbit10__64bit = 1024;			// 2^^10   0000.0100..0000.0000
-static __int64 flagbit11__64bit = 2048;			// 2^^11   0000.1000..0000.0000
+static int64_t flagbit8__64bit = 256;			// 2^^8    0000.0001..0000.0000
+static int64_t flagbit9__64bit = 512;			// 2^^9    0000.0010..0000.0000
+static int64_t flagbit10__64bit = 1024;			// 2^^10   0000.0100..0000.0000
+static int64_t flagbit11__64bit = 2048;			// 2^^11   0000.1000..0000.0000
 
-static __int64 flagbit12__64bit = 4096;			// 2^^12   0001.0000..0000.0000
-static __int64 flagbit13__64bit = 8192;			// 2^^13   0010.0000..0000.0000
-static __int64 flagbit14__64bit = 16384;		// 2^^14   0100.0000..0000.0000
-static __int64 flagbit15__64bit = 32768;		// 2^^15   1000.0000..0000.0000
+static int64_t flagbit12__64bit = 4096;			// 2^^12   0001.0000..0000.0000
+static int64_t flagbit13__64bit = 8192;			// 2^^13   0010.0000..0000.0000
+static int64_t flagbit14__64bit = 16384;		// 2^^14   0100.0000..0000.0000
+static int64_t flagbit15__64bit = 32768;		// 2^^15   1000.0000..0000.0000
 
 
 
-__int64		CreateLine3Dn(
-				__int64		owlModel,
+int64_t		CreateLine3Dn(
+				int64_t		owlModel,
 				double		x,
 				double		y,
 				double		z
@@ -47,15 +47,15 @@ __int64		CreateLine3Dn(
 	points[4] = y;
 	points[5] = z;
 
-	__int64	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
+	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
 
-	SetDataTypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
+	SetDatatypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
 
 	return	owlInstanceLine3D;
 }
 
-__int64		CreateLine3Dn(
-					__int64		owlModel,
+int64_t		CreateLine3Dn(
+					int64_t		owlModel,
 					double		minX,
 					double		minY,
 					double		minZ,
@@ -73,34 +73,34 @@ __int64		CreateLine3Dn(
 	points[4] = maxY;
 	points[5] = maxZ;
 
-	__int64	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
+	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
 
-	SetDataTypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
+	SetDatatypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
 
 	return	owlInstanceLine3D;
 }
 
-__int64		UpdateDesignTree(
-				__int64		owlModel,
-				__int64		owlInstance
+int64_t		UpdateDesignTree(
+				int64_t		owlModel,
+				int64_t		owlInstance
 			)
 {
 
-	__int64	owlClass = GetInstanceClass(owlInstance);
+	int64_t	owlClass = GetInstanceClass(owlInstance);
 
 	if (owlClass == GetClassByName(owlModel, "Collection")) {
 		//
 		//	Walk through all objects
 		//
-		__int64	* values = nullptr, card = 0;
-		GetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "objects"), &values, &card);
+		int64_t	* values = nullptr, card = 0;
+		GetObjectProperty(owlInstance, GetPropertyByName(owlModel, "objects"), &values, &card);
 		if (card) {
-			__int64 * returnValues = new __int64[(unsigned int)card];
-			for (__int64 i = 0; i < card; i++) {
+			int64_t * returnValues = new int64_t[(unsigned int)card];
+			for (int64_t i = 0; i < card; i++) {
 				returnValues[i] = UpdateDesignTree(owlModel, values[i]);
 			}
 
-			SetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "objects"), returnValues, card);
+			SetObjectProperty(owlInstance, GetPropertyByName(owlModel, "objects"), returnValues, card);
 		}
 
 		return	owlInstance;
@@ -109,12 +109,12 @@ __int64		UpdateDesignTree(
 		//
 		//	Walk through object
 		//
-		__int64	* values = nullptr, card = 0;
-		GetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "object"), &values, &card);
+		int64_t	* values = nullptr, card = 0;
+		GetObjectProperty(owlInstance, GetPropertyByName(owlModel, "object"), &values, &card);
 		if (card == 1) {
-			__int64	returnValue = UpdateDesignTree(owlModel, values[0]);
+			int64_t	returnValue = UpdateDesignTree(owlModel, values[0]);
 
-			SetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "object"), &returnValue, card);
+			SetObjectProperty(owlInstance, GetPropertyByName(owlModel, "object"), &returnValue, card);
 		}
 
 		return	owlInstance;
@@ -123,8 +123,8 @@ __int64		UpdateDesignTree(
 		//
 		//	Walk through object
 		//
-		__int64	* values = nullptr, card = 0;
-		GetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "firstObject"), &values, &card);
+		int64_t	* values = nullptr, card = 0;
+		GetObjectProperty(owlInstance, GetPropertyByName(owlModel, "firstObject"), &values, &card);
 		if (card == 1) {
 			return	UpdateDesignTree(owlModel, values[0]);
 		}
@@ -136,9 +136,9 @@ __int64		UpdateDesignTree(
 		//	Replace it with the polygonDirection * extrusionLength
 		//
 		double	* valuesPolygonDirection = nullptr, * valuesExtrusionLength = nullptr, x, y, z;
-		__int64	cardPolygonDirection = 0, cardExtrusionLength = 0;
+		int64_t	cardPolygonDirection = 0, cardExtrusionLength = 0;
 
-		GetDataTypeProperty(owlInstance, GetPropertyByName(owlModel, "polygonDirection"), (void**) &valuesPolygonDirection, &cardPolygonDirection);
+		GetDatatypeProperty(owlInstance, GetPropertyByName(owlModel, "polygonDirection"), (void**) &valuesPolygonDirection, &cardPolygonDirection);
 		if (cardPolygonDirection == 3) {
 			x = valuesPolygonDirection[0];
 			y = valuesPolygonDirection[1];
@@ -151,7 +151,7 @@ __int64		UpdateDesignTree(
 			z =	1;
 		}
 
-		GetDataTypeProperty(owlInstance, GetPropertyByName(owlModel, "extrusionLength"), (void**)&valuesExtrusionLength, &cardExtrusionLength);
+		GetDatatypeProperty(owlInstance, GetPropertyByName(owlModel, "extrusionLength"), (void**)&valuesExtrusionLength, &cardExtrusionLength);
 		if (cardExtrusionLength == 1) {
 			x *= valuesExtrusionLength[0];
 			y *= valuesExtrusionLength[0];
@@ -167,8 +167,8 @@ __int64		UpdateDesignTree(
 		//
 		//	Replace it with the path direction
 		//
-		__int64	* values = nullptr, card = 0;
-		GetObjectTypeProperty(owlInstance, GetPropertyByName(owlModel, "direction"), &values, &card);
+		int64_t	* values = nullptr, card = 0;
+		GetObjectProperty(owlInstance, GetPropertyByName(owlModel, "direction"), &values, &card);
 		if (card == 1) {
 			return	values[0];
 		}
@@ -177,12 +177,12 @@ __int64		UpdateDesignTree(
 		return	owlInstance;
 	}
 	else if (owlClass == GetClassByName(owlModel, "BoundaryRepresentation")) {
-		__int64	owlInstanceLine3Dn = 0;
+		int64_t	owlInstanceLine3Dn = 0;
 
 		//
 		//	Replace it with the path direction
 		//
-		__int64	setting = 0, mask = 2;
+		int64_t	setting = 0, mask = 2;
 		mask += flagbit2__64bit;			//    PRECISION (32/64 bit)
 		mask += flagbit3__64bit;			//	  INDEX ARRAY (32/64 bit)
 		mask += flagbit5__64bit;			//    NORMALS
@@ -199,10 +199,10 @@ __int64		UpdateDesignTree(
 		setting += 0;						//    POINTS OFF
 		setting += 0;						//    WIREFRAME OFF
 		
-		__int64 originalSetting = GetFormat(owlModel, mask);
+		int64_t originalSetting = GetFormat(owlModel, mask);
 		SetFormat(owlModel, setting, mask);
 
-		__int64	vertexBufferSize = 0, indexBufferSize = 0;
+		int64_t	vertexBufferSize = 0, indexBufferSize = 0;
 		CalculateInstance(owlInstance, &vertexBufferSize, &indexBufferSize, 0);
 		if (vertexBufferSize && indexBufferSize) {
 			double	* vertices = new double[3 * (int) vertexBufferSize];
@@ -210,7 +210,7 @@ __int64		UpdateDesignTree(
 			double	minX = vertices[0], maxX = minX,
 					minY = vertices[1], maxY = minY,
 					minZ = vertices[2], maxZ = minZ;
-			for (__int64 i = 1; i < vertexBufferSize; i++) {
+			for (int64_t i = 1; i < vertexBufferSize; i++) {
 				if (minX > vertices[3 * i + 0]) { minX = vertices[3 * i + 0]; }
 				if (maxX < vertices[3 * i + 0]) { maxX = vertices[3 * i + 0]; }
 				if (minY > vertices[3 * i + 1]) { minY = vertices[3 * i + 1]; }

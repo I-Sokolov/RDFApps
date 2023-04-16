@@ -15,9 +15,9 @@
 #include <assert.h>
 
 
-extern	STRUCT__SIUNIT	* units;
+extern	STRUCT__SIUNIT	* unitsGlobal;
 
-extern	__int64			encodingSetting,
+extern	int64_t			encodingSetting,
 						encodingMask;
 
 int_t	ifcModelGlobalTmp = 0;
@@ -65,7 +65,7 @@ STRUCT__IFC__OBJECT	** queryIfcObjects(
 		int_t	ifcEntity = sdaiGetEntity(ifcModel, (char*) entityName);
 		for (i = 0; i < noIfcObjectInstances; ++i) {
 			int_t	ifcObjectInstance = 0;
-			engiGetAggrElement(ifcObjectInstances, i, sdaiINSTANCE, &ifcObjectInstance);
+			sdaiGetAggrByIndex(ifcObjectInstances, i, sdaiINSTANCE, &ifcObjectInstance);
 
 			STRUCT__IFC__OBJECT	* ifcObject = CreateIfcObject(ifcEntity, ifcObjectInstance, entityName, hide, segmentationParts);
 			(*firstFreeIfcObject) = ifcObject;
@@ -174,8 +174,8 @@ void	GenerateWireFrameGeometry(
 
 		CreateInstance(GetClassByName((int64_t) ifcModel, "Transformation"), nullptr);
 
-		__int64	noVertices = 0, noIndices = 0;
-		CalculateInstance((__int64) ifcObject->ifcInstance, &noVertices, &noIndices, nullptr);
+		int64_t	noVertices = 0, noIndices = 0;
+		CalculateInstance((int64_t) ifcObject->ifcInstance, &noVertices, &noIndices, nullptr);
 
 		int64_t	owlModel = 0,
 				owlInstance = 0;
@@ -217,13 +217,15 @@ void	GenerateWireFrameGeometry(
 
 					ClearedInstanceExternalBuffers(owlInstance);
 
-					__int64	noVert = noVertices, noInd = noIndices;
+#ifdef _DEBUG
+					int64_t	noVert = noVertices, noInd = noIndices;
+#endif // _DEBUG
 
-					CalculateInstance((__int64)ifcObject->ifcInstance, &noVertices, &noIndices, nullptr);
+					CalculateInstance((int64_t) ifcObject->ifcInstance, &noVertices, &noIndices, nullptr);
 					assert(noVert == noVertices &&
 						   noInd == noIndices);
-					UpdateInstanceVertexBuffer((__int64)ifcObject->ifcInstance, vertices);
-					UpdateInstanceIndexBuffer((__int64)ifcObject->ifcInstance, indices);
+					UpdateInstanceVertexBuffer((int64_t)ifcObject->ifcInstance, vertices);
+					UpdateInstanceIndexBuffer((int64_t)ifcObject->ifcInstance, indices);
 				}
 			}
 
@@ -241,17 +243,17 @@ void	GenerateWireFrameGeometry(
 
 //SaveModel(ifcModel, "c:\\s\\out.bin");
 
-			int_t	faceCnt = getConceptualFaceCnt(ifcObject->ifcInstance);
+			int64_t	faceCnt = GetConceptualFaceCnt(ifcObject->ifcInstance);
 			int_t	* maxIndex = new int_t[faceCnt],
 					* primitivesForFaces = new int_t[faceCnt];
 
-			for  (int_t j = 0; j < faceCnt; j++) {
-				int_t	startIndexTriangles = 0, noIndicesTrangles = 0,
+			for (int64_t j = 0; j < faceCnt; j++) {
+				int64_t	startIndexTriangles = 0, noIndicesTrangles = 0,
 						startIndexLines = 0, noIndicesLines = 0,
 						startIndexPoints = 0, noIndicesPoints = 0,
 						startIndexConceptualFacesPolygons__ = 0, noIndicesConceptualFacesPolygons__ = 0;
 
-				getConceptualFaceEx(
+				GetConceptualFace(
 						ifcObject->ifcInstance, j,
 						&startIndexTriangles, &noIndicesTrangles,
 						&startIndexLines, &noIndicesLines,
@@ -428,7 +430,7 @@ void	GenerateWireFrameGeometry(
 /*			if (ifcObject->materials) {
 				STRUCT_MATERIALS	* materials = ifcObject->materials;
 				if (materials->next) {
-					__int64	indexBufferSize = 0, indexArrayOffset = 0, j = 0;
+					int64_t	indexBufferSize = 0, indexArrayOffset = 0, j = 0;
 					while (materials) {
 						ASSERT(materials->__indexBufferSize >= 0);
 						ASSERT(materials->__noPrimitivesForFaces == 0);
@@ -617,9 +619,9 @@ void	CleanupIfcFile()
 		topGroupTreeItem = nullptr;
 	}
 
-	if (units) {
-		CleanUnits__MemoryStructure(units);
-		units = nullptr;
+	if (unitsGlobal) {
+		CleanUnits__MemoryStructure(unitsGlobal);
+		unitsGlobal = nullptr;
 	}
 
 	mtrls.clear();
@@ -908,7 +910,7 @@ bool	ParseIfcFile(
 					owlInstanceArray = new int64_t[ifcAlignmentInstancesCnt];
 					for (int_t i = 0; i < ifcAlignmentInstancesCnt; i++) {
 						int_t	ifcAlignmentInstance = 0;
-						engiGetAggrElement(ifcAlignmentInstances, i, sdaiINSTANCE, &ifcAlignmentInstance);
+						sdaiGetAggrByIndex(ifcAlignmentInstances, i, sdaiINSTANCE, &ifcAlignmentInstance);
 						owlBuildInstance(ifcModel, ifcAlignmentInstance, &owlInstanceArray[i]);
 					}
 				}
@@ -916,7 +918,7 @@ bool	ParseIfcFile(
 					owlInstanceArray = new int64_t[ifcGeographicElementInstancesCnt];
 					for (int_t i = 0; i < ifcGeographicElementInstancesCnt; i++) {
 						int_t	ifcGeographicElementInstance = 0;
-						engiGetAggrElement(ifcGeographicElementInstances, i, sdaiINSTANCE, &ifcGeographicElementInstance);
+						sdaiGetAggrByIndex(ifcGeographicElementInstances, i, sdaiINSTANCE, &ifcGeographicElementInstance);
 						owlBuildInstance(ifcModel, ifcGeographicElementInstance, &owlInstanceArray[i]);
 					}
 				}
@@ -1059,7 +1061,7 @@ struct ReferencingInstancesCollector
 		auto NInst = sdaiGetMemberCount(allInst);
 		for (int i = 0; i < NInst; i++) {
 			int_t instance = 0;
-			engiGetAggrElement(allInst, i, sdaiINSTANCE, &instance);
+			sdaiGetAggrByIndex(allInst, i, sdaiINSTANCE, &instance);
 			if (instance) {
 				VisitInstance(instance);
 			}
@@ -1122,7 +1124,7 @@ private:
 				auto cnt = sdaiGetMemberCount(aggr);
 				for (int_t i = 0; i < cnt && !refers; i++) {
 					SdaiInstance inst = 0;
-					engiGetAggrElement(aggr, i, sdaiINSTANCE, &inst);
+					sdaiGetAggrByIndex(aggr, i, sdaiINSTANCE, &inst);
 					refers = (inst == referencedInstance);
 				}
 				return refers;

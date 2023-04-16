@@ -377,13 +377,13 @@ void	UnitAddName(STRUCT__SIUNIT * unit, wchar_t * name)
 }
 
 void	CleanUnits__MemoryStructure(
-				STRUCT__SIUNIT			* units
+				STRUCT__SIUNIT			* units_
 			)
 {
-	while (units) {
-		STRUCT__SIUNIT	* unitToRemove = units;
+	while (units_) {
+		STRUCT__SIUNIT	* unitToRemove = units_;
 
-		units = units->next;
+		units_ = units_->next;
 		delete unitToRemove;
 	}
 }
@@ -405,7 +405,7 @@ STRUCT__SIUNIT	* GetUnits(int_t ifcModel, int_t ifcProjectInstance)
 	unit_cnt = sdaiGetMemberCount(unit_set);
 	for (i = 0; i < unit_cnt; ++i) {
 		int_t	ifcUnitInstance = 0;
-		engiGetAggrElement(unit_set, i, sdaiINSTANCE, &ifcUnitInstance);
+		sdaiGetAggrByIndex(unit_set, i, sdaiINSTANCE, &ifcUnitInstance);
 		if (sdaiGetInstanceType(ifcUnitInstance) == ifcConversianBasedUnit_TYPE) {
 			STRUCT__SIUNIT	* unit = new STRUCT__SIUNIT();
 			unit->unitType = 0;
@@ -473,9 +473,9 @@ STRUCT__SIUNIT	* GetUnits(int_t ifcModel, int_t ifcProjectInstance)
 	return	firstUnit;
 }
 
-wchar_t	* GetUnit(STRUCT__SIUNIT * units, wchar_t * unitType)
+wchar_t	* GetUnit(STRUCT__SIUNIT * units_, wchar_t * unitType)
 {
-	STRUCT__SIUNIT	* unit = units;
+	STRUCT__SIUNIT	* unit = units_;
 
 	while (unit) {
 		if (equalStr(unit->unitType, unitType)) {
@@ -831,7 +831,7 @@ void	CreateIfcElementQuantity(int_t ifcModel, STRUCT__PROPERTY__SET ** propertyS
 					ifcQuantityWeigth_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCQUANTITYWEIGHT"),
 					ifcQuantityTime_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCQUANTITYTIME");
 
-			engiGetAggrElement(ifcQuantityInstances, i, sdaiINSTANCE, &ifcQuantityInstance);
+			sdaiGetAggrByIndex(ifcQuantityInstances, i, sdaiINSTANCE, &ifcQuantityInstance);
 
 			wchar_t	* quantityName = 0, * quantityDescription = 0;
 			sdaiGetAttrBN(ifcQuantityInstance, (char*) L"Name", sdaiUNICODE, &quantityName);
@@ -875,11 +875,11 @@ STRUCT__PROPERTY	** CreateIfcComplexProperty(int_t ifcModel, int_t ifcComplexPro
 
 	sdaiGetAttrBN(ifcComplexProperty, (char*) L"HasProperties", sdaiAGGR, &ifcPropertyInstances);
 
-	if	(ifcPropertyInstances) {
+	if (ifcPropertyInstances) {
 		int_t	ifcPropertyInstancesCnt = sdaiGetMemberCount(ifcPropertyInstances);
-		for  (int_t i = 0; i < ifcPropertyInstancesCnt; ++i) {
+		for (int_t i = 0; i < ifcPropertyInstancesCnt; ++i) {
 			int_t	ifcPropertyInstance = 0;
-			engiGetAggrElement(ifcPropertyInstances, i, sdaiINSTANCE, &ifcPropertyInstance);
+			sdaiGetAggrByIndex(ifcPropertyInstances, i, sdaiINSTANCE, &ifcPropertyInstance);
 
 			wchar_t	* propertyName = 0, * propertyDescription = 0;
 			sdaiGetAttrBN(ifcPropertyInstance, (char*) L"Name", sdaiUNICODE, &propertyName);
@@ -905,7 +905,7 @@ STRUCT__PROPERTY	** CreateIfcComplexProperty(int_t ifcModel, int_t ifcComplexPro
 void	CreateIfcPropertySet(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets, int_t ifcPropertySetInstance, STRUCT__SIUNIT * units)
 {
 	STRUCT__PROPERTY__SET	** ppPropertySet = propertySets;
-	while  ((* ppPropertySet)) {
+	while ((* ppPropertySet)) {
 		ppPropertySet = &(* ppPropertySet)->next;
 	}
 
@@ -925,14 +925,14 @@ void	CreateIfcPropertySet(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets,
 
 	sdaiGetAttrBN(ifcPropertySetInstance, (char*) L"HasProperties", sdaiAGGR, &ifcPropertyInstances);
 
-	if	(ifcPropertyInstances) {
+	if (ifcPropertyInstances) {
 		int_t	ifcPropertyInstancesCnt = sdaiGetMemberCount(ifcPropertyInstances);
-		for  (int_t i = 0; i < ifcPropertyInstancesCnt; ++i) {
+		for (int_t i = 0; i < ifcPropertyInstancesCnt; ++i) {
 			int_t	ifcPropertyInstance = 0,
 					ifcPropertySingleValue_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCPROPERTYSINGLEVALUE"),
 					ifcComplexProperty_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCCOMPLEXPROPERTY");
 
-			engiGetAggrElement(ifcPropertyInstances, i, sdaiINSTANCE, &ifcPropertyInstance);
+			sdaiGetAggrByIndex(ifcPropertyInstances, i, sdaiINSTANCE, &ifcPropertyInstance);
 
 			wchar_t	* propertyName = 0, * propertyDescription = 0;
 			sdaiGetAttrBN(ifcPropertyInstance, (char*) L"Name", sdaiUNICODE, &propertyName);
@@ -961,7 +961,7 @@ void	CreateIfcPropertySet(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets,
 
 void	CreateTypeObjectProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** propertySets, int_t ifcTypeObjectInstance, STRUCT__SIUNIT * units)
 {
-	if	(ifcTypeObjectInstance) {
+	if (ifcTypeObjectInstance) {
 		int_t	* hasPropertySets = 0, hasPropertySetsCnt,
 				ifcElementQuantity_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCELEMENTQUANTITY"),
 				ifcPropertySet_TYPE = sdaiGetEntity(ifcModel, (char*) L"IFCPROPERTYSET");
@@ -969,9 +969,9 @@ void	CreateTypeObjectProperties(int_t ifcModel, STRUCT__PROPERTY__SET ** propert
 		sdaiGetAttrBN(ifcTypeObjectInstance, (char*) L"HasPropertySets", sdaiAGGR, &hasPropertySets);
 
 		hasPropertySetsCnt = sdaiGetMemberCount(hasPropertySets);
-		for  (int_t i = 0; i < hasPropertySetsCnt; ++i) {
+		for (int_t i = 0; i < hasPropertySetsCnt; ++i) {
 			int_t	hasPropertySetInstance = 0;
-			engiGetAggrElement(hasPropertySets, i, sdaiINSTANCE, &hasPropertySetInstance);
+			sdaiGetAggrByIndex(hasPropertySets, i, sdaiINSTANCE, &hasPropertySetInstance);
 			if (sdaiGetInstanceType(hasPropertySetInstance) == ifcElementQuantity_TYPE) {
 				CreateIfcElementQuantity(ifcModel, propertySets, hasPropertySetInstance, units);
 			}
@@ -1082,7 +1082,7 @@ void	CreateIfcInstanceProperties(
 		int_t	isDefinedByInstancesCnt = sdaiGetMemberCount(isDefinedByInstances);
 		for (int_t i = 0; i < isDefinedByInstancesCnt; ++i) {
 			int_t	isDefinedByInstance = 0;
-			engiGetAggrElement(isDefinedByInstances, i, sdaiINSTANCE, &isDefinedByInstance);
+			sdaiGetAggrByIndex(isDefinedByInstances, i, sdaiINSTANCE, &isDefinedByInstance);
 
 			if (sdaiGetInstanceType(isDefinedByInstance) == ifcRelDefinesByType_TYPE && addTypeObjectProperties) {
 				int_t	typeObjectInstance = 0;
@@ -1116,7 +1116,7 @@ bool	IfcInstanceHasProperties(
 		int_t	isDefinedByInstancesCnt = sdaiGetMemberCount(isDefinedByInstances);
 		for (int_t i = 0; i < isDefinedByInstancesCnt; ++i) {
 			int_t	isDefinedByInstance = 0;
-			engiGetAggrElement(isDefinedByInstances, i, sdaiINSTANCE, &isDefinedByInstance);
+			sdaiGetAggrByIndex(isDefinedByInstances, i, sdaiINSTANCE, &isDefinedByInstance);
 
 			if (sdaiGetInstanceType(isDefinedByInstance) == ifcRelDefinesByType_TYPE) {
 				//...
@@ -1148,7 +1148,7 @@ bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
 			case sdaiINSTANCE:
 			{
 				int_t inst = 0;
-				engiGetAggrElement(aggregation, i, sdaiINSTANCE, &inst);
+				sdaiGetAggrByIndex(aggregation, i, sdaiINSTANCE, &inst);
 				if ((checkInstance && inst == checkInstance) || (!checkInstance && inst != 0)) {
 					return true; //>>>>>>>>>>>>>.
 				}
@@ -1157,8 +1157,8 @@ bool AggregationContainsInstance(int_t* aggregation, int_t checkInstance)
 
 			case sdaiAGGR:
 			{
-				int_t* aggr = nullptr;
-				engiGetAggrElement(aggregation, i, sdaiAGGR, &aggr);
+				int_t	* aggr = nullptr;
+				sdaiGetAggrByIndex(aggregation, i, sdaiAGGR, &aggr);
 				if (aggr) {
 					if (AggregationContainsInstance(aggr, checkInstance)) {
 						return true; //>>>>>>>>>>>>>.

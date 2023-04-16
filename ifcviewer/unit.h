@@ -132,4 +132,4 @@ bool			AggregationContainsInstance(
 
 
 
-extern	STRUCT__SIUNIT* units;
+extern	STRUCT__SIUNIT	* unitsGlobal;
