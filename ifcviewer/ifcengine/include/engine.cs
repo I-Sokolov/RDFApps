@@ -135,16 +135,56 @@ namespace RDF
 		}
 	}//COLOR
 
-    class engine
-    {
-        public const Int64 OBJECTPROPERTY_TYPE             = 1;
-        public const Int64 DATATYPEPROPERTY_TYPE_BOOLEAN   = 2;
-        public const Int64 DATATYPEPROPERTY_TYPE_CHAR      = 3;
-        public const Int64 DATATYPEPROPERTY_TYPE_INTEGER   = 4;
-        public const Int64 DATATYPEPROPERTY_TYPE_DOUBLE    = 5;
-        public const Int64 DATATYPEPROPERTY_TYPE_BYTE      = 6;
+	class engine
+	{
+		public const Int64 OBJECTPROPERTY_TYPE             = 1;
+		public const Int64 DATATYPEPROPERTY_TYPE_BOOLEAN   = 2;
+		public const Int64 DATATYPEPROPERTY_TYPE_CHAR      = 3;
+		public const Int64 DATATYPEPROPERTY_TYPE_INTEGER   = 4;
+		public const Int64 DATATYPEPROPERTY_TYPE_DOUBLE    = 5;
+		public const Int64 DATATYPEPROPERTY_TYPE_BYTE      = 6;
 
-        public const string enginedll = @"engine.dll";
+		public const UInt64 flagbit0 = 1;               // 2^^0							 0000.0000..0000.0001
+		public const UInt64 flagbit1 = 2;               // 2^^1							 0000.0000..0000.0010
+		public const UInt64 flagbit2 = 4;               // 2^^2							 0000.0000..0000.0100
+		public const UInt64 flagbit3 = 8;               // 2^^3							 0000.0000..0000.1000
+
+		public const UInt64 flagbit4 = 16;              // 2^^4							 0000.0000..0001.0000
+		public const UInt64 flagbit5 = 32;              // 2^^5							 0000.0000..0010.0000
+		public const UInt64 flagbit6 = 64;              // 2^^6							 0000.0000..0100.0000
+		public const UInt64 flagbit7 = 128;             // 2^^7							 0000.0000..1000.0000
+
+		public const UInt64 flagbit8 = 256;             // 2^^8							 0000.0001..0000.0000
+		public const UInt64 flagbit9 = 512;             // 2^^9							 0000.0010..0000.0000
+		public const UInt64 flagbit10 = 1024;           // 2^^10						 0000.0100..0000.0000
+		public const UInt64 flagbit11 = 2048;           // 2^^11						 0000.1000..0000.0000
+
+		public const UInt64 flagbit12 = 4096;           // 2^^12						 0001.0000..0000.0000
+		public const UInt64 flagbit13 = 8192;           // 2^^13						 0010.0000..0000.0000
+		public const UInt64 flagbit14 = 16384;          // 2^^14						 0100.0000..0000.0000
+		public const UInt64 flagbit15 = 32768;          // 2^^15						 1000.0000..0000.0000
+
+		public const UInt64 flagbit16 = 65536;          // 2^^16   0000.0000..0000.0001  0000.0000..0000.0000
+		public const UInt64 flagbit17 = 131072;         // 2^^17   0000.0000..0000.0010  0000.0000..0000.0000
+		public const UInt64 flagbit18 = 262144;         // 2^^18   0000.0000..0000.0100  0000.0000..0000.0000
+		public const UInt64 flagbit19 = 524288;         // 2^^19   0000.0000..0000.1000  0000.0000..0000.0000
+
+		public const UInt64 flagbit20 = 1048576;        // 2^^20   0000.0000..0001.0000  0000.0000..0000.0000
+		public const UInt64 flagbit21 = 2097152;        // 2^^21   0000.0000..0010.0000  0000.0000..0000.0000
+		public const UInt64 flagbit22 = 4194304;        // 2^^22   0000.0000..0100.0000  0000.0000..0000.0000
+		public const UInt64 flagbit23 = 8388608;        // 2^^23   0000.0000..1000.0000  0000.0000..0000.0000
+
+		public const UInt64 flagbit24 = 16777216;       // 2^^24   0000.0001..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit25 = 33554432;       // 2^^25   0000.0010..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit26 = 67108864;       // 2^^26   0000.0100..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit27 = 134217728;      // 2^^27   0000.1000..0000.0000  0000.0000..0000.0000
+
+		public const UInt64 flagbit28 = 268435456;      // 2^^28   0001.0000..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit29 = 536870912;      // 2^^29   0010.0000..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit30 = 1073741824;     // 2^^30   0100.0000..0000.0000  0000.0000..0000.0000
+		public const UInt64 flagbit31 = 2147483648;		// 2^^31   1000.0000..0000.0000  0000.0000..0000.0000
+
+		public const string enginedll = @"engine.dll";
 
         //
         //  Meta information API Calls
@@ -1794,12 +1834,38 @@ namespace RDF
 		///
 		///	...
 		/// </summary>
-
-
-		public static void GetInstancePropertyCardinalityRestriction(Int64 owlInstance, Int64 rdfProperty, out Int64 minCard)
+		public static void GetInstancePropertyCardinalityRestriction(Int64 owlInstance, Int64 rdfProperty, out Int64 minCard, out Int64 maxCard)
 		{
-			string name = (string) null;
-			return RDF.engine.GetInstancePropertyCardinalityRestriction(owlInstance, rdfProperty, out minCard, out maxCard);
+			Int64	owlClass = GetInstanceClassByIterator(owlInstance, 0);
+
+			RDF.engine.GetClassPropertyCardinalityRestriction(
+					owlClass,
+					rdfProperty,
+					out minCard,
+					out maxCard
+				);
+
+			owlClass = RDF.engine.GetInstanceClassByIterator(owlInstance, owlClass);
+			while (owlClass != 0) {
+				Int64	myMinCard = -1,
+						myMaxCard = -1;
+
+				RDF.engine.GetClassPropertyCardinalityRestriction(
+						owlClass,
+						rdfProperty,
+						out myMinCard,
+						out myMaxCard
+					);
+
+				if (minCard < myMinCard)
+					minCard = myMinCard;
+
+				if (myMaxCard >= 0 &&
+					(maxCard == -1 || maxCard > myMaxCard))
+					maxCard = myMaxCard;
+
+				owlClass = RDF.engine.GetInstanceClassByIterator(owlInstance, owlClass);
+			}
 		}
 
 		/// <summary>
@@ -2446,7 +2512,8 @@ namespace RDF
 			if (myOwlClass == owlClass)
 				return	true;
 			Int64	parentOwlClass = GetClassParentsByIterator(myOwlClass, 0);
-			while (parentOwlClass != 0) {
+			while (parentOwlClass != 0)
+			{
 				if (IsKindOfClass(parentOwlClass, owlClass))
 					return	true;
 				parentOwlClass = GetClassParentsByIterator(myOwlClass, parentOwlClass);
@@ -2680,6 +2747,9 @@ namespace RDF
 		///	instances can return the same handles (however with possible different startIndices and noIndicesTriangles).
 		///	Argument index should be at least zero and smaller then return value of GetConceptualFaceCnt().
 		/// </summary>
+        [DllImport(enginedll, EntryPoint = "GetConceptualFace")]
+        public static extern Int64 GetConceptualFace(Int64 owlInstance, Int64 index, out Int64 startIndexTriangles, out Int64 noIndicesTriangles, out Int64 startIndexLines, out Int64 noIndicesLines, out Int64 startIndexPoints, out Int64 noIndicesPoints, out Int64 startIndexFacePolygons, out Int64 noIndicesFacePolygons, out Int64 startIndexConceptualFacePolygons, out Int64 noIndicesConceptualFacePolygons);
+
 		[DllImport(enginedll, EntryPoint = "GetConceptualFace")]
 		public static extern Int64 GetConceptualFace(Int64 owlInstance, Int64 index, out Int64 startIndexTriangles, out Int64 noIndicesTriangles, out Int64 startIndexLines, out Int64 noIndicesLines, out Int64 startIndexPoints, out Int64 noIndicesPoints, out Int64 startIndexFacePolygons, out Int64 noIndicesFacePolygons, IntPtr startIndexConceptualFacePolygons, IntPtr noIndicesConceptualFacePolygons);
 
@@ -3102,6 +3172,26 @@ namespace RDF
 		[DllImport(enginedll, EntryPoint = "SetVertexBufferOffset")]
 		public static extern void SetVertexBufferOffset(Int64 model, double x, double y, double z);
 
+		public static void SetVertexBufferOffset(Int64 model, ref double[] offset)
+		{
+			if (offset != null) {
+				SetVertexBufferOffset(
+								model,
+								offset[0],
+								offset[1],
+								offset[2]
+							);
+			}
+			else {
+				SetVertexBufferOffset(
+								model,
+								0.0,
+								0.0,
+								0.0
+							);
+			}
+		}
+
 		/// <summary>
 		///		GetVertexBufferOffset                                   (http://rdf.bg/gkdoc/CS64/GetVertexBufferOffset.html)
 		///
@@ -3109,6 +3199,16 @@ namespace RDF
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetVertexBufferOffset")]
 		public static extern void GetVertexBufferOffset(Int64 model, out double x, out double y, out double z);
+
+		public static void GetVertexBufferOffset(Int64 model, ref double[] offset)
+		{
+			GetVertexBufferOffset(
+							model,
+							out offset[0],
+							out offset[1],
+							out offset[2]
+						);
+		}
 
 		/// <summary>
 		///		SetDefaultColor                                         (http://rdf.bg/gkdoc/CS64/SetDefaultColor.html)
@@ -3477,11 +3577,13 @@ namespace RDF
 			string[] rgbwNames = { "R", "G", "B", "W" };
 			double[] rgbwValues = { 0.0, 0.0, 0.0, 0.0 };
 
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++)
+			{
 				Int64 card = 0;
 				IntPtr valuesPtr = IntPtr.Zero;
 				RDF.engine.GetDatatypeProperty(owlInstanceColorComponent, RDF.engine.GetPropertyByName(model, rgbwNames[i]), out valuesPtr, out card);
-				if (card == 1) {
+				if (card == 1)
+				{
 					double[] values = new double[card];
 					System.Runtime.InteropServices.Marshal.Copy(valuesPtr, values, 0, (int)card);
 					rgbwValues[i] = values[0];
@@ -3505,7 +3607,8 @@ namespace RDF
 			string[] rgbwNames = { "R", "G", "B", "W" };
 			double[] rgbwValues = RDF.COLOR.GET_COMPONENTS(color);
 
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 4; i++)
+			{
 				RDF.engine.SetDatatypeProperty(owlInstanceColorComponent, RDF.engine.GetPropertyByName(model, rgbwNames[i]), rgbwValues[i]);
 			}
 		}

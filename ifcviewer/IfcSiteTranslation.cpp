@@ -162,9 +162,9 @@ bool	SetSiteTranslation(
 
 			if (ifcCartesianPointInstance) {
 				int_t	* coordinatesAGGR = sdaiCreateAggrBN(ifcCartesianPointInstance, "Coordinates");
-				sdaiAppend((int_t) coordinatesAGGR, sdaiREAL, (void*) &translation[0]);
-				sdaiAppend((int_t) coordinatesAGGR, sdaiREAL, (void*) &translation[1]);
-				sdaiAppend((int_t) coordinatesAGGR, sdaiREAL, (void*) &translation[2]);
+				sdaiAppend(coordinatesAGGR, sdaiREAL, (void*) &translation[0]);
+				sdaiAppend(coordinatesAGGR, sdaiREAL, (void*) &translation[1]);
+				sdaiAppend(coordinatesAGGR, sdaiREAL, (void*) &translation[2]);
 
 				return	true;
 			}
