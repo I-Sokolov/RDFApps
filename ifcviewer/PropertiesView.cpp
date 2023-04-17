@@ -99,6 +99,7 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 	if (lHint == (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance) {
 		auto pInstance = dynamic_cast<CifcviewerDoc::ActiveInstanceHint*> (pHint);
 
+		m_wndProps.SetRedraw(false);
 		m_wndProps.RemoveAll();
 
 		if (pInstance) {
@@ -109,6 +110,7 @@ void CPropertiesView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* pHint)
 				AddRelationshipsOf(instance);
 			}
 		}
+		m_wndProps.SetRedraw(true);
 	}
 
 	Invalidate();
