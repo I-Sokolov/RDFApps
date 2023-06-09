@@ -4,8 +4,8 @@
 //  $Revision: 3999 $
 //  Project: Geometry Kernel
 //
-//  Be aware of license fee for use of this library when used commercially
-//  More info for commercial use:  peter.bonsma@rdf.bg / contact@rdf.bg
+//  Be aware a license fee for use of this library when used commercially is required
+//  For more info on commercial use please contact:  peter.bonsma@rdf.bg / contact@rdf.bg
 //
 
 #ifndef __RDF_LTD__ENGINE_H
@@ -14,7 +14,8 @@
 
 #include	"engdef.h"
 
-#include	"assert.h"
+#include	<assert.h>
+#include	<string.h>
 
 #if !defined _WINDOWS
 #include	<stdint.h>
@@ -908,6 +909,26 @@ OwlModel		DECL STDC	OpenModelA(
 									int64_t					size
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	OwlModel	OpenModelA(
+									const unsigned char		* content
+								)
+{
+	return	OpenModelA(
+					content,
+					strlen((const char*) content)	//	size
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		ImportModel                                             (http://rdf.bg/gkdoc/CP64/ImportModel.html)
 //				OwlModel				model								IN
@@ -981,6 +1002,28 @@ OwlInstance		DECL STDC	ImportModelA(
 									const unsigned char		* content,
 									int64_t					size
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	OwlInstance	ImportModelA(
+									OwlModel				model,
+									const unsigned char		* content
+								)
+{
+	return	ImportModelA(
+					model,
+					content,
+					strlen((const char*) content)	//	size
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		SaveInstanceTree                                        (http://rdf.bg/gkdoc/CP64/SaveInstanceTree.html)
@@ -4272,6 +4315,27 @@ int64_t			DECL STDC	SetFormat(
 									int64_t					mask
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int64_t	SetFormat(
+								OwlModel				model
+							)
+{
+	return	SetFormat(
+					model,
+					0,				//	setting
+					0				//	mask
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		GetFormat                                               (http://rdf.bg/gkdoc/CP64/GetFormat.html)
 //				OwlModel				model								IN
@@ -4285,6 +4349,26 @@ int64_t			DECL STDC	GetFormat(
 									OwlModel				model,
 									int64_t					mask
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int64_t	GetFormat(
+								OwlModel				model
+							)
+{
+	return	GetFormat(
+					model,
+					0				//	mask
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		GetVertexDataOffset                                     (http://rdf.bg/gkdoc/CP64/GetVertexDataOffset.html)
@@ -4640,7 +4724,8 @@ int64_t			DECL STDC	CheckInstanceConsistency(
 //
 //				bool					returns								OUT
 //
-//	Checks if two geometry representations are (almost) similar except for a transformation matrix.
+//	Checks if two geometry representations are (almost) similar except for a transformation matrix and a given epsilon.
+//	The parameter duplicateMatrix is optional and can be left to zero.
 //
 bool			DECL STDC	IsDuplicate(
 									OwlInstance				originalOwlInstance,
@@ -4650,9 +4735,33 @@ bool			DECL STDC	IsDuplicate(
 									bool					checkMaterial
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	bool	IsDuplicate(
+								OwlInstance				originalOwlInstance,
+								OwlInstance				duplicateOwlInstance
+							)
+{
+	return	IsDuplicate(
+					originalOwlInstance,
+					duplicateOwlInstance,
+					nullptr,		//	duplicateMatrix
+					0.,				//	epsilon
+					false			//	checkMaterial
+				);
+}
+
 //
 //  Derived Geometry API Calls
 //
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		GetPerimeter                                            (http://rdf.bg/gkdoc/CP64/GetPerimeter.html)
@@ -5047,6 +5156,21 @@ double			DECL STDC	GetDistance(
 #ifdef __cplusplus
 	}
 #endif
+
+//
+//
+static	inline	double	GetDistance(
+								OwlInstance				firstOwlInstance,
+								OwlInstance				secondOwlInstance
+							)
+{
+	return	GetDistance(
+					firstOwlInstance,
+					secondOwlInstance,
+					nullptr,		//	pointFirstInstance
+					nullptr			//	pointSecondInstance
+				);
+}
 
 //
 //

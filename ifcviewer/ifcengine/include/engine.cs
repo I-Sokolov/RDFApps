@@ -3141,6 +3141,11 @@ namespace RDF
 		[DllImport(enginedll, EntryPoint = "SetFormat")]
 		public static extern Int64 SetFormat(Int64 model, Int64 setting, Int64 mask);
 
+		public static Int64 SetFormat(Int64 model)
+		{
+			return	RDF.engine.SetFormat(model, 0, 0);
+		}
+
 		/// <summary>
 		///		GetFormat                                               (http://rdf.bg/gkdoc/CS64/GetFormat.html)
 		///
@@ -3148,6 +3153,11 @@ namespace RDF
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetFormat")]
 		public static extern Int64 GetFormat(Int64 model, Int64 mask);
+
+		public static Int64 GetFormat(Int64 model)
+		{
+			return	RDF.engine.GetFormat(model, 0);
+		}
 
 		/// <summary>
 		///		GetVertexDataOffset                                     (http://rdf.bg/gkdoc/CS64/GetVertexDataOffset.html)
@@ -3372,7 +3382,8 @@ namespace RDF
 		/// <summary>
 		///		IsDuplicate                                             (http://rdf.bg/gkdoc/CS64/IsDuplicate.html)
 		///
-		///	Checks if two geometry representations are (almost) similar except for a transformation matrix.
+		///	Checks if two geometry representations are (almost) similar except for a transformation matrix and a given epsilon.
+		///	The parameter duplicateMatrix is optional and can be left to zero.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "IsDuplicate")]
 		public static extern byte IsDuplicate(Int64 originalOwlInstance, Int64 duplicateOwlInstance, out double duplicateMatrix, double epsilon, byte checkMaterial);
@@ -3630,6 +3641,11 @@ namespace RDF
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetDistance")]
 		public static extern double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, out double pointFirstInstance, out double pointSecondInstance);
+
+		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance)
+		{
+			RDF.engine.GetDistance(firstOwlInstance, secondOwlInstance, IntPtr.Zero, IntPtr.Zero);
+		}
 
 		/// <summary>
 		///		GetColorOfComponent                                     (http://rdf.bg/gkdoc/CS64/GetColorOfComponent.html)
