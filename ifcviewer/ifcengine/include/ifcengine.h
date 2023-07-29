@@ -4,8 +4,8 @@
 //  $Revision: 3999 $
 //  Project: IFC Engine Library
 //
-//  Be aware of license fee for use of this library when used commercially
-//  More info for commercial use:  peter.bonsma@rdf.bg / contact@rdf.bg
+//  Be aware a license fee for use of this library when used commercially is required
+//  For more info on commercial use please contact:  peter.bonsma@rdf.bg / contact@rdf.bg
 //
 
 #ifndef __RDF_LTD__IFCENGINE_H
@@ -14,7 +14,8 @@
 
 #include	"engdef.h"
 
-#include	"assert.h"
+#include	<assert.h>
+#include	<string.h>
 
 #if !defined _WINDOWS
 #include	<stdint.h>
@@ -101,37 +102,37 @@ typedef	int_t			* SchemaAggr;
 
 enum class enum_express_declaration : unsigned char
 {
-	__NONE = 0,
-	__ENTITY,
-	__ENUM,
-	__SELECT,
-	__DEFINED_TYPE
+	__NONE						= 0,
+	__ENTITY					= 1,
+	__ENUM						= 2,
+	__SELECT					= 3,
+	__DEFINED_TYPE				= 4
 };
 
 
 enum class enum_express_attr_type : unsigned char
 {
-	__NONE = 0, //attribute type is unknown here but it may be defined by referenced domain entity
-	__BINARY,
-	__BINARY_32,
-	__BOOLEAN,
-	__ENUMERATION,
-	__INTEGER,
-	__LOGICAL,
-	__NUMBER,
-	__REAL,
-	__SELECT,
-	__STRING
+	__NONE						= 0,		//	attribute type is unknown here but it may be defined by referenced domain entity
+	__BINARY					= 1,
+	__BINARY_32					= 2,
+	__BOOLEAN					= 3,
+	__ENUMERATION				= 4,
+	__INTEGER					= 5,
+	__LOGICAL					= 6,
+	__NUMBER					= 7,
+	__REAL						= 8,
+	__SELECT					= 9,
+	__STRING					= 10
 };
 
 
 enum class enum_express_aggr : unsigned char
 {
-	__NONE = 0,
-	__ARRAY,
-	__BAG,
-	__LIST,
-	__SET
+	__NONE						= 0,
+	__ARRAY						= 1,
+	__BAG						= 2,
+	__LIST						= 3,
+	__SET						= 4
 };
 
 typedef void		* ValidationResults;
@@ -141,31 +142,31 @@ typedef int_t		ValidationIssueLevel;
 enum class enum_validation_type : uint64_t
 {
 	__NONE						= 0,
-	__NO_OF_ARGUMENTS			= 1 << 0,	//number of arguments
-	__ARGUMENT_EXPRESS_TYPE		= 1 << 1,	//argument value is correct entity, defined type or enumeration value
-	__ARGUMENT_PRIM_TYPE		= 1 << 2,	//argument value has correct primitive type
-	__REQUIRED_ARGUMENTS		= 1 << 3,	//non-optional arguments values are provided
-	__ARRGEGATION_EXPECTED		= 1 << 4,	//aggregation is provided when expected
-	__AGGREGATION_NOT_EXPECTED	= 1 << 5,   //aggregation is not used when not expected
-	__AGGREGATION_SIZE			= 1 << 6,   //aggregation size
-	__AGGREGATION_UNIQUE		= 1 << 7,	//elements in aggregations are unique when required
-	__COMPLEX_INSTANCE			= 1 << 8,	//complex instances contains full parent chains
-	__REFERENCE_EXISTS			= 1 << 9,	//referenced instance exists
-	__ABSTRACT_ENTITY			= 1 << 10,  //abstract entity should not instantiate
-	__WHERE_RULE				= 1 << 11,  //where-rule check
-	__UNIQUE_RULE				= 1 << 12,	//unique-rule check
-	__STAR_USAGE				= 1 << 13,  //* is used only for derived arguments
-	__CALL_ARGUMENT				= 1 << 14,  //validateModel/validateInstance function argument should be model/instance
-	__INTERNAL_ERROR			= 1 << 15   //unspecified error
+	__NO_OF_ARGUMENTS			= 1 << 0,	//	number of arguments
+	__ARGUMENT_EXPRESS_TYPE		= 1 << 1,	//	argument value is correct entity, defined type or enumeration value
+	__ARGUMENT_PRIM_TYPE		= 1 << 2,	//	argument value has correct primitive type
+	__REQUIRED_ARGUMENTS		= 1 << 3,	//	non-optional arguments values are provided
+	__ARRGEGATION_EXPECTED		= 1 << 4,	//	aggregation is provided when expected
+	__AGGREGATION_NOT_EXPECTED	= 1 << 5,   //	aggregation is not used when not expected
+	__AGGREGATION_SIZE			= 1 << 6,   //	aggregation size
+	__AGGREGATION_UNIQUE		= 1 << 7,	//	elements in aggregations are unique when required
+	__COMPLEX_INSTANCE			= 1 << 8,	//	complex instances contains full parent chains
+	__REFERENCE_EXISTS			= 1 << 9,	//	referenced instance exists
+	__ABSTRACT_ENTITY			= 1 << 10,  //	abstract entity should not instantiate
+	__WHERE_RULE				= 1 << 11,  //	where-rule check
+	__UNIQUE_RULE				= 1 << 12,	//	unique-rule check
+	__STAR_USAGE				= 1 << 13,  //	* is used only for derived arguments
+	__CALL_ARGUMENT				= 1 << 14,  //	validateModel/validateInstance function argument should be model/instance
+	__INTERNAL_ERROR			= 1 << 15   //	unspecified error
 };
 
 enum class enum_validation_status : unsigned char
 {
-	__NONE = 0,
-	__COMPLETE_ALL,		//all issues proceed
-	__COMPLETE_NOT_ALL, //completed but some issues were excluded by option settings
-	__TIME_EXCEED,		//validation was finished because of reach time limit
-	__COUNT_EXCEED	    //validation was finished because of reach of issue's numbers limit
+	__NONE						= 0,
+	__COMPLETE_ALL				= 1,		//	all issues proceed
+	__COMPLETE_NOT_ALL			= 2,		//	completed but some issues were excluded by option settings
+	__TIME_EXCEED				= 3,		//	validation was finished because of reach time limit
+	__COUNT_EXCEED				= 4			//	validation was finished because of reach of issue's numbers limit
 };
 
 
@@ -196,6 +197,29 @@ SdaiModel		DECL STDC	sdaiCreateModelBN(
 									const char				* schemaName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiModel	sdaiCreateModelBN(
+									SdaiRep					repository,
+									char					* fileName,
+									char					* schemaName
+								)
+{
+	return	sdaiCreateModelBN(
+					repository,
+					(const char*) fileName,
+					(const char*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiCreateModelBNUnicode                                (http://rdf.bg/ifcdoc/CP64/sdaiCreateModelBNUnicode.html)
 //				SdaiRep					repository							IN
@@ -213,6 +237,29 @@ SdaiModel		DECL STDC	sdaiCreateModelBNUnicode(
 									const wchar_t			* fileName,
 									const wchar_t			* schemaName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiModel	sdaiCreateModelBNUnicode(
+									SdaiRep					repository,
+									wchar_t					* fileName,
+									wchar_t					* schemaName
+								)
+{
+	return	sdaiCreateModelBNUnicode(
+					repository,
+					(const wchar_t*) fileName,
+					(const wchar_t*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiOpenModelBN                                         (http://rdf.bg/ifcdoc/CP64/sdaiOpenModelBN.html)
@@ -232,6 +279,29 @@ SdaiModel		DECL STDC	sdaiOpenModelBN(
 									const char				* schemaName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiModel	sdaiOpenModelBN(
+									SdaiRep					repository,
+									char					* fileName,
+									char					* schemaName
+								)
+{
+	return	sdaiOpenModelBN(
+					repository,
+					(const char*) fileName,
+					(const char*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiOpenModelBNUnicode                                  (http://rdf.bg/ifcdoc/CP64/sdaiOpenModelBNUnicode.html)
 //				SdaiRep					repository							IN
@@ -250,6 +320,29 @@ SdaiModel		DECL STDC	sdaiOpenModelBNUnicode(
 									const wchar_t			* schemaName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiModel	sdaiOpenModelBNUnicode(
+									SdaiRep					repository,
+									wchar_t					* fileName,
+									wchar_t					* schemaName
+								)
+{
+	return	sdaiOpenModelBNUnicode(
+					repository,
+					(const wchar_t*) fileName,
+					(const wchar_t*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiOpenModelByStream                                   (http://rdf.bg/ifcdoc/CP64/engiOpenModelByStream.html)
 //				SdaiRep					repository							IN
@@ -267,6 +360,29 @@ SdaiModel		DECL STDC	engiOpenModelByStream(
 									const void				* callback,
 									const char				* schemaName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiModel	engiOpenModelByStream(
+									SdaiRep					repository,
+									const void				* callback,
+									char					* schemaName
+								)
+{
+	return	engiOpenModelByStream(
+					repository,
+					callback,
+					(const char*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiOpenModelByArray                                    (http://rdf.bg/ifcdoc/CP64/engiOpenModelByArray.html)
@@ -297,13 +413,30 @@ SdaiModel		DECL STDC	engiOpenModelByArray(
 static	inline	SdaiModel	engiOpenModelByArray(
 									SdaiRep					repository,
 									const unsigned char		* content,
+									int_t					size,
+									char					* schemaName
+								)
+{
+	return	engiOpenModelByArray(
+					repository,
+					content,
+					size,
+					(const char*) schemaName
+				);
+}
+
+//
+//
+static	inline	SdaiModel	engiOpenModelByArray(
+									SdaiRep					repository,
+									const unsigned char		* content,
 									const char				* schemaName
 								)
 {
 	return	engiOpenModelByArray(
 					repository,
 					content,
-					strlen((const char*) content),
+					strlen((const char*) content),	//	size
 					schemaName
 				);
 }
@@ -326,6 +459,27 @@ void			DECL STDC	sdaiSaveModelBN(
 									const char				* fileName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelBN(
+								SdaiModel				model,
+								char					* fileName
+							)
+{
+	return	sdaiSaveModelBN(
+					model,
+					(const char*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiSaveModelBNUnicode                                  (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelBNUnicode.html)
 //				SdaiModel				model								IN
@@ -340,6 +494,27 @@ void			DECL STDC	sdaiSaveModelBNUnicode(
 									const wchar_t			* fileName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelBNUnicode(
+								SdaiModel				model,
+								wchar_t					* fileName
+							)
+{
+	return	sdaiSaveModelBNUnicode(
+					model,
+					(const wchar_t*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiSaveModelByStream                                   (http://rdf.bg/ifcdoc/CP64/engiSaveModelByStream.html)
 //				SdaiModel				model								IN
@@ -348,7 +523,7 @@ void			DECL STDC	sdaiSaveModelBNUnicode(
 //
 //				void					returns
 //
-//	This function saves the model as a steam.
+//	This function saves the model as a stream.
 //
 void			DECL STDC	engiSaveModelByStream(
 									SdaiModel				model,
@@ -386,6 +561,27 @@ void			DECL STDC	sdaiSaveModelAsXmlBN(
 									const char				* fileName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsXmlBN(
+								SdaiModel				model,
+								char					* fileName
+							)
+{
+	return	sdaiSaveModelAsXmlBN(
+					model,
+					(const char*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiSaveModelAsXmlBNUnicode                             (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBNUnicode.html)
 //				SdaiModel				model								IN
@@ -399,6 +595,27 @@ void			DECL STDC	sdaiSaveModelAsXmlBNUnicode(
 									SdaiModel				model,
 									const wchar_t			* fileName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsXmlBNUnicode(
+								SdaiModel				model,
+								wchar_t					* fileName
+							)
+{
+	return	sdaiSaveModelAsXmlBNUnicode(
+					model,
+					(const wchar_t*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiSaveModelAsSimpleXmlBN                              (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBN.html)
@@ -414,6 +631,27 @@ void			DECL STDC	sdaiSaveModelAsSimpleXmlBN(
 									const char				* fileName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsSimpleXmlBN(
+								SdaiModel				model,
+								char					* fileName
+							)
+{
+	return	sdaiSaveModelAsSimpleXmlBN(
+					model,
+					(const char*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiSaveModelAsSimpleXmlBNUnicode                       (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
 //				SdaiModel				model								IN
@@ -427,6 +665,27 @@ void			DECL STDC	sdaiSaveModelAsSimpleXmlBNUnicode(
 									SdaiModel				model,
 									const wchar_t			* fileName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsSimpleXmlBNUnicode(
+								SdaiModel				model,
+								wchar_t					* fileName
+							)
+{
+	return	sdaiSaveModelAsSimpleXmlBNUnicode(
+					model,
+					(const wchar_t*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiSaveModelAsJsonBN                                   (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBN.html)
@@ -442,6 +701,27 @@ void			DECL STDC	sdaiSaveModelAsJsonBN(
 									const char				* fileName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsJsonBN(
+								SdaiModel				model,
+								char					* fileName
+							)
+{
+	return	sdaiSaveModelAsJsonBN(
+					model,
+					(const char*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiSaveModelAsJsonBNUnicode                            (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBNUnicode.html)
 //				SdaiModel				model								IN
@@ -455,6 +735,27 @@ void			DECL STDC	sdaiSaveModelAsJsonBNUnicode(
 									SdaiModel				model,
 									const wchar_t			* fileName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiSaveModelAsJsonBNUnicode(
+								SdaiModel				model,
+								wchar_t					* fileName
+							)
+{
+	return	sdaiSaveModelAsJsonBNUnicode(
+					model,
+					(const wchar_t*) fileName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiSaveSchemaBN                                        (http://rdf.bg/ifcdoc/CP64/engiSaveSchemaBN.html)
@@ -470,6 +771,27 @@ bool			DECL STDC	engiSaveSchemaBN(
 									const char				* filePath
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	bool	engiSaveSchemaBN(
+								SdaiModel				model,
+								char					* filePath
+							)
+{
+	return	engiSaveSchemaBN(
+					model,
+					(const char*) filePath
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiSaveSchemaBNUnicode                                 (http://rdf.bg/ifcdoc/CP64/engiSaveSchemaBNUnicode.html)
 //				SdaiModel				model								IN
@@ -483,6 +805,27 @@ bool			DECL STDC	engiSaveSchemaBNUnicode(
 									SdaiModel				model,
 									const wchar_t			* filePath
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	bool	engiSaveSchemaBNUnicode(
+								SdaiModel				model,
+								wchar_t					* filePath
+							)
+{
+	return	engiSaveSchemaBNUnicode(
+					model,
+					(const wchar_t*) filePath
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiCloseModel                                          (http://rdf.bg/ifcdoc/CP64/sdaiCloseModel.html)
@@ -571,7 +914,7 @@ enum_express_declaration	DECL STDC	engiGetDeclarationType(
 //				SchemaDecl				enumeration							IN
 //				SdaiInteger				index								IN
 //
-//				char					* returns							OUT
+//				const char				* returns							OUT
 //
 //	This call returns a name of the enumaration element with the given index (zero based)
 //	It returns NULL if the index out of range
@@ -626,6 +969,27 @@ SdaiEntity		DECL STDC	sdaiGetEntity(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiEntity	sdaiGetEntity(
+									SdaiModel				model,
+									char					* entityName
+								)
+{
+	return	sdaiGetEntity(
+					model,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEntityModel                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
 //				SdaiEntity				entity								IN
@@ -652,6 +1016,27 @@ SdaiAttr		DECL STDC	engiGetEntityArgument(
 									const char				* argumentName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAttr	engiGetEntityArgument(
+									SdaiEntity				entity,
+									char					* argumentName
+								)
+{
+	return	engiGetEntityArgument(
+					entity,
+					(const char*) argumentName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEntityAttributeIndex                             (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndex.html)
 //				SdaiEntity				entity								IN
@@ -665,6 +1050,27 @@ int_t			DECL STDC	engiGetEntityAttributeIndex(
 									SdaiEntity				entity,
 									const char				* attributeName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetEntityAttributeIndex(
+								SdaiEntity				entity,
+								char					* attributeName
+							)
+{
+	return	engiGetEntityAttributeIndex(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityAttributeIndexEx                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndexEx.html)
@@ -684,6 +1090,31 @@ int_t			DECL STDC	engiGetEntityAttributeIndexEx(
 									bool					countedWithInverse
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetEntityAttributeIndexEx(
+								SdaiEntity				entity,
+								char					* attributeName,
+								bool					countedWithParents,
+								bool					countedWithInverse
+							)
+{
+	return	engiGetEntityAttributeIndexEx(
+					entity,
+					(const char*) attributeName,
+					countedWithParents,
+					countedWithInverse
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
 //				SdaiEntity				entity								IN
@@ -698,6 +1129,27 @@ int_t			DECL STDC	engiGetEntityArgumentIndex(
 									const char				* argumentName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetEntityArgumentIndex(
+								SdaiEntity				entity,
+								char					* argumentName
+							)
+{
+	return	engiGetEntityArgumentIndex(
+					entity,
+					(const char*) argumentName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentName.html)
 //				SdaiEntity				entity								IN
@@ -705,16 +1157,57 @@ int_t			DECL STDC	engiGetEntityArgumentIndex(
 //				SdaiPrimitiveType		valueType							IN
 //				const char				** argumentName						IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
 //
-void			DECL STDC	engiGetEntityArgumentName(
+const char		DECL * STDC	engiGetEntityArgumentName(
 									SdaiEntity				entity,
 									SdaiInteger				index,
 									SdaiPrimitiveType		valueType,
 									const char				** argumentName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* engiGetEntityArgumentName(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType,
+									char					** argumentName
+								)
+{
+	return	engiGetEntityArgumentName(
+					entity,
+					index,
+					valueType,
+					(const char**) argumentName
+				);
+}
+
+//
+//
+static	inline	const char	* engiGetEntityArgumentName(
+									SdaiEntity				entity,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType
+								)
+{
+	return	engiGetEntityArgumentName(
+					entity,
+					index,
+					valueType,
+					(const char**) nullptr				//	argumentName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityArgumentType                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentType.html)
@@ -795,21 +1288,79 @@ SdaiAggr		DECL STDC	sdaiGetEntityExtentBN(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAggr	sdaiGetEntityExtentBN(
+									SdaiModel				model,
+									char					* entityName
+								)
+{
+	return	sdaiGetEntityExtentBN(
+					model,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEntityName                                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityName.html)
 //				SdaiEntity				entity								IN
 //				SdaiPrimitiveType		valueType							IN
 //				const char				** entityName						IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	This call can be used to get the name of the given entity.
 //
-void			DECL STDC	engiGetEntityName(
+const char		DECL * STDC	engiGetEntityName(
 									SdaiEntity				entity,
 									SdaiPrimitiveType		valueType,
 									const char				** entityName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* engiGetEntityName(
+									SdaiEntity				entity,
+									SdaiPrimitiveType		valueType,
+									char					** entityName
+								)
+{
+	return	engiGetEntityName(
+					entity,
+					valueType,
+					(const char**) entityName
+				);
+}
+
+//
+//
+static	inline	const char	* engiGetEntityName(
+									SdaiEntity				entity,
+									SdaiPrimitiveType		valueType
+								)
+{
+	return	engiGetEntityName(
+					entity,
+					valueType,
+					(const char**) nullptr				//	entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityNoAttributes                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributes.html)
@@ -947,6 +1498,27 @@ int_t			DECL STDC	engiGetAttrOptionalBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetAttrOptionalBN(
+								SdaiEntity				entity,
+								char					* attributeName
+							)
+{
+	return	engiGetAttrOptionalBN(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetAttrDerived                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrDerived.html)
 //				SdaiEntity				entity								IN
@@ -984,6 +1556,27 @@ int_t			DECL STDC	engiGetAttrDerivedBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetAttrDerivedBN(
+								SdaiEntity				entity,
+								char					* attributeName
+							)
+{
+	return	engiGetAttrDerivedBN(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetAttrInverse                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrInverse.html)
 //				const SdaiAttr			attribute							IN
@@ -1018,27 +1611,81 @@ int_t			DECL STDC	engiGetAttrInverseBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetAttrInverseBN(
+								SdaiEntity				entity,
+								char					* attributeName
+							)
+{
+	return	engiGetAttrInverseBN(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetAttrDomain                                       (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomain.html)
 //				const SdaiAttr			attribute							IN
-//				char					** domainName						IN / OUT
+//				const char				** domainName						IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	This call can be used to get the domain of an attribute
 //
-void			DECL STDC	engiGetAttrDomain(
+const char		DECL * STDC	engiGetAttrDomain(
+									const SdaiAttr			attribute,
+									const char				** domainName
+								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* engiGetAttrDomain(
 									const SdaiAttr			attribute,
 									char					** domainName
-								);
+								)
+{
+	return	engiGetAttrDomain(
+					attribute,
+					(const char**) domainName
+				);
+}
+
+//
+//
+static	inline	const char	* engiGetAttrDomain(
+									const SdaiAttr			attribute
+								)
+{
+	return	engiGetAttrDomain(
+					attribute,
+					(const char**) nullptr				//	domainName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetAttrDomainBN                                     (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomainBN.html)
 //				SdaiEntity				entity								IN
 //				const char				* attributeName						IN
-//				char					** domainName						IN / OUT
+//				const char				** domainName						IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	This call can be used to get the domain of an attribute.
 //
@@ -1051,11 +1698,48 @@ void			DECL STDC	engiGetAttrDomain(
 //				domainName
 //			);
 //
-void			DECL STDC	engiGetAttrDomainBN(
+const char		DECL * STDC	engiGetAttrDomainBN(
 									SdaiEntity				entity,
 									const char				* attributeName,
-									char					** domainName
+									const char				** domainName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* engiGetAttrDomainBN(
+									SdaiEntity				entity,
+									char					* attributeName,
+									char					** domainName
+								)
+{
+	return	engiGetAttrDomainBN(
+					entity,
+					(const char*) attributeName,
+					(const char**) domainName
+				);
+}
+
+//
+//
+static	inline	const char	* engiGetAttrDomainBN(
+									SdaiEntity				entity,
+									const char				* attributeName
+								)
+{
+	return	engiGetAttrDomainBN(
+					entity,
+					attributeName,
+					(const char**) nullptr				//	domainName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityIsAbstract                                 (http://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstract.html)
@@ -1091,23 +1775,85 @@ int_t			DECL STDC	engiGetEntityIsAbstractBN(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetEntityIsAbstractBN(
+								SdaiModel				model,
+								char					* entityName
+							)
+{
+	return	engiGetEntityIsAbstractBN(
+					model,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetEnumerationValue                                 (http://rdf.bg/ifcdoc/CP64/engiGetEnumerationValue.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
-//				char					** enumerationValue					IN / OUT
+//				const char				** enumerationValue					IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
-//	...
+//	Allows to retrieve enumeration values of an attribute by index.
 //
-void			DECL STDC	engiGetEnumerationValue(
+const char		DECL * STDC	engiGetEnumerationValue(
+									const SdaiAttr			attribute,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType,
+									const char				** enumerationValue
+								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* engiGetEnumerationValue(
 									const SdaiAttr			attribute,
 									SdaiInteger				index,
 									SdaiPrimitiveType		valueType,
 									char					** enumerationValue
-								);
+								)
+{
+	return	engiGetEnumerationValue(
+					attribute,
+					index,
+					valueType,
+					(const char**) enumerationValue
+				);
+}
+
+//
+//
+static	inline	const char	* engiGetEnumerationValue(
+									const SdaiAttr			attribute,
+									SdaiInteger				index,
+									SdaiPrimitiveType		valueType
+								)
+{
+	return	engiGetEnumerationValue(
+					attribute,
+					index,
+					valueType,
+					(const char**) nullptr				//	enumerationValue
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
@@ -1154,6 +1900,41 @@ void			DECL STDC	engiGetAttributeTraits(
 									bool					* optional,
 									bool					* unique
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	engiGetAttributeTraits(
+								const SdaiAttr			attribute,
+								char					** name,
+								SdaiEntity				* definingEntity,
+								bool					* inverse,
+								enum_express_attr_type	* attrType,
+								SdaiEntity				* domainEntity,
+								SchemaAggr				* aggregationDescriptor,
+								bool					* optional,
+								bool					* unique
+							)
+{
+	return	engiGetAttributeTraits(
+					attribute,
+					(const char**) name,
+					definingEntity,
+					inverse,
+					attrType,
+					domainEntity,
+					aggregationDescriptor,
+					optional,
+					unique
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetAggregation                                      (http://rdf.bg/ifcdoc/CP64/engiGetAggregation.html)
@@ -1211,6 +1992,45 @@ void			DECL STDC	SetSPFFHeader(
 									const char				* fileSchema
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	SetSPFFHeader(
+								SdaiModel				model,
+								char					* description,
+								char					* implementationLevel,
+								char					* name,
+								char					* timeStamp,
+								char					* author,
+								char					* organization,
+								char					* preprocessorVersion,
+								char					* originatingSystem,
+								char					* authorization,
+								char					* fileSchema
+							)
+{
+	return	SetSPFFHeader(
+					model,
+					(const char*) description,
+					(const char*) implementationLevel,
+					(const char*) name,
+					(const char*) timeStamp,
+					(const char*) author,
+					(const char*) organization,
+					(const char*) preprocessorVersion,
+					(const char*) originatingSystem,
+					(const char*) authorization,
+					(const char*) fileSchema
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		SetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CP64/SetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
@@ -1231,13 +2051,40 @@ int_t			DECL STDC	SetSPFFHeaderItem(
 									const char				* value
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	SetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								char					* value
+							)
+{
+	return	SetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const char*) value
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		GetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
 //				SdaiPrimitiveType		valueType							IN
-//				char					** value							IN / OUT
+//				const char				** value							IN / OUT
 //
 //				int_t					returns								OUT
 //
@@ -1248,8 +2095,35 @@ int_t			DECL STDC	GetSPFFHeaderItem(
 									int_t					itemIndex,
 									int_t					itemSubIndex,
 									SdaiPrimitiveType		valueType,
-									char					** value
+									const char				** value
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	GetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								char					** value
+							)
+{
+	return	GetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const char**) value
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		GetSPFFHeaderItemUnicode                                (http://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItemUnicode.html)
@@ -1292,11 +2166,11 @@ SdaiPrimitiveType	DECL STDC	sdaiGetADBType(
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
 //
-//				char					* returns							OUT
+//				const char				* returns							OUT
 //
 //	This call can be used to get the path of an ADB type.
 //
-char			DECL * STDC	sdaiGetADBTypePath(
+const char		DECL * STDC	sdaiGetADBTypePath(
 									const SdaiADB			ADB,
 									int_t					typeNameNumber
 								);
@@ -1305,17 +2179,54 @@ char			DECL * STDC	sdaiGetADBTypePath(
 //		sdaiGetADBTypePathx                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePathx.html)
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
-//				char					** path								IN / OUT
+//				const char				** path								IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	This call is the same as sdaiGetADBTypePath, however can be used by porting to languages that have issues with returned char arrays.
 //
-void			DECL STDC	sdaiGetADBTypePathx(
+const char		DECL * STDC	sdaiGetADBTypePathx(
+									const SdaiADB			ADB,
+									int_t					typeNameNumber,
+									const char				** path
+								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* sdaiGetADBTypePathx(
 									const SdaiADB			ADB,
 									int_t					typeNameNumber,
 									char					** path
-								);
+								)
+{
+	return	sdaiGetADBTypePathx(
+					ADB,
+					typeNameNumber,
+					(const char**) path
+				);
+}
+
+//
+//
+static	inline	const char	* sdaiGetADBTypePathx(
+									const SdaiADB			ADB,
+									int_t					typeNameNumber
+								)
+{
+	return	sdaiGetADBTypePathx(
+					ADB,
+					typeNameNumber,
+					(const char**) nullptr				//	path
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiGetADBValue                                         (http://rdf.bg/ifcdoc/CP64/sdaiGetADBValue.html)
@@ -1769,6 +2680,31 @@ void			DECL * STDC	sdaiGetAttrBN(
 									void					* value
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	* sdaiGetAttrBN(
+								SdaiInstance			instance,
+								char					* attributeName,
+								SdaiPrimitiveType		valueType,
+								void					* value
+							)
+{
+	return	sdaiGetAttrBN(
+					instance,
+					(const char*) attributeName,
+					valueType,
+					value
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiGetAttrBNUnicode                                    (http://rdf.bg/ifcdoc/CP64/sdaiGetAttrBNUnicode.html)
 //				SdaiInstance			instance							IN
@@ -1786,6 +2722,31 @@ int_t			DECL STDC	sdaiGetAttrBNUnicode(
 									unsigned char			* buffer,
 									int_t					bufferLength
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiGetAttrBNUnicode(
+								SdaiInstance			instance,
+								char					* attributeName,
+								unsigned char			* buffer,
+								int_t					bufferLength
+							)
+{
+	return	sdaiGetAttrBNUnicode(
+					instance,
+					(const char*) attributeName,
+					buffer,
+					bufferLength
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiGetStringAttrBN                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetStringAttrBN.html)
@@ -1818,6 +2779,27 @@ char			DECL * STDC	sdaiGetStringAttrBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	char	* sdaiGetStringAttrBN(
+								SdaiInstance			instance,
+								char					* attributeName
+							)
+{
+	return	sdaiGetStringAttrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiGetInstanceAttrBN                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetInstanceAttrBN.html)
 //				SdaiInstance			instance							IN
@@ -1848,6 +2830,27 @@ SdaiInstance	DECL STDC	sdaiGetInstanceAttrBN(
 									SdaiInstance			instance,
 									const char				* attributeName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiInstance	sdaiGetInstanceAttrBN(
+										SdaiInstance			instance,
+										char					* attributeName
+									)
+{
+	return	sdaiGetInstanceAttrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiGetAggregationAttrBN                                (http://rdf.bg/ifcdoc/CP64/sdaiGetAggregationAttrBN.html)
@@ -1880,6 +2883,27 @@ SdaiAggr		DECL STDC	sdaiGetAggregationAttrBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAggr	sdaiGetAggregationAttrBN(
+									SdaiInstance			instance,
+									char					* attributeName
+								)
+{
+	return	sdaiGetAggregationAttrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiGetAttrDefinition                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetAttrDefinition.html)
 //				SdaiEntity				entity								IN
@@ -1893,6 +2917,27 @@ SdaiAttr		DECL STDC	sdaiGetAttrDefinition(
 									SdaiEntity				entity,
 									const char				* attributeName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAttr	sdaiGetAttrDefinition(
+									SdaiEntity				entity,
+									char					* attributeName
+								)
+{
+	return	sdaiGetAttrDefinition(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiGetInstanceType                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetInstanceType.html)
@@ -1958,6 +3003,27 @@ int_t			DECL STDC	sdaiIsKindOfBN(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiIsKindOfBN(
+								SdaiInstance			instance,
+								char					* entityName
+							)
+{
+	return	sdaiIsKindOfBN(
+					instance,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetAttrType                                         (http://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
 //				const SdaiAttr			attribute							IN
@@ -2000,6 +3066,27 @@ SdaiPrimitiveType	DECL STDC	engiGetAttrTypeBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
+											SdaiEntity				entity,
+											char					* attributeName
+										)
+{
+	return	engiGetAttrTypeBN(
+					entity,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetInstanceAttrType                                 (http://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrType.html)
 //				SdaiInstance			instance							IN
@@ -2041,6 +3128,27 @@ SdaiPrimitiveType	DECL STDC	engiGetInstanceAttrTypeBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiPrimitiveType	engiGetInstanceAttrTypeBN(
+											SdaiInstance			instance,
+											char					* attributeName
+										)
+{
+	return	engiGetInstanceAttrTypeBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiIsInstanceOf                                        (http://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOf.html)
 //				SdaiInstance			instance							IN
@@ -2081,6 +3189,27 @@ int_t			DECL STDC	sdaiIsInstanceOfBN(
 									SdaiInstance			instance,
 									const char				* entityName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiIsInstanceOfBN(
+								SdaiInstance			instance,
+								char					* entityName
+							)
+{
+	return	sdaiIsInstanceOfBN(
+					instance,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiIsEqual                                             (http://rdf.bg/ifcdoc/CP64/sdaiIsEqual.html)
@@ -2133,6 +3262,27 @@ int_t			DECL STDC	sdaiValidateAttributeBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiValidateAttributeBN(
+								SdaiInstance			instance,
+								char					* attributeName
+							)
+{
+	return	sdaiValidateAttributeBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiGetInstanceClassInfo                                (http://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfo.html)
 //				SdaiInstance			instance							IN
@@ -2161,8 +3311,8 @@ char			DECL * STDC	engiGetInstanceClassInfoUC(
 //		engiGetInstanceMetaInfo                                 (http://rdf.bg/ifcdoc/CP64/engiGetInstanceMetaInfo.html)
 //				SdaiInstance			instance							IN
 //				int_t					* localId							IN / OUT
-//				char					** entityName						IN / OUT
-//				char					** entityNameUC						IN / OUT
+//				const char				** entityName						IN / OUT
+//				const char				** entityNameUC						IN / OUT
 //
 //				int_t					returns								OUT
 //
@@ -2171,9 +3321,34 @@ char			DECL * STDC	engiGetInstanceClassInfoUC(
 int_t			DECL STDC	engiGetInstanceMetaInfo(
 									SdaiInstance			instance,
 									int_t					* localId,
-									char					** entityName,
-									char					** entityNameUC
+									const char				** entityName,
+									const char				** entityNameUC
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	engiGetInstanceMetaInfo(
+								SdaiInstance			instance,
+								int_t					* localId,
+								char					** entityName,
+								char					** entityNameUC
+							)
+{
+	return	engiGetInstanceMetaInfo(
+					instance,
+					localId,
+					(const char**) entityName,
+					(const char**) entityNameUC
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiFindInstanceUsers                                   (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsers.html)
@@ -2209,9 +3384,34 @@ int_t			DECL STDC	sdaiFindInstanceUsedInBN(
 									int_t					resultList
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiFindInstanceUsedInBN(
+								SdaiInstance			instance,
+								char					* roleName,
+								int_t					domain,
+								int_t					resultList
+							)
+{
+	return	sdaiFindInstanceUsedInBN(
+					instance,
+					(const char*) roleName,
+					domain,
+					resultList
+				);
+}
+
 //
 //  Instance Writing API Calls
 //
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiPrepend                                             (http://rdf.bg/ifcdoc/CP64/sdaiPrepend.html)
@@ -2813,6 +4013,27 @@ SdaiAggr		DECL STDC	sdaiCreateAggrBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAggr	sdaiCreateAggrBN(
+									SdaiInstance			instance,
+									char					* attributeName
+								)
+{
+	return	sdaiCreateAggrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiCreateNPL                                           (http://rdf.bg/ifcdoc/CP64/sdaiCreateNPL.html)
 //				SdaiNPL					returns								OUT
@@ -2883,6 +4104,27 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceBN(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiInstance	sdaiCreateInstanceBN(
+										SdaiModel				model,
+										char					* entityName
+									)
+{
+	return	sdaiCreateInstanceBN(
+					model,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
 //				SdaiInstance			instance							IN
@@ -2910,6 +4152,29 @@ void			DECL STDC	sdaiPutADBTypePath(
 									int_t					pathCount,
 									const char				* path
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiPutADBTypePath(
+								const SdaiADB			ADB,
+								int_t					pathCount,
+								char					* path
+							)
+{
+	return	sdaiPutADBTypePath(
+					ADB,
+					pathCount,
+					(const char*) path
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		sdaiPutAttr                                             (http://rdf.bg/ifcdoc/CP64/sdaiPutAttr.html)
@@ -3133,20 +4398,37 @@ void			DECL STDC	sdaiPutAttrBN(
 
 //
 //
-//static	inline	void	sdaiPutAttrBN(
-//								SdaiInstance			instance,
-//								const char				* attributeName,
-//								SdaiPrimitiveType		valueType,
-//								SdaiInstance			value
-//							)
-//{
-//	return	sdaiPutAttrBN(
-//					instance,
-//					attributeName,
-//					valueType,
-//					(const void*) value
-//				);
-//}
+static	inline	void	sdaiPutAttrBN(
+								SdaiInstance			instance,
+								char					* attributeName,
+								SdaiPrimitiveType		valueType,
+								const void				* value
+							)
+{
+	return	sdaiPutAttrBN(
+					instance,
+					(const char*) attributeName,
+					valueType,
+					value
+				);
+}
+
+//
+//
+static	inline	void	sdaiPutAttrBN(
+								SdaiInstance			instance,
+								const char				* attributeName,
+								SdaiPrimitiveType		valueType,
+								SdaiInstance			value
+							)
+{
+	return	sdaiPutAttrBN(
+					instance,
+					attributeName,
+					valueType,
+					(const void*) value
+				);
+}
 
 #ifdef __cplusplus
 	extern "C" {
@@ -3191,6 +4473,27 @@ void			DECL STDC	sdaiUnsetAttrBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	sdaiUnsetAttrBN(
+								SdaiInstance			instance,
+								char					* attributeName
+							)
+{
+	return	sdaiUnsetAttrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		engiSetComment                                          (http://rdf.bg/ifcdoc/CP64/engiSetComment.html)
 //				SdaiInstance			instance							IN
@@ -3204,6 +4507,27 @@ void			DECL STDC	engiSetComment(
 									SdaiInstance			instance,
 									const char				* comment
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	engiSetComment(
+								SdaiInstance			instance,
+								char					* comment
+							)
+{
+	return	engiSetComment(
+					instance,
+					(const char*) comment
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		engiGetInstanceLocalId                                  (http://rdf.bg/ifcdoc/CP64/engiGetInstanceLocalId.html)
@@ -3251,6 +4575,27 @@ int_t			DECL STDC	sdaiTestAttrBN(
 									const char				* attributeName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	sdaiTestAttrBN(
+								SdaiInstance			instance,
+								char					* attributeName
+							)
+{
+	return	sdaiTestAttrBN(
+					instance,
+					(const char*) attributeName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiCreateInstanceEI                                    (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceEI.html)
 //				SdaiModel				model								IN
@@ -3282,6 +4627,29 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceBNEI(
 									const char				* entityName,
 									ExpressID				expressID
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiInstance	sdaiCreateInstanceBNEI(
+										SdaiModel				model,
+										char					* entityName,
+										ExpressID				expressID
+									)
+{
+	return	sdaiCreateInstanceBNEI(
+					model,
+					(const char*) entityName,
+					expressID
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		setSegmentation                                         (http://rdf.bg/ifcdoc/CP64/setSegmentation.html)
@@ -3387,9 +4755,9 @@ void			DECL STDC	setMaximumSegmentationLength(
 //		getUnitConversionFactor                                 (http://rdf.bg/ifcdoc/CP64/getUnitConversionFactor.html)
 //				SdaiModel				model								IN
 //				const char				* unitType							IN
-//				char					** unitPrefix						IN / OUT
-//				char					** unitName							IN / OUT
-//				char					** SIUnitName						IN / OUT
+//				const char				** unitPrefix						IN / OUT
+//				const char				** unitName							IN / OUT
+//				const char				** SIUnitName						IN / OUT
 //
 //				double					returns								OUT
 //
@@ -3398,10 +4766,37 @@ void			DECL STDC	setMaximumSegmentationLength(
 double			DECL STDC	getUnitConversionFactor(
 									SdaiModel				model,
 									const char				* unitType,
-									char					** unitPrefix,
-									char					** unitName,
-									char					** SIUnitName
+									const char				** unitPrefix,
+									const char				** unitName,
+									const char				** SIUnitName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	double	getUnitConversionFactor(
+								SdaiModel				model,
+								char					* unitType,
+								char					** unitPrefix,
+								char					** unitName,
+								char					** SIUnitName
+							)
+{
+	return	getUnitConversionFactor(
+					model,
+					(const char*) unitType,
+					(const char**) unitPrefix,
+					(const char**) unitName,
+					(const char**) SIUnitName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		setBRepProperties                                       (http://rdf.bg/ifcdoc/CP64/setBRepProperties.html)
@@ -3480,16 +4875,49 @@ SdaiInstance	DECL STDC	internalGetInstanceFromP21Line(
 //
 //		internalGetXMLID                                        (http://rdf.bg/ifcdoc/CP64/internalGetXMLID.html)
 //				SdaiInstance			instance							IN
-//				char					** XMLID							IN / OUT
+//				const char				** XMLID							IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
-//	...
+//	In case an XML file is loaded the XML ID values are kept in memory and can be retrieved through this API call
 //
-void			DECL STDC	internalGetXMLID(
+const char		DECL * STDC	internalGetXMLID(
+									SdaiInstance			instance,
+									const char				** XMLID
+								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* internalGetXMLID(
 									SdaiInstance			instance,
 									char					** XMLID
-								);
+								)
+{
+	return	internalGetXMLID(
+					instance,
+					(const char**) XMLID
+				);
+}
+
+//
+//
+static	inline	const char	* internalGetXMLID(
+									SdaiInstance			instance
+								)
+{
+	return	internalGetXMLID(
+					instance,
+					(const char**) nullptr				//	XMLID
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		setStringUnicode                                        (http://rdf.bg/ifcdoc/CP64/setStringUnicode.html)
@@ -3581,6 +5009,27 @@ SdaiAggr		DECL STDC	xxxxGetEntityAndSubTypesExtentBN(
 									const char				* entityName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiAggr	xxxxGetEntityAndSubTypesExtentBN(
+									SdaiModel				model,
+									char					* entityName
+								)
+{
+	return	xxxxGetEntityAndSubTypesExtentBN(
+					model,
+					(const char*) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		xxxxGetAllInstances                                     (http://rdf.bg/ifcdoc/CP64/xxxxGetAllInstances.html)
 //				SdaiModel				model								IN
@@ -3641,22 +5090,59 @@ SdaiAttr		DECL STDC	xxxxGetAttrDefinitionByValue(
 //				SdaiInteger				index								IN
 //				const char				** name								IN / OUT
 //
-//				void					returns
+//				const char				* returns							OUT
 //
 //	...
 //
-void			DECL STDC	xxxxGetAttrNameByIndex(
+const char		DECL * STDC	xxxxGetAttrNameByIndex(
 									SdaiInstance			instance,
 									SdaiInteger				index,
 									const char				** name
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	const char	* xxxxGetAttrNameByIndex(
+									SdaiInstance			instance,
+									SdaiInteger				index,
+									char					** name
+								)
+{
+	return	xxxxGetAttrNameByIndex(
+					instance,
+					index,
+					(const char**) name
+				);
+}
+
+//
+//
+static	inline	const char	* xxxxGetAttrNameByIndex(
+									SdaiInstance			instance,
+									SdaiInteger				index
+								)
+{
+	return	xxxxGetAttrNameByIndex(
+					instance,
+					index,
+					(const char**) nullptr				//	name
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		iterateOverInstances                                    (http://rdf.bg/ifcdoc/CP64/iterateOverInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				SdaiEntity				* entity							IN / OUT
-//				char					** entityName						IN / OUT
+//				const char				** entityName						IN / OUT
 //
 //				SdaiInstance			returns								OUT
 //
@@ -3667,8 +5153,33 @@ SdaiInstance	DECL STDC	iterateOverInstances(
 									SdaiModel				model,
 									SdaiInstance			instance,
 									SdaiEntity				* entity,
-									char					** entityName
+									const char				** entityName
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	SdaiInstance	iterateOverInstances(
+										SdaiModel				model,
+										SdaiInstance			instance,
+										SdaiEntity				* entity,
+										char					** entityName
+									)
+{
+	return	iterateOverInstances(
+					model,
+					instance,
+					entity,
+					(const char**) entityName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		iterateOverProperties                                   (http://rdf.bg/ifcdoc/CP64/iterateOverProperties.html)
@@ -3826,6 +5337,29 @@ void			DECL STDC	internalSetLink(
 									const char				* attributeName,
 									int_t					linked_id
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	void	internalSetLink(
+								SdaiInstance			instance,
+								char					* attributeName,
+								int_t					linked_id
+							)
+{
+	return	internalSetLink(
+					instance,
+					(const char*) attributeName,
+					linked_id
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		internalAddAggrLink                                     (http://rdf.bg/ifcdoc/CP64/internalAddAggrLink.html)
@@ -4350,6 +5884,29 @@ int_t			DECL STDC	xxxxOpenModelByStream(
 									const char				* schemaName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	xxxxOpenModelByStream(
+								int_t					repository,
+								const void				* callback,
+								char					* schemaName
+							)
+{
+	return	xxxxOpenModelByStream(
+					repository,
+					callback,
+					(const char*) schemaName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 //
 //		sdaiCreateIterator                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateIterator.html)
 //				const SdaiAggr			aggregate							IN
@@ -4437,10 +5994,49 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 								);
 
 //
+//		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrType.html)
+//				SdaiInstance			instance							IN
+//				const SdaiAttr			attribute							IN
+//				const char				** attributeType					IN / OUT
+//
+//				int_t					returns								OUT
+//
+//	...
+//
+int_t			DECL STDC	xxxxGetAttrType(
+									SdaiInstance			instance,
+									const SdaiAttr			attribute,
+									const char				** attributeType
+								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	xxxxGetAttrType(
+								SdaiInstance			instance,
+								const SdaiAttr			attribute,
+								char					** attributeType
+							)
+{
+	return	xxxxGetAttrType(
+					instance,
+					attribute,
+					(const char**) attributeType
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+//
 //		xxxxGetAttrTypeBN                                       (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrTypeBN.html)
 //				SdaiInstance			instance							IN
 //				const char				* attributeName						IN
-//				char					** attributeType					IN / OUT
+//				const char				** attributeType					IN / OUT
 //
 //				int_t					returns								OUT
 //
@@ -4461,12 +6057,35 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 int_t			DECL STDC	xxxxGetAttrTypeBN(
 									SdaiInstance			instance,
 									const char				* attributeName,
-									char					** attributeType
+									const char				** attributeType
 								);
+
+#ifdef __cplusplus
+	}
+#endif
+
+//
+//
+static	inline	int_t	xxxxGetAttrTypeBN(
+								SdaiInstance			instance,
+								char					* attributeName,
+								char					** attributeType
+							)
+{
+	return	xxxxGetAttrTypeBN(
+					instance,
+					(const char*) attributeName,
+					(const char**) attributeType
+				);
+}
 
 //
 //  Validation
 //
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
 //
 //		validateSetOptions                                      (http://rdf.bg/ifcdoc/CP64/validateSetOptions.html)
@@ -4613,7 +6232,13 @@ ValidationIssue	DECL STDC	validateGetNextIssue(
 //
 //				enum_validation_status	returns								OUT
 //
-//	..
+//	Return value is the issueStatus (enum_validation_status):
+//
+//		value 0:	(__NONE)						no status set
+//		value 1:	(__COMPLETE_ALL)				all issues proceed
+//		value 2:	(__COMPLETE_NOT_ALL)			completed but some issues were excluded by option settings
+//		value 3:	(__TIME_EXCEED)					validation was finished because of reach time limit
+//		value 4:	(__COUNT_EXCEED)				validation was finished because of reach of issue's numbers limit
 //
 enum_validation_status	DECL STDC	validateGetStatus(
 									ValidationResults		results
@@ -4625,7 +6250,24 @@ enum_validation_status	DECL STDC	validateGetStatus(
 //
 //				enum_validation_type	returns								OUT
 //
-//	..
+//	Return value is the issueType (enum_validation_type):
+//
+//		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
+//		bit 1:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
+//		bit 2:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
+//		bit 3:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
+//		bit 4:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
+//		bit 5:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
+//		bit 6:	(__AGGREGATION_SIZE)				aggregation size
+//		bit 7:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
+//		bit 8:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
+//		bit 9:	(__REFERENCE_EXISTS)				referenced instance exists
+//		bit 10:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
+//		bit 11:	(__WHERE_RULE)						where-rule check
+//		bit 12:	(__UNIQUE_RULE)						unique-rule check
+//		bit 13:	(__STAR_USAGE)						* is used only for derived arguments
+//		bit 14:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
+//		bit 15:	(__INTERNAL_ERROR)					unspecified error
 //
 enum_validation_type	DECL STDC	validateGetIssueType(
 									ValidationIssue			issue
@@ -4661,7 +6303,7 @@ SdaiInstance	DECL STDC	validateGetInstanceRelated(
 //
 //				SdaiEntity				returns								OUT
 //
-//	..
+//	Returns the entity handle related to the given issue (if relevant)
 //
 SdaiEntity		DECL STDC	validateGetEntity(
 									ValidationIssue			issue
@@ -4673,7 +6315,7 @@ SdaiEntity		DECL STDC	validateGetEntity(
 //
 //				SdaiAttr				returns								OUT
 //
-//	..
+//	Returns the attribute handle related to the given issue (if relevant)
 //
 SdaiAttr		DECL STDC	validateGetAttr(
 									ValidationIssue			issue
@@ -4695,7 +6337,7 @@ ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
 //		validateGetAggrIndArray                                 (http://rdf.bg/ifcdoc/CP64/validateGetAggrIndArray.html)
 //				ValidationIssue			issue								IN
 //
-//				int_t					* returns							OUT
+//				const int_t				* returns							OUT
 //
 //	array of indecies for each aggregation lsize is aggrLevel
 //
@@ -4709,7 +6351,7 @@ const int_t		DECL * STDC	validateGetAggrIndArray(
 //
 //				int_t					returns								OUT
 //
-//	..
+//	Returns the issue level (i.e. severaty of the issue) of the issue given as input
 //
 int_t			DECL STDC	validateGetIssueLevel(
 									ValidationIssue			issue
@@ -4719,9 +6361,9 @@ int_t			DECL STDC	validateGetIssueLevel(
 //		validateGetDescription                                  (http://rdf.bg/ifcdoc/CP64/validateGetDescription.html)
 //				ValidationIssue			issue								IN
 //
-//				char					* returns							OUT
+//				const char				* returns							OUT
 //
-//	returns Description text
+//	Returns the description text of the issue given as input
 //
 const char		DECL * STDC	validateGetDescription(
 									ValidationIssue			issue
@@ -4933,10 +6575,22 @@ void			DECL STDC	exportModellingAsOWL(
 									const char				* fileName
 								);
 
-
 #ifdef __cplusplus
 	}
 #endif
+
+//
+//
+static	inline	void	exportModellingAsOWL(
+								SdaiModel				model,
+								char					* fileName
+							)
+{
+	return	exportModellingAsOWL(
+					model,
+					(const char*) fileName
+				);
+}
 
 
 #undef DECL

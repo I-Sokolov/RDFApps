@@ -172,7 +172,7 @@ void	GenerateWireFrameGeometry(
 		SetFormat(ifcModel, flagbit14, flagbit14);
 		SetBehavior(ifcModel, flagbit12, flagbit12);
 
-		CreateInstance(GetClassByName((int64_t) ifcModel, "Transformation"), nullptr);
+		CreateInstance(GetClassByName((int64_t) ifcModel, "Transformation"), (char*)nullptr);
 
 		int64_t	noVertices = 0, noIndices = 0;
 		CalculateInstance((int64_t) ifcObject->ifcInstance, &noVertices, &noIndices, nullptr);
@@ -923,7 +923,7 @@ bool	ParseIfcFile(
 					}
 				}
 
-				int64_t	myCollection = CreateInstance(GetClassByName(ifcModel, "Collection"), nullptr);
+				int64_t	myCollection = CreateInstance(GetClassByName(ifcModel, "Collection"), (char*)nullptr);
 				SetObjectProperty(myCollection, GetPropertyByName(ifcModel, "objects"), owlInstanceArray, ifcAlignmentInstancesCnt ? ifcAlignmentInstancesCnt : ifcGeographicElementInstancesCnt);
 
 				int64_t	vertexBufferSize = 0, indexBufferSize = 0;

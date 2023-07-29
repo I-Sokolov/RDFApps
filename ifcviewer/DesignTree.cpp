@@ -47,7 +47,7 @@ int64_t		CreateLine3Dn(
 	points[4] = y;
 	points[5] = z;
 
-	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
+	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), (char*)nullptr);
 
 	SetDatatypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
 
@@ -73,7 +73,7 @@ int64_t		CreateLine3Dn(
 	points[4] = maxY;
 	points[5] = maxZ;
 
-	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), nullptr);
+	int64_t	owlInstanceLine3D = CreateInstance(GetClassByName(owlModel, "Line3Dn"), (char*)nullptr);
 
 	SetDatatypeProperty(owlInstanceLine3D, GetPropertyByName(owlModel, "points"), points, 6);
 
