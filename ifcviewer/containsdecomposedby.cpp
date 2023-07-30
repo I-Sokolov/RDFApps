@@ -29,23 +29,41 @@ static void AddChild(STRUCT_TREE_ITEM* parent, STRUCT_TREE_ITEM* child)
 
 static void AddDecompositionChild(
 	SdaiModel			ifcModel,
-	STRUCT_TREE_ITEM*	parent,
-	const wchar_t*		decompositionTypeName,
+	STRUCT_TREE_ITEM* parent,
+	const wchar_t* decompositionTypeName,
 	int_t				depth,
-	STRUCT_TREE_ITEM*&	decomposedByTreeItem,
+	STRUCT_TREE_ITEM*& decomposedByTreeItem,
 	STRUCT_TREE_ITEM**& ppChild,
-	SdaiInstance  		instChild
-	)
+	SdaiInstance  		instChild,
+	const wchar_t* excludeWithAttribute
+)
 {
-	if (instChild) {
-		if (decomposedByTreeItem == nullptr) {
-			decomposedByTreeItem = CreateTreeItem__DECOMPOSITION(parent, decompositionTypeName);
-			ppChild = &decomposedByTreeItem->child;
-		}
-
-		(*ppChild) = CreateTreeItem_ifcObject(ifcModel, instChild, decomposedByTreeItem, depth + 1);
-		ppChild = &(*ppChild)->next;
+	if (!instChild) {
+		return;//>>>>>>>
 	}
+
+	if (excludeWithAttribute) {
+		SdaiInstance inst;
+		SdaiAggr aggr;
+		if (sdaiGetAttrBN (instChild, (char*)excludeWithAttribute, sdaiINSTANCE, &inst)) {
+			if (inst) {
+				return; //>>>>>>>
+			}
+		}
+		if (sdaiGetAttrBN(instChild, (char*)excludeWithAttribute, sdaiAGGR, &aggr)) {
+			if (sdaiGetMemberCount(aggr)) {
+				return; //>>>>>>>
+			}
+		}
+	}
+
+	if (decomposedByTreeItem == nullptr) {
+		decomposedByTreeItem = CreateTreeItem__DECOMPOSITION(parent, decompositionTypeName);
+		ppChild = &decomposedByTreeItem->child;
+	}
+
+	(*ppChild) = CreateTreeItem_ifcObject(ifcModel, instChild, decomposedByTreeItem, depth + 1);
+	ppChild = &(*ppChild)->next;
 }
 
 static void PopulateTreeItems_Decomposition(
@@ -55,7 +73,8 @@ static void PopulateTreeItems_Decomposition(
 	int_t				depth,
 	const wchar_t*		decompositionTypeName,
 	const wchar_t*		decompositionInverseAttribute,
-	const wchar_t*		relationTargetAttribute
+	const wchar_t*		relationTargetAttribute,
+	const wchar_t*		excludeWithAttribute = NULL
 )
 {
 	STRUCT_TREE_ITEM* decomposedByTreeItem = nullptr, ** ppChild = nullptr;
@@ -83,11 +102,11 @@ static void PopulateTreeItems_Decomposition(
 				int_t	childCnt = sdaiGetMemberCount(childInstances);
 				for (int_t k = 0; k < childCnt; ++k) {
 					sdaiGetAggrByIndex(childInstances, k, sdaiINSTANCE, &childInst);
-					AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst);
+					AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst, excludeWithAttribute);
 				}
 			}
 			else if (sdaiGetAttrBN(ifcRelDecomposesInstance, (char*)relationTargetAttribute, sdaiINSTANCE, &childInst)) {
-				AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst);
+				AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst, excludeWithAttribute);
 			}
 			else ASSERT(0);
 		}
@@ -105,7 +124,7 @@ static void PopulateTreeItems_Decomposition(
 							int_t				depth
 						)
 {
-	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Contains", L"ContainsElements", L"RelatedElements");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Contains", L"ContainsElements", L"RelatedElements", L"FillsVoids");
 
 	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Aggregates", L"IsDecomposedBy", L"RelatedObjects");
 
