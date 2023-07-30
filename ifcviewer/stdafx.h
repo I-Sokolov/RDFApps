@@ -5,7 +5,7 @@
 
 #pragma once
 
-#define PRODUCE_FLAT_TREE 1
+#define PRODUCE_FLAT_TREE 0
 
 
 #ifndef _SECURE_ATL

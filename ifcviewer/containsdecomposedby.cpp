@@ -6,10 +6,6 @@ extern	STRUCT__IFC__OBJECT	* ifcObjectsLinkedList;
 
 STRUCT__SIUNIT	* unitsGlobal = nullptr;
 
-int_t			ifcRelAggregates_TYPE = 0,
-				ifcRelNests_TYPE = 0,
-				ifcRelContainedInSpatialStructure_TYPE = 0;
-
 extern	int_t			ifcSpace_TYPE;
 
 
@@ -31,14 +27,35 @@ static void AddChild(STRUCT_TREE_ITEM* parent, STRUCT_TREE_ITEM* child)
 	}
 }
 
-static void PopulateTreeItems_ifcObjectDecomposedBy(
-	int_t				ifcModel,
-	int_t				ifcObjectInstance,
-	STRUCT_TREE_ITEM	* parent,
+static void AddDecompositionChild(
+	SdaiModel			ifcModel,
+	STRUCT_TREE_ITEM*	parent,
+	const wchar_t*		decompositionTypeName,
 	int_t				depth,
-	const wchar_t		* decompositionTypeName,
-	const wchar_t		* decompositionInverseAttribute,
-	const wchar_t		* relationTargetAttribute
+	STRUCT_TREE_ITEM*&	decomposedByTreeItem,
+	STRUCT_TREE_ITEM**& ppChild,
+	SdaiInstance  		instChild
+	)
+{
+	if (instChild) {
+		if (decomposedByTreeItem == nullptr) {
+			decomposedByTreeItem = CreateTreeItem__DECOMPOSEDBY(parent, decompositionTypeName);
+			ppChild = &decomposedByTreeItem->child;
+		}
+
+		(*ppChild) = CreateTreeItem_ifcObject(ifcModel, instChild, decomposedByTreeItem, depth + 1);
+		ppChild = &(*ppChild)->next;
+	}
+}
+
+static void PopulateTreeItems_ifcObjectDecomposedBy(
+	SdaiModel			ifcModel,
+	SdaiInstance		ifcObjectInstance,
+	STRUCT_TREE_ITEM*	parent,
+	int_t				depth,
+	const wchar_t*		decompositionTypeName,
+	const wchar_t*		decompositionInverseAttribute,
+	const wchar_t*		relationTargetAttribute
 )
 {
 	STRUCT_TREE_ITEM* decomposedByTreeItem = nullptr, ** ppChild = nullptr;
@@ -59,28 +76,20 @@ static void PopulateTreeItems_ifcObjectDecomposedBy(
 
 			int_t ifcRelDecomposesInstance = 0;
 			sdaiGetAggrByIndex(ifcRelDecomposesInstances, j, sdaiINSTANCE, &ifcRelDecomposesInstance);
-			if (sdaiGetInstanceType(ifcRelDecomposesInstance) == ifcRelAggregates_TYPE) {
-				int_t* ifcObjectInstances = nullptr;
-				sdaiGetAttrBN(ifcRelDecomposesInstance, (char*)relationTargetAttribute, sdaiAGGR, &ifcObjectInstances);
 
-				int_t	ifcObjectInstancesCnt = sdaiGetMemberCount(ifcObjectInstances);
-				if (ifcObjectInstancesCnt) {
-					if (decomposedByTreeItem == nullptr) {
-						decomposedByTreeItem = CreateTreeItem__DECOMPOSEDBY(parent, decompositionTypeName);
-						ppChild = &decomposedByTreeItem->child;
-					}
-					for (int_t k = 0; k < ifcObjectInstancesCnt; ++k) {
-						int_t ifcObjectInstance__ = 0;
-						sdaiGetAggrByIndex(ifcObjectInstances, k, sdaiINSTANCE, &ifcObjectInstance__);
-
-						(*ppChild) = CreateTreeItem_ifcObject(ifcModel, ifcObjectInstance__, decomposedByTreeItem, depth + 1);
-						ppChild = &(*ppChild)->next;
-					}
+			SdaiAggr childInstances = nullptr;
+			SdaiInstance childInst = 0;
+			if (sdaiGetAttrBN(ifcRelDecomposesInstance, (char*)relationTargetAttribute, sdaiAGGR, &childInstances)) {
+				int_t	childCnt = sdaiGetMemberCount(childInstances);
+				for (int_t k = 0; k < childCnt; ++k) {
+					sdaiGetAggrByIndex(childInstances, k, sdaiINSTANCE, &childInst);
+					AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst);
 				}
 			}
-			else {
-				ASSERT(false);
+			else if (sdaiGetAttrBN(ifcRelDecomposesInstance, (char*)relationTargetAttribute, sdaiINSTANCE, &childInst)) {
+				AddDecompositionChild(ifcModel, parent, decompositionTypeName, depth, decomposedByTreeItem, ppChild, childInst);
 			}
+			else ASSERT(0);
 		}
 	}
 
@@ -100,6 +109,9 @@ static void PopulateTreeItems_ifcObjectDecomposedBy(
 
 	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Nests", L"IsNestedBy", L"RelatedObjects");
 
+	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Openings", L"HasOpenings", L"RelatedOpeningElement");
+
+	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Projections", L"HasProjections", L"RelatedFeatureElement");
 }
 
 static void PopulateTreeItems_ifcObjectContains(
@@ -125,7 +137,7 @@ static void PopulateTreeItems_ifcObjectContains(
 	for (int_t i = 0; i < ifcRelContainedInSpatialStructureInstancesCnt; ++i) {
 		int_t	ifcRelContainedInSpatialStructureInstance = 0;
 		sdaiGetAggrByIndex(ifcRelContainedInSpatialStructureInstances, i, sdaiINSTANCE, &ifcRelContainedInSpatialStructureInstance);
-		if (sdaiGetInstanceType(ifcRelContainedInSpatialStructureInstance) == ifcRelContainedInSpatialStructure_TYPE) {
+		
 			int_t	* ifcObjectInstances = nullptr;
 			sdaiGetAttrBN(ifcRelContainedInSpatialStructureInstance, (char*)L"RelatedElements", sdaiAGGR, &ifcObjectInstances);
 
@@ -144,9 +156,6 @@ static void PopulateTreeItems_ifcObjectContains(
 					ppChild = &(*ppChild)->next;
 				}
 			}
-		} else {
-			ASSERT(false);
-		}
 	}
 
 	if (containsTreeItem) {
@@ -185,10 +194,6 @@ void	CreateTreeItem_ifcProject(
 				int_t				ifcModel
 			)
 {
-	ifcRelAggregates_TYPE				   = sdaiGetEntity(ifcModel, (char*)L"IFCRELAGGREGATES");
-	ifcRelNests_TYPE					   = sdaiGetEntity(ifcModel, (char*)L"IFCRELNESTS");
-	ifcRelContainedInSpatialStructure_TYPE = sdaiGetEntity(ifcModel, (char*)L"IFCRELCONTAINEDINSPATIALSTRUCTURE");
-
 	int_t	* ifcProjectInstances = sdaiGetEntityExtentBN(ifcModel, (char*) L"IFCPROJECT"),
 			noIfcProjectInstances = sdaiGetMemberCount(ifcProjectInstances);
 	for (int_t i = 0; i < noIfcProjectInstances; ++i) {
@@ -370,21 +375,6 @@ void	CreateTreeItem_ifcGroup(
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 STRUCT_TREE_ITEM	* CreateTreeItem_ifcSpaceBoundary_SPACE(
 							int_t				ifcModel,
 							int_t				ifcSpaceInstance,
@@ -424,36 +414,33 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcSpaceBoundary_SPACE(
 	return	nullptr;
 }
 
-STRUCT_TREE_ITEM	** CreateTreeItem_ifcSpaceBoundaryDecomposedBy(
-							int_t				ifcModel,
-							int_t				ifcObjectInstance,
-							STRUCT_TREE_ITEM	* parent,
-							STRUCT_TREE_ITEM	** pChild
-						)
+static STRUCT_TREE_ITEM** CreateTreeItem_ifcSpaceBoundaryDecomposedBy(
+	int_t				ifcModel,
+	int_t				ifcObjectInstance,
+	STRUCT_TREE_ITEM* parent,
+	STRUCT_TREE_ITEM** pChild
+)
 {
-	int_t	* ifcRelDecomposesInstances = nullptr, ifcRelDecomposesInstancesCnt;
-	sdaiGetAttrBN(ifcObjectInstance, (char*) L"IsDecomposedBy", sdaiAGGR, &ifcRelDecomposesInstances);
+	int_t* ifcRelDecomposesInstances = nullptr, ifcRelDecomposesInstancesCnt;
+	sdaiGetAttrBN(ifcObjectInstance, (char*)L"IsDecomposedBy", sdaiAGGR, &ifcRelDecomposesInstances);
 
 	if (ifcRelDecomposesInstances) {
 		ifcRelDecomposesInstancesCnt = sdaiGetMemberCount(ifcRelDecomposesInstances);
 		for (int_t j = 0; j < ifcRelDecomposesInstancesCnt; ++j) {
 			int_t ifcRelDecomposesInstance = 0;
 			sdaiGetAggrByIndex(ifcRelDecomposesInstances, j, sdaiINSTANCE, &ifcRelDecomposesInstance);
-			if	(sdaiGetInstanceType(ifcRelDecomposesInstance) == ifcRelAggregates_TYPE) {
-				int_t	* ifcObjectInstances = nullptr;
-				sdaiGetAttrBN(ifcRelDecomposesInstance, (char*) L"RelatedObjects", sdaiAGGR, &ifcObjectInstances);
 
-				int_t	ifcObjectInstancesCnt = sdaiGetMemberCount(ifcObjectInstances);
-				if (ifcObjectInstancesCnt) {
-					for (int_t k = 0; k < ifcObjectInstancesCnt; ++k) {
-						ifcObjectInstance = 0;
-						sdaiGetAggrByIndex(ifcObjectInstances, k, sdaiINSTANCE, &ifcObjectInstance);
+			int_t* ifcObjectInstances = nullptr;
+			sdaiGetAttrBN(ifcRelDecomposesInstance, (char*)L"RelatedObjects", sdaiAGGR, &ifcObjectInstances);
 
-						pChild = CreateTreeItem_ifcSpaceBoundary(ifcModel, ifcObjectInstance, parent, pChild);
-					}
+			int_t	ifcObjectInstancesCnt = sdaiGetMemberCount(ifcObjectInstances);
+			if (ifcObjectInstancesCnt) {
+				for (int_t k = 0; k < ifcObjectInstancesCnt; ++k) {
+					ifcObjectInstance = 0;
+					sdaiGetAggrByIndex(ifcObjectInstances, k, sdaiINSTANCE, &ifcObjectInstance);
+
+					pChild = CreateTreeItem_ifcSpaceBoundary(ifcModel, ifcObjectInstance, parent, pChild);
 				}
-			} else {
-				ASSERT(false);
 			}
 		}
 	}
@@ -475,7 +462,7 @@ STRUCT_TREE_ITEM	** CreateTreeItem_ifcSpaceBoundaryContains(
 	for (int_t i = 0; i < ifcRelContainedInSpatialStructureInstancesCnt; ++i) {
 		int_t	ifcRelContainedInSpatialStructureInstance = 0;
 		sdaiGetAggrByIndex(ifcRelContainedInSpatialStructureInstances, i, sdaiINSTANCE, &ifcRelContainedInSpatialStructureInstance);
-		if (sdaiGetInstanceType(ifcRelContainedInSpatialStructureInstance) == ifcRelContainedInSpatialStructure_TYPE) {
+
 			int_t	* ifcObjectInstances = nullptr;
 			sdaiGetAttrBN(ifcRelContainedInSpatialStructureInstance, (char*)L"RelatedElements", sdaiAGGR, &ifcObjectInstances);
 
@@ -488,9 +475,6 @@ STRUCT_TREE_ITEM	** CreateTreeItem_ifcSpaceBoundaryContains(
 					pChild = CreateTreeItem_ifcSpaceBoundary(ifcModel, ifcObjectInstance, parent, pChild);
 				}
 			}
-		} else {
-			ASSERT(false);
-		}
 	}
 
 	return	pChild;
