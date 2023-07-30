@@ -111,6 +111,8 @@ static void PopulateTreeItems_ifcObjectDecomposedBy(
 
 	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Openings", L"HasOpenings", L"RelatedOpeningElement");
 
+	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Fills", L"HasFillings", L"RelatedBuildingElement");
+
 	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Projections", L"HasProjections", L"RelatedFeatureElement");
 }
 
