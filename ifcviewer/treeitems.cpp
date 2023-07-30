@@ -52,23 +52,6 @@ STRUCT_TREE_ITEM	* CreateTreeItem__NOTREFERENCED(
 	return	treeItem;
 }
 
-STRUCT_TREE_ITEM	* CreateTreeItem__CONTAINS(
-							STRUCT_TREE_ITEM	* parent
-						)
-{
-	STRUCT_TREE_ITEM_CONTAINS	* treeItem = new STRUCT_TREE_ITEM_CONTAINS;
-
-	treeItem->type = TREE_ITEM_CONTAINS;
-
-	InitTreeItemSelectable(treeItem, parent);
-
-	treeItem->nameBuffer = L"contains";
-
-	ASSERT(treeItem->parent  &&  treeItem->parent->type == TREE_ITEM_IFCINSTANCE);
-
-	return	treeItem;
-}
-
 STRUCT_TREE_ITEM	* CreateTreeItem__GROUPS(
 							STRUCT_TREE_ITEM	* parent
 						)
@@ -99,12 +82,12 @@ STRUCT_TREE_ITEM	* CreateTreeItem__GROUPEDBY(
 	return	treeItem;
 }
 
-STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY(
+STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSITION(
 							STRUCT_TREE_ITEM	* parent,
 							const wchar_t		* decompositionType
 						)
 {
-	STRUCT_TREE_ITEM_DECOMPOSEDBY	* treeItem = new STRUCT_TREE_ITEM_DECOMPOSEDBY;
+	STRUCT_TREE_ITEM_DECOMPOSITION	* treeItem = new STRUCT_TREE_ITEM_DECOMPOSITION;
 
 	treeItem->type = TREE_ITEM_DECOMPOSEDBY;
 

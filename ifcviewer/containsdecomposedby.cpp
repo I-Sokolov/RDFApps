@@ -39,7 +39,7 @@ static void AddDecompositionChild(
 {
 	if (instChild) {
 		if (decomposedByTreeItem == nullptr) {
-			decomposedByTreeItem = CreateTreeItem__DECOMPOSEDBY(parent, decompositionTypeName);
+			decomposedByTreeItem = CreateTreeItem__DECOMPOSITION(parent, decompositionTypeName);
 			ppChild = &decomposedByTreeItem->child;
 		}
 
@@ -48,7 +48,7 @@ static void AddDecompositionChild(
 	}
 }
 
-static void PopulateTreeItems_ifcObjectDecomposedBy(
+static void PopulateTreeItems_Decomposition(
 	SdaiModel			ifcModel,
 	SdaiInstance		ifcObjectInstance,
 	STRUCT_TREE_ITEM*	parent,
@@ -98,73 +98,25 @@ static void PopulateTreeItems_ifcObjectDecomposedBy(
 	}
 }
 
-static void PopulateTreeItems_ifcObjectDecomposedBy(
+static void PopulateTreeItems_Decomposition(
 							int_t				ifcModel,
 							int_t				ifcObjectInstance,
 							STRUCT_TREE_ITEM	* parent,
 							int_t				depth
 						)
 {
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Aggregates", L"IsDecomposedBy", L"RelatedObjects");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Contains", L"ContainsElements", L"RelatedElements");
 
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Nests", L"IsNestedBy", L"RelatedObjects");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Aggregates", L"IsDecomposedBy", L"RelatedObjects");
 
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Openings", L"HasOpenings", L"RelatedOpeningElement");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Nests", L"IsNestedBy", L"RelatedObjects");
 
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Fills", L"HasFillings", L"RelatedBuildingElement");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Openings", L"HasOpenings", L"RelatedOpeningElement");
 
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, parent, depth, L"Projections", L"HasProjections", L"RelatedFeatureElement");
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Fills", L"HasFillings", L"RelatedBuildingElement");
+
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, parent, depth, L"Projections", L"HasProjections", L"RelatedFeatureElement");
 }
-
-static void PopulateTreeItems_ifcObjectContains(
-							int_t				ifcModel,
-							int_t				ifcObjectInstance,
-							STRUCT_TREE_ITEM	* parent,
-							int_t				depth
-						)
-{
-	STRUCT_TREE_ITEM	* containsTreeItem = nullptr, ** ppChild = nullptr;
-
-#if PRODUCE_FLAT_TREE
-	containsTreeItem = parent;
-	ppChild = &containsTreeItem->child;
-	while (*ppChild)
-		ppChild = &((*ppChild)->next);
-#endif
-
-	int_t	* ifcRelContainedInSpatialStructureInstances = nullptr;
-	sdaiGetAttrBN(ifcObjectInstance, (char*) L"ContainsElements", sdaiAGGR, &ifcRelContainedInSpatialStructureInstances);
-	int_t	ifcRelContainedInSpatialStructureInstancesCnt = sdaiGetMemberCount(ifcRelContainedInSpatialStructureInstances);
-
-	for (int_t i = 0; i < ifcRelContainedInSpatialStructureInstancesCnt; ++i) {
-		int_t	ifcRelContainedInSpatialStructureInstance = 0;
-		sdaiGetAggrByIndex(ifcRelContainedInSpatialStructureInstances, i, sdaiINSTANCE, &ifcRelContainedInSpatialStructureInstance);
-		
-			int_t	* ifcObjectInstances = nullptr;
-			sdaiGetAttrBN(ifcRelContainedInSpatialStructureInstance, (char*)L"RelatedElements", sdaiAGGR, &ifcObjectInstances);
-
-			int_t	ifcObjectInstancesCnt = sdaiGetMemberCount(ifcObjectInstances);
-			if (ifcObjectInstancesCnt) {
-				if (containsTreeItem == nullptr) {
-					containsTreeItem = CreateTreeItem__CONTAINS(parent);
-					ppChild = &containsTreeItem->child;
-				}
-
-				for (int_t k = 0; k < ifcObjectInstancesCnt; ++k) {
-					ifcObjectInstance = 0;
-					sdaiGetAggrByIndex(ifcObjectInstances, k, sdaiINSTANCE, &ifcObjectInstance);
-
-					(*ppChild) = CreateTreeItem_ifcObject(ifcModel, ifcObjectInstance, containsTreeItem, depth + 1);
-					ppChild = &(*ppChild)->next;
-				}
-			}
-	}
-
-	if (containsTreeItem) {
-		AddChild(parent, containsTreeItem);
-	}
-}
-
 
 
 STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
@@ -185,9 +137,9 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcObject(
 	AddChild (treeItem, CreateTreeItem__PROPERTIES(treeItem));
 #endif
 
-	PopulateTreeItems_ifcObjectDecomposedBy(ifcModel, ifcObjectInstance, treeItem, depth);
+	PopulateTreeItems_Decomposition(ifcModel, ifcObjectInstance, treeItem, depth);
 
-	PopulateTreeItems_ifcObjectContains(ifcModel, ifcObjectInstance, treeItem, depth);
+	//PopulateTreeItems_ifcObjectContains(ifcModel, ifcObjectInstance, treeItem, depth);
 	
 	return	treeItem;
 }
