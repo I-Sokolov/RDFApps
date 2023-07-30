@@ -100,7 +100,8 @@ STRUCT_TREE_ITEM	* CreateTreeItem__GROUPEDBY(
 }
 
 STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY(
-							STRUCT_TREE_ITEM	* parent
+							STRUCT_TREE_ITEM	* parent,
+							const wchar_t		* decompositionType
 						)
 {
 	STRUCT_TREE_ITEM_DECOMPOSEDBY	* treeItem = new STRUCT_TREE_ITEM_DECOMPOSEDBY;
@@ -109,29 +110,13 @@ STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY(
 
 	InitTreeItemSelectable(treeItem, parent);
 
-	treeItem->nameBuffer = L"decomposition";
+	treeItem->nameBuffer = decompositionType;
 
 	ASSERT(treeItem->parent  &&  treeItem->parent->type == TREE_ITEM_IFCINSTANCE);
 
 	return	treeItem;
 }
 
-STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY__NESTED(
-							STRUCT_TREE_ITEM	* parent
-						)
-{
-	STRUCT_TREE_ITEM_DECOMPOSEDBY	* treeItem = new STRUCT_TREE_ITEM_DECOMPOSEDBY;
-
-	treeItem->type = TREE_ITEM_DECOMPOSEDBY;
-
-	InitTreeItemSelectable(treeItem, parent);
-
-	treeItem->nameBuffer = L"decomposition (is nested)";
-
-	ASSERT(treeItem->parent  &&  treeItem->parent->type == TREE_ITEM_IFCINSTANCE);
-
-	return	treeItem;
-}
 
 STRUCT_TREE_ITEM	* CreateTreeItem__SPACEBOUNDARIES(
 							STRUCT_TREE_ITEM		* parent
@@ -379,7 +364,7 @@ STRUCT_TREE_ITEM	* CreateTreeItem__IFCENTITY(
 	return	treeItem;
 }
 
-wchar_t	* GetTreeItemName(
+const wchar_t	* GetTreeItemName(
 				STRUCT_TREE_ITEM	* treeItem
 			)
 {

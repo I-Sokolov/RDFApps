@@ -175,7 +175,7 @@ tvstruct.item.cChildren = 1;
 	 }
  }
 
- tvstruct.item.pszText = GetTreeItemName(treeItem);
+ tvstruct.item.pszText = (LPWSTR) GetTreeItemName(treeItem);
 
  switch (treeItem->type) {
  case TREE_ITEM_CONTAINS:

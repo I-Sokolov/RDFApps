@@ -36,7 +36,7 @@ struct STRUCT_TREE_ITEM {
 	ENUM_TREE_ITEM_TYPES			type;
 
 	HTREEITEM						hTreeItem;
-	wchar_t							* nameBuffer;
+	const wchar_t					* nameBuffer;
 
 	STRUCT_TREE_ITEM				* parent;
 	STRUCT_TREE_ITEM				* child;
@@ -118,12 +118,10 @@ STRUCT_TREE_ITEM	* CreateTreeItem__GROUPS(
 						);
 
 STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY(
-							STRUCT_TREE_ITEM			* parent
+							STRUCT_TREE_ITEM			* parent,
+							const wchar_t				* decompositionType
 						);
 
-STRUCT_TREE_ITEM	* CreateTreeItem__DECOMPOSEDBY__NESTED(
-							STRUCT_TREE_ITEM			* parent
-						);
 
 STRUCT_TREE_ITEM	* CreateTreeItem__SPACEBOUNDARIES(
 							STRUCT_TREE_ITEM			* parent
@@ -179,7 +177,7 @@ STRUCT_TREE_ITEM	* CreateTreeItem__PROPERTYSET(
 							int_t						ifcInstance
 						);
 
-wchar_t				* GetTreeItemName(
+const wchar_t		* GetTreeItemName(
 							STRUCT_TREE_ITEM			* treeItem
 						);
 
