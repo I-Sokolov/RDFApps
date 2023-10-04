@@ -122,7 +122,8 @@ enum class enum_express_attr_type : unsigned char
 	__NUMBER					= 7,
 	__REAL						= 8,
 	__SELECT					= 9,
-	__STRING					= 10
+	__STRING					= 10,
+	__GENERIC					= 11
 };
 
 
@@ -132,7 +133,8 @@ enum class enum_express_aggr : unsigned char
 	__ARRAY						= 1,
 	__BAG						= 2,
 	__LIST						= 3,
-	__SET						= 4
+	__SET						= 4,
+	__AGGREGATE					= 5  //generic aggregate
 };
 
 typedef void		* ValidationResults;

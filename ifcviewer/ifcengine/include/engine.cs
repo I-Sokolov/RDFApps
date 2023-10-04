@@ -1058,8 +1058,15 @@ namespace RDF
 		/// <summary>
 		///		CreateClass                                             (http://rdf.bg/gkdoc/CS64/CreateClass.html)
 		///
-		///	Returns a handle to an on the fly created class.
-		///	If the model input is zero or not a model handle 0 will be returned,
+		///	Returns a handle to an on the fly created class, however when
+		///	a class with this name already exists the handle of existing class will be returned.
+		///
+		///	The following reasons will cause a return value of 0:
+		///		-	when the name is already used for an instance or property;
+		///		-	if the model input is zero or not a model handle.
+		///
+		///	Giving the class a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateClass")]
 		public static extern Int64 CreateClass(Int64 model, string name);
@@ -1070,8 +1077,15 @@ namespace RDF
 		/// <summary>
 		///		CreateClassW                                            (http://rdf.bg/gkdoc/CS64/CreateClassW.html)
 		///
-		///	Returns a handle to an on the fly created class.
-		///	If the model input is zero or not a model handle 0 will be returned,
+		///	Returns a handle to an on the fly created class, however when
+		///	a class with this name already exists the handle of existing class will be returned.
+		///
+		///	The following reasons will cause a return value of 0:
+		///		-	when the name is already used for an instance or property;
+		///		-	if the model input is zero or not a model handle.
+		///
+		///	Giving the class a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateClassW")]
 		public static extern Int64 CreateClassW(Int64 model, string name);
@@ -1083,10 +1097,7 @@ namespace RDF
 		///		GetClassByName                                          (http://rdf.bg/gkdoc/CS64/GetClassByName.html)
 		///
 		///	Returns a handle to the class as stored inside.
-		///	When the class does not exist yet and the name is unique
-		///	the class will be created on the fly and the handle will be returned.
-		///	When the name is not unique and given to an instance, objectTypeProperty
-		///	or dataTypeProperty 0 will be returned.
+		///	When there is no class with such a name the return value is 0 (note that GetModellingStyle(..) can change this behavior).
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetClassByName")]
 		public static extern Int64 GetClassByName(Int64 model, string name);
@@ -1098,10 +1109,7 @@ namespace RDF
 		///		GetClassByNameW                                         (http://rdf.bg/gkdoc/CS64/GetClassByNameW.html)
 		///
 		///	Returns a handle to the class as stored inside.
-		///	When the class does not exist yet and the name is unique
-		///	the class will be created on the fly and the handle will be returned.
-		///	When the name is not unique and given to an instance, objectTypeProperty
-		///	or dataTypeProperty 0 will be returned.
+		///	When there is no class with such a name the return value is 0 (note that GetModellingStyle(..) can change this behavior).
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetClassByNameW")]
 		public static extern Int64 GetClassByNameW(Int64 model, string name);
@@ -1171,8 +1179,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfClass                                          (http://rdf.bg/gkdoc/CS64/SetNameOfClass.html)
 		///
-		///	Sets/updates the name of the class, if no error it returns 0.
-		///	In case class does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the class, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument owlClass is incorrect (not a proper handle to an active class)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of owlClass is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfClass")]
 		public static extern Int64 SetNameOfClass(Int64 owlClass, string name);
@@ -1183,8 +1200,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfClassW                                         (http://rdf.bg/gkdoc/CS64/SetNameOfClassW.html)
 		///
-		///	Sets/updates the name of the class, if no error it returns 0.
-		///	In case class does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the class, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument owlClass is incorrect (not a proper handle to an active class)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of owlClass is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfClassW")]
 		public static extern Int64 SetNameOfClassW(Int64 owlClass, string name);
@@ -1195,8 +1221,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfClassEx                                        (http://rdf.bg/gkdoc/CS64/SetNameOfClassEx.html)
 		///
-		///	Sets/updates the name of the class, if no error it returns 0.
-		///	In case class does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the class, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or owlClass is incorrect (not a proper handle to an active class)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of owlClass is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		///
 		///	This call has the same behavior as SetNameOfClass, however needs to be
 		///	used in case classes are exchanged as a successive series of integers.
@@ -1210,8 +1245,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfClassWEx                                       (http://rdf.bg/gkdoc/CS64/SetNameOfClassWEx.html)
 		///
-		///	Sets/updates the name of the class, if no error it returns 0.
-		///	In case class does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the class, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or owlClass is incorrect (not a proper handle to an active class)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of owlClass is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		///
 		///	This call has the same behavior as SetNameOfClassW, however needs to be
 		///	used in case classes are exchanged as a successive series of integers.
@@ -1302,6 +1346,9 @@ namespace RDF
 		[DllImport(enginedll, EntryPoint = "GetClassPropertyByIterator")]
 		public static extern Int64 GetClassPropertyByIterator(Int64 owlClass, Int64 rdfProperty, out Int64 minCard, out Int64 maxCard);
 
+		[DllImport(enginedll, EntryPoint = "GetClassPropertyByIterator")]
+		public static extern Int64 GetClassPropertyByIterator(Int64 owlClass, Int64 rdfProperty, IntPtr minCard, IntPtr maxCard);
+
 		public static Int64 GetClassPropertyByIterator(Int64 owlClass, Int64 rdfProperty)
 		{
 			return GetClassPropertyByIterator(owlClass, rdfProperty, IntPtr.Zero, IntPtr.Zero);
@@ -1323,6 +1370,9 @@ namespace RDF
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetClassPropertyByIteratorEx")]
 		public static extern Int64 GetClassPropertyByIteratorEx(Int64 model, Int64 owlClass, Int64 rdfProperty, out Int64 minCard, out Int64 maxCard);
+
+		[DllImport(enginedll, EntryPoint = "GetClassPropertyByIteratorEx")]
+		public static extern Int64 GetClassPropertyByIteratorEx(Int64 model, Int64 owlClass, Int64 rdfProperty, IntPtr minCard, IntPtr maxCard);
 
 		public static Int64 GetClassPropertyByIteratorEx(Int64 model, Int64 owlClass, Int64 rdfProperty)
 		{
@@ -1462,8 +1512,15 @@ namespace RDF
 		/// <summary>
 		///		CreateProperty                                          (http://rdf.bg/gkdoc/CS64/CreateProperty.html)
 		///
-		///	Returns a handle to an on the fly created property.
-		///	If the model input is zero or not a model handle 0 will be returned,
+		///	Returns a handle to an on the fly created property, however when
+		///	a property with this name already exists the handle of existing property will be returned.
+		///
+		///	The following reasons will cause a return value of 0:
+		///		-	when the name is already used for a class or instance;
+		///		-	if the model input is zero or not a model handle.
+		///
+		///	Giving the property a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateProperty")]
 		public static extern Int64 CreateProperty(Int64 model, Int64 rdfPropertyType, string name);
@@ -1474,8 +1531,15 @@ namespace RDF
 		/// <summary>
 		///		CreatePropertyW                                         (http://rdf.bg/gkdoc/CS64/CreatePropertyW.html)
 		///
-		///	Returns a handle to an on the fly created property.
-		///	If the model input is zero or not a model handle 0 will be returned,
+		///	Returns a handle to an on the fly created property, however when
+		///	a property with this name already exists the handle of existing property will be returned.
+		///
+		///	The following reasons will cause a return value of 0:
+		///		-	when the name is already used for a class or instance;
+		///		-	if the model input is zero or not a model handle.
+		///
+		///	Giving the property a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreatePropertyW")]
 		public static extern Int64 CreatePropertyW(Int64 model, Int64 rdfPropertyType, string name);
@@ -1487,9 +1551,7 @@ namespace RDF
 		///		GetPropertyByName                                       (http://rdf.bg/gkdoc/CS64/GetPropertyByName.html)
 		///
 		///	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
-		///	When the property does not exist yet and the name is unique
-		///	the property will be created on-the-fly and the handle will be returned.
-		///	When the name is not unique and given to a class or instance 0 will be returned.
+		///	When there is no property with such a name the return value is 0 (note that GetModellingStyle(..) can change this behavior).
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetPropertyByName")]
 		public static extern Int64 GetPropertyByName(Int64 model, string name);
@@ -1501,9 +1563,7 @@ namespace RDF
 		///		GetPropertyByNameW                                      (http://rdf.bg/gkdoc/CS64/GetPropertyByNameW.html)
 		///
 		///	Returns a handle to the objectTypeProperty or dataTypeProperty as stored inside.
-		///	When the property does not exist yet and the name is unique
-		///	the property will be created on-the-fly and the handle will be returned.
-		///	When the name is not unique and given to a class or instance 0 will be returned.
+		///	When there is no property with such a name the return value is 0 (note that GetModellingStyle(..) can change this behavior).
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetPropertyByNameW")]
 		public static extern Int64 GetPropertyByNameW(Int64 model, string name);
@@ -1574,8 +1634,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfProperty                                       (http://rdf.bg/gkdoc/CS64/SetNameOfProperty.html)
 		///
-		///	Sets/updates the name of the property, if no error it returns 0.
-		///	In case property does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the property, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument rdfProperty is incorrect (not a proper handle to an active property)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of rdfProperty is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfProperty")]
 		public static extern Int64 SetNameOfProperty(Int64 rdfProperty, string name);
@@ -1586,8 +1655,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfPropertyW                                      (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyW.html)
 		///
-		///	Sets/updates the name of the property, if no error it returns 0.
-		///	In case property does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the property, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument rdfProperty is incorrect (not a proper handle to an active property)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of rdfProperty is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfPropertyW")]
 		public static extern Int64 SetNameOfPropertyW(Int64 rdfProperty, string name);
@@ -1598,8 +1676,20 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfPropertyEx                                     (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyEx.html)
 		///
-		///	Sets/updates the name of the property, if no error it returns 0.
-		///	In case property does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the property, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or rdfProperty is incorrect (not a proper handle to an active property)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of rdfProperty is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
+		///
+		///	This call has the same behavior as SetNameOfProperty, however needs to be
+		///	used in case properties are exchanged as a successive series of integers.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfPropertyEx")]
 		public static extern Int64 SetNameOfPropertyEx(Int64 model, Int64 rdfProperty, string name);
@@ -1610,8 +1700,20 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfPropertyWEx                                    (http://rdf.bg/gkdoc/CS64/SetNameOfPropertyWEx.html)
 		///
-		///	Sets/updates the name of the property, if no error it returns 0.
-		///	In case property does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the property, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or rdfProperty is incorrect (not a proper handle to an active property)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of rdfProperty is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
+		///
+		///	This call has the same behavior as SetNameOfPropertyW, however needs to be
+		///	used in case properties are exchanged as a successive series of integers.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfPropertyWEx")]
 		public static extern Int64 SetNameOfPropertyWEx(Int64 model, Int64 rdfProperty, string name);
@@ -2032,8 +2134,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfInstance                                       (http://rdf.bg/gkdoc/CS64/SetNameOfInstance.html)
 		///
-		///	Sets/updates the name of the instance, if no error it returns 0.
-		///	In case instance does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the instance, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument owlInstance is incorrect (not a proper handle to an active instance)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of instance is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfInstance")]
 		public static extern Int64 SetNameOfInstance(Int64 owlInstance, string name);
@@ -2044,8 +2155,17 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfInstanceW                                      (http://rdf.bg/gkdoc/CS64/SetNameOfInstanceW.html)
 		///
-		///	Sets/updates the name of the instance, if no error it returns 0.
-		///	In case instance does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the instance, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument owlInstance is incorrect (not a proper handle to an active instance)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of instance is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfInstanceW")]
 		public static extern Int64 SetNameOfInstanceW(Int64 owlInstance, string name);
@@ -2056,8 +2176,20 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfInstanceEx                                     (http://rdf.bg/gkdoc/CS64/SetNameOfInstanceEx.html)
 		///
-		///	Sets/updates the name of the instance, if no error it returns 0.
-		///	In case instance does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the instance, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or owlInstance is incorrect (not a proper handle to an active instance)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of instance is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
+		///
+		///	This call has the same behavior as SetNameOfInstance, however needs to be
+		///	used in case instance are exchanged as a successive series of integers.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfInstanceEx")]
 		public static extern Int64 SetNameOfInstanceEx(Int64 model, Int64 owlInstance, string name);
@@ -2068,8 +2200,20 @@ namespace RDF
 		/// <summary>
 		///		SetNameOfInstanceWEx                                    (http://rdf.bg/gkdoc/CS64/SetNameOfInstanceWEx.html)
 		///
-		///	Sets/updates the name of the instance, if no error it returns 0.
-		///	In case instance does not exist it returns 1, when name cannot be updated 2.
+		///	Sets or updates the name of the instance, it returns 0 on success.
+		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or owlInstance is incorrect (not a proper handle to an active instance)
+		///		2	argument name is incorrect (nullptr or zero length name)
+		///		3	the name of instance is locked
+		///		4	name is already used by another class
+		///		5	name is already used by a property
+		///		6	name is already used by an instance
+		///		7	undefined error
+		///
+		///	This call has the same behavior as SetNameOfInstanceW, however needs to be
+		///	used in case instances are exchanged as a successive series of integers.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetNameOfInstanceWEx")]
 		public static extern Int64 SetNameOfInstanceWEx(Int64 model, Int64 owlInstance, string name);
@@ -3745,14 +3889,24 @@ namespace RDF
 		///	This function returns the shortest distance between two instances.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetDistance")]
-		public static extern double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, out double pointFirstInstance, out double pointSecondInstance);
+		public static extern double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, out double pointFirstInstance, out double pointSecondInstance, byte allowCalculateInstance);
 
 		[DllImport(enginedll, EntryPoint = "GetDistance")]
-		public static extern double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, IntPtr pointFirstInstance, IntPtr pointSecondInstance);
+		public static extern double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, IntPtr pointFirstInstance, IntPtr pointSecondInstance, byte allowCalculateInstance);
+
+		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, out double pointFirstInstance, out double pointSecondInstance)
+		{
+			return GetDistance(firstOwlInstance, secondOwlInstance, pointFirstInstance, pointSecondInstance, 1);
+		}
+
+		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, IntPtr pointFirstInstance, IntPtr pointSecondInstance)
+		{
+			return GetDistance(firstOwlInstance, secondOwlInstance, pointFirstInstance, pointSecondInstance, 1);
+		}
 
 		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance)
 		{
-			return GetDistance(firstOwlInstance, secondOwlInstance, IntPtr.Zero, IntPtr.Zero);
+			return GetDistance(firstOwlInstance, secondOwlInstance, IntPtr.Zero, IntPtr.Zero, 1);
 		}
 
 		/// <summary>
