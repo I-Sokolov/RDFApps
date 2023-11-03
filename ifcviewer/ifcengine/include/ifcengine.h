@@ -2050,12 +2050,31 @@ int_t			DECL STDC	SetSPFFHeaderItem(
 									int_t					itemIndex,
 									int_t					itemSubIndex,
 									SdaiPrimitiveType		valueType,
-									const char				* value
+									const void				* value
 								);
 
 #ifdef __cplusplus
 	}
 #endif
+
+//
+//
+static	inline	int_t	SetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								const char				* value
+							)
+{
+	return	SetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void*) value
+				);
+}
 
 //
 //
@@ -2072,7 +2091,45 @@ static	inline	int_t	SetSPFFHeaderItem(
 					itemIndex,
 					itemSubIndex,
 					valueType,
-					(const char*) value
+					(const void*) value
+				);
+}
+
+//
+//
+static	inline	int_t	SetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								const wchar_t			* value
+							)
+{
+	return	SetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void*) value
+				);
+}
+
+//
+//
+static	inline	int_t	SetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								wchar_t					* value
+							)
+{
+	return	SetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void*) value
 				);
 }
 
@@ -2097,12 +2154,31 @@ int_t			DECL STDC	GetSPFFHeaderItem(
 									int_t					itemIndex,
 									int_t					itemSubIndex,
 									SdaiPrimitiveType		valueType,
-									const char				** value
+									const void				** value
 								);
 
 #ifdef __cplusplus
 	}
 #endif
+
+//
+//
+static	inline	int_t	GetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								const char				** value
+							)
+{
+	return	GetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void**) value
+				);
+}
 
 //
 //
@@ -2119,7 +2195,45 @@ static	inline	int_t	GetSPFFHeaderItem(
 					itemIndex,
 					itemSubIndex,
 					valueType,
-					(const char**) value
+					(const void**) value
+				);
+}
+
+//
+//
+static	inline	int_t	GetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								const wchar_t			** value
+							)
+{
+	return	GetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void**) value
+				);
+}
+
+//
+//
+static	inline	int_t	GetSPFFHeaderItem(
+								SdaiModel				model,
+								int_t					itemIndex,
+								int_t					itemSubIndex,
+								SdaiPrimitiveType		valueType,
+								wchar_t					** value
+							)
+{
+	return	GetSPFFHeaderItem(
+					model,
+					itemIndex,
+					itemSubIndex,
+					valueType,
+					(const void**) value
 				);
 }
 

@@ -99,7 +99,7 @@ static void PrintIssue(ValidationIssue issue)
 
     auto issueId = validateGetIssueType(issue);
     auto level = validateGetIssueLevel(issue);
-    printf(" issueId='%x' issueLevel='%I64d'>\n", (unsigned int)issueId, level);
+    printf(" issueId='0x%x' issueLevel='%I64d'>\n", (unsigned int)issueId, level);
 
     auto text = validateGetDescription(issue);
     if (text) {
@@ -124,6 +124,7 @@ static ValidationIssueLevel CheckModel(const char* filePath, const char* express
     ValidationIssueLevel result = 0;
 
     SdaiModel model = sdaiOpenModelBN(NULL, filePath, expressSchemaFilePath ? expressSchemaFilePath : "");
+
     if (model) {
         auto checks = validateModel(model);
         for (auto issue = validateGetFirstIssue(checks); issue; issue = validateGetNextIssue(issue)) {

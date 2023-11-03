@@ -39,23 +39,25 @@
 #endif
 
 
-typedef		int64_t								RdfsResource;
-typedef		RdfsResource						OwlModel;
-typedef		RdfsResource						OwlClass;
-typedef		RdfsResource						OwlInstance;
-typedef		RdfsResource						RdfProperty;
-typedef		RdfProperty							OwlDatatypeProperty;
-typedef		RdfProperty							OwlObjectProperty;
-typedef		int64_t								RdfPropertyType;
-typedef		int64_t								ConceptualFace;
+typedef		int64_t										RdfsResource;
+typedef		RdfsResource								OwlModel;
+typedef		RdfsResource								OwlClass;
+typedef		RdfsResource								OwlInstance;
+typedef		RdfsResource								RdfProperty;
+typedef		RdfProperty									OwlDatatypeProperty;
+typedef		RdfProperty									OwlObjectProperty;
+typedef		int64_t										RdfPropertyType;
+typedef		int64_t										ConceptualFace;
 
-#define		OBJECTPROPERTY_TYPE					1
-#define		OBJECTTYPEPROPERTY_TYPE				1
-#define		DATATYPEPROPERTY_TYPE_BOOLEAN 		2
-#define		DATATYPEPROPERTY_TYPE_CHAR			3
-#define		DATATYPEPROPERTY_TYPE_INTEGER		4
-#define		DATATYPEPROPERTY_TYPE_DOUBLE		5
-#define		DATATYPEPROPERTY_TYPE_BYTE			6
+#define		OBJECTPROPERTY_TYPE							1
+#define		OBJECTTYPEPROPERTY_TYPE						1
+#define		DATATYPEPROPERTY_TYPE_BOOLEAN 				2
+#define		DATATYPEPROPERTY_TYPE_STRING				3		//	DATATYPEPROPERTY_TYPE_CHAR
+#define		DATATYPEPROPERTY_TYPE_INTEGER				4
+#define		DATATYPEPROPERTY_TYPE_DOUBLE				5
+#define		DATATYPEPROPERTY_TYPE_BYTE					6
+#define		DATATYPEPROPERTY_TYPE_CHAR_ARRAY			7
+#define		DATATYPEPROPERTY_TYPE_WCHAR_T_ARRAY			8
 
 //
 // Flags can be used in bitwise combination for settings and masks to SetFormat, GetFormat and other functions working with settings
@@ -4610,7 +4612,7 @@ static	inline	int64_t	SetDatatypeProperty(
 								const char				* value
 							)
 {
-	assert(GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_CHAR);
+	assert(GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_STRING || GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_CHAR_ARRAY);
 	const int64_t	card = 1;
 	return	SetDatatypeProperty(
 					owlInstance,
@@ -4628,7 +4630,7 @@ static	inline	int64_t	SetDatatypeProperty(
 								const wchar_t			* value
 							)
 {
-	assert(GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_CHAR);
+	assert(GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_STRING || GetPropertyType(owlDatatypeProperty) == DATATYPEPROPERTY_TYPE_WCHAR_T_ARRAY);
 	const int64_t	card = 1;
 	return	SetDatatypeProperty(
 					owlInstance,
