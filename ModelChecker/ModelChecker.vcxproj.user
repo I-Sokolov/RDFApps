@@ -9,7 +9,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>O:\DevArea\IfcOpenShell\src\ifcopenshell-python\test\fixtures\rules\*.ifc</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>O:\DevArea\RDF\RDFSmokeTests\TestData\ModelCheckerIFC4.ifc</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
