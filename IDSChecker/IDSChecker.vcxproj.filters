@@ -13,10 +13,51 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Parser">
+      <UniqueIdentifier>{415f7ceb-5d8f-4339-b7d6-4d4839b7ad34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="parser\_reader.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\_serialization.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\_xml.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\_net.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="parser\_reader.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_serialization.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_xml.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_errors.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_net.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_string.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
