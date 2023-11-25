@@ -52,13 +52,26 @@ namespace RDF
             void ReadInfo(_xml::_element& elem, Context& ctx);
             void ReadSpecifications(_xml::_element& elem, Context& ctx);
 
+        private:
+            std::string                 m_title;
+            std::list<Specification>    m_specifications;
         };
 
         //
         //
         class Specification
         {
-            bool Read(_xml::_element& elem, Context& ctx);
+        public:
+            void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            std::string m_name;
+            std::string m_minOccurs;
+            std::string m_maxOccurs;
+            std::string m_ifcVersion;
+            std::string m_identifier;
+            std::string m_description;
+            std::string m_instructions;
         };
     }
 }

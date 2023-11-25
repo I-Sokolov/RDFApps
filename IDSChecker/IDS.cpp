@@ -182,7 +182,7 @@ bool File::Read(const char* idsFilePath, Console* output)
 /// </summary>
 void File::Read(_xml::_element& elem , Context& ctx)
 {
-    Dump(elem);
+    //Dump(elem);
 
     for (auto child : elem.children()) {
         if (child) {
@@ -193,6 +193,9 @@ void File::Read(_xml::_element& elem , Context& ctx)
             else if (name == "specifications") {
                 ReadSpecifications(*child, ctx);
             }
+            else {
+                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
+            }
         }
     }
 }
@@ -200,9 +203,18 @@ void File::Read(_xml::_element& elem , Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void File::ReadInfo(_xml::_element& elem, Context& ctx)
+void File::ReadInfo(_xml::_element& elem, Context&)
 {
-    Dump(elem);
+    //Dump(elem);
+
+    for (auto child : elem.children()) {
+        if (child) {
+            auto& name = child->getName();
+            if (name == "title") {
+                m_title = child->getContent ();
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -210,15 +222,75 @@ void File::ReadInfo(_xml::_element& elem, Context& ctx)
 /// </summary>
 void File::ReadSpecifications(_xml::_element& elem, Context& ctx)
 {
-    Dump(elem);
+    //Dump(elem);
+
+    for (auto child : elem.children()) {
+        if (child) {
+            auto& name = child->getName();
+            if (name == "specification") {
+                ctx.StartXmlElement(child);
+                m_specifications.push_back(Specification());
+                m_specifications.back().Read(*child, ctx);
+                ctx.EndXmlElement(child);
+            }
+            else {
+                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
+            }
+        }
+    }
+
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool Specification::Read(_xml::_element& xml, Context& ctx)
+void Specification::Read(_xml::_element& elem, Context& ctx)
 {
-    return true;
+    //BENGIN_ATTR(name)
+    for (auto attr : elem.attributes()) {
+        if (attr) {
+            auto attrName = attr->getName();
+            if (attrName == "name") {
+                m_name = attr->getValue();
+            }
+    //NEXT_ATTR()
+            else if (attrName == "minOccurs") {
+                m_minOccurs = attr->getValue();
+            }
+            else if (attrName == "maxOccurs") {
+                m_maxOccurs = attr->getValue();
+            }
+            else if (attrName == "ifcVersion") {
+                m_ifcVersion = attr->getValue();
+            }
+            else if (attrName == "identifier") {
+                m_identifier = attr->getValue();
+            }
+            else if (attrName == "description") {
+                m_description = attr->getValue();
+            }
+            else if (attrName == "instructions") {
+                m_instructions = attr->getValue();
+            }
+    //END_ATTR
+            else {
+                LogMsg(ctx, MsgType::Warning, "Unknown attribute %s", attrName.c_str());
+            }
+        }
+    }
+
+    for (auto child : elem.children()) {
+        if (child) {
+            auto& name = child->getName();
+            if (name == "applicability") {
+            }
+            else if (name == "requirements") {
+            }
+            else {
+                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
+            }
+        }
+    }
 }
 
 #if 0
