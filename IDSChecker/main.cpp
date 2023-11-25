@@ -3,6 +3,9 @@
 
 #include <pch.h>
 
+#include "IDS.h"
+
+#if 0
 #include <parser/_xml.h>
 
 static void Print(_xml::_element* elem, int level)
@@ -45,9 +48,11 @@ static void TestTryXML()
         Print(root, 0);
     }
 }
-
+#endif
 
 int main()
 {
-    TestTryXML();
+    RDF::IDS::File ids;
+
+    ids.Read("aaa");
 }

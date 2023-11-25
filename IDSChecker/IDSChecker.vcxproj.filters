@@ -36,6 +36,9 @@
     <ClCompile Include="parser\_net.cpp">
       <Filter>Parser</Filter>
     </ClCompile>
+    <ClCompile Include="IDS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser\_reader.h">
@@ -57,6 +60,21 @@
       <Filter>Parser</Filter>
     </ClInclude>
     <ClInclude Include="parser\_string.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IDS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_io.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_log.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_schema_storage.h">
+      <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\_time.h">
       <Filter>Parser</Filter>
     </ClInclude>
   </ItemGroup>

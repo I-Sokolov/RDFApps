@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IDS.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser\_net.cpp" />
     <ClCompile Include="parser\_reader.cpp" />
@@ -176,11 +177,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IDS.h" />
     <ClInclude Include="parser\_errors.h" />
+    <ClInclude Include="parser\_io.h" />
+    <ClInclude Include="parser\_log.h" />
     <ClInclude Include="parser\_net.h" />
     <ClInclude Include="parser\_reader.h" />
+    <ClInclude Include="parser\_schema_storage.h" />
     <ClInclude Include="parser\_serialization.h" />
     <ClInclude Include="parser\_string.h" />
+    <ClInclude Include="parser\_time.h" />
     <ClInclude Include="parser\_xml.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
