@@ -52,7 +52,9 @@ static void TestTryXML()
 
 int main()
 {
+    const char* filePath = R"(E:\DevArea\buildingSMART\IDS\Documentation\testcases\ids\fail-a_minimal_ids_can_check_a_minimal_ifc_1_2.ids)";
+
     RDF::IDS::File ids;
 
-    ids.Read("aaa");
+    ids.Read(filePath);
 }

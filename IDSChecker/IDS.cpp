@@ -15,6 +15,25 @@
 
 using namespace RDF::IDS;
 
+static void Dump(_xml::_element& elem)
+{
+    for (auto attr : elem.attributes()) {
+        auto& n = attr->getName();
+        auto& v = attr->getValue();
+        printf(" Attr %s='%s'\n", n.c_str(), v.c_str());
+    }
+
+    for (auto child : elem.children()) {
+        if (child) {
+            auto& name = child->getName();
+            printf("  child %s\n", name.c_str());
+        }
+    }
+
+    auto cont = elem.getContent();
+    printf("   content: %s\n", cont.c_str());
+}
+
 /// <summary>
 /// 
 /// </summary>
@@ -34,7 +53,7 @@ public:
     const XmlStack& GetXmlStack() { return m_xmlStack; }
 
 private:
-    Console&     m_con;
+    Console&    m_con;
     XmlStack    m_xmlStack;
 };
 
@@ -147,7 +166,7 @@ bool File::Read(const char* idsFilePath, Console* output)
 
         if (auto root = doc.getRoot()) {
             ctx.StartXmlElement(root);
-            ok = Read(*root, ctx);
+            Read(*root, ctx);
             ctx.EndXmlElement(root);
         }
     }
@@ -161,20 +180,37 @@ bool File::Read(const char* idsFilePath, Console* output)
 /// <summary>
 /// 
 /// </summary>
-bool File::Read(_xml::_element& xml, Context& ctx)
+void File::Read(_xml::_element& elem , Context& ctx)
 {
-    for (auto attr : xml.attributes()) {
-        auto& n = attr->getName();
-        auto& v = attr->getValue();
-        printf(" %s='%s'\n", n.c_str(), v.c_str());
-    }
+    Dump(elem);
 
-    for (auto child : xml.children()) {
-        auto& n = child->getName();
-        printf("  %s\n", n.c_str());
+    for (auto child : elem.children()) {
+        if (child) {
+            auto& name = child->getName();
+            if (name == "info") {
+                ReadInfo(*child, ctx);
+            }
+            else if (name == "specifications") {
+                ReadSpecifications(*child, ctx);
+            }
+        }
     }
+}
 
-    return true;
+/// <summary>
+/// 
+/// </summary>
+void File::ReadInfo(_xml::_element& elem, Context& ctx)
+{
+    Dump(elem);
+}
+
+/// <summary>
+/// 
+/// </summary>
+void File::ReadSpecifications(_xml::_element& elem, Context& ctx)
+{
+    Dump(elem);
 }
 
 /// <summary>

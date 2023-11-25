@@ -48,7 +48,9 @@ namespace RDF
             bool Read(const char* idsFilePath, Console* output = nullptr);
 
         private:
-            bool Read(_xml::_element& xml, Context& ctx);
+            void Read(_xml::_element& elem, Context& ctx);
+            void ReadInfo(_xml::_element& elem, Context& ctx);
+            void ReadSpecifications(_xml::_element& elem, Context& ctx);
 
         };
 
@@ -56,7 +58,7 @@ namespace RDF
         //
         class Specification
         {
-            bool Read(_xml::_element& xml, Context& ctx);
+            bool Read(_xml::_element& elem, Context& ctx);
         };
     }
 }
