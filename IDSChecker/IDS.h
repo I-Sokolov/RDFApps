@@ -49,8 +49,10 @@ namespace RDF
 
         private:
             void Read(_xml::_element& elem, Context& ctx);
-            void ReadInfo(_xml::_element& elem, Context& ctx);
-            void ReadSpecifications(_xml::_element& elem, Context& ctx);
+            void Read_info(_xml::_element& elem, Context& ctx);
+            void Read_title(_xml::_element& elem, Context& ctx);
+            void Read_specifications(_xml::_element& elem, Context& ctx);
+            void Read_specification(_xml::_element& elem, Context& ctx);
 
         private:
             std::string                 m_title;
@@ -63,6 +65,11 @@ namespace RDF
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_applicability(_xml::_element& elem, Context& ctx);
+            void Read_requirements(_xml::_element& elem, Context& ctx);
+            void Read_requirement(_xml::_element& elem, Context& ctx);
 
         private:
             std::string m_name;

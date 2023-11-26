@@ -12,9 +12,52 @@
 #include "pch.h"
 
 #include "IDS.h"
-
 using namespace RDF::IDS;
 
+/// <summary>
+/// 
+/// </summary>
+#define GET_ATTR(name)                      \
+    for (auto attr : elem.attributes()) {   \
+    if (attr) {                             \
+        auto attrName = attr->getName();    \
+        if (attrName == #name) {            \
+            m_##name = attr->getValue();    \
+        }                                   
+
+#define NEXT_ATTR(name)                     \
+            else if (attrName == #name) {   \
+            m_##name = attr->getValue();    \
+        }
+
+#define END_ATTR        \
+            else { LogMsg(ctx, MsgType::Warning, "Unknown attribute %s", attrName.c_str()); } } }
+
+
+/// <summary>
+/// 
+/// </summary>
+#define GET_CHILD(name)                     \
+    for (auto child : elem.children()) {    \
+        if (child) {                        \
+            auto&  tag= child->getName();   \
+            if (tag == #name) {             \
+                Read_##name(*child, ctx);   \
+            }
+
+#define NEXT_CHILD(name)                    \
+            else if (tag == #name) {        \
+                Read_##name(*child, ctx);   \
+            }
+
+#define END_CHILDREN \
+            else { LogMsg(ctx, MsgType::Warning, "Unknown child element %s", tag.c_str()); } } }
+
+
+
+/// <summary>
+/// 
+/// </summary>
 static void Dump(_xml::_element& elem)
 {
     for (auto attr : elem.attributes()) {
@@ -177,120 +220,93 @@ bool File::Read(const char* idsFilePath, Console* output)
     return ok;
 }
 
+
 /// <summary>
 /// 
 /// </summary>
 void File::Read(_xml::_element& elem , Context& ctx)
 {
-    //Dump(elem);
-
-    for (auto child : elem.children()) {
-        if (child) {
-            auto& name = child->getName();
-            if (name == "info") {
-                ReadInfo(*child, ctx);
-            }
-            else if (name == "specifications") {
-                ReadSpecifications(*child, ctx);
-            }
-            else {
-                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
-            }
-        }
-    }
+    GET_CHILD(info)
+    NEXT_CHILD(specifications)
+    END_CHILDREN
 }
 
 /// <summary>
 /// 
 /// </summary>
-void File::ReadInfo(_xml::_element& elem, Context&)
+void File::Read_info(_xml::_element& elem, Context& ctx)
 {
-    //Dump(elem);
-
-    for (auto child : elem.children()) {
-        if (child) {
-            auto& name = child->getName();
-            if (name == "title") {
-                m_title = child->getContent ();
-            }
-        }
-    }
+    GET_CHILD(title)
+    END_CHILDREN
 }
 
 /// <summary>
 /// 
 /// </summary>
-void File::ReadSpecifications(_xml::_element& elem, Context& ctx)
+void File::Read_title(_xml::_element& elem, Context&)
 {
-    //Dump(elem);
-
-    for (auto child : elem.children()) {
-        if (child) {
-            auto& name = child->getName();
-            if (name == "specification") {
-                ctx.StartXmlElement(child);
-                m_specifications.push_back(Specification());
-                m_specifications.back().Read(*child, ctx);
-                ctx.EndXmlElement(child);
-            }
-            else {
-                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
-            }
-        }
-    }
-
+    m_title = elem.getContent ();
 }
+
+/// <summary>
+/// 
+/// </summary>
+void File::Read_specifications(_xml::_element& elem, Context& ctx)
+{
+    GET_CHILD(specification)
+    END_CHILDREN
+}
+
+/// <summary>
+/// 
+/// </summary>
+void File::Read_specification(_xml::_element& elem, Context& ctx)
+{
+    ctx.StartXmlElement(&elem);
+    m_specifications.push_back(Specification());
+    m_specifications.back().Read(elem, ctx);
+    ctx.EndXmlElement(&elem);
+}
+
 
 /// <summary>
 /// 
 /// </summary>
 void Specification::Read(_xml::_element& elem, Context& ctx)
 {
-    //BENGIN_ATTR(name)
-    for (auto attr : elem.attributes()) {
-        if (attr) {
-            auto attrName = attr->getName();
-            if (attrName == "name") {
-                m_name = attr->getValue();
-            }
-    //NEXT_ATTR()
-            else if (attrName == "minOccurs") {
-                m_minOccurs = attr->getValue();
-            }
-            else if (attrName == "maxOccurs") {
-                m_maxOccurs = attr->getValue();
-            }
-            else if (attrName == "ifcVersion") {
-                m_ifcVersion = attr->getValue();
-            }
-            else if (attrName == "identifier") {
-                m_identifier = attr->getValue();
-            }
-            else if (attrName == "description") {
-                m_description = attr->getValue();
-            }
-            else if (attrName == "instructions") {
-                m_instructions = attr->getValue();
-            }
-    //END_ATTR
-            else {
-                LogMsg(ctx, MsgType::Warning, "Unknown attribute %s", attrName.c_str());
-            }
-        }
-    }
+    GET_ATTR(name)
+    NEXT_ATTR(minOccurs)
+    NEXT_ATTR(maxOccurs)
+    NEXT_ATTR(ifcVersion)
+    NEXT_ATTR(identifier)
+    NEXT_ATTR(description)
+    NEXT_ATTR(instructions)
+    END_ATTR
 
-    for (auto child : elem.children()) {
-        if (child) {
-            auto& name = child->getName();
-            if (name == "applicability") {
-            }
-            else if (name == "requirements") {
-            }
-            else {
-                LogMsg(ctx, MsgType::Warning, "Unknown child element %s", name.c_str());
-            }
-        }
-    }
+    GET_CHILD(applicability)
+    NEXT_CHILD(requirements)
+    END_CHILDREN
+}
+
+/// <summary>
+/// 
+/// </summary>
+void Specification::Read_applicability(_xml::_element& elem, Context& ctx)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+void Specification::Read_requirements(_xml::_element& elem, Context& ctx)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+void Specification::Read_requirement(_xml::_element& elem, Context& ctx)
+{
 }
 
 #if 0
