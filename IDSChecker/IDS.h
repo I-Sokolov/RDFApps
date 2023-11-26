@@ -21,62 +21,74 @@ namespace RDF
 {
     namespace IDS
     {
-        //IDS structure
-        class File;
-        class Specification;
-
-        //
-        //implement to redirect output
-        class Console
-        {
-        public:
-            virtual void out(const char* sz) = NULL;
-        };
-
-        //internal
         class Context;
 
-        //
-        //
-        class File
-        {
-        public:
-            File();
-            ~File();
-
-        public:
-            bool Read(const char* idsFilePath, Console* output = nullptr);
-
-        private:
-            void Read(_xml::_element& elem, Context& ctx);
-            void Read_info(_xml::_element& elem, Context& ctx);
-            void Read_title(_xml::_element& elem, Context& ctx);
-            void Read_specifications(_xml::_element& elem, Context& ctx);
-            void Read_specification(_xml::_element& elem, Context& ctx);
-
-        private:
-            std::string                 m_title;
-            std::list<Specification>    m_specifications;
-        };
-
+        /// <summary>
+        /// 
+        /// </summary>
         class Facet
         {
         public:
             virtual ~Facet() {}
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class FacetEntity : public Facet
         {
         public:
             FacetEntity(_xml::_element& elem, Context& ctx);
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class FacetPartOf : public Facet
         {
         public:
             FacetPartOf(_xml::_element& elem, Context& ctx);
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
+        class FacetClassification : public Facet
+        {
+        public:
+            FacetClassification(_xml::_element& elem, Context& ctx);
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class FacetAttribute : public Facet
+        {
+        public:
+            FacetAttribute(_xml::_element& elem, Context& ctx);
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class FacetProperty : public Facet
+        {
+        public:
+            FacetProperty(_xml::_element& elem, Context& ctx);
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class FacetMaterial : public Facet
+        {
+        public:
+            FacetMaterial(_xml::_element& elem, Context& ctx);
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
         class Facets
         {
         public:
@@ -88,11 +100,18 @@ namespace RDF
         private:
             void Read_entity(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetEntity(elem, ctx)); }
             void Read_partOf(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetPartOf(elem, ctx)); }
+            void Read_classification(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetClassification(elem, ctx)); }
+            void Read_attribute(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetAttribute(elem, ctx)); }
+            void Read_property(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetProperty(elem, ctx)); }
+            void Read_material(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetMaterial(elem, ctx)); }
 
         private:
             std::list<Facet*> m_facets;
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class Applicability
         {
         public:
@@ -102,6 +121,9 @@ namespace RDF
             Facets  m_facets;
         };
 
+        /// <summary>
+        /// 
+        /// </summary>
         class Requirements
         {
         public:
@@ -112,12 +134,13 @@ namespace RDF
             Facets      m_facets;
         };
 
-        //
-        //
+        /// <summary>
+        /// 
+        /// </summary>
         class Specification
         {
         public:  
-            void Read(_xml::_element& elem, Context& ctx);
+            Specification(_xml::_element& elem, Context& ctx);
 
         private:
             void Read_applicability(_xml::_element& elem, Context& ctx) { m_applicability.Read(elem, ctx); }
@@ -134,6 +157,39 @@ namespace RDF
 
             Applicability m_applicability;
             Requirements  m_requirements;
+        };
+
+        /// <summary>
+        /// implement it if you wnat redirect output 
+        /// </summary>
+        class Console
+        {
+        public:
+            virtual void out(const char* sz) = NULL;
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class File
+        {
+        public:
+            File();
+            ~File();
+
+        public:
+            bool Read(const char* idsFilePath, Console* output = nullptr);
+
+        private:
+            void Read(_xml::_element& elem, Context& ctx);
+            void Read_info(_xml::_element& elem, Context& ctx);
+            void Read_title(_xml::_element& elem, Context& ctx);
+            void Read_specifications(_xml::_element& elem, Context& ctx);
+            void Read_specification(_xml::_element& elem, Context& ctx) { m_specifications.push_back(new Specification(elem, ctx)); }
+
+        private:
+            std::string                 m_title;
+            std::list<Specification*>   m_specifications;
         };
     }
 }

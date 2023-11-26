@@ -186,7 +186,10 @@ File::File()
 /// </summary>
 File::~File()
 {
-
+    for (auto s : m_specifications) {
+        delete s;
+    }
+    m_specifications.clear();
 }
 
 /// <summary>
@@ -257,22 +260,11 @@ void File::Read_specifications(_xml::_element& elem, Context& ctx)
     END_CHILDREN
 }
 
-/// <summary>
-/// 
-/// </summary>
-void File::Read_specification(_xml::_element& elem, Context& ctx)
-{
-    ctx.StartXmlElement(&elem);
-    m_specifications.push_back(Specification());
-    m_specifications.back().Read(elem, ctx);
-    ctx.EndXmlElement(&elem);
-}
-
 
 /// <summary>
 /// 
 /// </summary>
-void Specification::Read(_xml::_element& elem, Context& ctx)
+Specification::Specification(_xml::_element& elem, Context& ctx)
 {
     GET_ATTR(name)
     NEXT_ATTR(minOccurs)
@@ -318,6 +310,10 @@ void Facets::Read(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD(entity)
     NEXT_CHILD(partOf)
+    NEXT_CHILD(classification)
+    NEXT_CHILD(attribute)
+    NEXT_CHILD(property)
+    NEXT_CHILD(material)
     END_CHILDREN
 }
 
@@ -326,7 +322,7 @@ void Facets::Read(_xml::_element& elem, Context& ctx)
 /// </summary>
 FacetEntity::FacetEntity(_xml::_element& elem, Context& ctx)
 {
-    assert(!"todo");
+    //assert(!"todo");
 }
 
 /// <summary>
@@ -334,7 +330,39 @@ FacetEntity::FacetEntity(_xml::_element& elem, Context& ctx)
 /// </summary>
 FacetPartOf::FacetPartOf(_xml::_element& elem, Context& ctx)
 {
-    assert(!"todo");
+    //assert(!"todo");
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
+{
+    //assert(!"todo");
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
+{
+    //assert(!"todo");
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetProperty::FacetProperty(_xml::_element& elem, Context& ctx)
+{
+    //assert(!"todo");
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetMaterial::FacetMaterial(_xml::_element& elem, Context& ctx)
+{
+    //assert(!"todo");
 }
 
 
