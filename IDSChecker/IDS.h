@@ -103,6 +103,14 @@ namespace RDF
         {
         public:
             FacetAttribute(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_name(_xml::_element& elem, Context& ctx) { m_name.Read(elem, ctx); }
+            void Read_value(_xml::_element& elem, Context& ctx) { m_value.Read(elem, ctx); }
+
+        private:
+            IdsValue   m_name;
+            IdsValue   m_value;
         };
 
         /// <summary>

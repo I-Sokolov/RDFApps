@@ -371,7 +371,10 @@ FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
 FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    assert(!"todo");
+    printf(__FUNCTION__ "\n");
+    GET_CHILD(name)
+    NEXT_CHILD(value)
+    END_CHILDREN
 }
 
 /// <summary>
