@@ -14,7 +14,6 @@
 #include "IDS.h"
 using namespace RDF::IDS;
 
-#include "ifcengine.h"
 
 /// <summary>
 /// 
@@ -98,15 +97,18 @@ static void Dump(_xml::_element& elem)
 class RDF::IDS::Context
 {
 public:
-    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirtsError_)
-        : console(con_), msgLevel(msgLevel_), stopAtFirtsError(stopAtFirtsError_)
+    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
+        : console(con_), msgLevel(msgLevel_), stopAtFirstError(stopAtFirstError_)
     {}
     ~Context() {}
 
 public:
     Console&    console;
     MsgLevel    msgLevel;
-    bool        stopAtFirtsError;
+    bool        stopAtFirstError;
+
+    SdaiInstance    currentInstane = 0;
+    Specification*  currentSpecification = nullptr;
 };
 
 /// <summary>
@@ -265,7 +267,7 @@ void Requirements::Read(_xml::_element& elem, Context& ctx)
     GET_ATTR(description)
     END_ATTR
 
-    m_facets.Read (elem, ctx);
+    Facets::Read (elem, ctx);
 }
 
 /// <summary>
@@ -407,7 +409,13 @@ Restriction::Restriction(_xml::_element& elem, Context& ctx)
 /// </summary>
 bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output)
 {
-    bool ok = true;
+    for (auto spec : m_specifications) {
+        if (spec) {
+            spec->Reset();
+        }
+    }
+     
+    bool ok = false;
 
     DefaultConsole con;
     if (!output) {
@@ -415,12 +423,20 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
     }
 
     Context ctx(*output, msgLevel, stopAtFirstError);
-    
-    SdaiModel model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
 
+    SdaiModel model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
     if (model) {
 
+        ok = CheckInstances(model, ctx);
+
+        if (ok || !ctx.stopAtFirstError) {
+            if (!CheckSpecificationsUsed(model, ctx)) {
+                ok = false;
+            }
+        }
+
         sdaiCloseModel(model);
+        model = 0;
     }
     else {
         LogMsg(ctx, MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
@@ -428,4 +444,126 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
     }
 
     return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool File::CheckInstances(SdaiModel model, Context& ctx)
+{
+    bool ok = true;
+
+    auto aggr = xxxxGetAllInstances(model);
+    int i = 0;
+    SdaiInstance inst = 0;
+    while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &inst)) {
+
+        ctx.currentInstane = inst;
+
+        for (auto spec : m_specifications) {
+            if (spec) {
+
+                ctx.currentSpecification = spec;
+
+                if (!spec->Check(model, inst, ctx)) {
+                    ok = false;
+                }
+
+                ctx.currentSpecification = nullptr;
+                if (!ok && ctx.stopAtFirstError) {
+                    return false; //>>>>>>>>>>>>>>>>>>>>>
+                }
+            }
+        }
+        ctx.currentInstane = 0;
+    }
+
+    return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool File::CheckSpecificationsUsed(SdaiModel model, Context& ctx)
+{
+    bool ok = true;
+
+    for (auto spec : m_specifications) {
+        if (spec) {
+
+            ctx.currentSpecification = spec;
+
+            if (!spec->CheckUsed(model, ctx)) {
+                ok = false;
+            }
+
+            ctx.currentSpecification = nullptr;
+            if (!ok && ctx.stopAtFirstError) {
+                return false; //>>>>>>>>>>>>>>>>>>>>>
+            }
+        }
+    }
+
+    return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool Specification::Check(SdaiModel model, SdaiInstance inst, Context& ctx)
+{
+    bool ok = true;
+
+    if (SuitableIfcVersion(model)) {
+        if (m_applicability.Match(inst)) {
+            m_wasMatch = true;
+            
+            ok = m_requirements.Match(inst);
+
+            if (ok) {
+                LogMsg(ctx, MsgLevel::Info, "Checked ok");
+            }
+            else {
+                LogMsg(ctx, MsgLevel::Error, "Instance does not match specification");
+            }
+        }
+    }
+
+    return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool Specification::CheckUsed(SdaiModel model, Context& ctx)
+{
+    bool ok = true;
+
+    if (SuitableIfcVersion(model) && IsRequired()) {
+        
+        ok = m_wasMatch;
+        
+        if (ok) {
+            LogMsg(ctx, MsgLevel::Info, "OK, required specification matched some instances");
+        }
+        else {
+            LogMsg(ctx, MsgLevel::Error, "ERROR, required specification never match");
+        }
+    }
+
+    return ok;
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+bool Facets::Match(SdaiInstance inst)
+{
+    for (auto facet : m_facets) {
+        if (!facet->Match(inst)) {
+            return false;
+        }
+    }
+    return true;
 }

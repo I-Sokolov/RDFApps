@@ -16,6 +16,7 @@
 // https://github.com/buildingSMART/IDS/tree/master/Documentation
 
 #include "_xml.h"
+#include "ifcengine.h"
 
 namespace RDF
 {
@@ -107,6 +108,8 @@ namespace RDF
         public:
             virtual ~Facet() {}
 
+            virtual bool Match(SdaiInstance inst) = 0;
+
         protected:
             Facet() {}
             Facet(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
@@ -131,6 +134,8 @@ namespace RDF
             FacetEntity(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
 
             void Read(_xml::_element& elem, Context& ctx);
+            
+            virtual bool Match(SdaiInstance inst) override;
 
         private:
             IdsValue m_name;
@@ -145,6 +150,8 @@ namespace RDF
         public:
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
+            virtual bool Match(SdaiInstance inst) override;
+
         private:
             FacetEntity  m_entity;
         };
@@ -156,6 +163,8 @@ namespace RDF
         {
         public:
             FacetClassification(_xml::_element& elem, Context& ctx);
+
+            virtual bool Match(SdaiInstance inst) override;
 
         private:
             IdsValue m_value;
@@ -170,6 +179,8 @@ namespace RDF
         public:
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
+            virtual bool Match(SdaiInstance inst) override;
+
         private:
             IdsValue   m_name;
             IdsValue   m_value;
@@ -182,6 +193,8 @@ namespace RDF
         {
         public:
             FacetProperty(_xml::_element& elem, Context& ctx);
+
+            virtual bool Match(SdaiInstance inst) override;
 
         private:
             IdsValue m_propertySet;
@@ -197,6 +210,8 @@ namespace RDF
         public:
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
+            virtual bool Match(SdaiInstance inst) override;
+
         private:
             IdsValue m_value;
         };
@@ -208,6 +223,8 @@ namespace RDF
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
+
+            bool Match(SdaiInstance inst);
 
         private:
             void Read_entity(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetEntity(elem, ctx)); }
@@ -224,26 +241,20 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
-        class Applicability
+        class Applicability : public Facets
         {
-        public:
-            void Read(_xml::_element& elem, Context& ctx) { m_facets.Read(elem, ctx); };
-
-        private:
-            Facets  m_facets;
         };
 
         /// <summary>
         /// 
         /// </summary>
-        class Requirements
+        class Requirements : public Facets
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
 
         private:
             std::string m_description;
-            Facets      m_facets;
         };
 
         /// <summary>
@@ -253,6 +264,15 @@ namespace RDF
         {
         public:  
             Specification(_xml::_element& elem, Context& ctx);
+
+        public:
+            void Reset() { m_wasMatch = false; m_suitableIfcVersion = -1; };
+            bool Check(SdaiModel model, SdaiInstance inst, Context& ctx);
+            bool CheckUsed(SdaiModel model, Context& ctx);
+
+        private:
+            bool SuitableIfcVersion(SdaiModel model);
+            bool IsRequired();
 
         private:
             std::string m_name;
@@ -265,6 +285,9 @@ namespace RDF
 
             Applicability m_applicability;
             Requirements  m_requirements;
+            
+            bool          m_wasMatch = false;
+            int           m_suitableIfcVersion = -1;
         };
 
         /// <summary>
@@ -289,6 +312,10 @@ namespace RDF
         public:
             bool Read(const char* idsFilePath);
             bool Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output = nullptr);
+
+        private:
+            bool CheckInstances(SdaiModel model, Context& ctx);
+            bool CheckSpecificationsUsed (SdaiModel model, Context& ctx);
 
         private:
             void Read(_xml::_element& elem, Context& ctx);
