@@ -26,6 +26,48 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
+        template <typename T> class OwningPtrList : public std::list<T*>
+        {
+        public:
+            ~OwningPtrList()
+            {
+                for (auto p : *this) {
+                    delete p;
+                }
+            }
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class Value
+        {
+        public:
+            Value(_xml::_element& elem, Context& ctx);
+
+        private:
+            std::string m_value;
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class Restriction
+        {
+        public:
+            Restriction(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_enumeration(_xml::_element& elem, Context& ctx) { m_enumerations.push_back(new Value(elem, ctx)); }
+
+        private:
+            std::string             m_base;
+            OwningPtrList<Value>    m_enumerations;
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
         class IdsValue
         {
         public:
@@ -33,9 +75,11 @@ namespace RDF
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
+            void Read_restriction(_xml::_element& elem, Context& ctx) { m_restrictions.push_back(new Restriction(elem, ctx)); }
 
         private:
-            std::string m_simpleValue;
+            std::string                m_simpleValue;
+            OwningPtrList<Restriction> m_restrictions;
         };
 
         /// <summary>
@@ -146,9 +190,6 @@ namespace RDF
         class Facets
         {
         public:
-            ~Facets();
-
-        public:
             void Read(_xml::_element& elem, Context& ctx);
 
         private:
@@ -160,7 +201,7 @@ namespace RDF
             void Read_material(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetMaterial(elem, ctx)); }
 
         private:
-            std::list<Facet*> m_facets;
+            OwningPtrList<Facet> m_facets;
         };
 
         /// <summary>
@@ -224,10 +265,6 @@ namespace RDF
         class File
         {
         public:
-            File();
-            ~File();
-
-        public:
             bool Read(const char* idsFilePath, Console* output = nullptr);
 
         private:
@@ -238,8 +275,8 @@ namespace RDF
             void Read_specification(_xml::_element& elem, Context& ctx) { m_specifications.push_back(new Specification(elem, ctx)); }
 
         private:
-            std::string                 m_title;
-            std::list<Specification*>   m_specifications;
+            std::string                    m_title;
+            OwningPtrList<Specification>   m_specifications;
         };
     }
 }

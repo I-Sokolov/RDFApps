@@ -189,25 +189,6 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
 /// <summary>
 /// 
 /// </summary>
-File::File()
-{
-
-}
-
-/// <summary>
-/// 
-/// </summary>
-File::~File()
-{
-    for (auto s : m_specifications) {
-        delete s;
-    }
-    m_specifications.clear();
-}
-
-/// <summary>
-/// 
-/// </summary>
 bool File::Read(const char* idsFilePath, Console* output)
 {
     bool ok = false;
@@ -300,26 +281,6 @@ void Requirements::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-Facets::~Facets()
-{
-    for (auto f : m_facets) {
-        delete f;
-    }
-    m_facets.clear();
-}
-
-/// <summary>
-/// 
-/// </summary>
-void IdsValue::Read(_xml::_element& elem, Context& ctx)
-{
-    GET_CHILD(simpleValue)
-    END_CHILDREN
-}
-
-/// <summary>
-/// 
-/// </summary>
 void Facets::Read(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD(entity)
@@ -406,6 +367,38 @@ FacetMaterial::FacetMaterial(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
     GET_CHILD_MEMBER(value)
+    END_CHILDREN
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+void IdsValue::Read(_xml::_element& elem, Context& ctx)
+{
+    GET_CHILD(simpleValue)
+    NEXT_CHILD(restriction)
+    END_CHILDREN
+}
+
+/// <summary>
+/// 
+/// </summary>
+Value::Value(_xml::_element& elem, Context& ctx)
+{
+    GET_ATTR(value)
+    END_ATTR
+}
+
+/// <summary>
+/// 
+/// </summary>
+Restriction::Restriction(_xml::_element& elem, Context& ctx)
+{
+    GET_ATTR(base)
+    END_ATTR
+
+    GET_CHILD(enumeration)
     END_CHILDREN
 }
 
