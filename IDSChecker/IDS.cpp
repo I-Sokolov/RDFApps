@@ -14,6 +14,8 @@
 #include "IDS.h"
 using namespace RDF::IDS;
 
+#include "ifcengine.h"
+
 /// <summary>
 /// 
 /// </summary>
@@ -31,7 +33,7 @@ using namespace RDF::IDS;
         }
 
 #define END_ATTR        \
-            else { LogMsg(ctx, MsgType::Warning, "Unknown attribute '%s'", attrName.c_str()); } } }
+            else { LogMsg(ctx, MsgLevel::Warning, "Unknown attribute '%s'", attrName.c_str()); } } }
 
 
 /// <summary>
@@ -64,7 +66,7 @@ using namespace RDF::IDS;
             }
 
 #define END_CHILDREN \
-            else { LogMsg(ctx, MsgType::Warning, "Unknown child element <%s>", tag.c_str()); } } }
+            else { LogMsg(ctx, MsgLevel::Warning, "Unknown child element <%s>", tag.c_str()); } } }
 
 
 
@@ -96,21 +98,15 @@ static void Dump(_xml::_element& elem)
 class RDF::IDS::Context
 {
 public:
-    typedef std::list<_xml::_element*> XmlStack;
+    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirtsError_)
+        : console(con_), msgLevel(msgLevel_), stopAtFirtsError(stopAtFirtsError_)
+    {}
+    ~Context() {}
 
 public:
-    Context(Console& con) : m_con(con) {}
-    ~Context() { assert(m_xmlStack.empty()); }
-
-    Console& GetConsole() { return m_con; }
-
-    void StartXmlElement(_xml::_element* xml) { assert(xml);  m_xmlStack.push_back(xml); }
-    void EndXmlElement(_xml::_element* xml) { assert(xml == m_xmlStack.back()); m_xmlStack.pop_back(); }
-    const XmlStack& GetXmlStack() { return m_xmlStack; }
-
-private:
-    Console&    m_con;
-    XmlStack    m_xmlStack;
+    Console&    console;
+    MsgLevel    msgLevel;
+    bool        stopAtFirtsError;
 };
 
 /// <summary>
@@ -121,33 +117,31 @@ class DefaultConsole : public Console
     virtual void out(const char* msg) override { printf("%s", msg); }
 };
 
-/// <summary>
-/// 
-/// </summary>
-enum class MsgType
-{
-    Info, Warning, Error
-};
 
 /// <summary>
 /// 
 /// </summary>
-static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
+static void LogMsg (Context& ctx, MsgLevel type, const char* format, ...)
 {
-    auto& log = ctx.GetConsole();
+    if (type < ctx.msgLevel) {
+        return; //>>>>>>>>>>>>>
+    }
+
+    auto& log = ctx.console;
 
     //
     log.out("\t<");
 
     const char* msgType;
     switch (type) {
-        case MsgType::Info:     msgType = "info"; break;
-        case MsgType::Warning:  msgType = "Warning"; break;
-        default:                msgType = "ERROR"; break;
+        case MsgLevel::Info:     msgType = "info"; break;
+        case MsgLevel::Warning:  msgType = "Warning"; break;
+        default:                 msgType = "ERROR"; break;
     }
 
     log.out(msgType);
 
+#if 0
     //
     std::string xpath;
     for (auto xml : ctx.GetXmlStack()) {
@@ -167,6 +161,7 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
         log.out(xpath.c_str());
         log.out("'");
     }
+#endif
 
     //
     log.out(">\n\t\t");
@@ -189,29 +184,24 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
 /// <summary>
 /// 
 /// </summary>
-bool File::Read(const char* idsFilePath, Console* output)
+bool File::Read(const char* idsFilePath)
 {
     bool ok = false;
 
     DefaultConsole con;
-    if (!output) {
-        output = &con;
-    }
-
-    Context ctx(*output);
+    Context ctx(con, MsgLevel::All, false);
 
     try {
         _xml::_document doc(nullptr);
         doc.load(idsFilePath);
 
         if (auto root = doc.getRoot()) {
-            ctx.StartXmlElement(root);
             Read(*root, ctx);
-            ctx.EndXmlElement(root);
+            ok = true;
         }
     }
     catch (exception& ex) {
-        LogMsg(ctx, MsgType::Error, "Failed read IDS file: '%s', error: %s", idsFilePath, ex.what());
+        LogMsg(ctx, MsgLevel::Error, "Failed read IDS file: '%s', error: %s", idsFilePath, ex.what());
     }
 
     return ok;
@@ -412,33 +402,30 @@ Restriction::Restriction(_xml::_element& elem, Context& ctx)
 }
 
 
-#if 0
 /// <summary>
 /// 
 /// </summary>
-bool IDS::Check(const char* ifcFilePath, CheckingLog* log, bool untilFirstError)
+bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output)
 {
     bool ok = true;
 
-    SdaiModel model = 0;
+    DefaultConsole con;
+    if (!output) {
+        output = &con;
+    }
 
-    for (auto& spec : m_specifications) {
-        auto o = spec.Check(model, log, untilFirstError);        
-        ok = ok && o;
+    Context ctx(*output, msgLevel, stopAtFirstError);
+    
+    SdaiModel model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
 
-        if (!ok && untilFirstError) {
-            break; //>>>
-        }
+    if (model) {
+
+        sdaiCloseModel(model);
+    }
+    else {
+        LogMsg(ctx, MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
+        ok = false;
     }
 
     return ok;
 }
-
-/// <summary>
-/// 
-/// </summary>
-bool Specification::Check(SdaiModel model, CheckingLog* log, bool untilFirstError)
-{
-    return false;
-}
-#endif

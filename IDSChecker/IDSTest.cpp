@@ -2,12 +2,31 @@
 #include "IDS.h"
 #include "IDSTest.h"
 
+bool stopAtFirstError;
+RDF::IDS::MsgLevel msgLevel;
+
 static void IDSTest(std::string& idsFile, std::string& ifcFile)
 {
-    printf("<Test idspath='%s'>\n", idsFile.c_str());
+    //make various options
+    stopAtFirstError = !stopAtFirstError;
+    msgLevel = (RDF::IDS::MsgLevel)((int(msgLevel) + 1) % (int(RDF::IDS::MsgLevel::Error)+1));
+        
+        
+    printf("<Test idspath='%s' stopAtFirstError='%d' msgLevel='%d'>\n", idsFile.c_str(), stopAtFirstError, msgLevel);
+
+    bool ok = false;
 
     RDF::IDS::File ids;
-    ids.Read(idsFile.c_str());
+    if (ids.Read(idsFile.c_str())) {
+        ok = ids.Check(ifcFile.c_str(), stopAtFirstError, msgLevel);
+    }
+    else {
+        assert(!"Failed to read IDS file");
+    }
+
+    bool pass = (idsFile.find("pass")!=std::string::npos);
+
+    //assert(ok == pass);
 
     printf("</Test>\n");
 }

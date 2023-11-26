@@ -279,10 +279,16 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
+        enum class MsgLevel { All, Info, Warning, Error };
+
+        /// <summary>
+        /// 
+        /// </summary>
         class File
         {
         public:
-            bool Read(const char* idsFilePath, Console* output = nullptr);
+            bool Read(const char* idsFilePath);
+            bool Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output = nullptr);
 
         private:
             void Read(_xml::_element& elem, Context& ctx);
