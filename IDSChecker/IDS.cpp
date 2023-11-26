@@ -31,7 +31,7 @@ using namespace RDF::IDS;
         }
 
 #define END_ATTR        \
-            else { LogMsg(ctx, MsgType::Warning, "Unknown attribute %s", attrName.c_str()); } } }
+            else { LogMsg(ctx, MsgType::Warning, "Unknown attribute '%s'", attrName.c_str()); } } }
 
 
 /// <summary>
@@ -51,7 +51,7 @@ using namespace RDF::IDS;
             }
 
 #define END_CHILDREN \
-            else { LogMsg(ctx, MsgType::Warning, "Unknown child element %s", tag.c_str()); } } }
+            else { LogMsg(ctx, MsgType::Warning, "Unknown child element <%s>", tag.c_str()); } } }
 
 
 
@@ -150,7 +150,7 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
     }
 
     if (!xpath.empty()) {
-        log.out("ids='");
+        log.out(" ids='");
         log.out(xpath.c_str());
         log.out("'");
     }
@@ -288,12 +288,6 @@ void Specification::Read(_xml::_element& elem, Context& ctx)
     END_CHILDREN
 }
 
-/// <summary>
-/// 
-/// </summary>
-void Applicability::Read(_xml::_element& elem, Context& ctx)
-{
-}
 
 /// <summary>
 /// 
@@ -302,6 +296,45 @@ void Requirements::Read(_xml::_element& elem, Context& ctx)
 {
     GET_ATTR(description)
     END_ATTR
+
+    m_facets.Read (elem, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+Facets::~Facets()
+{
+    for (auto f : m_facets) {
+        delete f;
+    }
+    m_facets.clear();
+}
+
+/// <summary>
+/// 
+/// </summary>
+void Facets::Read(_xml::_element& elem, Context& ctx)
+{
+    GET_CHILD(entity)
+    NEXT_CHILD(partOf)
+    END_CHILDREN
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetEntity::FacetEntity(_xml::_element& elem, Context& ctx)
+{
+    assert(!"todo");
+}
+
+/// <summary>
+/// 
+/// </summary>
+FacetPartOf::FacetPartOf(_xml::_element& elem, Context& ctx)
+{
+    assert(!"todo");
 }
 
 

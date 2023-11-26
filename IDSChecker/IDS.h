@@ -59,10 +59,47 @@ namespace RDF
             std::list<Specification>    m_specifications;
         };
 
+        class Facet
+        {
+        public:
+            virtual ~Facet() {}
+        };
+
+        class FacetEntity : public Facet
+        {
+        public:
+            FacetEntity(_xml::_element& elem, Context& ctx);
+        };
+
+        class FacetPartOf : public Facet
+        {
+        public:
+            FacetPartOf(_xml::_element& elem, Context& ctx);
+        };
+
+        class Facets
+        {
+        public:
+            ~Facets();
+
+        public:
+            void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_entity(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetEntity(elem, ctx)); }
+            void Read_partOf(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetPartOf(elem, ctx)); }
+
+        private:
+            std::list<Facet*> m_facets;
+        };
+
         class Applicability
         {
         public:
-            void Read(_xml::_element& elem, Context& ctx);
+            void Read(_xml::_element& elem, Context& ctx) { m_facets.Read(elem, ctx); };
+
+        private:
+            Facets  m_facets;
         };
 
         class Requirements
@@ -72,6 +109,7 @@ namespace RDF
 
         private:
             std::string m_description;
+            Facets      m_facets;
         };
 
         //
