@@ -50,6 +50,19 @@ using namespace RDF::IDS;
                 Read_##name(*child, ctx);   \
             }
 
+#define GET_CHILD_MEMBER(name)              \
+    for (auto child : elem.children()) {    \
+        if (child) {                        \
+            auto&  tag= child->getName();   \
+            if (tag == #name) {             \
+                m_##name.Read(*child, ctx); \
+            }
+
+#define NEXT_CHILD_MEMBER(name)             \
+            else if (tag == #name) {        \
+                m_##name.Read(*child, ctx); \
+            }
+
 #define END_CHILDREN \
             else { LogMsg(ctx, MsgType::Warning, "Unknown child element <%s>", tag.c_str()); } } }
 
@@ -275,8 +288,8 @@ Specification::Specification(_xml::_element& elem, Context& ctx)
     NEXT_ATTR(instructions)
     END_ATTR
 
-    GET_CHILD(applicability)
-    NEXT_CHILD(requirements)
+    GET_CHILD_MEMBER(applicability)
+    NEXT_CHILD_MEMBER(requirements)
     END_CHILDREN
 }
 
@@ -331,6 +344,7 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
 {
     GET_ATTR(minOccurs)
     NEXT_ATTR(maxOccurs)
+    NEXT_ATTR(datatype)
     END_ATTR
 }
 
@@ -341,8 +355,8 @@ void FacetEntity::Read(_xml::_element& elem, Context& ctx)
 {
     Facet::Read(elem, ctx);
 
-    GET_CHILD(name)
-    NEXT_CHILD(predefinedType)
+    GET_CHILD_MEMBER(name)
+    NEXT_CHILD_MEMBER(predefinedType)
     END_CHILDREN
 }
 
@@ -352,7 +366,7 @@ void FacetEntity::Read(_xml::_element& elem, Context& ctx)
 FacetPartOf::FacetPartOf(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    GET_CHILD(entity)
+    GET_CHILD_MEMBER(entity)
     END_CHILDREN
 }
 
@@ -362,7 +376,9 @@ FacetPartOf::FacetPartOf(_xml::_element& elem, Context& ctx)
 FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    assert(!"todo");
+    GET_CHILD_MEMBER(value)
+    NEXT_CHILD_MEMBER(system)
+    END_CHILDREN
 }
 
 /// <summary>
@@ -371,9 +387,8 @@ FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
 FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    printf(__FUNCTION__ "\n");
-    GET_CHILD(name)
-    NEXT_CHILD(value)
+    GET_CHILD_MEMBER(name)
+    NEXT_CHILD_MEMBER(value)
     END_CHILDREN
 }
 
@@ -383,7 +398,10 @@ FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
 FacetProperty::FacetProperty(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    assert(!"todo");
+    GET_CHILD_MEMBER(propertySet)
+    NEXT_CHILD_MEMBER(name)
+    NEXT_CHILD_MEMBER(value)
+    END_CHILDREN
 }
 
 /// <summary>
@@ -392,7 +410,8 @@ FacetProperty::FacetProperty(_xml::_element& elem, Context& ctx)
 FacetMaterial::FacetMaterial(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
 {
-    assert(!"todo");
+    GET_CHILD_MEMBER(value)
+    END_CHILDREN
 }
 
 

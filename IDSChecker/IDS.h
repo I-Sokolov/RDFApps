@@ -50,6 +50,7 @@ namespace RDF
         private:
             std::string m_minOccurs;
             std::string m_maxOccurs;
+            std::string m_datatype;
         };
 
         /// <summary>
@@ -62,10 +63,6 @@ namespace RDF
             FacetEntity(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
 
             void Read(_xml::_element& elem, Context& ctx);
-
-        private:
-            void Read_name(_xml::_element& elem, Context& ctx) { m_name.Read(elem, ctx); }
-            void Read_predefinedType(_xml::_element& elem, Context& ctx) { m_predefinedType.Read(elem, ctx); }
 
         private:
             IdsValue m_name;
@@ -81,9 +78,6 @@ namespace RDF
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
         private:
-            void Read_entity(_xml::_element& elem, Context& ctx) { m_entity.Read(elem, ctx); }
-
-        private:
             FacetEntity  m_entity;
         };
 
@@ -94,6 +88,10 @@ namespace RDF
         {
         public:
             FacetClassification(_xml::_element& elem, Context& ctx);
+
+        private:
+            IdsValue m_value;
+            IdsValue m_system;
         };
 
         /// <summary>
@@ -103,10 +101,6 @@ namespace RDF
         {
         public:
             FacetAttribute(_xml::_element& elem, Context& ctx);
-
-        private:
-            void Read_name(_xml::_element& elem, Context& ctx) { m_name.Read(elem, ctx); }
-            void Read_value(_xml::_element& elem, Context& ctx) { m_value.Read(elem, ctx); }
 
         private:
             IdsValue   m_name;
@@ -120,6 +114,11 @@ namespace RDF
         {
         public:
             FacetProperty(_xml::_element& elem, Context& ctx);
+
+        private:
+            IdsValue m_propertySet;
+            IdsValue m_name;
+            IdsValue m_value;
         };
 
         /// <summary>
@@ -129,6 +128,9 @@ namespace RDF
         {
         public:
             FacetMaterial(_xml::_element& elem, Context& ctx);
+
+        private:
+            IdsValue m_value;
         };
 
         /// <summary>
@@ -186,10 +188,6 @@ namespace RDF
         {
         public:  
             Specification(_xml::_element& elem, Context& ctx);
-
-        private:
-            void Read_applicability(_xml::_element& elem, Context& ctx) { m_applicability.Read(elem, ctx); }
-            void Read_requirements(_xml::_element& elem, Context& ctx) { m_requirements.Read(elem, ctx); }
 
         private:
             std::string m_name;
