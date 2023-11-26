@@ -306,6 +306,13 @@ Facets::~Facets()
 /// <summary>
 /// 
 /// </summary>
+void IdsValue::Read(_xml::_element& elem, Context& ctx)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
 void Facets::Read(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD(entity)
@@ -320,49 +327,69 @@ void Facets::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-FacetEntity::FacetEntity(_xml::_element& elem, Context& ctx)
+void Facet::Read(_xml::_element& elem, Context& ctx)
 {
-    //assert(!"todo");
+    GET_ATTR(minOccurs)
+    NEXT_ATTR(maxOccurs)
+    END_ATTR
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetEntity::Read(_xml::_element& elem, Context& ctx)
+{
+    Facet::Read(elem, ctx);
+
+    GET_CHILD(name)
+    NEXT_CHILD(predefinedType)
+    END_CHILDREN
 }
 
 /// <summary>
 /// 
 /// </summary>
 FacetPartOf::FacetPartOf(_xml::_element& elem, Context& ctx)
+    : Facet(elem, ctx)
 {
-    //assert(!"todo");
+    GET_CHILD(entity)
+    END_CHILDREN
 }
 
 /// <summary>
 /// 
 /// </summary>
 FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
+    : Facet(elem, ctx)
 {
-    //assert(!"todo");
+    assert(!"todo");
 }
 
 /// <summary>
 /// 
 /// </summary>
 FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
+    : Facet(elem, ctx)
 {
-    //assert(!"todo");
+    assert(!"todo");
 }
 
 /// <summary>
 /// 
 /// </summary>
 FacetProperty::FacetProperty(_xml::_element& elem, Context& ctx)
+    : Facet(elem, ctx)
 {
-    //assert(!"todo");
+    assert(!"todo");
 }
 
 /// <summary>
 /// 
 /// </summary>
 FacetMaterial::FacetMaterial(_xml::_element& elem, Context& ctx)
+    : Facet(elem, ctx)
 {
-    //assert(!"todo");
+    assert(!"todo");
 }
 
 

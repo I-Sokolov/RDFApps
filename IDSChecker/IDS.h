@@ -26,10 +26,30 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
+        class IdsValue
+        {
+        public:
+            void Read(_xml::_element& elem, Context& ctx);
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
         class Facet
         {
         public:
             virtual ~Facet() {}
+
+        protected:
+            Facet() {}
+            Facet(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
+
+        protected:
+            void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            std::string m_minOccurs;
+            std::string m_maxOccurs;
         };
 
         /// <summary>
@@ -38,7 +58,18 @@ namespace RDF
         class FacetEntity : public Facet
         {
         public:
-            FacetEntity(_xml::_element& elem, Context& ctx);
+            FacetEntity() {}
+            FacetEntity(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
+
+            void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_name(_xml::_element& elem, Context& ctx) { m_name.Read(elem, ctx); }
+            void Read_predefinedType(_xml::_element& elem, Context& ctx) { m_predefinedType.Read(elem, ctx); }
+
+        private:
+            IdsValue m_name;
+            IdsValue m_predefinedType;
         };
 
         /// <summary>
@@ -48,6 +79,12 @@ namespace RDF
         {
         public:
             FacetPartOf(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_entity(_xml::_element& elem, Context& ctx) { m_entity.Read(elem, ctx); }
+
+        private:
+            FacetEntity  m_entity;
         };
 
         /// <summary>
