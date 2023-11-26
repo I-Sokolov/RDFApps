@@ -30,6 +30,12 @@ namespace RDF
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
+
+        private:
+            std::string m_simpleValue;
         };
 
         /// <summary>
@@ -51,6 +57,7 @@ namespace RDF
             std::string m_minOccurs;
             std::string m_maxOccurs;
             std::string m_datatype;
+            std::string m_relation;
         };
 
         /// <summary>
@@ -226,7 +233,7 @@ namespace RDF
         private:
             void Read(_xml::_element& elem, Context& ctx);
             void Read_info(_xml::_element& elem, Context& ctx);
-            void Read_title(_xml::_element& elem, Context& ctx);
+            void Read_title(_xml::_element& elem, Context&) { m_title = elem.getContent(); }
             void Read_specifications(_xml::_element& elem, Context& ctx);
             void Read_specification(_xml::_element& elem, Context& ctx) { m_specifications.push_back(new Specification(elem, ctx)); }
 

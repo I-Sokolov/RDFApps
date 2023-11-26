@@ -259,14 +259,6 @@ void File::Read_info(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void File::Read_title(_xml::_element& elem, Context&)
-{
-    m_title = elem.getContent ();
-}
-
-/// <summary>
-/// 
-/// </summary>
 void File::Read_specifications(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD(specification)
@@ -321,6 +313,8 @@ Facets::~Facets()
 /// </summary>
 void IdsValue::Read(_xml::_element& elem, Context& ctx)
 {
+    GET_CHILD(simpleValue)
+    END_CHILDREN
 }
 
 /// <summary>
@@ -345,6 +339,7 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
     GET_ATTR(minOccurs)
     NEXT_ATTR(maxOccurs)
     NEXT_ATTR(datatype)
+    NEXT_ATTR(relation)
     END_ATTR
 }
 
