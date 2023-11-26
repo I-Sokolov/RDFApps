@@ -47,6 +47,7 @@ namespace RDF
 
         private:
             std::string m_value;
+            std::string m_fixed;
         };
 
         /// <summary>
@@ -58,11 +59,27 @@ namespace RDF
             Restriction(_xml::_element& elem, Context& ctx);
 
         private:
-            void Read_enumeration(_xml::_element& elem, Context& ctx) { m_enumerations.push_back(new Value(elem, ctx)); }
+            void Read_enumeration(_xml::_element& elem, Context& ctx) { m_enumeration.push_back(new Value(elem, ctx)); }
+            void Read_pattern(_xml::_element& elem, Context& ctx) { m_pattern.push_back(new Value(elem, ctx)); }
+            void Read_minInclusive(_xml::_element& elem, Context& ctx) { m_minInclusive.push_back(new Value(elem, ctx)); }
+            void Read_maxInclusive(_xml::_element& elem, Context& ctx) { m_maxInclusive.push_back(new Value(elem, ctx)); }
+            void Read_minExclusive(_xml::_element& elem, Context& ctx) { m_minExclusive.push_back(new Value(elem, ctx)); }
+            void Read_maxExclusive(_xml::_element& elem, Context& ctx) { m_maxExclusive.push_back(new Value(elem, ctx)); }
+            void Read_length(_xml::_element& elem, Context& ctx) { m_length.push_back(new Value(elem, ctx)); }
+            void Read_minLength(_xml::_element& elem, Context& ctx) { m_minLength.push_back(new Value(elem, ctx)); }
+            void Read_maxLength(_xml::_element& elem, Context& ctx) { m_maxLength.push_back(new Value(elem, ctx)); }
 
         private:
             std::string             m_base;
-            OwningPtrList<Value>    m_enumerations;
+            OwningPtrList<Value>    m_enumeration;
+            OwningPtrList<Value>    m_pattern;
+            OwningPtrList<Value>    m_minInclusive;
+            OwningPtrList<Value>    m_maxInclusive;
+            OwningPtrList<Value>    m_minExclusive;
+            OwningPtrList<Value>    m_maxExclusive;
+            OwningPtrList<Value>    m_length;
+            OwningPtrList<Value>    m_minLength;
+            OwningPtrList<Value>    m_maxLength;
         };
 
         /// <summary>

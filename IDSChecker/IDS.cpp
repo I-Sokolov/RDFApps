@@ -387,6 +387,7 @@ void IdsValue::Read(_xml::_element& elem, Context& ctx)
 Value::Value(_xml::_element& elem, Context& ctx)
 {
     GET_ATTR(value)
+    NEXT_ATTR(fixed)
     END_ATTR
 }
 
@@ -399,6 +400,14 @@ Restriction::Restriction(_xml::_element& elem, Context& ctx)
     END_ATTR
 
     GET_CHILD(enumeration)
+    NEXT_CHILD(pattern)
+    NEXT_CHILD(minInclusive)
+    NEXT_CHILD(maxInclusive)
+    NEXT_CHILD(minExclusive)
+    NEXT_CHILD(maxExclusive)
+    NEXT_CHILD(length)
+    NEXT_CHILD(minLength)
+    NEXT_CHILD(maxLength)
     END_CHILDREN
 }
 
