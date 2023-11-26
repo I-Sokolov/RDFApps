@@ -59,17 +59,31 @@ namespace RDF
             std::list<Specification>    m_specifications;
         };
 
-        //
-        //
-        class Specification
+        class Applicability
+        {
+        public:
+            void Read(_xml::_element& elem, Context& ctx);
+        };
+
+        class Requirements
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
 
         private:
-            void Read_applicability(_xml::_element& elem, Context& ctx);
-            void Read_requirements(_xml::_element& elem, Context& ctx);
-            void Read_requirement(_xml::_element& elem, Context& ctx);
+            std::string m_description;
+        };
+
+        //
+        //
+        class Specification
+        {
+        public:  
+            void Read(_xml::_element& elem, Context& ctx);
+
+        private:
+            void Read_applicability(_xml::_element& elem, Context& ctx) { m_applicability.Read(elem, ctx); }
+            void Read_requirements(_xml::_element& elem, Context& ctx) { m_requirements.Read(elem, ctx); }
 
         private:
             std::string m_name;
@@ -79,6 +93,9 @@ namespace RDF
             std::string m_identifier;
             std::string m_description;
             std::string m_instructions;
+
+            Applicability m_applicability;
+            Requirements  m_requirements;
         };
     }
 }

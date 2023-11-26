@@ -291,23 +291,19 @@ void Specification::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void Specification::Read_applicability(_xml::_element& elem, Context& ctx)
+void Applicability::Read(_xml::_element& elem, Context& ctx)
 {
 }
 
 /// <summary>
 /// 
 /// </summary>
-void Specification::Read_requirements(_xml::_element& elem, Context& ctx)
+void Requirements::Read(_xml::_element& elem, Context& ctx)
 {
+    GET_ATTR(description)
+    END_ATTR
 }
 
-/// <summary>
-/// 
-/// </summary>
-void Specification::Read_requirement(_xml::_element& elem, Context& ctx)
-{
-}
 
 #if 0
 /// <summary>
