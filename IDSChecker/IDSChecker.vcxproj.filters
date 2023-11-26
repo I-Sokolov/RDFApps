@@ -39,6 +39,9 @@
     <ClCompile Include="IDS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IDSTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser\_reader.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="parser\_time.h">
       <Filter>Parser</Filter>
+    </ClInclude>
+    <ClInclude Include="IDSTest.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

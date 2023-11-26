@@ -137,7 +137,7 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
     auto& log = ctx.GetConsole();
 
     //
-    log.out("<");
+    log.out("\t<");
 
     const char* msgType;
     switch (type) {
@@ -169,7 +169,7 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
     }
 
     //
-    log.out(">\n    ");
+    log.out(">\n\t\t");
 
     char msg[512];
     va_list args;
@@ -181,7 +181,7 @@ static void LogMsg (Context& ctx, MsgType type, const char* format, ...)
     log.out("\n");
 
     //
-    log.out("</");
+    log.out("\t</");
     log.out(msgType);
     log.out(">\n");
 }
