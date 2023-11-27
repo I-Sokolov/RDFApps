@@ -368,6 +368,8 @@ FacetMaterial::FacetMaterial(_xml::_element& elem, Context& ctx)
 /// </summary>
 void IdsValue::Read(_xml::_element& elem, Context& ctx)
 {
+    m_isSet = true;
+
     GET_CHILD(simpleValue)
     NEXT_CHILD(restriction)
     END_CHILDREN
@@ -507,6 +509,19 @@ bool File::CheckSpecificationsUsed(SdaiModel model, Context& ctx)
     return ok;
 }
 
+
+/// <summary>
+/// 
+/// </summary>
+void Specification::Reset() 
+{ 
+    m_wasMatch = false; 
+    m_suitableIfcVersion = -1; 
+
+    m_applicability.Reset();
+    m_requirements.Reset();
+};
+
 /// <summary>
 /// 
 /// </summary>
@@ -515,10 +530,10 @@ bool Specification::Check(SdaiModel model, SdaiInstance inst, Context& ctx)
     bool ok = true;
 
     if (SuitableIfcVersion(model)) {
-        if (m_applicability.Match(inst)) {
+        if (m_applicability.Match(model, inst)) {
             m_wasMatch = true;
             
-            ok = m_requirements.Match(inst);
+            ok = m_requirements.Match(model, inst);
 
             if (ok) {
                 LogMsg(ctx, MsgLevel::Info, "Checked ok");
@@ -558,12 +573,75 @@ bool Specification::CheckUsed(SdaiModel model, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool Facets::Match(SdaiInstance inst)
+bool Facets::Match(SdaiModel model, SdaiInstance inst)
 {
     for (auto facet : m_facets) {
-        if (!facet->Match(inst)) {
+        if (!facet->Match(model, inst)) {
             return false;
         }
     }
+    return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetEntity::Reset()
+{
+    m_sdaiEntity = 0;
+    m_attrPredefinedType = 0;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetEntity::Match(SdaiModel model, SdaiInstance inst)
+{
+    // check entity name
+    //
+    bool entityNameMatch = false;
+
+    auto instType = sdaiGetInstanceType(inst);
+
+    if (auto name = m_name.GetSimpleValue()) {
+        if (!m_sdaiEntity) {
+            m_sdaiEntity = sdaiGetEntity(model, name);
+        }
+        entityNameMatch = (instType == m_sdaiEntity);
+    }
+    else {
+        assert(!"to test");
+        auto instTypeName = engiGetEntityName(instType, sdaiSTRING);
+        entityNameMatch = m_name.Match(instTypeName, true);
+    }
+
+    if (!entityNameMatch) {
+        return false; //>>>>>>>>>>>>>>>>>>>>>>>
+    }
+    
+    // check predefined type
+    //
+    if (m_predefinedType.IsSet()) {
+        const char* predTypeValue = nullptr;
+        void* getResult = nullptr;
+
+        if (m_sdaiEntity) {
+            if (!m_attrPredefinedType) {
+                m_attrPredefinedType = sdaiGetAttrDefinition(m_sdaiEntity, "PredefinedType");
+            }
+            getResult = sdaiGetAttr(inst, m_attrPredefinedType, sdaiSTRING, &predTypeValue);
+        }
+        else {
+            getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiSTRING, &predTypeValue);
+        }
+
+        bool predTypeMatch = getResult && predTypeValue && m_predefinedType.Match(predTypeValue, false);
+
+        if (!predTypeMatch) {
+            return false; //>>>>>>>>>>>>>>>>>>>>>>>
+        }
+    }
+
+    //
     return true;
 }

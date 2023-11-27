@@ -1,7 +1,7 @@
 //
 //  Author:  Peter Bonsma
 //  $Date:  $
-//  $Revision:  $
+//  $Revision:  
 //  Project: IFC Engine Library
 //
 //  In case of use of the DLL:
@@ -91,11 +91,16 @@ namespace RDF
         public:
             void Read(_xml::_element& elem, Context& ctx);
 
+            bool IsSet() { return m_isSet; }
+            const char* GetSimpleValue() { if (m_isSet && m_restrictions.empty()) return m_simpleValue.c_str(); else return nullptr; }
+            bool Match(const char* value, bool compareNoCase) { assert(!"Todo"); return false; }
+
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
             void Read_restriction(_xml::_element& elem, Context& ctx) { m_restrictions.push_back(new Restriction(elem, ctx)); }
 
         private:
+            bool                       m_isSet = false;
             std::string                m_simpleValue;
             OwningPtrList<Restriction> m_restrictions;
         };
@@ -108,7 +113,8 @@ namespace RDF
         public:
             virtual ~Facet() {}
 
-            virtual bool Match(SdaiInstance inst) = 0;
+            virtual void Reset() = 0;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) = 0;
 
         protected:
             Facet() {}
@@ -133,13 +139,18 @@ namespace RDF
             FacetEntity() {}
             FacetEntity(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
 
+
             void Read(_xml::_element& elem, Context& ctx);
-            
-            virtual bool Match(SdaiInstance inst) override;
+
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             IdsValue m_name;
             IdsValue m_predefinedType;
+
+            SdaiEntity  m_sdaiEntity = 0;
+            SdaiAttr    m_attrPredefinedType = 0;
         };
 
         /// <summary>
@@ -150,7 +161,8 @@ namespace RDF
         public:
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
-            virtual bool Match(SdaiInstance inst) override;
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             FacetEntity  m_entity;
@@ -164,7 +176,8 @@ namespace RDF
         public:
             FacetClassification(_xml::_element& elem, Context& ctx);
 
-            virtual bool Match(SdaiInstance inst) override;
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             IdsValue m_value;
@@ -179,7 +192,8 @@ namespace RDF
         public:
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
-            virtual bool Match(SdaiInstance inst) override;
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             IdsValue   m_name;
@@ -194,7 +208,8 @@ namespace RDF
         public:
             FacetProperty(_xml::_element& elem, Context& ctx);
 
-            virtual bool Match(SdaiInstance inst) override;
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             IdsValue m_propertySet;
@@ -210,7 +225,8 @@ namespace RDF
         public:
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
-            virtual bool Match(SdaiInstance inst) override;
+            virtual void Reset() override;
+            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
             IdsValue m_value;
@@ -223,8 +239,8 @@ namespace RDF
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
-
-            bool Match(SdaiInstance inst);
+            void Reset() { for (auto f : m_facets) { if (f) f->Reset(); } }
+            bool Match(SdaiModel model, SdaiInstance inst);
 
         private:
             void Read_entity(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetEntity(elem, ctx)); }
@@ -266,7 +282,7 @@ namespace RDF
             Specification(_xml::_element& elem, Context& ctx);
 
         public:
-            void Reset() { m_wasMatch = false; m_suitableIfcVersion = -1; };
+            void Reset();
             bool Check(SdaiModel model, SdaiInstance inst, Context& ctx);
             bool CheckUsed(SdaiModel model, Context& ctx);
 
