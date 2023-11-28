@@ -645,3 +645,202 @@ bool FacetEntity::Match(SdaiModel model, SdaiInstance inst)
     //
     return true;
 }
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::Reset()
+{
+    m_entity.Reset();
+    m_navigations.clear();
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetPartOf::Match(SdaiModel model, SdaiInstance inst)
+{
+    if (m_navigations.empty()) {
+        FillParentsNavigators(model);
+    }
+
+    std::list<SdaiInstance> toCheckParents;
+    toCheckParents.push_back(inst);
+
+    while (!toCheckParents.empty()) {
+        
+        inst = toCheckParents.front();
+        toCheckParents.pop_front();
+
+        for (auto& nav : m_navigations) {
+            std::list<SdaiInstance> follow;
+            nav->Follow(model, inst, follow);
+            for (auto parent : follow) {
+                if (m_entity.Match(model, parent)) {
+                    return true; //>>>>>>>>>>>>>>>>>>>>>>>>>
+                }
+                toCheckParents.push_back(parent);
+            }
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::FillParentsNavigators(SdaiModel model)
+{
+    if (m_relation.empty()) {
+        CreateNavigatorByAttributes(model, "IfcObjectDefinition",             "IsDecomposedBy",   sdaiAGGR,       "IfcRelDecomposes",     false,  "RelatingObject");
+        CreateNavigatorByAttributes(model, "IfcObjectDefinition",             "HasAssignments",   sdaiAGGR,       "IFCRELASSIGNSTOGROUP", true,   "RelatedGroup");
+        CreateNavigatorByAttributes(model, "IfcFeatureElementSubtraction",    "VoidsElements",    sdaiINSTANCE,   "IfcRelVoidsElement",   false,  "RelatingBuildingElement");
+        CreateNavigatorByAttributes(model, "IfcElement",                      "FillsVoids",       sdaiAGGR,       "IFCRELFILLSELEMENT",   false,  "RelatingOpeningElement");
+
+        CreateNavigatorByRelation(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements");
+    }
+    else if (m_relation == "IFCRELAGGREGATES") {
+        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELAGGREGATES", true, "RelatingObject");
+    }
+    else if (m_relation == "IFCRELNESTS") {
+        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELNESTS", true, "RelatingObject");
+    }
+    else if (m_relation == "IFCRELASSIGNSTOGROUP") {
+        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "HasAssignments", sdaiAGGR, "IFCRELASSIGNSTOGROUP", true, "RelatedGroup");
+    }
+    else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
+        CreateNavigatorByRelation(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements");
+    }
+    else if (m_relation == "IFCRELVOIDSELEMENT") {
+        CreateNavigatorByAttributes(model, "IfcFeatureElementSubtraction","VoidsElements", sdaiINSTANCE, "IFCRELVOIDSELEMENT", false, "RelatingBuildingElement");
+    }
+    else if (m_relation == "IFCRELFILLSELEMENT") {
+        CreateNavigatorByAttributes(model, "IfcElement", "FillsVoids", sdaiAGGR, "IFCRELFILLSELEMENT", false, "RelatingOpeningElement");
+    }
+    else {
+        assert(0); //unsupported relationship?
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::CreateNavigatorByAttributes(SdaiModel model, const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent)
+{
+    auto nav = new NavigateByAttributes ();
+    m_navigations.push_back(nav);
+
+    auto srcEntity = sdaiGetEntity(model, srcClass);
+    assert(srcEntity);
+    nav->attrRelation = sdaiGetAttrDefinition(srcEntity, attrRelation);
+    assert(nav->attrRelation);
+
+    nav->sdaiType = sdaiType;
+
+    auto relEntity = sdaiGetEntity(model, relClass);
+    assert(relEntity);
+
+    if (restrict) {
+        nav->relClass = relEntity;
+    }
+    else {
+        nav->relClass = 0;
+    }
+
+    nav->attrInstance = sdaiGetAttrDefinition(relEntity, attrParent);
+    assert(nav->attrInstance);
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::CreateNavigatorByRelation(SdaiModel model, const char* relClass, const char* attrParent, const char* attrChildren)
+{
+    auto rel = new NavigateByRelation();
+    m_navigations.push_back(rel);
+
+    rel->relClass = sdaiGetEntity(model, relClass);
+    assert(rel->relClass);
+
+    rel->attrParent = sdaiGetAttrDefinition(rel->relClass, attrParent);
+    assert(rel->attrParent);
+
+    rel->attrChildren = sdaiGetAttrDefinition(rel->relClass, attrChildren);
+    assert(rel->attrChildren);
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::NavigateByAttributes::Follow(SdaiModel, SdaiInstance inst, std::list<SdaiInstance>& follow)
+{
+    if (sdaiType == sdaiAGGR) {
+        SdaiAggr aggr = 0;
+        sdaiGetAttr(inst, attrRelation, sdaiAGGR, &aggr);
+        if (aggr) {
+            int i = 0;
+            SdaiInstance rel = 0;
+            while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &rel)) {
+                FollowRel(rel, follow);
+            }
+        }
+    }
+    else {
+        SdaiInstance rel = 0;
+        sdaiGetAttr(inst, attrRelation, sdaiINSTANCE, &rel);
+        FollowRel(rel, follow);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::NavigateByAttributes::FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow)
+{
+    if (!rel) {
+        return;
+    }
+    
+    if (relClass) {
+        if (!sdaiIsInstanceOf(rel, relClass)) {
+            return;
+        }
+    }
+
+    SdaiInstance inst;
+    sdaiGetAttr(rel, attrInstance, sdaiINSTANCE, &inst);
+    
+    if (inst) {
+        follow.push_back(inst);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetPartOf::NavigateByRelation::Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow)
+{
+    auto ext = xxxxGetEntityAndSubTypesExtent(model, relClass);
+
+    SdaiInstance rel = 0;
+    int_t i = 0;
+    while (sdaiGetAggrByIndex(ext, i++, sdaiINSTANCE, &rel)) {
+        SdaiAggr aggr = 0;
+        sdaiGetAttr(rel, attrChildren, sdaiAGGR, &aggr);
+        if (aggr) {
+            SdaiInstance ai;
+            int_t j = 0;
+            while (sdaiGetAggrByIndex(aggr, j++, sdaiINSTANCE, &ai)) {
+                if (ai = inst) {
+                    SdaiInstance f = 0;
+                    sdaiGetAttr(rel, attrParent, sdaiINSTANCE, &f);
+                    if (f) {
+                        follow.push_back(f);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+}

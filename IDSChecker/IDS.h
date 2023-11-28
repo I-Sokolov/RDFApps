@@ -30,11 +30,14 @@ namespace RDF
         template <typename T> class OwningPtrList : public std::list<T*>
         {
         public:
-            ~OwningPtrList()
+            ~OwningPtrList() { clear(); }
+
+            void clear ()
             {
                 for (auto p : *this) {
                     delete p;
                 }
+                std::list<T*>::clear();
             }
         };
 
@@ -123,11 +126,11 @@ namespace RDF
         protected:
             void Read(_xml::_element& elem, Context& ctx);
 
-        private:
+        protected:
             std::string m_minOccurs;
             std::string m_maxOccurs;
             std::string m_datatype;
-            std::string m_relation;
+            std::string m_relation; //for partOf
         };
 
         /// <summary>
@@ -165,7 +168,42 @@ namespace RDF
             virtual bool Match(SdaiModel model, SdaiInstance inst) override;
 
         private:
-            FacetEntity  m_entity;
+            struct Navigator
+            {
+                virtual ~Navigator() {}
+                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) = 0;
+            };
+            typedef OwningPtrList<Navigator> Navigators;
+
+            struct NavigateByAttributes : public Navigator
+            {
+                SdaiAttr    attrRelation;
+                int_t       sdaiType;
+                SdaiEntity  relClass;
+                SdaiAttr    attrInstance;
+
+                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) override;
+            private:
+                void FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow);
+            };
+
+            struct NavigateByRelation : public Navigator
+            {
+                SdaiEntity  relClass;
+                SdaiAttr    attrParent;
+                SdaiAttr    attrChildren;
+
+                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) override;
+            };
+
+        private:
+            void FillParentsNavigators(SdaiModel model);
+            void CreateNavigatorByAttributes(SdaiModel model, const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent);
+            void CreateNavigatorByRelation(SdaiModel model, const char* relClass, const char* attrParent, const char* attrChildren);
+
+        private:
+            FacetEntity         m_entity;
+            Navigators          m_navigations;
         };
 
         /// <summary>
