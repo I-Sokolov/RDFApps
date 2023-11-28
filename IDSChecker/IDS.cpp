@@ -107,6 +107,7 @@ public:
     MsgLevel    msgLevel;
     bool        stopAtFirstError;
 
+    SdaiModel       model = 0;
     SdaiInstance    currentInstane = 0;
     Specification*  currentSpecification = nullptr;
 };
@@ -426,19 +427,18 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
 
     Context ctx(*output, msgLevel, stopAtFirstError);
 
-    SdaiModel model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
-    if (model) {
-
-        ok = CheckInstances(model, ctx);
+    ctx.model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
+    if (ctx.model) {       
+        ok = CheckInstances(ctx);
 
         if (ok || !ctx.stopAtFirstError) {
-            if (!CheckSpecificationsUsed(model, ctx)) {
+            if (!CheckSpecificationsUsed(ctx)) {
                 ok = false;
             }
         }
 
-        sdaiCloseModel(model);
-        model = 0;
+        sdaiCloseModel(ctx.model);
+        ctx.model = 0;
     }
     else {
         LogMsg(ctx, MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
@@ -451,11 +451,11 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
 /// <summary>
 /// 
 /// </summary>
-bool File::CheckInstances(SdaiModel model, Context& ctx)
+bool File::CheckInstances(Context& ctx)
 {
     bool ok = true;
 
-    auto aggr = xxxxGetAllInstances(model);
+    auto aggr = xxxxGetAllInstances(ctx.model);
     int i = 0;
     SdaiInstance inst = 0;
     while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &inst)) {
@@ -467,7 +467,7 @@ bool File::CheckInstances(SdaiModel model, Context& ctx)
 
                 ctx.currentSpecification = spec;
 
-                if (!spec->Check(model, inst, ctx)) {
+                if (!spec->Check(inst, ctx)) {
                     ok = false;
                 }
 
@@ -486,7 +486,7 @@ bool File::CheckInstances(SdaiModel model, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool File::CheckSpecificationsUsed(SdaiModel model, Context& ctx)
+bool File::CheckSpecificationsUsed(Context& ctx)
 {
     bool ok = true;
 
@@ -495,7 +495,7 @@ bool File::CheckSpecificationsUsed(SdaiModel model, Context& ctx)
 
             ctx.currentSpecification = spec;
 
-            if (!spec->CheckUsed(model, ctx)) {
+            if (!spec->CheckUsed(ctx)) {
                 ok = false;
             }
 
@@ -525,15 +525,15 @@ void Specification::Reset()
 /// <summary>
 /// 
 /// </summary>
-bool Specification::Check(SdaiModel model, SdaiInstance inst, Context& ctx)
+bool Specification::Check(SdaiInstance inst, Context& ctx)
 {
     bool ok = true;
 
-    if (SuitableIfcVersion(model)) {
-        if (m_applicability.Match(model, inst)) {
+    if (SuitableIfcVersion(ctx)) {
+        if (m_applicability.Match(inst, ctx)) {
             m_wasMatch = true;
             
-            ok = m_requirements.Match(model, inst);
+            ok = m_requirements.Match(inst, ctx);
 
             if (ok) {
                 LogMsg(ctx, MsgLevel::Info, "Checked ok");
@@ -550,11 +550,11 @@ bool Specification::Check(SdaiModel model, SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool Specification::CheckUsed(SdaiModel model, Context& ctx)
+bool Specification::CheckUsed(Context& ctx)
 {
     bool ok = true;
 
-    if (SuitableIfcVersion(model) && IsRequired()) {
+    if (SuitableIfcVersion(ctx) && IsRequired()) {
         
         ok = m_wasMatch;
         
@@ -573,10 +573,10 @@ bool Specification::CheckUsed(SdaiModel model, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool Facets::Match(SdaiModel model, SdaiInstance inst)
+bool Facets::Match(SdaiInstance inst, Context& ctx)
 {
     for (auto facet : m_facets) {
-        if (!facet->Match(model, inst)) {
+        if (!facet->Match(inst, ctx)) {
             return false;
         }
     }
@@ -595,7 +595,7 @@ void FacetEntity::Reset()
 /// <summary>
 /// 
 /// </summary>
-bool FacetEntity::Match(SdaiModel model, SdaiInstance inst)
+bool FacetEntity::Match(SdaiInstance inst, Context& ctx)
 {
     // check entity name
     //
@@ -605,7 +605,7 @@ bool FacetEntity::Match(SdaiModel model, SdaiInstance inst)
 
     if (auto name = m_name.GetSimpleValue()) {
         if (!m_sdaiEntity) {
-            m_sdaiEntity = sdaiGetEntity(model, name);
+            m_sdaiEntity = sdaiGetEntity(ctx.model, name);
         }
         entityNameMatch = (instType == m_sdaiEntity);
     }
@@ -658,10 +658,10 @@ void FacetPartOf::Reset()
 /// <summary>
 /// 
 /// </summary>
-bool FacetPartOf::Match(SdaiModel model, SdaiInstance inst)
+bool FacetPartOf::Match(SdaiInstance inst, Context& ctx)
 {
     if (m_navigations.empty()) {
-        FillParentsNavigators(model);
+        FillParentsNavigators(ctx);
     }
 
     std::list<SdaiInstance> toCheckParents;
@@ -674,9 +674,9 @@ bool FacetPartOf::Match(SdaiModel model, SdaiInstance inst)
 
         for (auto& nav : m_navigations) {
             std::list<SdaiInstance> follow;
-            nav->Follow(model, inst, follow);
+            nav->Follow(inst, follow, ctx);
             for (auto parent : follow) {
-                if (m_entity.Match(model, parent)) {
+                if (m_entity.Match(parent, ctx)) {
                     return true; //>>>>>>>>>>>>>>>>>>>>>>>>>
                 }
                 toCheckParents.push_back(parent);
@@ -690,55 +690,56 @@ bool FacetPartOf::Match(SdaiModel model, SdaiInstance inst)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::FillParentsNavigators(SdaiModel model)
+void FacetPartOf::FillParentsNavigators(Context& ctx)
 {
     if (m_relation.empty()) {
-        CreateNavigatorByAttributes(model, "IfcObjectDefinition",             "IsDecomposedBy",   sdaiAGGR,       "IfcRelDecomposes",     false,  "RelatingObject");
-        CreateNavigatorByAttributes(model, "IfcObjectDefinition",             "HasAssignments",   sdaiAGGR,       "IFCRELASSIGNSTOGROUP", true,   "RelatedGroup");
-        CreateNavigatorByAttributes(model, "IfcFeatureElementSubtraction",    "VoidsElements",    sdaiINSTANCE,   "IfcRelVoidsElement",   false,  "RelatingBuildingElement");
-        CreateNavigatorByAttributes(model, "IfcElement",                      "FillsVoids",       sdaiAGGR,       "IFCRELFILLSELEMENT",   false,  "RelatingOpeningElement");
+        CreateNavigatorByAttributes("IfcObjectDefinition",             "IsDecomposedBy",   sdaiAGGR,       "IfcRelDecomposes",     false,  "RelatingObject", ctx);
+        CreateNavigatorByAttributes("IfcObjectDefinition",             "HasAssignments",   sdaiAGGR,       "IFCRELASSIGNSTOGROUP", true,   "RelatedGroup", ctx);
+        CreateNavigatorByAttributes("IfcFeatureElementSubtraction",    "VoidsElements",    sdaiINSTANCE,   "IfcRelVoidsElement",   false,  "RelatingBuildingElement", ctx);
+        CreateNavigatorByAttributes("IfcElement",                      "FillsVoids",       sdaiAGGR,       "IFCRELFILLSELEMENT",   false,  "RelatingOpeningElement", ctx);
 
-        CreateNavigatorByRelation(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements");
+        CreateNavigatorByRelation("IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements", ctx);
     }
     else if (m_relation == "IFCRELAGGREGATES") {
-        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELAGGREGATES", true, "RelatingObject");
+        CreateNavigatorByAttributes("IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELAGGREGATES", true, "RelatingObject", ctx);
     }
     else if (m_relation == "IFCRELNESTS") {
-        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELNESTS", true, "RelatingObject");
+        CreateNavigatorByAttributes("IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELNESTS", true, "RelatingObject", ctx);
     }
     else if (m_relation == "IFCRELASSIGNSTOGROUP") {
-        CreateNavigatorByAttributes(model, "IfcObjectDefinition", "HasAssignments", sdaiAGGR, "IFCRELASSIGNSTOGROUP", true, "RelatedGroup");
+        CreateNavigatorByAttributes("IfcObjectDefinition", "HasAssignments", sdaiAGGR, "IFCRELASSIGNSTOGROUP", true, "RelatedGroup", ctx);
     }
     else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
-        CreateNavigatorByRelation(model, "IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements");
+        CreateNavigatorByRelation("IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements", ctx);
     }
     else if (m_relation == "IFCRELVOIDSELEMENT") {
-        CreateNavigatorByAttributes(model, "IfcFeatureElementSubtraction","VoidsElements", sdaiINSTANCE, "IFCRELVOIDSELEMENT", false, "RelatingBuildingElement");
+        CreateNavigatorByAttributes("IfcFeatureElementSubtraction","VoidsElements", sdaiINSTANCE, "IFCRELVOIDSELEMENT", false, "RelatingBuildingElement", ctx);
     }
     else if (m_relation == "IFCRELFILLSELEMENT") {
-        CreateNavigatorByAttributes(model, "IfcElement", "FillsVoids", sdaiAGGR, "IFCRELFILLSELEMENT", false, "RelatingOpeningElement");
+        CreateNavigatorByAttributes("IfcElement", "FillsVoids", sdaiAGGR, "IFCRELFILLSELEMENT", false, "RelatingOpeningElement", ctx);
     }
     else {
-        assert(0); //unsupported relationship?
+        LogMsg(ctx, MsgLevel::Error, "Unsupported relationship %s", m_relation.c_str());
+        assert(0);
     }
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByAttributes(SdaiModel model, const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent)
+void FacetPartOf::CreateNavigatorByAttributes(const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent, Context& ctx)
 {
     auto nav = new NavigateByAttributes ();
     m_navigations.push_back(nav);
 
-    auto srcEntity = sdaiGetEntity(model, srcClass);
+    auto srcEntity = sdaiGetEntity(ctx.model, srcClass);
     assert(srcEntity);
     nav->attrRelation = sdaiGetAttrDefinition(srcEntity, attrRelation);
     assert(nav->attrRelation);
 
     nav->sdaiType = sdaiType;
 
-    auto relEntity = sdaiGetEntity(model, relClass);
+    auto relEntity = sdaiGetEntity(ctx.model, relClass);
     assert(relEntity);
 
     if (restrict) {
@@ -755,12 +756,12 @@ void FacetPartOf::CreateNavigatorByAttributes(SdaiModel model, const char* srcCl
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByRelation(SdaiModel model, const char* relClass, const char* attrParent, const char* attrChildren)
+void FacetPartOf::CreateNavigatorByRelation(const char* relClass, const char* attrParent, const char* attrChildren, Context& ctx)
 {
     auto rel = new NavigateByRelation();
     m_navigations.push_back(rel);
 
-    rel->relClass = sdaiGetEntity(model, relClass);
+    rel->relClass = sdaiGetEntity(ctx.model, relClass);
     assert(rel->relClass);
 
     rel->attrParent = sdaiGetAttrDefinition(rel->relClass, attrParent);
@@ -773,7 +774,7 @@ void FacetPartOf::CreateNavigatorByRelation(SdaiModel model, const char* relClas
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::NavigateByAttributes::Follow(SdaiModel, SdaiInstance inst, std::list<SdaiInstance>& follow)
+void FacetPartOf::NavigateByAttributes::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context&)
 {
     if (sdaiType == sdaiAGGR) {
         SdaiAggr aggr = 0;
@@ -819,9 +820,9 @@ void FacetPartOf::NavigateByAttributes::FollowRel(SdaiInstance rel, std::list<Sd
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::NavigateByRelation::Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow)
+void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx)
 {
-    auto ext = xxxxGetEntityAndSubTypesExtent(model, relClass);
+    auto ext = xxxxGetEntityAndSubTypesExtent(ctx.model, relClass);
 
     SdaiInstance rel = 0;
     int_t i = 0;
@@ -844,3 +845,4 @@ void FacetPartOf::NavigateByRelation::Follow(SdaiModel model, SdaiInstance inst,
         }
     }
 }
+

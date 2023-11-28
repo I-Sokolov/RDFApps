@@ -117,7 +117,7 @@ namespace RDF
             virtual ~Facet() {}
 
             virtual void Reset() = 0;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) = 0;
+            virtual bool Match(SdaiInstance inst, Context& ctx) = 0;
 
         protected:
             Facet() {}
@@ -146,7 +146,7 @@ namespace RDF
             void Read(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_name;
@@ -165,13 +165,13 @@ namespace RDF
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             struct Navigator
             {
                 virtual ~Navigator() {}
-                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) = 0;
+                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) = 0;
             };
             typedef OwningPtrList<Navigator> Navigators;
 
@@ -182,7 +182,7 @@ namespace RDF
                 SdaiEntity  relClass;
                 SdaiAttr    attrInstance;
 
-                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) override;
+                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
             private:
                 void FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow);
             };
@@ -193,13 +193,13 @@ namespace RDF
                 SdaiAttr    attrParent;
                 SdaiAttr    attrChildren;
 
-                virtual void Follow(SdaiModel model, SdaiInstance inst, std::list<SdaiInstance>& follow) override;
+                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
             };
 
         private:
-            void FillParentsNavigators(SdaiModel model);
-            void CreateNavigatorByAttributes(SdaiModel model, const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent);
-            void CreateNavigatorByRelation(SdaiModel model, const char* relClass, const char* attrParent, const char* attrChildren);
+            void FillParentsNavigators(Context& ctx);
+            void CreateNavigatorByAttributes(const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent, Context& ctx);
+            void CreateNavigatorByRelation(const char* relClass, const char* attrParent, const char* attrChildren, Context& ctx);
 
         private:
             FacetEntity         m_entity;
@@ -215,7 +215,7 @@ namespace RDF
             FacetClassification(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_value;
@@ -231,7 +231,7 @@ namespace RDF
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue   m_name;
@@ -247,7 +247,7 @@ namespace RDF
             FacetProperty(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_propertySet;
@@ -264,7 +264,7 @@ namespace RDF
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
             virtual void Reset() override;
-            virtual bool Match(SdaiModel model, SdaiInstance inst) override;
+            virtual bool Match(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_value;
@@ -278,7 +278,7 @@ namespace RDF
         public:
             void Read(_xml::_element& elem, Context& ctx);
             void Reset() { for (auto f : m_facets) { if (f) f->Reset(); } }
-            bool Match(SdaiModel model, SdaiInstance inst);
+            bool Match(SdaiInstance inst, Context& ctx);
 
         private:
             void Read_entity(_xml::_element& elem, Context& ctx) { m_facets.push_back(new FacetEntity(elem, ctx)); }
@@ -321,11 +321,11 @@ namespace RDF
 
         public:
             void Reset();
-            bool Check(SdaiModel model, SdaiInstance inst, Context& ctx);
-            bool CheckUsed(SdaiModel model, Context& ctx);
+            bool Check(SdaiInstance inst, Context& ctx);
+            bool CheckUsed(Context& ctx);
 
         private:
-            bool SuitableIfcVersion(SdaiModel model);
+            bool SuitableIfcVersion(Context& ctx);
             bool IsRequired();
 
         private:
@@ -368,8 +368,8 @@ namespace RDF
             bool Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output = nullptr);
 
         private:
-            bool CheckInstances(SdaiModel model, Context& ctx);
-            bool CheckSpecificationsUsed (SdaiModel model, Context& ctx);
+            bool CheckInstances(Context& ctx);
+            bool CheckSpecificationsUsed (Context& ctx);
 
         private:
             void Read(_xml::_element& elem, Context& ctx);
