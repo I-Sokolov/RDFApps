@@ -116,14 +116,14 @@ namespace RDF
         public:
             virtual ~Facet() {}
 
-            void Reset();
+            void ResetCache();
             bool Match(SdaiInstance inst, Context& ctx);
 
         protected:
             Facet() {}
             Facet(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
 
-            virtual void ResetImpl() = 0;
+            virtual void ResetCacheImpl() = 0;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) = 0;
 
         protected:
@@ -149,7 +149,7 @@ namespace RDF
             void Read(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -169,7 +169,7 @@ namespace RDF
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -220,7 +220,7 @@ namespace RDF
             FacetClassification(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -237,7 +237,7 @@ namespace RDF
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -254,7 +254,7 @@ namespace RDF
             FacetProperty(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -272,7 +272,7 @@ namespace RDF
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetImpl() override;
+            virtual void ResetCacheImpl() override;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
@@ -286,7 +286,7 @@ namespace RDF
         {
         public:
             void Read(_xml::_element& elem, Context& ctx);
-            void Reset() { for (auto f : m_facets) { if (f) f->Reset(); } }
+            void ResetCache() { for (auto f : m_facets) { if (f) f->ResetCache(); } }
             bool Match(SdaiInstance inst, Context& ctx);
 
         private:
@@ -329,7 +329,7 @@ namespace RDF
             Specification(_xml::_element& elem, Context& ctx);
 
         public:
-            void Reset();
+            void ResetCache();
             bool Check(SdaiInstance inst, Context& ctx);
             bool CheckUsed(Context& ctx);
 

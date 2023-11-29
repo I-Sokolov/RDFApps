@@ -300,9 +300,9 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void Facet::Reset()
+void Facet::ResetCache()
 {
-    ResetImpl();
+    ResetCacheImpl();
 }
 
 /// <summary>
@@ -430,7 +430,7 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
 {
     for (auto spec : m_specifications) {
         if (spec) {
-            spec->Reset();
+            spec->ResetCache();
         }
     }
      
@@ -529,13 +529,13 @@ bool File::CheckSpecificationsUsed(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void Specification::Reset() 
+void Specification::ResetCache() 
 { 
     m_wasMatch = false; 
     m_suitableIfcVersion = -1; 
 
-    m_applicability.Reset();
-    m_requirements.Reset();
+    m_applicability.ResetCache();
+    m_requirements.ResetCache();
 };
 
 /// <summary>
@@ -602,7 +602,7 @@ bool Facets::Match(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetEntity::ResetImpl()
+void FacetEntity::ResetCacheImpl()
 {
     m_sdaiEntity = 0;
     m_attrPredefinedType = 0;
@@ -665,9 +665,9 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::ResetImpl()
+void FacetPartOf::ResetCacheImpl()
 {
-    m_entity.Reset();
+    m_entity.ResetCache();
     m_navigations.clear();
 }
 
