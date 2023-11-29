@@ -147,14 +147,33 @@ public:
     bool        stopAtFirstError;
 
     SdaiModel       model = 0;
-    SdaiInstance    currentInstane = 0;
-    Specification*  currentSpecification = nullptr;
+    SdaiInstance    currentInstane = 0;    Specification*  currentSpecification = nullptr;
 
+    CONTEXT_ENTITY_CACHE(IfcObjectDefinition);
     CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
     CONTEXT_ENTITY_CACHE(IfcClassificationReference);
     CONTEXT_ENTITY_CACHE(IfcClassification);
+    CONTEXT_ENTITY_CACHE(IfcRelDecomposes);
+    CONTEXT_ENTITY_CACHE(IfcRelAssignsToGroup);
+    CONTEXT_ENTITY_CACHE(IfcFeatureElementSubtraction);
+    CONTEXT_ENTITY_CACHE(IfcRelVoidsElement);
+    CONTEXT_ENTITY_CACHE(IfcElement);
+    CONTEXT_ENTITY_CACHE(IfcRelFillsElement);
+    CONTEXT_ENTITY_CACHE(IfcRelContainedInSpatialStructure);
+    CONTEXT_ENTITY_CACHE(IfcRelAggregates);
+    CONTEXT_ENTITY_CACHE(IfcRelNests);
 
+    CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
+    CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
     CONTEXT_ATTRIBUTE_CACHE(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
+    CONTEXT_ATTRIBUTE_CACHE(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);
+    CONTEXT_ATTRIBUTE_CACHE(IfcElement, FillsVoids, IfcElement_FillsVoids);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
 };
 
 /// <summary>
@@ -754,30 +773,34 @@ bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
 void FacetPartOf::FillParentsNavigators(Context& ctx)
 {
     if (m_relation.empty()) {
-        CreateNavigatorByAttributes("IfcObjectDefinition",             "IsDecomposedBy",   sdaiAGGR,       "IfcRelDecomposes",     false,  "RelatingObject", ctx);
-        CreateNavigatorByAttributes("IfcObjectDefinition",             "HasAssignments",   sdaiAGGR,       "IFCRELASSIGNSTOGROUP", true,   "RelatedGroup", ctx);
-        CreateNavigatorByAttributes("IfcFeatureElementSubtraction",    "VoidsElements",    sdaiINSTANCE,   "IfcRelVoidsElement",   false,  "RelatingBuildingElement", ctx);
-        CreateNavigatorByAttributes("IfcElement",                      "FillsVoids",       sdaiAGGR,       "IFCRELFILLSELEMENT",   false,  "RelatingOpeningElement", ctx);
+        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, NULL, ctx._IfcRelDecomposes_RelatingObject(), ctx);
+        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
+        CreateNavigatorByAttributes(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
+        CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
 
-        CreateNavigatorByRelation("IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements", ctx);
+        CreateNavigatorByRelation(ctx._IfcRelContainedInSpatialStructure(),
+                                  ctx._IfcRelContainedInSpatialStructure_RelatingStructure(),
+                                  ctx._IfcRelContainedInSpatialStructure_RelatedElements(), ctx);
     }
     else if (m_relation == "IFCRELAGGREGATES") {
-        CreateNavigatorByAttributes("IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELAGGREGATES", true, "RelatingObject", ctx);
+        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
     }
     else if (m_relation == "IFCRELNESTS") {
-        CreateNavigatorByAttributes("IfcObjectDefinition", "IsDecomposedBy", sdaiAGGR, "IFCRELNESTS", true, "RelatingObject", ctx);
+        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
     }
     else if (m_relation == "IFCRELASSIGNSTOGROUP") {
-        CreateNavigatorByAttributes("IfcObjectDefinition", "HasAssignments", sdaiAGGR, "IFCRELASSIGNSTOGROUP", true, "RelatedGroup", ctx);
+        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
     }
     else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
-        CreateNavigatorByRelation("IFCRELCONTAINEDINSPATIALSTRUCTURE", "RelatingStructure", "RelatedElements", ctx);
+        CreateNavigatorByRelation(ctx._IfcRelContainedInSpatialStructure(),
+                                  ctx._IfcRelContainedInSpatialStructure_RelatingStructure(),
+                                  ctx._IfcRelContainedInSpatialStructure_RelatedElements(), ctx);
     }
     else if (m_relation == "IFCRELVOIDSELEMENT") {
-        CreateNavigatorByAttributes("IfcFeatureElementSubtraction","VoidsElements", sdaiINSTANCE, "IFCRELVOIDSELEMENT", false, "RelatingBuildingElement", ctx);
+        CreateNavigatorByAttributes(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
     }
     else if (m_relation == "IFCRELFILLSELEMENT") {
-        CreateNavigatorByAttributes("IfcElement", "FillsVoids", sdaiAGGR, "IFCRELFILLSELEMENT", false, "RelatingOpeningElement", ctx);
+        CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
     }
     else {
         LogMsg(ctx, MsgLevel::Error, "Unsupported relationship %s", m_relation.c_str());
@@ -788,48 +811,28 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByAttributes(const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent, Context& ctx)
+void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, int_t sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
 {
     auto nav = new NavigateByAttributes ();
     m_navigations.push_back(nav);
 
-    auto srcEntity = sdaiGetEntity(ctx.model, srcClass);
-    assert(srcEntity);
-    nav->attrRelation = sdaiGetAttrDefinition(srcEntity, attrRelation);
-    assert(nav->attrRelation);
-
+    nav->attrRelation = attrRelation;
     nav->sdaiType = sdaiType;
-
-    auto relEntity = sdaiGetEntity(ctx.model, relClass);
-    assert(relEntity);
-
-    if (restrict) {
-        nav->relClass = relEntity;
-    }
-    else {
-        nav->relClass = 0;
-    }
-
-    nav->attrInstance = sdaiGetAttrDefinition(relEntity, attrParent);
-    assert(nav->attrInstance);
+    nav->relClass = relClass;
+    nav->attrInstance = attrParent;
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByRelation(const char* relClass, const char* attrParent, const char* attrChildren, Context& ctx)
+void FacetPartOf::CreateNavigatorByRelation(SdaiEntity relClass, SdaiAttr attrParent, SdaiAttr attrChildren, Context&)
 {
     auto rel = new NavigateByRelation();
     m_navigations.push_back(rel);
 
-    rel->relClass = sdaiGetEntity(ctx.model, relClass);
-    assert(rel->relClass);
-
-    rel->attrParent = sdaiGetAttrDefinition(rel->relClass, attrParent);
-    assert(rel->attrParent);
-
-    rel->attrChildren = sdaiGetAttrDefinition(rel->relClass, attrChildren);
-    assert(rel->attrChildren);
+    rel->relClass = relClass;
+    rel->attrParent = attrParent;
+    rel->attrChildren = attrChildren;
 }
 
 /// <summary>

@@ -203,8 +203,8 @@ namespace RDF
 
         private:
             void FillParentsNavigators(Context& ctx);
-            void CreateNavigatorByAttributes(const char* srcClass, const char* attrRelation, int_t sdaiType, const char* relClass, bool restrict, const char* attrParent, Context& ctx);
-            void CreateNavigatorByRelation(const char* relClass, const char* attrParent, const char* attrChildren, Context& ctx);
+            void CreateNavigatorByAttributes(SdaiAttr attrRelation, int_t sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
+            void CreateNavigatorByRelation(SdaiEntity relClass, SdaiAttr attrParent, SdaiAttr attrChildren, Context& ctx);
 
         private:
             FacetEntity         m_entity;
