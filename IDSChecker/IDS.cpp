@@ -130,7 +130,7 @@ static void Dump(_xml::_element& elem)
 class RDF::IDS::Context
 {
 public:
-    enum class IfcVersion { Undef, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
+    enum class IfcVersion { NotItitialized, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
 
 public:
     Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
@@ -148,6 +148,9 @@ public:
 
     SdaiModel       model = 0;
     SdaiInstance    currentInstane = 0;    Specification*  currentSpecification = nullptr;
+
+private:
+    IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
 
     CONTEXT_ENTITY_CACHE(IfcObjectDefinition);
     CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
@@ -175,6 +178,35 @@ public:
     CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
     CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
 };
+
+/// <summary>
+/// 
+/// </summary>
+Context::IfcVersion Context::GetIfcVersion()
+{
+    if (m_ifcVersion == IfcVersion::NotItitialized) {
+        assert(model);
+        
+        const char* schemaName = nullptr;
+        GetSPFFHeaderItem(model, 9, 0, sdaiSTRING, &schemaName);
+        assert(schemaName);
+
+        if (strstr(schemaName, "IFC4x3")) {
+            m_ifcVersion = IfcVersion::Ifc4x3;
+        }
+        else if (strstr(schemaName, "IFC4")) {
+            m_ifcVersion = IfcVersion::Ifc4;
+        }
+        else if (strstr(schemaName, "IFC2x3")) {
+            m_ifcVersion = IfcVersion::Ifc2x3;
+        }
+        else {
+            m_ifcVersion = IfcVersion::Unsupported;
+            assert(0);
+        }
+    }
+    return m_ifcVersion;
+}
 
 /// <summary>
 /// 
