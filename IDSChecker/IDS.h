@@ -224,6 +224,11 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
+            bool ClassificationSelectMatch(SdaiInstance clsf, Context& ctx);
+            bool ClassificationReferenceMatch(SdaiInstance clsf, Context& ctx);
+            bool ClassificationMatch(SdaiInstance clsf, Context& ctx);
+
+        private:
             IdsValue m_value;
             IdsValue m_system;
         };

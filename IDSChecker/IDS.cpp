@@ -68,6 +68,38 @@ using namespace RDF::IDS;
             else { LogMsg(ctx, MsgLevel::Warning, "Unknown child element <%s>", tag.c_str()); } } }
 
 
+/// <summary>
+/// 
+/// </summary>
+#define CONTEXT_ENTITY_CACHE(EntityName)        \
+    private:                                    \
+        SdaiEntity m_entity##EntityName = 0;    \
+    public:                                     \
+        SdaiEntity _##EntityName()              \
+        {                                       \
+            if (!m_entity##EntityName) {        \
+                m_entity##EntityName = sdaiGetEntity(model, #EntityName);  \
+                assert(m_entity##EntityName);   \
+            }                                   \
+            return m_entity##EntityName;        \
+        }                                       
+
+/// <summary>
+/// 
+/// </summary>
+#define CONTEXT_ATTRIBUTE_CACHE(Ent,Attr,EntAttr)                       \
+    private:                                                            \
+        SdaiAttr    m_attribute_##EntAttr = 0;                          \
+    public:                                                             \
+        SdaiAttr    _##EntAttr ()                                       \
+        {                                                               \
+            if (!m_attribute_##EntAttr){                                \
+                auto ent = _##Ent();                                    \
+                m_attribute_##EntAttr = sdaiGetAttrDefinition(ent, #Attr);\
+                assert(m_attribute_##EntAttr);                          \
+            }                                                           \
+            return m_attribute_##EntAttr;                               \
+        }
 
 /// <summary>
 /// 
@@ -91,16 +123,23 @@ static void Dump(_xml::_element& elem)
     printf("   content: %s\n", cont.c_str());
 }
 
+
 /// <summary>
 /// 
 /// </summary>
 class RDF::IDS::Context
 {
 public:
+    enum class IfcVersion { Undef, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
+
+public:
     Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
         : console(con_), msgLevel(msgLevel_), stopAtFirstError(stopAtFirstError_)
     {}
     ~Context() {}
+
+public:
+    IfcVersion GetIfcVersion();
 
 public:
     Console&    console;
@@ -110,6 +149,12 @@ public:
     SdaiModel       model = 0;
     SdaiInstance    currentInstane = 0;
     Specification*  currentSpecification = nullptr;
+
+    CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
+    CONTEXT_ENTITY_CACHE(IfcClassificationReference);
+    CONTEXT_ENTITY_CACHE(IfcClassification);
+
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
 };
 
 /// <summary>
@@ -623,10 +668,10 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
         if (!m_sdaiEntity) {
             m_sdaiEntity = sdaiGetEntity(ctx.model, name);
         }
-        entityNameMatch = (instType == m_sdaiEntity);
+        entityNameMatch = sdaiIsInstanceOf (instType, m_sdaiEntity);
     }
     else {
-        assert(!"to test");
+        assert(!"to test, do we need polymorphic match");
         auto instTypeName = engiGetEntityName(instType, sdaiSTRING);
         entityNameMatch = m_name.Match(instTypeName, true);
     }
@@ -862,3 +907,72 @@ void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiIn
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+void FacetClassification::ResetCacheImpl()
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
+{
+    SdaiAggr aggrAssoc = 0;
+    sdaiGetAttrBN(inst, "HasAssociations", sdaiAGGR, &aggrAssoc);
+
+    SdaiInstance relAssoc = 0;
+    int_t i = 0;
+    while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
+
+        if (sdaiIsInstanceOf(relAssoc, ctx._IfcRelAssociatesClassification())) {
+
+            SdaiInstance clsf = 0;
+            sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
+            if (clsf) {
+                if (ClassificationSelectMatch(clsf, ctx)) {
+                    return true; //>>>>>>>>>>>>>>>>>>>>>>>>
+                }
+            }
+        }
+    }
+    
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::ClassificationSelectMatch(SdaiInstance clsf, Context& ctx)
+{
+    auto clsfType = sdaiGetInstanceType(clsf);
+    if (clsfType == ctx._IfcClassificationReference() /*sdaiIsInstanceOf(clsf, ctx._IfcClassificationReference())*/) {
+        return ClassificationReferenceMatch(clsf, ctx); //>>
+    }
+
+    if (clsfType == ctx._IfcClassification() /*sdaiIsInstanceOf(clsf, ctx._IfcClassification())*/) {
+        return ClassificationMatch(clsf, ctx);
+    }
+
+    auto clsfTypeName = engiGetEntityName(clsfType, sdaiSTRING);
+    assert(clsfTypeName);
+    LogMsg(ctx, MsgLevel::Error, "Not implemented IfcClassificationSelect type %s", clsfTypeName ? clsfTypeName : NULL);
+ 
+    assert(0);
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::ClassificationReferenceMatch(SdaiInstance clsf, Context& ctx)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::ClassificationMatch(SdaiInstance clsf, Context& ctx)
+{
+}
