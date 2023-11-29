@@ -300,6 +300,22 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
+void Facet::Reset()
+{
+    ResetImpl();
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool Facet::Match(SdaiInstance inst, Context& ctx)
+{
+    return MatchImpl(inst, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
 void FacetEntity::Read(_xml::_element& elem, Context& ctx)
 {
     Facet::Read(elem, ctx);
@@ -586,7 +602,7 @@ bool Facets::Match(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetEntity::Reset()
+void FacetEntity::ResetImpl()
 {
     m_sdaiEntity = 0;
     m_attrPredefinedType = 0;
@@ -595,7 +611,7 @@ void FacetEntity::Reset()
 /// <summary>
 /// 
 /// </summary>
-bool FacetEntity::Match(SdaiInstance inst, Context& ctx)
+bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     // check entity name
     //
@@ -649,7 +665,7 @@ bool FacetEntity::Match(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::Reset()
+void FacetPartOf::ResetImpl()
 {
     m_entity.Reset();
     m_navigations.clear();
@@ -658,7 +674,7 @@ void FacetPartOf::Reset()
 /// <summary>
 /// 
 /// </summary>
-bool FacetPartOf::Match(SdaiInstance inst, Context& ctx)
+bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     if (m_navigations.empty()) {
         FillParentsNavigators(ctx);

@@ -116,12 +116,15 @@ namespace RDF
         public:
             virtual ~Facet() {}
 
-            virtual void Reset() = 0;
-            virtual bool Match(SdaiInstance inst, Context& ctx) = 0;
+            void Reset();
+            bool Match(SdaiInstance inst, Context& ctx);
 
         protected:
             Facet() {}
             Facet(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
+
+            virtual void ResetImpl() = 0;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) = 0;
 
         protected:
             void Read(_xml::_element& elem, Context& ctx);
@@ -145,8 +148,9 @@ namespace RDF
 
             void Read(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_name;
@@ -164,8 +168,9 @@ namespace RDF
         public:
             FacetPartOf(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             struct Navigator
@@ -214,8 +219,9 @@ namespace RDF
         public:
             FacetClassification(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_value;
@@ -230,8 +236,9 @@ namespace RDF
         public:
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue   m_name;
@@ -246,8 +253,9 @@ namespace RDF
         public:
             FacetProperty(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_propertySet;
@@ -263,8 +271,9 @@ namespace RDF
         public:
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
-            virtual void Reset() override;
-            virtual bool Match(SdaiInstance inst, Context& ctx) override;
+        protected:
+            virtual void ResetImpl() override;
+            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue m_value;
