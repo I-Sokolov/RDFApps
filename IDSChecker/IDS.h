@@ -96,7 +96,7 @@ namespace RDF
 
             bool IsSet() { return m_isSet; }
             const char* GetSimpleValue() { if (m_isSet && m_restrictions.empty()) return m_simpleValue.c_str(); else return nullptr; }
-            bool Match(const char* value, bool compareNoCase) { assert(!"Todo"); return false; }
+            bool Match(const char* value, bool compareNoCase);
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
@@ -224,13 +224,20 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
-            bool ClassificationSelectMatch(SdaiInstance clsf, Context& ctx);
-            bool ClassificationReferenceMatch(SdaiInstance clsf, Context& ctx);
-            bool ClassificationMatch(SdaiInstance clsf, Context& ctx);
+            void HandleClassificationSelect(SdaiInstance clsf, Context& ctx);
+            void HandleClassificationReference(SdaiInstance clsf, Context& ctx);
+            void HandleClassification(SdaiInstance clsf, Context& ctx);
+            void HandleClassificationNotation(SdaiInstance clsf, Context& ctx);
 
         private:
             IdsValue m_value;
             IdsValue m_system;
+            IdsValue m_URI;
+
+            bool m_valueMatch = false;
+            bool m_systemMatch = false;
+            bool m_uriMatch = false;
+
         };
 
         /// <summary>
@@ -370,7 +377,7 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
-        enum class MsgLevel { All, Info, Warning, Error };
+        enum class MsgLevel { All, Info, Warning, Error, NotImplemented };
 
         /// <summary>
         /// 

@@ -155,7 +155,9 @@ private:
     CONTEXT_ENTITY_CACHE(IfcObjectDefinition);
     CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
     CONTEXT_ENTITY_CACHE(IfcClassificationReference);
+    CONTEXT_ENTITY_CACHE(IfcExternalReference);
     CONTEXT_ENTITY_CACHE(IfcClassification);
+    CONTEXT_ENTITY_CACHE(IfcClassificationNotation);
     CONTEXT_ENTITY_CACHE(IfcRelDecomposes);
     CONTEXT_ENTITY_CACHE(IfcRelAssignsToGroup);
     CONTEXT_ENTITY_CACHE(IfcFeatureElementSubtraction);
@@ -177,6 +179,14 @@ private:
     CONTEXT_ATTRIBUTE_CACHE(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
     CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
     CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
+    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, Identification, IfcExternalReference_Identification);
+    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, ItemReference, IfcExternalReference_ItemReference);
+    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, Location, IfcExternalReference_Location);
+    CONTEXT_ATTRIBUTE_CACHE(IfcClassificationReference, ReferencedSource, IfcClassificationReference_ReferencedSource);
+    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Name, IfcClassification_Name);
+    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Location, IfcClassification_Location);
+    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Specification, IfcClassification_Specification);
+    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Source, IfcClassification_Source);
 };
 
 /// <summary>
@@ -439,6 +449,7 @@ FacetClassification::FacetClassification(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD_MEMBER(value)
     NEXT_CHILD_MEMBER(system)
+    NEXT_CHILD_MEMBER(URI)
     END_CHILDREN
 }
 
@@ -835,7 +846,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
         CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
     }
     else {
-        LogMsg(ctx, MsgLevel::Error, "Unsupported relationship %s", m_relation.c_str());
+        LogMsg(ctx, MsgLevel::NotImplemented, "Unsupported relationship %s", m_relation.c_str());
         assert(0);
     }
 }
@@ -954,20 +965,33 @@ void FacetClassification::ResetCacheImpl()
 /// </summary>
 bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 {
+    //inst IfcPropertyDefinition or IfcObjectDefinition
     SdaiAggr aggrAssoc = 0;
-    sdaiGetAttrBN(inst, "HasAssociations", sdaiAGGR, &aggrAssoc);
+    sdaiGetAttrBN(inst, "HasAssociations", sdaiAGGR, &aggrAssoc); 
 
     SdaiInstance relAssoc = 0;
     int_t i = 0;
     while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
 
-        if (sdaiIsInstanceOf(relAssoc, ctx._IfcRelAssociatesClassification())) {
+        auto entityAssoc = sdaiGetInstanceType(relAssoc);
+        if (entityAssoc == ctx._IfcRelAssociatesClassification()) {
 
             SdaiInstance clsf = 0;
             sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
             if (clsf) {
-                if (ClassificationSelectMatch(clsf, ctx)) {
-                    return true; //>>>>>>>>>>>>>>>>>>>>>>>>
+
+                m_valueMatch = false;
+                m_systemMatch = false;
+                m_uriMatch = false;
+
+                HandleClassificationSelect(clsf, ctx);
+
+                if (m_valueMatch || !m_value.IsSet()) {
+                    if (m_systemMatch || !m_system.IsSet()) {
+                        if (m_uriMatch || !m_URI.IsSet()) {
+                            return true; //>>>>>>>>>>>>>
+                        }
+                    }
                 }
             }
         }
@@ -979,35 +1003,97 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::ClassificationSelectMatch(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context& ctx)
 {
     auto clsfType = sdaiGetInstanceType(clsf);
-    if (clsfType == ctx._IfcClassificationReference() /*sdaiIsInstanceOf(clsf, ctx._IfcClassificationReference())*/) {
-        return ClassificationReferenceMatch(clsf, ctx); //>>
+    if (clsfType == ctx._IfcClassificationReference()) {
+        HandleClassificationReference(clsf, ctx);
+        return;
     }
 
-    if (clsfType == ctx._IfcClassification() /*sdaiIsInstanceOf(clsf, ctx._IfcClassification())*/) {
-        return ClassificationMatch(clsf, ctx);
+    if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+        if (clsfType == ctx._IfcClassificationNotation()) {
+            HandleClassificationNotation(clsf, ctx);
+            return;
+        }
+    }
+    else {
+        if (clsfType == ctx._IfcClassification()) {
+            HandleClassification(clsf, ctx);
+            return;
+        }
     }
 
     auto clsfTypeName = engiGetEntityName(clsfType, sdaiSTRING);
     assert(clsfTypeName);
-    LogMsg(ctx, MsgLevel::Error, "Not implemented IfcClassificationSelect type %s", clsfTypeName ? clsfTypeName : NULL);
- 
+    LogMsg(ctx, MsgLevel::NotImplemented, "Not implemented IfcClassificationSelect type %s", clsfTypeName ? clsfTypeName : NULL);
     assert(0);
-    return false;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::ClassificationReferenceMatch(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Context& ctx)
 {
+    if (!m_valueMatch && m_value.IsSet()) {
+        const char* value = nullptr;
+
+        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            sdaiGetAttr(clsf, ctx._IfcExternalReference_ItemReference(), sdaiSTRING, &value);
+        }
+        else {
+            sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiSTRING, &value);
+        }
+
+        m_valueMatch = m_value.Match(value, false);
+    }
+
+    if (!m_uriMatch && m_URI.IsSet()) {
+        const char* uri = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiSTRING, &uri);
+        m_uriMatch = m_URI.Match(uri, true);
+    }
+
+    SdaiInstance source = 0;
+    sdaiGetAttr(clsf, ctx._IfcClassificationReference_ReferencedSource(), sdaiINSTANCE, &source);
+    HandleClassificationSelect(source, ctx);
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::ClassificationMatch(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx)
 {
+    if (!m_systemMatch && m_system.IsSet()) {
+        const char* name = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiSTRING, &name);
+        m_systemMatch = m_system.Match(name, true);
+    }
+
+    if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() == Context::IfcVersion::Ifc4) {
+        const char* source = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Location(), sdaiSTRING, &source);
+        m_uriMatch = m_URI.Match(source, true);
+    }
+
+    if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() > Context::IfcVersion::Ifc4) {
+        const char* source = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Specification(), sdaiSTRING, &source);
+        m_uriMatch = m_URI.Match(source, true);
+    }
+
+    if (!m_uriMatch && m_URI.IsSet()) {
+        const char* source = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiSTRING, &source);
+        m_uriMatch = m_URI.Match(source, true);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx)
+{
+    LogMsg(ctx, MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
+    assert(!"TODO... if somebody uses");
 }
