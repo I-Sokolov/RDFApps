@@ -940,7 +940,7 @@ void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiIn
             SdaiInstance ai;
             int_t j = 0;
             while (sdaiGetAggrByIndex(aggr, j++, sdaiINSTANCE, &ai)) {
-                if (ai = inst) {
+                if (ai == inst) {
                     SdaiInstance f = 0;
                     sdaiGetAttr(rel, attrParent, sdaiINSTANCE, &f);
                     if (f) {
@@ -1096,4 +1096,87 @@ void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Co
 {
     LogMsg(ctx, MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
     assert(!"TODO... if somebody uses");
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
+{
+    SdaiEntity ent = sdaiGetInstanceType(inst);
+
+    if (auto attrName = m_name.GetSimpleValue()) {
+
+        //explicitly specified attribute
+        auto attr = sdaiGetAttrDefinition(ent, attrName);
+        if (attr) {
+            return MatchAttribute(inst, attr, ctx); //>>>>>>>>>>>>>>>>
+        }
+    }
+    else {
+
+        //attribute name must match
+        auto N = engiGetEntityNoAttributes(ent);
+        for (int_t i = 0; i < N; i++) {
+            auto attr = engiGetEntityAttributeByIndex(ent, i, true, true);
+            const char* name = 0;
+            engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+            if (m_name.Match(name, true)) {
+                if (MatchAttribute(inst, attr, ctx)) {
+                    return true; //>>>>>>>>>>>>>
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx)
+{
+    bool match = false;
+
+    auto sdaiType = engiGetInstanceAttrType(inst, attr);
+    switch (sdaiType) {
+
+        case sdaiBINARY:
+        case sdaiENUM:
+        case sdaiSTRING: {
+            const char* value = nullptr;
+            if (sdaiGetAttr(inst, attr, sdaiSTRING, &value)) {
+                match = m_value.Match(value, false);
+            }
+            break;
+        }
+        case sdaiINTEGER: {
+            SdaiInteger value = 0;
+            if (sdaiGetAttr(inst, attr, sdaiINTEGER, &value)) {
+                match = m_value.Match(value);
+            }
+            break;
+        }
+        case sdaiREAL:
+        case sdaiNUMBER: {
+            double value = 0;
+            if (sdaiGetAttr(inst, attr, sdaiREAL, &value)) {
+                match = m_value.Match(value);
+            }
+            break;
+        }
+        case sdaiBOOLEAN:
+        case sdaiINSTANCE:
+        case sdaiLOGICAL:
+        case sdaiADB:
+        case sdaiAGGR:
+            LogMsg(ctx, MsgLevel::NotImplemented, "Match this type of attributes");
+            assert(0);
+            break;
+        default:
+            LogMsg(ctx, MsgLevel::NotImplemented, "Match unknown attribute type");
+            assert(0);
+    }
+    return match;
 }

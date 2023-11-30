@@ -96,7 +96,11 @@ namespace RDF
 
             bool IsSet() { return m_isSet; }
             const char* GetSimpleValue() { if (m_isSet && m_restrictions.empty()) return m_simpleValue.c_str(); else return nullptr; }
-            bool Match(const char* value, bool compareNoCase);
+
+            //unset value matches to everything except NULL string
+            bool Match(const char* value, bool compareNoCase); //NULL string always does not match 
+            bool Match(SdaiInteger value);
+            bool Match(double value);
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
@@ -249,8 +253,11 @@ namespace RDF
             FacetAttribute(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetCacheImpl() override;
+            virtual void ResetCacheImpl() override {};
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+
+        private:
+            bool MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx);
 
         private:
             IdsValue   m_name;
