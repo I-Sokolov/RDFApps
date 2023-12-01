@@ -847,13 +847,13 @@ void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiIn
     auto ext = xxxxGetEntityAndSubTypesExtent(ctx.model, relClass);
 
     SdaiInstance rel = 0;
-    int_t i = 0;
+    SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(ext, i++, sdaiINSTANCE, &rel)) {
         SdaiAggr aggr = 0;
         sdaiGetAttr(rel, attrChildren, sdaiAGGR, &aggr);
         if (aggr) {
             SdaiInstance ai;
-            int_t j = 0;
+            SdaiInteger j = 0;
             while (sdaiGetAggrByIndex(aggr, j++, sdaiINSTANCE, &ai)) {
                 if (ai == inst) {
                     SdaiInstance f = 0;
@@ -885,7 +885,7 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
     sdaiGetAttrBN(inst, "HasAssociations", sdaiAGGR, &aggrAssoc); 
 
     SdaiInstance relAssoc = 0;
-    int_t i = 0;
+    SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
 
         auto entityAssoc = sdaiGetInstanceType(relAssoc);
@@ -1033,7 +1033,7 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
 
         //attribute name must match
         auto N = engiGetEntityNoAttributes(ent);
-        for (int_t i = 0; i < N; i++) {
+        for (SdaiInteger i = 0; i < N; i++) {
             auto attr = engiGetEntityAttributeByIndex(ent, i, true, true);
             const char* name = 0;
             engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
@@ -1128,7 +1128,7 @@ bool FacetProperty::MatchImpl(SdaiInstance inst, Context& ctx)
 bool FacetProperty::MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx)
 {
     SdaiInstance pset = 0;
-    int_t i = 0;
+    SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &pset)) {
         if (MatchInPSDef(pset, ctx)) {
             return true;
@@ -1143,7 +1143,7 @@ bool FacetProperty::MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx)
 bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx)
 {
     SdaiInstance rel = 0;
-    int_t i = 0;
+    SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &rel)) {
         SdaiInstance pset = 0;
         if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiINSTANCE, &pset)) {
@@ -1154,7 +1154,7 @@ bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx)
         else {
             SdaiAggr psdefset = 0;
             if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiAGGR, &psdefset)) {
-                int_t j = 0;
+                SdaiInteger j = 0;
                 while (sdaiGetAggrByIndex(psdefset, j++, sdaiINSTANCE, &pset)) {
                     if (MatchInPSDef(pset, ctx)) {
                         return true;
@@ -1185,7 +1185,7 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
         SdaiAggr aggr = 0;
         sdaiGetAttr(inst, ctx._IfcPropertySet_HasProperties(), sdaiAGGR, &aggr);
         SdaiInstance prop = 0;
-        int_t i = 0;
+        SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &prop)) {
             if (MatchProperty(prop, ctx)) {
                 return true;
@@ -1196,7 +1196,7 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
         SdaiAggr aggr = 0;
         sdaiGetAttr(inst, ctx._IfcElementQuantity_Quantities(), sdaiAGGR, &aggr);
         SdaiInstance quant = 0;
-        int_t i = 0;
+        SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &quant)) {
             if (MatchQuantity(quant, ctx)) {
                 return true;
