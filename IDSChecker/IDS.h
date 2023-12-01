@@ -282,8 +282,11 @@ namespace RDF
             bool MatchInPSDef(SdaiInstance inst, Context& ctx);
 
             bool MatchProperty(SdaiInstance prop, Context& ctx);
+            bool MatchPropertySingleValue(SdaiInstance prop, Context& ctx);
 
-            bool MatchQuantity(SdaiInstance prop, Context& ctx);
+            bool MatchQuantity(SdaiInstance qto, Context& ctx);
+            bool MatchValue(double value, const char* typePath, SdaiInstance unit, Context& ctx);
+            bool MatchValue(int_t value, Context& ctx);
 
         private:
             IdsValue m_propertySet;

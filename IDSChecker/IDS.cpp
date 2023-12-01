@@ -71,7 +71,7 @@ using namespace RDF::IDS;
 /// <summary>
 /// 
 /// </summary>
-#define CONTEXT_ENTITY_CACHE(EntityName)        \
+#define ENTITY(EntityName)                      \
     private:                                    \
         SdaiEntity m_entity##EntityName = 0;    \
     public:                                     \
@@ -87,7 +87,7 @@ using namespace RDF::IDS;
 /// <summary>
 /// 
 /// </summary>
-#define CONTEXT_ATTRIBUTE_CACHE(Ent,Attr,EntAttr)                       \
+#define ATTR(Ent,Attr,EntAttr)                                          \
     private:                                                            \
         SdaiAttr    m_attribute_##EntAttr = 0;                          \
     public:                                                             \
@@ -101,107 +101,8 @@ using namespace RDF::IDS;
             return m_attribute_##EntAttr;                               \
         }
 
-/// <summary>
-/// 
-/// </summary>
-static void Dump(_xml::_element& elem)
-{
-    for (auto attr : elem.attributes()) {
-        auto& n = attr->getName();
-        auto& v = attr->getValue();
-        printf(" Attr %s='%s'\n", n.c_str(), v.c_str());
-    }
 
-    for (auto child : elem.children()) {
-        if (child) {
-            auto& name = child->getName();
-            printf("  child %s\n", name.c_str());
-        }
-    }
-
-    auto cont = elem.getContent();
-    printf("   content: %s\n", cont.c_str());
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-class RDF::IDS::Context
-{
-public:
-    enum class IfcVersion { NotItitialized, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
-
-public:
-    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
-        : console(con_), msgLevel(msgLevel_), stopAtFirstError(stopAtFirstError_)
-    {}
-    ~Context() {}
-
-public:
-    IfcVersion GetIfcVersion();
-
-public:
-    Console&    console;
-    MsgLevel    msgLevel;
-    bool        stopAtFirstError;
-
-    SdaiModel       model = 0;
-    SdaiInstance    currentInstane = 0;    Specification*  currentSpecification = nullptr;
-
-private:
-    IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
-
-    CONTEXT_ENTITY_CACHE(IfcRoot);
-    CONTEXT_ENTITY_CACHE(IfcObjectDefinition);
-    CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
-    CONTEXT_ENTITY_CACHE(IfcClassificationReference);
-    CONTEXT_ENTITY_CACHE(IfcExternalReference);
-    CONTEXT_ENTITY_CACHE(IfcClassification);
-    CONTEXT_ENTITY_CACHE(IfcClassificationNotation);
-    CONTEXT_ENTITY_CACHE(IfcRelDecomposes);
-    CONTEXT_ENTITY_CACHE(IfcRelAssignsToGroup);
-    CONTEXT_ENTITY_CACHE(IfcFeatureElementSubtraction);
-    CONTEXT_ENTITY_CACHE(IfcRelVoidsElement);
-    CONTEXT_ENTITY_CACHE(IfcElement);
-    CONTEXT_ENTITY_CACHE(IfcRelFillsElement);
-    CONTEXT_ENTITY_CACHE(IfcRelContainedInSpatialStructure);
-    CONTEXT_ENTITY_CACHE(IfcRelAggregates);
-    CONTEXT_ENTITY_CACHE(IfcRelNests);
-    CONTEXT_ENTITY_CACHE(IfcObject);
-    CONTEXT_ENTITY_CACHE(IfcTypeObject);
-    CONTEXT_ENTITY_CACHE(IfcContext);
-    CONTEXT_ENTITY_CACHE(IfcRelDefinesByProperties);
-    CONTEXT_ENTITY_CACHE(IfcPropertySet);
-    CONTEXT_ENTITY_CACHE(IfcElementQuantity);
-
-    CONTEXT_ATTRIBUTE_CACHE(IfcRoot, Name, IfcRoot_Name);
-    CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
-    CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
-    CONTEXT_ATTRIBUTE_CACHE(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);
-    CONTEXT_ATTRIBUTE_CACHE(IfcElement, FillsVoids, IfcElement_FillsVoids);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
-    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, Identification, IfcExternalReference_Identification);
-    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, ItemReference, IfcExternalReference_ItemReference);
-    CONTEXT_ATTRIBUTE_CACHE(IfcExternalReference, Location, IfcExternalReference_Location);
-    CONTEXT_ATTRIBUTE_CACHE(IfcClassificationReference, ReferencedSource, IfcClassificationReference_ReferencedSource);
-    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Name, IfcClassification_Name);
-    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Location, IfcClassification_Location);
-    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Specification, IfcClassification_Specification);
-    CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Source, IfcClassification_Source);
-    CONTEXT_ATTRIBUTE_CACHE(IfcObject, IsDefinedBy, IfcObject_IsDefinedBy);
-    CONTEXT_ATTRIBUTE_CACHE(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
-    CONTEXT_ATTRIBUTE_CACHE(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
-    CONTEXT_ATTRIBUTE_CACHE(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
-    CONTEXT_ATTRIBUTE_CACHE(IfcPropertySet, HasProperties, IfcPropertySet_HasProperties);
-    CONTEXT_ATTRIBUTE_CACHE(IfcElementQuantity, Quantities, IfcElementQuantity_Quantities);
-};
+#include "Context.h"
 
 /// <summary>
 /// 
@@ -1304,4 +1205,129 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
     }
 
     return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiSTRING, &name);
+    if (!m_name.Match(name, false)) {
+        return false;
+    }
+
+    if (!m_value.IsSet()) {
+        return true;
+    }
+
+    auto entity = sdaiGetInstanceType(prop);
+
+    if (entity == ctx._IfcComplexProperty()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "IfcComplexProperty");
+        assert(0);
+        return false;
+    }
+    else if (entity == ctx._IfcPropertyBoundedValue()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyBoundedValue");
+        assert(0);
+        return false;
+    }
+    else if (entity == ctx._IfcPropertyEnumeratedValue()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyEnumeratedValue");
+        assert(0);
+        return false;
+    }
+    else if (entity == ctx._IfcPropertyListValue()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyListValue");
+        assert(0);
+        return false;
+    }
+    else if (entity == ctx._IfcPropertyReferenceValue()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyReferenceValue");
+        assert(0);
+        return false;
+    }
+    else if (entity == ctx._IfcPropertySingleValue()) {
+        return MatchPropertySingleValue(inst, ctx);
+    }
+    else if (entity == ctx._IfcPropertyTableValue()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyTableValue");
+        assert(0);
+        return false;
+    }
+    else {
+        LogMsg(ctx, MsgLevel::NotImplemented, "Unknown entity");
+        assert(0);
+        return false;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiSTRING, &name);
+    if (!m_name.Match(name, false)) {
+        return false;
+    }
+
+    if (!m_value.IsSet()) {
+        return true;
+    }
+
+    auto entity = sdaiGetInstanceType(qto);
+
+    if (entity == ctx._IfcPhysicalComplexQuantity()) {
+        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPhysicalComplexQuantity");
+        assert(0);
+        return false;
+    }
+
+    SdaiInstance unit = 0;
+    sdaiGetAttr(qto, ctx._IfcPhysicalSimpleQuantity_Unit(), sdaiINSTANCE, &unit);
+
+    if (entity == ctx._IfcQuantityArea()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityArea_AreaValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcAreaMeasure", unit, ctx);
+    }
+    else if (entity == ctx._IfcQuantityCount()) {
+        int_t value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value);
+        return MatchValue(value, ctx);
+    }
+    else if (entity == ctx._IfcQuantityLength()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityLength_LengthValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcLengthMeasure", unit, ctx);
+    }
+    else if (entity == ctx._IfcQuantityNumber()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityNumber_NumberValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcNumericMeasure", unit, ctx);
+    }
+    else if (entity == ctx._IfcQuantityTime()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityTime_TimeValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcTimeMeasure", unit, ctx);
+    }
+    if (entity == ctx._IfcQuantityVolume()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityVolume_VolumeValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcVolumeMeasure", unit, ctx);
+    }
+    else if (entity == ctx._IfcQuantityWeight()) {
+        double value = 0;
+        sdaiGetAttr(qto, ctx._IfcQuantityWeight_WeightValue(), sdaiREAL, &value);
+        return MatchValue(value, "IfcMassMeasure", unit, ctx);
+    }
+    else {
+        LogMsg(ctx, MsgLevel::NotImplemented, "Unknown entity");
+        assert(0);
+        return false;
+    }
 }
