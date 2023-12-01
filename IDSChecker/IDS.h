@@ -101,6 +101,7 @@ namespace RDF
             bool Match(const char* value, bool compareNoCase); 
             bool Match(SdaiInteger value);
             bool Match(double value);
+            bool Match(bool value);
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
@@ -286,7 +287,6 @@ namespace RDF
 
             bool MatchQuantity(SdaiInstance qto, Context& ctx);
             bool MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx);
-            bool MatchValue(int_t value, Context& ctx);
 
         private:
             IdsValue m_propertySet;

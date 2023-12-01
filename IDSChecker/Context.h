@@ -109,7 +109,7 @@ private:
     ATTR(IfcQuantityNumber, NumberValue, IfcQuantityNumber_NumberValue);
     ATTR(IfcQuantityTime, TimeValue, IfcQuantityTime_TimeValue);
     ATTR(IfcQuantityVolume, VolumeValue, IfcQuantityVolume_VolumeValue);
-    ATTR(IfcQuantittyWeight, WeightValue, IfcQuantityWeight_WeightValue);
+    ATTR(IfcQuantityWeight, WeightValue, IfcQuantityWeight_WeightValue);
     ATTR(IfcPropertySingleValue, NominalValue, IfcPropertySingleValue_NominalValue);
     ATTR(IfcPropertySingleValue, Unit, IfcPropertySingleValue_Unit);
 };

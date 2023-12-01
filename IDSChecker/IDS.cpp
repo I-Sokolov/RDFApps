@@ -1296,9 +1296,9 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
         return MatchValue(value, unit, "AREAUNIT", ctx);
     }
     else if (entity == ctx._IfcQuantityCount()) {
-        int_t value = 0;
+        SdaiInteger value = 0;
         sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value);
-        return MatchValue(value, ctx);
+        return m_value.Match(value);
     }
     else if (entity == ctx._IfcQuantityLength()) {
         double value = 0;
@@ -1338,14 +1338,76 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
 /// </summary>
 bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
 {
-    SdaiInstance unit = 0;
-    sdaiGetAttr(prop, ctx._IfcPropertySingleValue_Unit(), sdaiINSTANCE, &unit);
-
     SdaiADB nominalValue = 0;
     sdaiGetAttr(prop, ctx._IfcPropertySingleValue_NominalValue(), sdaiADB, &nominalValue);
 
-    const char unitKind = nullptr;
+    enum_express_attr_type  attrType = enum_express_attr_type::__NONE;
     auto ifcType = sdaiGetADBTypePath(nominalValue, 0);
     if (ifcType) {
+        auto type = sdaiGetEntity(ctx.model, ifcType);
+        attrType = engiGetDefinedType(type, nullptr, nullptr);
     }
+
+    switch (attrType) {
+        case enum_express_attr_type::__BINARY:
+        case enum_express_attr_type::__BINARY_32:
+        {
+            const char* value = nullptr;
+            sdaiGetADBValue(nominalValue, sdaiBINARY, &value);
+            return m_value.Match(value, false);
+        }
+        case enum_express_attr_type::__STRING:
+        {
+            const char* value = nullptr;
+            sdaiGetADBValue(nominalValue, sdaiSTRING, &value);
+            return m_value.Match(value, false);
+        }
+        case enum_express_attr_type::__ENUMERATION:
+        {
+            const char* value = nullptr;
+            sdaiGetADBValue(nominalValue, sdaiENUM, &value);
+            return m_value.Match(value, false);
+        }
+        case enum_express_attr_type::__BOOLEAN:
+        {
+            bool value = 0;
+            sdaiGetADBValue(nominalValue, sdaiBOOLEAN, &value);
+            return m_value.Match(value);
+        }
+        case enum_express_attr_type::__INTEGER:
+        {
+            SdaiInteger value = 0;
+            sdaiGetADBValue(nominalValue, sdaiINTEGER, &value);
+            return m_value.Match(value);
+        }
+        case enum_express_attr_type::__LOGICAL:
+        {
+            const char* value = 0;
+            sdaiGetADBValue(nominalValue, sdaiLOGICAL, &value);
+            return m_value.Match(value, false);
+        }
+        case enum_express_attr_type::__NUMBER:
+        case enum_express_attr_type::__REAL:
+        {
+            SdaiInstance            unit = 0;
+            sdaiGetAttr(prop, ctx._IfcPropertySingleValue_Unit(), sdaiINSTANCE, &unit);
+
+            const char* unitKind = nullptr;
+            auto it = s_ifcDataTypesUnits.find(ifcType);
+            if (it != s_ifcDataTypesUnits.end()) {
+                unitKind = it->second.c_str();
+            }
+
+            double value = 0;
+            sdaiGetADBValue(nominalValue, sdaiREAL, &value);
+            return MatchValue(value, unit, unitKind, ctx);
+        }
+        default:
+        {
+            LogMsg(ctx, MsgLevel::NotImplemented, "type of IfcValue");
+            assert(0);
+            return false;
+        }
+    }
+
 }
