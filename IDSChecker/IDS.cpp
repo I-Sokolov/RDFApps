@@ -152,6 +152,7 @@ public:
 private:
     IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
 
+    CONTEXT_ENTITY_CACHE(IfcRoot);
     CONTEXT_ENTITY_CACHE(IfcObjectDefinition);
     CONTEXT_ENTITY_CACHE(IfcRelAssociatesClassification);
     CONTEXT_ENTITY_CACHE(IfcClassificationReference);
@@ -167,7 +168,14 @@ private:
     CONTEXT_ENTITY_CACHE(IfcRelContainedInSpatialStructure);
     CONTEXT_ENTITY_CACHE(IfcRelAggregates);
     CONTEXT_ENTITY_CACHE(IfcRelNests);
+    CONTEXT_ENTITY_CACHE(IfcObject);
+    CONTEXT_ENTITY_CACHE(IfcTypeObject);
+    CONTEXT_ENTITY_CACHE(IfcContext);
+    CONTEXT_ENTITY_CACHE(IfcRelDefinesByProperties);
+    CONTEXT_ENTITY_CACHE(IfcPropertySet);
+    CONTEXT_ENTITY_CACHE(IfcElementQuantity);
 
+    CONTEXT_ATTRIBUTE_CACHE(IfcRoot, Name, IfcRoot_Name);
     CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
     CONTEXT_ATTRIBUTE_CACHE(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
     CONTEXT_ATTRIBUTE_CACHE(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
@@ -187,6 +195,12 @@ private:
     CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Location, IfcClassification_Location);
     CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Specification, IfcClassification_Specification);
     CONTEXT_ATTRIBUTE_CACHE(IfcClassification, Source, IfcClassification_Source);
+    CONTEXT_ATTRIBUTE_CACHE(IfcObject, IsDefinedBy, IfcObject_IsDefinedBy);
+    CONTEXT_ATTRIBUTE_CACHE(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
+    CONTEXT_ATTRIBUTE_CACHE(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
+    CONTEXT_ATTRIBUTE_CACHE(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
+    CONTEXT_ATTRIBUTE_CACHE(IfcPropertySet, HasProperties, IfcPropertySet_HasProperties);
+    CONTEXT_ATTRIBUTE_CACHE(IfcElementQuantity, Quantities, IfcElementQuantity_Quantities);
 };
 
 /// <summary>
@@ -1179,4 +1193,115 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
             assert(0);
     }
     return match;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchImpl(SdaiInstance inst, Context& ctx)
+{
+    SdaiAggr aggr = 0;
+    sdaiGetAttr(inst, ctx._IfcTypeObject_HasPropertySets(), sdaiAGGR, &aggr);
+    if (MatchInSetOfPSDef(aggr, ctx)) {
+        return true;
+    }
+
+    sdaiGetAttr(inst, ctx._IfcObject_IsDefinedBy(), sdaiAGGR, &aggr);
+    if (MatchInSetOfRel(aggr, ctx)) {
+        return true;
+    }
+
+    if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc2x3) {
+        sdaiGetAttr(inst, ctx._IfcContext_IsDefinedBy(), sdaiAGGR, &aggr);
+        if (MatchInSetOfRel(aggr, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx)
+{
+    SdaiInstance pset = 0;
+    int_t i = 0;
+    while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &pset)) {
+        if (MatchInPSDef(pset, ctx)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx)
+{
+    SdaiInstance rel = 0;
+    int_t i = 0;
+    while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &rel)) {
+        SdaiInstance pset = 0;
+        if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiINSTANCE, &pset)) {
+            if (MatchInPSDef(pset, ctx)) {
+                return true;
+            }
+        }
+        else {
+            SdaiAggr psdefset = 0;
+            if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiAGGR, &psdefset)) {
+                int_t j = 0;
+                while (sdaiGetAggrByIndex(psdefset, j++, sdaiINSTANCE, &pset)) {
+                    if (MatchInPSDef(pset, ctx)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
+{
+    if (m_propertySet.IsSet()) {
+        const char* name = 0;
+        sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiSTRING, &name);
+        if (!m_name.Match(name, false)) {
+            return false;
+        }
+    }
+
+    auto type = sdaiGetInstanceType(inst);
+
+    if (type == ctx._IfcPropertySet()) {
+        SdaiAggr aggr = 0;
+        sdaiGetAttr(inst, ctx._IfcPropertySet_HasProperties(), sdaiAGGR, &aggr);
+        SdaiInstance prop = 0;
+        int_t i = 0;
+        while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &prop)) {
+            if (MatchProperty(prop, ctx)) {
+                return true;
+            }
+        }
+    }
+    else if (type == ctx._IfcElementQuantity()) {
+        SdaiAggr aggr = 0;
+        sdaiGetAttr(inst, ctx._IfcElementQuantity_Quantities(), sdaiAGGR, &aggr);
+        SdaiInstance quant = 0;
+        int_t i = 0;
+        while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &quant)) {
+            if (MatchQuantity(quant, ctx)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

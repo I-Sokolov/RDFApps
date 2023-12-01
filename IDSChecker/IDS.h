@@ -97,8 +97,8 @@ namespace RDF
             bool IsSet() { return m_isSet; }
             const char* GetSimpleValue() { if (m_isSet && m_restrictions.empty()) return m_simpleValue.c_str(); else return nullptr; }
 
-            //unset value matches to everything except NULL string
-            bool Match(const char* value, bool compareNoCase); //NULL string always does not match 
+            //unset value matches to everything including NULL string
+            bool Match(const char* value, bool compareNoCase); 
             bool Match(SdaiInteger value);
             bool Match(double value);
 
@@ -273,8 +273,17 @@ namespace RDF
             FacetProperty(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetCacheImpl() override;
+            virtual void ResetCacheImpl() override {}
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+
+        private:
+            bool MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx);
+            bool MatchInSetOfRel(SdaiAggr aggr, Context& ctx);
+            bool MatchInPSDef(SdaiInstance inst, Context& ctx);
+
+            bool MatchProperty(SdaiInstance prop, Context& ctx);
+
+            bool MatchQuantity(SdaiInstance prop, Context& ctx);
 
         private:
             IdsValue m_propertySet;
