@@ -91,7 +91,6 @@ public:
 
 private:
     double GetDerivedUnitScale(SdaiInstance unit);
-    double GetNamedUnitScale(SdaiInstance unit);
     double GetContexDependentUnitScale(SdaiInstance unit);
     double GetConversionBasedUnitScale(SdaiInstance unit);
     double GetSIUnitScale(SdaiInstance unit);
@@ -213,9 +212,6 @@ double Context::GetUnitScale(SdaiInstance unit)
     if (entity == _IfcDerivedUnit()) {
         return GetDerivedUnitScale(unit);
     }
-    else if (entity == _IfcNamedUnit()) {
-        return GetNamedUnitScale(unit);
-    }
     else if (entity == _IfcMonetaryUnit()) {
         LogMsg(*this, MsgLevel::Warning, "Can not scale monetary units");
         return 1;
@@ -273,7 +269,7 @@ double Context::GetDerivedUnitScale(SdaiInstance unit)
         SdaiInstance elemUnit = 0;
         sdaiGetAttr(elem, _IfcDerivedUnitElement_Unit(), sdaiINSTANCE, &elemUnit);
 
-        double elemScale = GetNamedUnitScale(elemUnit);
+        double elemScale = GetUnitScale(elemUnit);
 
         SdaiInteger exponent = 0;
         sdaiGetAttr(elem, _IfcDerivedUnitElement_Exponent(), sdaiINTEGER, &exponent);
@@ -286,12 +282,6 @@ double Context::GetDerivedUnitScale(SdaiInstance unit)
     return factor;
 }
 
-/// <summary>
-/// 
-/// </summary>
-double Context::GetNamedUnitScale(SdaiInstance unit)
-{
-}
 
 /// <summary>
 /// 
