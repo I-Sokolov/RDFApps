@@ -1,130 +1,5 @@
 #pragma once
 
-
-/// <summary>
-/// 
-/// </summary>
-class RDF::IDS::Context
-{
-public:
-    enum class IfcVersion { NotItitialized, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
-
-public:
-    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
-        : console(con_), msgLevel(msgLevel_), stopAtFirstError(stopAtFirstError_)
-    {}
-    ~Context() {}
-
-public:
-    IfcVersion GetIfcVersion();
-
-public:
-    Console& console;
-    MsgLevel    msgLevel;
-    bool        stopAtFirstError;
-
-    SdaiModel       model = 0;
-    SdaiInstance    currentInstane = 0;    Specification* currentSpecification = nullptr;
-
-private:
-    IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
-
-    ENTITY(IfcRoot);
-    ENTITY(IfcObjectDefinition);
-    ENTITY(IfcRelAssociatesClassification);
-    ENTITY(IfcClassificationReference);
-    ENTITY(IfcExternalReference);
-    ENTITY(IfcClassification);
-    ENTITY(IfcClassificationNotation);
-    ENTITY(IfcRelDecomposes);
-    ENTITY(IfcRelAssignsToGroup);
-    ENTITY(IfcFeatureElementSubtraction);
-    ENTITY(IfcRelVoidsElement);
-    ENTITY(IfcElement);
-    ENTITY(IfcRelFillsElement);
-    ENTITY(IfcRelContainedInSpatialStructure);
-    ENTITY(IfcRelAggregates);
-    ENTITY(IfcRelNests);
-    ENTITY(IfcObject);
-    ENTITY(IfcTypeObject);
-    ENTITY(IfcContext);
-
-    ENTITY(IfcRelDefinesByProperties);
-    ENTITY(IfcPropertySet);
-    ENTITY(IfcElementQuantity);
-
-    ENTITY(IfcProperty);
-    ENTITY(IfcComplexProperty);
-    ENTITY(IfcPropertyBoundedValue);
-    ENTITY(IfcPropertyEnumeratedValue);
-    ENTITY(IfcPropertyListValue);
-    ENTITY(IfcPropertyReferenceValue);
-    ENTITY(IfcPropertySingleValue);
-    ENTITY(IfcPropertyTableValue);
-
-    ENTITY(IfcPhysicalQuantity);
-    ENTITY(IfcPhysicalComplexQuantity);
-    ENTITY(IfcPhysicalSimpleQuantity);
-    ENTITY(IfcQuantityArea);
-    ENTITY(IfcQuantityCount);
-    ENTITY(IfcQuantityLength);
-    ENTITY(IfcQuantityNumber);
-    ENTITY(IfcQuantityTime);
-    ENTITY(IfcQuantityVolume);
-    ENTITY(IfcQuantityWeight);
-
-    ATTR(IfcRoot, Name, IfcRoot_Name);
-    ATTR(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
-    ATTR(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
-    ATTR(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
-    ATTR(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
-    ATTR(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
-    ATTR(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
-    ATTR(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);
-    ATTR(IfcElement, FillsVoids, IfcElement_FillsVoids);
-    ATTR(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
-    ATTR(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
-    ATTR(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
-    ATTR(IfcExternalReference, Identification, IfcExternalReference_Identification);
-    ATTR(IfcExternalReference, ItemReference, IfcExternalReference_ItemReference);
-    ATTR(IfcExternalReference, Location, IfcExternalReference_Location);
-    ATTR(IfcClassificationReference, ReferencedSource, IfcClassificationReference_ReferencedSource);
-    ATTR(IfcClassification, Name, IfcClassification_Name);
-    ATTR(IfcClassification, Location, IfcClassification_Location);
-    ATTR(IfcClassification, Specification, IfcClassification_Specification);
-    ATTR(IfcClassification, Source, IfcClassification_Source);
-    ATTR(IfcObject, IsDefinedBy, IfcObject_IsDefinedBy);
-    ATTR(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
-    ATTR(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
-    ATTR(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
-    ATTR(IfcPropertySet, HasProperties, IfcPropertySet_HasProperties);
-    ATTR(IfcElementQuantity, Quantities, IfcElementQuantity_Quantities);
-    ATTR(IfcProperty, Name, IfcProperty_Name);
-    ATTR(IfcPhysicalQuantity, Name, IfcPhysicalQuantity_Name);
-    ATTR(IfcComplexProperty, HasProperties, IfcComplexProperty_HasProperties);
-    ATTR(IfcPhysicalSimpleQuantity, Unit, IfcPhysicalSimpleQuantity_Unit);
-    ATTR(IfcQuantityArea, AreaValue, IfcQuantityArea_AreaValue);
-    ATTR(IfcQuantityCount, CountValue, IfcQuantityCount_CountValue);
-    ATTR(IfcQuantityLength, LengthValue, IfcQuantityLength_LengthValue);
-    ATTR(IfcQuantityNumber, NumberValue, IfcQuantityNumber_NumberValue);
-    ATTR(IfcQuantityTime, TimeValue, IfcQuantityTime_TimeValue);
-    ATTR(IfcQuantityVolume, VolumeValue, IfcQuantityVolume_VolumeValue);
-    ATTR(IfcQuantityWeight, WeightValue, IfcQuantityWeight_WeightValue);
-    ATTR(IfcPropertySingleValue, NominalValue, IfcPropertySingleValue_NominalValue);
-    ATTR(IfcPropertySingleValue, Unit, IfcPropertySingleValue_Unit);
-};
-
-/// <summary>
-/// 
-/// </summary>
-struct IfcDataType
-{
-    int_t sdaiType;
-    std::string unitType;
-    
-    IfcDataType(int_t sdaiType_, const char* unitType_) : sdaiType(sdaiType_), unitType(unitType_) {}
-};
-
 /// <summary>
 /// 
 /// </summary>
@@ -182,7 +57,260 @@ static bool InitIfcDataTypesUnits()
     s_ifcDataTypesUnits["IFCVAPORPERMEABILITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VAPORPERMEABILITYUNIT");
     s_ifcDataTypesUnits["IFCVOLUMEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "VOLUMEUNIT");
     s_ifcDataTypesUnits["IFCVOLUMETRICFLOWRATEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VOLUMETRICFLOWRATEUNIT");
-    
+
     return true;
 }
 static bool s_InitIfcDataTypesUnits = InitIfcDataTypesUnits();
+
+/// <summary>
+/// 
+/// </summary>
+class RDF::IDS::Context
+{
+public:
+    enum class IfcVersion { NotItitialized, Ifc2x3, Ifc4, Ifc4x3, Unsupported };
+
+public:
+    Context(Console& con_, MsgLevel msgLevel_, bool stopAtFirstError_)
+        : console(con_), msgLevel(msgLevel_), stopAtFirstError(stopAtFirstError_)
+    {}
+    ~Context() {}
+
+public:
+    IfcVersion GetIfcVersion();
+    SdaiInstance FindProjectUnit(const char* unitKind);
+    double GetUnitScale(SdaiInstance unit);
+
+public:
+    Console&    console;
+    MsgLevel    msgLevel;
+    bool        stopAtFirstError;
+
+    SdaiModel       model = 0;
+    SdaiInstance    currentInstane = 0;    Specification* currentSpecification = nullptr;
+
+private:
+    double GetDerivedUnitScale(SdaiInstance unit);
+    double GetNamedUnitScale(SdaiInstance unit);
+    double GetContexDependentUnitScale(SdaiInstance unit);
+    double GetConversionBasedUnitScale(SdaiInstance unit);
+    double GetSIUnitScale(SdaiInstance unit);
+
+private:
+    IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
+
+    ENTITY(IfcRoot);
+    ENTITY(IfcObjectDefinition);
+    ENTITY(IfcRelAssociatesClassification);
+    ENTITY(IfcClassificationReference);
+    ENTITY(IfcExternalReference);
+    ENTITY(IfcClassification);
+    ENTITY(IfcClassificationNotation);
+    ENTITY(IfcRelDecomposes);
+    ENTITY(IfcRelAssignsToGroup);
+    ENTITY(IfcFeatureElementSubtraction);
+    ENTITY(IfcRelVoidsElement);
+    ENTITY(IfcElement);
+    ENTITY(IfcRelFillsElement);
+    ENTITY(IfcRelContainedInSpatialStructure);
+    ENTITY(IfcRelAggregates);
+    ENTITY(IfcRelNests);
+    ENTITY(IfcObject);
+    ENTITY(IfcTypeObject);
+    ENTITY(IfcContext);
+
+    ENTITY(IfcRelDefinesByProperties);
+    ENTITY(IfcPropertySet);
+    ENTITY(IfcElementQuantity);
+
+    ENTITY(IfcProperty);
+    ENTITY(IfcComplexProperty);
+    ENTITY(IfcPropertyBoundedValue);
+    ENTITY(IfcPropertyEnumeratedValue);
+    ENTITY(IfcPropertyListValue);
+    ENTITY(IfcPropertyReferenceValue);
+    ENTITY(IfcPropertySingleValue);
+    ENTITY(IfcPropertyTableValue);
+
+    ENTITY(IfcPhysicalQuantity);
+    ENTITY(IfcPhysicalComplexQuantity);
+    ENTITY(IfcPhysicalSimpleQuantity);
+    ENTITY(IfcQuantityArea);
+    ENTITY(IfcQuantityCount);
+    ENTITY(IfcQuantityLength);
+    ENTITY(IfcQuantityNumber);
+    ENTITY(IfcQuantityTime);
+    ENTITY(IfcQuantityVolume);
+    ENTITY(IfcQuantityWeight);
+
+    ENTITY(IfcDerivedUnit);
+    ENTITY(IfcMonetaryUnit);
+    ENTITY(IfcNamedUnit);
+    ENTITY(IfcContextDependentUnit);
+    ENTITY(IfcConversionBasedUnit);
+    ENTITY(IfcSIUnit);
+    ENTITY(IfcDerivedUnitElement);
+
+    ATTR(IfcRoot, Name, IfcRoot_Name);
+    ATTR(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
+    ATTR(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
+    ATTR(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
+    ATTR(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
+    ATTR(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
+    ATTR(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
+    ATTR(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);
+    ATTR(IfcElement, FillsVoids, IfcElement_FillsVoids);
+    ATTR(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
+    ATTR(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
+    ATTR(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
+    ATTR(IfcExternalReference, Identification, IfcExternalReference_Identification);
+    ATTR(IfcExternalReference, ItemReference, IfcExternalReference_ItemReference);
+    ATTR(IfcExternalReference, Location, IfcExternalReference_Location);
+    ATTR(IfcClassificationReference, ReferencedSource, IfcClassificationReference_ReferencedSource);
+    ATTR(IfcClassification, Name, IfcClassification_Name);
+    ATTR(IfcClassification, Location, IfcClassification_Location);
+    ATTR(IfcClassification, Specification, IfcClassification_Specification);
+    ATTR(IfcClassification, Source, IfcClassification_Source);
+    ATTR(IfcObject, IsDefinedBy, IfcObject_IsDefinedBy);
+    ATTR(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
+    ATTR(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
+    ATTR(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
+    ATTR(IfcPropertySet, HasProperties, IfcPropertySet_HasProperties);
+    ATTR(IfcElementQuantity, Quantities, IfcElementQuantity_Quantities);
+    ATTR(IfcProperty, Name, IfcProperty_Name);
+    ATTR(IfcPhysicalQuantity, Name, IfcPhysicalQuantity_Name);
+    ATTR(IfcComplexProperty, HasProperties, IfcComplexProperty_HasProperties);
+    ATTR(IfcPhysicalSimpleQuantity, Unit, IfcPhysicalSimpleQuantity_Unit);
+    ATTR(IfcQuantityArea, AreaValue, IfcQuantityArea_AreaValue);
+    ATTR(IfcQuantityCount, CountValue, IfcQuantityCount_CountValue);
+    ATTR(IfcQuantityLength, LengthValue, IfcQuantityLength_LengthValue);
+    ATTR(IfcQuantityNumber, NumberValue, IfcQuantityNumber_NumberValue);
+    ATTR(IfcQuantityTime, TimeValue, IfcQuantityTime_TimeValue);
+    ATTR(IfcQuantityVolume, VolumeValue, IfcQuantityVolume_VolumeValue);
+    ATTR(IfcQuantityWeight, WeightValue, IfcQuantityWeight_WeightValue);
+    ATTR(IfcPropertySingleValue, NominalValue, IfcPropertySingleValue_NominalValue);
+    ATTR(IfcPropertySingleValue, Unit, IfcPropertySingleValue_Unit);
+    ATTR(IfcDerivedUnit, Elements, IfcDerivedUnit_Elements);
+    ATTR(IfcDerivedUnitElement, Unit, IfcDerivedUnitElement_Unit);
+    ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);
+};
+
+
+/// <summary>
+/// 
+/// </summary>
+SdaiInstance Context::FindProjectUnit(const char* unitKind)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetUnitScale(SdaiInstance unit)
+{
+    auto entity = sdaiGetInstanceType(unit);
+
+    if (entity == _IfcDerivedUnit()) {
+        return GetDerivedUnitScale(unit);
+    }
+    else if (entity == _IfcNamedUnit()) {
+        return GetNamedUnitScale(unit);
+    }
+    else if (entity == _IfcMonetaryUnit()) {
+        LogMsg(*this, MsgLevel::Warning, "Can not scale monetary units");
+        return 1;
+    }
+    else if (entity == _IfcContextDependentUnit()) {
+        return GetContexDependentUnitScale(unit);
+    }
+    else if (entity == _IfcConversionBasedUnit()) {
+        return GetConversionBasedUnitScale(unit);
+    }
+    else if (entity == _IfcSIUnit()) {
+        return GetSIUnitScale(unit);
+    }
+    else {
+        LogMsg(*this, MsgLevel::NotImplemented, "Unknown unit class");
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+static double powInt(double val, int exp)
+{
+    if (fabs(val) < FLT_MIN) {
+        return 0;
+    }
+
+    if (exp < 0) {
+        val = 1 / val;
+        exp = -exp;
+    }
+    
+    double res = 1.0;
+    for (; exp > 0; exp--) {
+        res *= val;
+    }
+
+    return res;
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetDerivedUnitScale(SdaiInstance unit)
+{
+    double factor = 1;
+
+    SdaiAggr elems = 0;
+    sdaiGetAttr(unit, _IfcDerivedUnit_Elements(), sdaiAGGR, &elems);
+    
+    SdaiInstance elem = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(elems, i, sdaiINSTANCE, &elem)) {
+        
+        SdaiInstance elemUnit = 0;
+        sdaiGetAttr(elem, _IfcDerivedUnitElement_Unit(), sdaiINSTANCE, &elemUnit);
+
+        double elemScale = GetNamedUnitScale(elemUnit);
+
+        SdaiInteger exponent = 0;
+        sdaiGetAttr(elem, _IfcDerivedUnitElement_Exponent(), sdaiINTEGER, &exponent);
+
+        elemScale = powInt(elemScale, exponent);
+
+        factor *= elemScale;
+    }
+
+    return factor;
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetNamedUnitScale(SdaiInstance unit)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetContexDependentUnitScale(SdaiInstance unit)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetConversionBasedUnitScale(SdaiInstance unit)
+{
+}
+
+/// <summary>
+/// 
+/// </summary>
+double Context::GetSIUnitScale(SdaiInstance unit)
+{
+}
+

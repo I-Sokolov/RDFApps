@@ -1409,5 +1409,22 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
             return false;
         }
     }
-
 }
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx)
+{
+    if (!unit) {
+        unit = ctx.FindProjectUnit(unitKind);
+    }
+
+    double scale = GetUnitScale(unit);
+
+    value *= scale;
+
+    return m_value.Match(value);
+}
+
+

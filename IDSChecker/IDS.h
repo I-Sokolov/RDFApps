@@ -287,7 +287,7 @@ namespace RDF
 
             bool MatchQuantity(SdaiInstance qto, Context& ctx);
             bool MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx);
-
+            
         private:
             IdsValue m_propertySet;
             IdsValue m_name;
