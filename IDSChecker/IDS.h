@@ -49,9 +49,9 @@ namespace RDF
         public:
             MultiTypeValueCache(std::string& strVal) : m_strVal (strVal){}
 
-            const char* Str()   { return m_strVal.c_str(); }
-            double      Real()  { if (!m_dSet) { m_dVal = atof(Str()); m_dSet = true; } return m_dVal; }
-            SdaiInteger Int()   { if (!m_iSet) { m_iVal = atoi(Str()); m_iSet = true; } return m_iVal; }
+            void Get(const char** pval)   { *pval = m_strVal.c_str(); }
+            void Get(double* pval)        { if (!m_dSet) { m_dVal = atof(m_strVal.c_str()); m_dSet = true; } *pval = m_dVal; }
+            void Get(SdaiInteger* pval)   { if (!m_iSet) { m_iVal = atoi(m_strVal.c_str()); m_iSet = true; } *pval = m_iVal; }
 
         private:
             std::string& m_strVal;
@@ -71,6 +71,8 @@ namespace RDF
         public:
             Value(_xml::_element& elem, Context& ctx);
 
+            template<typename T> void Get(T* pval) { m_val.Get(pval); }
+
         private:
             std::string m_value;
             std::string m_fixed;
@@ -85,10 +87,8 @@ namespace RDF
         {
         public:
             Restriction(_xml::_element& elem, Context& ctx);
-
-            bool Fit(const char* value, bool compareNoCase, Context& ctx);
-            bool Fit(double value, Context& ctx);
-            bool Fit(SdaiInteger value, Context& ctx);
+         
+            template <typename T, class Comparer> bool Fit(T value, Comparer& cmp);
 
         private:
             void Read_enumeration(_xml::_element& elem, Context& ctx) { m_enumeration.push_back(new Value(elem, ctx)); }
@@ -136,6 +136,9 @@ namespace RDF
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
             void Read_restriction(_xml::_element& elem, Context& ctx) { m_restrictions.push_back(new Restriction(elem, ctx)); }
+
+        private:
+            template <typename T, class Comparer> bool MatchValue(T value, Comparer& cmp);
 
         private:
             bool                       m_isSet = false;

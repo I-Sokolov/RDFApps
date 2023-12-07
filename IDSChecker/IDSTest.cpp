@@ -26,7 +26,7 @@ static void IDSTest(std::string& idsFile, std::string& ifcFile)
 
     bool pass = (idsFile.find("pass")!=std::string::npos);
 
-    //assert(ok == pass);
+    assert(ok == pass);
 
     printf("</Test>\n");
 }

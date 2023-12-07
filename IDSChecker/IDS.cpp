@@ -1682,33 +1682,77 @@ bool FacetMaterial::MatchMaterialList(SdaiInstance material, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool IdsValue::Match(const char* value, bool compareNoCase, Context& ctx)
+struct ComparerStr
 {
-    if (!m_isSet) {
-        return true;
-    }
+    ComparerStr(bool compareNoCase) : m_compareNoCase(compareNoCase) {}
 
-    if (!value) {
-        return false;
-    }
-
-    //
-    if (!m_simpleValue.empty()) {
-        if (compareNoCase) {
-            if (!StrICmp(value, m_simpleValue.c_str())) {
-                return false;
-            }
+    int compare(const char* v1, const char* v2)
+    {
+        if (m_compareNoCase) {
+            return StrICmp(v1, v2);
         }
         else {
-            if (strcmp(value, m_simpleValue.c_str())) {
-                return false;
-            }
+            return strcmp(v1, v2);
         }
     }
+
+    bool m_compareNoCase;
+};
+
+/// <summary>
+/// 
+/// </summary>
+struct ComparerFloat
+{
+    ComparerFloat(double precision) : m_precision(precision) {}
+
+    int compare(double v1, double v2)
+    {
+        if (v1 < v2 - m_precision)
+            return -1;
+        else if (v1 > v2 + m_precision)
+            return 1;
+        else
+            return 0;
+    }
+    double m_precision;
+};
+
+/// <summary>
+/// 
+/// </summary>
+struct ComparerInt
+{
+    int compare(SdaiInteger v1, SdaiInteger v2)
+    {
+        if (v1 < v2)
+            return -1;
+        else if (v1 > v2)
+            return 1;
+        else
+            return 0;
+    }
+};
+
+/// <summary>
+/// 
+/// </summary>
+template <typename T, class Comparer>
+bool IdsValue::MatchValue(T value, Comparer& cmp)
+{
+    //
+    if (!m_simpleValue.empty()) {
+        T v;
+        m_simpleVal.Get(&v);
+        if (0!=cmp.compare(value, v)) {
+            return false;
+        }
+    }
+
 
     //
     for (auto& rest : m_restrictions) {
-        if (!rest->Fit(value, compareNoCase, ctx)) {
+        if (!rest->Fit(value, cmp)) {
             return false;
         }
     }
@@ -1719,27 +1763,32 @@ bool IdsValue::Match(const char* value, bool compareNoCase, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool IdsValue::Match(SdaiInteger value, Context& ctx)
+bool IdsValue::Match(const char* value, bool compareNoCase, Context&)
+{
+    if (!m_isSet) {
+        return true;
+    }
+    if (!value) {
+        return false;
+    }
+
+    ComparerStr cmp(compareNoCase);
+    
+    return MatchValue(value, cmp);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool IdsValue::Match(SdaiInteger value, Context&)
 {
     if (!m_isSet) {
         return true;
     }
 
-    //
-    if (!m_simpleValue.empty()) {
-        if (m_simpleVal.Int() != value) {
-            return false;
-        }
-    }
+    ComparerInt cmp;
 
-    //
-    for (auto& rest : m_restrictions) {
-        if (!rest->Fit(value, ctx)) {
-            return false;
-        }
-    }
-
-    return true;
+    return MatchValue(value, cmp);
 }
 
 /// <summary>
@@ -1751,19 +1800,42 @@ bool IdsValue::Match(double value, Context& ctx)
         return true;
     }
 
+    ComparerFloat cmp (ctx.Precision());
+
+    return MatchValue(value, cmp);
+}
+
+/// <summary>
+/// 
+/// </summary>
+template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& cmp)
+{
     //
-    if (!m_simpleValue.empty()) {
-        if (fabs (m_simpleVal.Real() - value) > ctx.Precision()) {
-            return false;
+    if (!m_enumeration.empty()) {
+        bool match = false;
+        for (auto& val : m_enumeration) {
+            T v;
+            val->Get(&v);
+            if (0 == cmp.compare(value, v)) {
+                match = true;
+                break;
+            }
+        }
+        if (!match) {
+            return false; //>>>>>>
         }
     }
 
-    //
-    for (auto& rest : m_restrictions) {
-        if (!rest->Fit(value, ctx)) {
-            return false;
-        }
-    }
+    /*
+    m_pattern;
+    m_minInclusive;
+    m_maxInclusive;
+    m_minExclusive;
+    m_maxExclusive;
+    m_length;
+    m_minLength;
+    m_maxLength;
+    */
 
     return true;
 }
