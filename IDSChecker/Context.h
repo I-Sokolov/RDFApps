@@ -78,8 +78,10 @@ public:
 
 public:
     IfcVersion GetIfcVersion();
-    //SdaiInstance FindProjectUnit(const char* unitKind);
+    
     double GetUnitScale(SdaiInstance unit, const char* unitKind);
+
+    double Precision() { return 1e-5; /*TODO: follow model precision*/ }
 
 public:
     Console&    console;

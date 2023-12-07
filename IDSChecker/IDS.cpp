@@ -101,6 +101,13 @@ using namespace RDF::IDS;
             return m_attribute_##EntAttr;                               \
         }
 
+/// <summary>
+/// 
+/// </summary>
+static int StrICmp(const char* s1, const char* s2)
+{
+    return _stricmp(s1, s2);
+}
 
 #include "Context.h"
 
@@ -418,6 +425,7 @@ void IdsValue::Read(_xml::_element& elem, Context& ctx)
 /// 
 /// </summary>
 Value::Value(_xml::_element& elem, Context& ctx)
+    : m_val (m_value)
 {
     GET_ATTR(value)
     NEXT_ATTR(fixed)
@@ -650,7 +658,7 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
     else {
         assert(!"to test, do we need polymorphic match");
         auto instTypeName = engiGetEntityName(instType, sdaiSTRING);
-        entityNameMatch = m_name.Match(instTypeName, true);
+        entityNameMatch = m_name.Match(instTypeName, true, ctx);
     }
 
     if (!entityNameMatch) {
@@ -673,7 +681,7 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
             getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiSTRING, &predTypeValue);
         }
 
-        bool predTypeMatch = getResult && predTypeValue && m_predefinedType.Match(predTypeValue, false);
+        bool predTypeMatch = getResult && predTypeValue && m_predefinedType.Match(predTypeValue, false, ctx);
 
         if (!predTypeMatch) {
             return false; //>>>>>>>>>>>>>>>>>>>>>>>
@@ -960,13 +968,13 @@ void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Conte
             sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiSTRING, &value);
         }
 
-        m_valueMatch = m_value.Match(value, false);
+        m_valueMatch = m_value.Match(value, false, ctx);
     }
 
     if (!m_uriMatch && m_URI.IsSet()) {
         const char* uri = nullptr;
         sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiSTRING, &uri);
-        m_uriMatch = m_URI.Match(uri, true);
+        m_uriMatch = m_URI.Match(uri, true, ctx);
     }
 
     SdaiInstance source = 0;
@@ -982,25 +990,25 @@ void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx)
     if (!m_systemMatch && m_system.IsSet()) {
         const char* name = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiSTRING, &name);
-        m_systemMatch = m_system.Match(name, true);
+        m_systemMatch = m_system.Match(name, true, ctx);
     }
 
     if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() == Context::IfcVersion::Ifc4) {
         const char* source = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Location(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true);
+        m_uriMatch = m_URI.Match(source, true, ctx);
     }
 
     if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() > Context::IfcVersion::Ifc4) {
         const char* source = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Specification(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true);
+        m_uriMatch = m_URI.Match(source, true, ctx);
     }
 
     if (!m_uriMatch && m_URI.IsSet()) {
         const char* source = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true);
+        m_uriMatch = m_URI.Match(source, true, ctx);
     }
 }
 
@@ -1037,7 +1045,7 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
             auto attr = engiGetEntityAttributeByIndex(ent, i, true, true);
             const char* name = 0;
             engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-            if (m_name.Match(name, true)) {
+            if (m_name.Match(name, true, ctx)) {
                 if (MatchAttribute(inst, attr, ctx)) {
                     return true; //>>>>>>>>>>>>>
                 }
@@ -1062,14 +1070,14 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiSTRING: {
             const char* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiSTRING, &value)) {
-                match = m_value.Match(value, false);
+                match = m_value.Match(value, false, ctx);
             }
             break;
         }
         case sdaiINTEGER: {
             SdaiInteger value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINTEGER, &value)) {
-                match = m_value.Match(value);
+                match = m_value.Match(value, ctx);
             }
             break;
         }
@@ -1077,7 +1085,7 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiNUMBER: {
             double value = 0;
             if (sdaiGetAttr(inst, attr, sdaiREAL, &value)) {
-                match = m_value.Match(value);
+                match = m_value.Match(value, ctx);
             }
             break;
         }
@@ -1174,7 +1182,7 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
     if (m_propertySet.IsSet()) {
         const char* name = 0;
         sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiSTRING, &name);
-        if (!m_name.Match(name, false)) {
+        if (!m_name.Match(name, false, ctx)) {
             return false;
         }
     }
@@ -1214,7 +1222,7 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiSTRING, &name);
-    if (!m_name.Match(name, false)) {
+    if (!m_name.Match(name, false, ctx)) {
         return false;
     }
 
@@ -1271,7 +1279,7 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiSTRING, &name);
-    if (!m_name.Match(name, false)) {
+    if (!m_name.Match(name, false, ctx)) {
         return false;
     }
 
@@ -1298,7 +1306,7 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
     else if (entity == ctx._IfcQuantityCount()) {
         SdaiInteger value = 0;
         sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value);
-        return m_value.Match(value);
+        return m_value.Match(value, ctx);
     }
     else if (entity == ctx._IfcQuantityLength()) {
         double value = 0;
@@ -1354,37 +1362,37 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
         {
             const char* value = nullptr;
             sdaiGetADBValue(nominalValue, sdaiBINARY, &value);
-            return m_value.Match(value, false);
+            return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__STRING:
         {
             const char* value = nullptr;
             sdaiGetADBValue(nominalValue, sdaiSTRING, &value);
-            return m_value.Match(value, false);
+            return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__ENUMERATION:
         {
             const char* value = nullptr;
             sdaiGetADBValue(nominalValue, sdaiENUM, &value);
-            return m_value.Match(value, false);
+            return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__BOOLEAN:
         {
             bool value = 0;
             sdaiGetADBValue(nominalValue, sdaiBOOLEAN, &value);
-            return m_value.Match(value);
+            return m_value.Match(value, ctx);
         }
         case enum_express_attr_type::__INTEGER:
         {
             SdaiInteger value = 0;
             sdaiGetADBValue(nominalValue, sdaiINTEGER, &value);
-            return m_value.Match(value);
+            return m_value.Match(value, ctx);
         }
         case enum_express_attr_type::__LOGICAL:
         {
             const char* value = 0;
             sdaiGetADBValue(nominalValue, sdaiLOGICAL, &value);
-            return m_value.Match(value, false);
+            return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__NUMBER:
         case enum_express_attr_type::__REAL:
@@ -1420,7 +1428,7 @@ bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* unit
 
     value *= scale;
 
-    return m_value.Match(value);
+    return m_value.Match(value, ctx);
 }
 
 /// <summary>
@@ -1506,7 +1514,7 @@ bool FacetMaterial::MatchMaterialSimple(SdaiInstance material, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(material, ctx._IfcMaterial_Name(), sdaiSTRING, &name);
-    return m_value.Match(name, false);
+    return m_value.Match(name, false, ctx);
 }
 
 /// <summary>
@@ -1516,7 +1524,7 @@ bool FacetMaterial::MatchMaterialLayer(SdaiInstance layer, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(layer, ctx._IfcMaterialLayer_Name(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1532,7 +1540,7 @@ bool FacetMaterial::MatchMaterialLayerSet(SdaiInstance material, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(material, ctx._IfcMaterialLayerSet_LayerSetName(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1567,7 +1575,7 @@ bool FacetMaterial::MatchMaterialProfile(SdaiInstance profile, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(profile, ctx._IfcMaterialProfile_Name(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1583,7 +1591,7 @@ bool FacetMaterial::MatchMaterialProfileSet(SdaiInstance material, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(material, ctx._IfcMaterialProfileSet_Name(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1618,7 +1626,7 @@ bool FacetMaterial::MatchMaterialConstituent(SdaiInstance constit, Context& ctx)
 {
     const char* name = nullptr;
     sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Name(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1634,7 +1642,7 @@ bool FacetMaterial::MatchMaterialConstituentSet(SdaiInstance material, Context& 
 {
     const char* name = nullptr;
     sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_Name(), sdaiSTRING, &name);
-    if (m_value.Match(name, false)) {
+    if (m_value.Match(name, false, ctx)) {
         return true;
     }
 
@@ -1669,5 +1677,94 @@ bool FacetMaterial::MatchMaterialList(SdaiInstance material, Context& ctx)
     }
 
     return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool IdsValue::Match(const char* value, bool compareNoCase, Context& ctx)
+{
+    if (!m_isSet) {
+        return true;
+    }
+
+    if (!value) {
+        return false;
+    }
+
+    //
+    if (!m_simpleValue.empty()) {
+        if (compareNoCase) {
+            if (!StrICmp(value, m_simpleValue.c_str())) {
+                return false;
+            }
+        }
+        else {
+            if (strcmp(value, m_simpleValue.c_str())) {
+                return false;
+            }
+        }
+    }
+
+    //
+    for (auto& rest : m_restrictions) {
+        if (!rest->Fit(value, compareNoCase, ctx)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool IdsValue::Match(SdaiInteger value, Context& ctx)
+{
+    if (!m_isSet) {
+        return true;
+    }
+
+    //
+    if (!m_simpleValue.empty()) {
+        if (m_simpleVal.Int() != value) {
+            return false;
+        }
+    }
+
+    //
+    for (auto& rest : m_restrictions) {
+        if (!rest->Fit(value, ctx)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool IdsValue::Match(double value, Context& ctx)
+{
+    if (!m_isSet) {
+        return true;
+    }
+
+    //
+    if (!m_simpleValue.empty()) {
+        if (fabs (m_simpleVal.Real() - value) > ctx.Precision()) {
+            return false;
+        }
+    }
+
+    //
+    for (auto& rest : m_restrictions) {
+        if (!rest->Fit(value, ctx)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 

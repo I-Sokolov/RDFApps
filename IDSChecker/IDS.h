@@ -32,13 +32,35 @@ namespace RDF
         public:
             ~OwningPtrList() { clear(); }
 
-            void clear ()
+            void clear()
             {
                 for (auto p : *this) {
                     delete p;
                 }
                 std::list<T*>::clear();
             }
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        class MultiTypeValueCache
+        {
+        public:
+            MultiTypeValueCache(std::string& strVal) : m_strVal (strVal){}
+
+            const char* Str()   { return m_strVal.c_str(); }
+            double      Real()  { if (!m_dSet) { m_dVal = atof(Str()); m_dSet = true; } return m_dVal; }
+            SdaiInteger Int()   { if (!m_iSet) { m_iVal = atoi(Str()); m_iSet = true; } return m_iVal; }
+
+        private:
+            std::string& m_strVal;
+
+            double       m_dVal = 0;
+            bool         m_dSet = false;
+
+            SdaiInteger  m_iVal = 0;
+            bool         m_iSet = false;
         };
 
         /// <summary>
@@ -52,6 +74,8 @@ namespace RDF
         private:
             std::string m_value;
             std::string m_fixed;
+
+            MultiTypeValueCache m_val;
         };
 
         /// <summary>
@@ -61,6 +85,10 @@ namespace RDF
         {
         public:
             Restriction(_xml::_element& elem, Context& ctx);
+
+            bool Fit(const char* value, bool compareNoCase, Context& ctx);
+            bool Fit(double value, Context& ctx);
+            bool Fit(SdaiInteger value, Context& ctx);
 
         private:
             void Read_enumeration(_xml::_element& elem, Context& ctx) { m_enumeration.push_back(new Value(elem, ctx)); }
@@ -92,16 +120,18 @@ namespace RDF
         class IdsValue
         {
         public:
+            IdsValue() : m_simpleVal(m_simpleValue) {}
+
             void Read(_xml::_element& elem, Context& ctx);
 
             bool IsSet() { return m_isSet; }
             const char* GetSimpleValue() { if (m_isSet && m_restrictions.empty()) return m_simpleValue.c_str(); else return nullptr; }
 
             //unset value matches to everything including NULL string
-            bool Match(const char* value, bool compareNoCase); 
-            bool Match(SdaiInteger value);
-            bool Match(double value);
-            bool Match(bool value);
+            bool Match(const char* value, bool compareNoCase, Context& ctx);
+            bool Match(SdaiInteger value, Context& ctx);
+            bool Match(double value, Context& ctx);
+            bool Match(bool value, Context& ctx) { return Match((SdaiInteger)value, ctx); }
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
@@ -111,6 +141,8 @@ namespace RDF
             bool                       m_isSet = false;
             std::string                m_simpleValue;
             OwningPtrList<Restriction> m_restrictions;
+
+            MultiTypeValueCache        m_simpleVal;
         };
 
         /// <summary>
@@ -188,7 +220,7 @@ namespace RDF
             struct NavigateByAttributes : public Navigator
             {
                 SdaiAttr    attrRelation;
-                int_t       sdaiType;
+                SdaiInteger sdaiType;
                 SdaiEntity  relClass;
                 SdaiAttr    attrInstance;
 
@@ -208,7 +240,7 @@ namespace RDF
 
         private:
             void FillParentsNavigators(Context& ctx);
-            void CreateNavigatorByAttributes(SdaiAttr attrRelation, int_t sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
+            void CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiInteger sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
             void CreateNavigatorByRelation(SdaiEntity relClass, SdaiAttr attrParent, SdaiAttr attrChildren, Context& ctx);
 
         private:
