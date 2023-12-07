@@ -78,8 +78,8 @@ public:
 
 public:
     IfcVersion GetIfcVersion();
-    SdaiInstance FindProjectUnit(const char* unitKind);
-    double GetUnitScale(SdaiInstance unit);
+    //SdaiInstance FindProjectUnit(const char* unitKind);
+    double GetUnitScale(SdaiInstance unit, const char* unitKind);
 
 public:
     Console&    console;
@@ -90,17 +90,19 @@ public:
     SdaiInstance    currentInstane = 0;    Specification* currentSpecification = nullptr;
 
 private:
+#if 0
     double GetDerivedUnitScale(SdaiInstance unit);
     double GetContexDependentUnitScale(SdaiInstance unit);
     double GetConversionBasedUnitScale(SdaiInstance unit);
     double GetSIUnitScale(SdaiInstance unit);
-
+#endif
 private:
     IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
 
     ENTITY(IfcRoot);
     ENTITY(IfcObjectDefinition);
     ENTITY(IfcRelAssociatesClassification);
+    ENTITY(IfcRelAssociatesMaterial);
     ENTITY(IfcClassificationReference);
     ENTITY(IfcExternalReference);
     ENTITY(IfcClassification);
@@ -150,10 +152,24 @@ private:
     ENTITY(IfcSIUnit);
     ENTITY(IfcDerivedUnitElement);
 
+    ENTITY(IfcMaterial);
+    ENTITY(IfcMaterialLayer);
+    ENTITY(IfcMaterialLayerSet);
+    ENTITY(IfcMaterialProfile);
+    ENTITY(IfcMaterialProfileSet);
+    ENTITY(IfcMaterialConstituent);
+    ENTITY(IfcMaterialConstituentSet);
+    ENTITY(IfcMaterialLayerSetUsage);
+    ENTITY(IfcMaterialProfileSetUsage);
+    ENTITY(IfcMaterialList);
+
+
     ATTR(IfcRoot, Name, IfcRoot_Name);
     ATTR(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
     ATTR(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
+    ATTR(IfcObjectDefinition, HasAssociations, IfcObjectDefinition_HasAssociations);
     ATTR(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
+    ATTR(IfcRelAssociatesMaterial, RelatingMaterial, IfcRelAssociatesMaterial_RelatingMaterial);
     ATTR(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
     ATTR(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
     ATTR(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
@@ -192,21 +208,42 @@ private:
     ATTR(IfcDerivedUnit, Elements, IfcDerivedUnit_Elements);
     ATTR(IfcDerivedUnitElement, Unit, IfcDerivedUnitElement_Unit);
     ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);
+
+    ATTR(IfcMaterial, Name, IfcMaterial_Name);
+    ATTR(IfcMaterialLayer, Name, IfcMaterialLayer_Name);
+    ATTR(IfcMaterialLayer, Material, IfcMaterialLayer_Material);
+    ATTR(IfcMaterialLayerSet, LayerSetName, IfcMaterialLayerSet_LayerSetName);
+    ATTR(IfcMaterialLayerSet, MaterialLayers, IfcMaterialLayerSet_MaterialLayers);
+    ATTR(IfcMaterialLayerSetUsage, ForLayerSet, IfcMaterialLayerSetUsage_ForLayerSet);
+    ATTR(IfcMaterialProfile, Name, IfcMaterialProfile_Name);
+    ATTR(IfcMaterialProfile, Material, IfcMaterialProfile_Material);
+    ATTR(IfcMaterialProfileSet, Name, IfcMaterialProfileSet_Name);
+    ATTR(IfcMaterialProfileSet, MaterialProfiles, IfcMaterialProfileSet_MaterialProfiles);
+    ATTR(IfcMaterialProfileSetUsage, ForProfileSet, IfcMaterialProfileSetUsage_ForProfileSet);
+    ATTR(IfcMaterialConstituent, Name, IfcMaterialConstituent_Name);
+    ATTR(IfcMaterialConstituent, Material, IfcMaterialConstituent_Material);
+    ATTR(IfcMaterialConstituentSet, Name, IfcMaterialConstituentSet_Name);
+    ATTR(IfcMaterialConstituentSet, MaterialConstituents, IfcMaterialConstituentSet_MaterialConstituents);
+    ATTR(IfcMaterialList, Materials, IfcMaterialList_Materials);
 };
 
 
-/// <summary>
-/// 
-/// </summary>
-SdaiInstance Context::FindProjectUnit(const char* unitKind)
-{
-}
 
 /// <summary>
 /// 
 /// </summary>
-double Context::GetUnitScale(SdaiInstance unit)
+double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
 {
+    if (unit) {
+        return getUnitInstanceConversionFactor(model, unit, nullptr, nullptr, nullptr);
+    }
+    else if (unitKind) {
+        return getUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
+    }
+    else {
+        return 1;
+    }
+#if 0
     auto entity = sdaiGetInstanceType(unit);
 
     if (entity == _IfcDerivedUnit()) {
@@ -228,6 +265,15 @@ double Context::GetUnitScale(SdaiInstance unit)
     else {
         LogMsg(*this, MsgLevel::NotImplemented, "Unknown unit class");
     }
+#endif
+}
+
+#if 0
+/// <summary>
+/// 
+/// </summary>
+SdaiInstance Context::FindProjectUnit(const char* unitKind)
+{
 }
 
 /// <summary>
@@ -304,3 +350,4 @@ double Context::GetSIUnitScale(SdaiInstance unit)
 {
 }
 
+#endif

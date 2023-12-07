@@ -303,8 +303,21 @@ namespace RDF
             FacetMaterial(_xml::_element& elem, Context& ctx);
 
         protected:
-            virtual void ResetCacheImpl() override;
+            virtual void ResetCacheImpl() override {}
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+
+        private:
+            bool MatchMaterialSelect(SdaiInstance material, Context& ctx);
+            bool MatchMaterialSimple(SdaiInstance material, Context& ctx);
+            bool MatchMaterialLayer(SdaiInstance material, Context& ctx);
+            bool MatchMaterialLayerSet(SdaiInstance material, Context& ctx);
+            bool MatchMaterialLayerSetUsage(SdaiInstance material, Context& ctx);
+            bool MatchMaterialProfile(SdaiInstance material, Context& ctx);
+            bool MatchMaterialProfileSet(SdaiInstance material, Context& ctx);
+            bool MatchMaterialProfileSetUsage(SdaiInstance material, Context& ctx);
+            bool MatchMaterialConstituent(SdaiInstance material, Context& ctx);
+            bool MatchMaterialConstituentSet(SdaiInstance material, Context& ctx);
+            bool MatchMaterialList(SdaiInstance material, Context& ctx);
 
         private:
             IdsValue m_value;

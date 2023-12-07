@@ -1416,15 +1416,258 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
 /// </summary>
 bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx)
 {
-    if (!unit) {
-        unit = ctx.FindProjectUnit(unitKind);
-    }
-
-    double scale = GetUnitScale(unit);
+    double scale = ctx.GetUnitScale(unit, unitKind);
 
     value *= scale;
 
     return m_value.Match(value);
 }
 
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
+{
+    SdaiAggr aggrAssoc = 0;
+    sdaiGetAttr(inst, ctx._IfcObjectDefinition_HasAssociations(), sdaiAGGR, &aggrAssoc);
+
+    SdaiInstance relAssoc = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
+
+        auto entityAssoc = sdaiGetInstanceType(relAssoc);
+        if (entityAssoc == ctx._IfcRelAssociatesMaterial()) {
+
+            SdaiInstance material = 0;
+            sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesMaterial_RelatingMaterial(), sdaiINSTANCE, &material);
+            if (material) {
+
+                if (MatchMaterialSelect(material, ctx)) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialSelect(SdaiInstance material, Context& ctx)
+{
+    if (!material) {
+        return false;
+    }
+
+    auto entity = sdaiGetInstanceType(material);
+
+    if (entity == ctx._IfcMaterial()) {
+        return MatchMaterialSimple(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialLayer()) {
+        return MatchMaterialLayer(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialLayerSet()) {
+        return MatchMaterialLayerSet(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialProfile()) {
+        return MatchMaterialProfile(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialProfileSet()) {
+        return MatchMaterialProfileSet(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialConstituent()) {
+        return MatchMaterialConstituent(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialConstituentSet()) {
+        return MatchMaterialConstituentSet(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialLayerSetUsage()) {
+        return MatchMaterialLayerSetUsage(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialProfileSetUsage()) {
+        return MatchMaterialProfileSetUsage(material, ctx);
+    }
+    else if (entity == ctx._IfcMaterialList()) {
+        return MatchMaterialList(material, ctx);
+    }
+    else {
+        LogMsg(ctx, MsgLevel::NotImplemented, "Material type");
+        return false;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialSimple(SdaiInstance material, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterial_Name(), sdaiSTRING, &name);
+    return m_value.Match(name, false);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialLayer(SdaiInstance layer, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(layer, ctx._IfcMaterialLayer_Name(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiInstance material = 0;
+    sdaiGetAttr(layer, ctx._IfcMaterialLayer_Material(), sdaiINSTANCE, &material);
+    return MatchMaterialSimple(material, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialLayerSet(SdaiInstance material, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialLayerSet_LayerSetName(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiAggr layers = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialLayerSet_MaterialLayers(), sdaiAGGR, &layers);
+
+    SdaiInstance layer = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(layers, i++, sdaiINSTANCE, &layer)) {
+        if (MatchMaterialLayer(layer, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialLayerSetUsage(SdaiInstance material, Context& ctx)
+{
+    SdaiInstance layerset = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialLayerSetUsage_ForLayerSet(), sdaiINSTANCE, &layerset);
+    return MatchMaterialLayerSet(layerset, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialProfile(SdaiInstance profile, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(profile, ctx._IfcMaterialProfile_Name(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiInstance material = 0;
+    sdaiGetAttr(profile, ctx._IfcMaterialProfile_Material(), sdaiINSTANCE, &material);
+    return MatchMaterialSimple(material, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialProfileSet(SdaiInstance material, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialProfileSet_Name(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiAggr profiles = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialProfileSet_MaterialProfiles(), sdaiAGGR, &profiles);
+
+    SdaiInstance profile = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(profiles, i++, sdaiINSTANCE, &profile)) {
+        if (MatchMaterialProfile(profile, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialProfileSetUsage(SdaiInstance material, Context& ctx)
+{
+    SdaiInstance profileset = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialProfileSetUsage_ForProfileSet(), sdaiINSTANCE, &profileset);
+    return MatchMaterialLayerSet(profileset, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialConstituent(SdaiInstance constit, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Name(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiInstance material = 0;
+    sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Material(), sdaiINSTANCE, &material);
+    return MatchMaterialSimple(material, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialConstituentSet(SdaiInstance material, Context& ctx)
+{
+    const char* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_Name(), sdaiSTRING, &name);
+    if (m_value.Match(name, false)) {
+        return true;
+    }
+
+    SdaiAggr parts = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_MaterialConstituents(), sdaiAGGR, &parts);
+
+    SdaiInstance part = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(parts, i++, sdaiINSTANCE, &part)) {
+        if (MatchMaterialConstituent(part, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetMaterial::MatchMaterialList(SdaiInstance material, Context& ctx)
+{
+    SdaiAggr parts = 0;
+    sdaiGetAttr(material, ctx._IfcMaterialList_Materials(), sdaiAGGR, &parts);
+
+    SdaiInstance part = 0;
+    SdaiInteger i = 0;
+    while (sdaiGetAggrByIndex(parts, i++, sdaiINSTANCE, &part)) {
+        if (MatchMaterialSimple(part, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
