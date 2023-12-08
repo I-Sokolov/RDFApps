@@ -83,7 +83,7 @@ public:
     
     double GetUnitScale(SdaiInstance unit, const char* unitKind);
 
-    double Precision() { return 1e-5; /*TODO: follow model precision*/ }
+    double Precision() { return 1e-6; }
 
 public:
     Console&    console;

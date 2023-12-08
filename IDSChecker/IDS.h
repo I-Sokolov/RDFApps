@@ -160,8 +160,8 @@ namespace RDF
             bool Match(SdaiInstance inst, Context& ctx);
 
         protected:
-            Facet() {}
-            Facet(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
+            Facet() : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) {}
+            Facet(_xml::_element& elem, Context& ctx) : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) { Read(elem, ctx); }
 
             virtual void ResetCacheImpl() = 0;
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) = 0;
@@ -174,6 +174,10 @@ namespace RDF
             std::string m_maxOccurs;
             std::string m_datatype;
             std::string m_relation; //for partOf
+
+        private:
+            MultiTypeValueCache m_minOccursVal;
+            MultiTypeValueCache m_maxOccursVal;
         };
 
         /// <summary>
@@ -184,7 +188,6 @@ namespace RDF
         public:
             FacetEntity() {}
             FacetEntity(_xml::_element& elem, Context& ctx) { Read(elem, ctx); }
-
 
             void Read(_xml::_element& elem, Context& ctx);
 

@@ -109,6 +109,38 @@ static int StrICmp(const char* s1, const char* s2)
     return _stricmp(s1, s2);
 }
 
+/// <summary>
+/// 
+/// </summary>
+enum class RqType { Required, Optional, Prohibited };
+static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur, RqType def)
+{
+    const char* min__ = nullptr;
+    minOccur.Get(&min__);
+
+    if (!min__ || !*min__) {
+        return def;
+    }
+
+    SdaiInteger min_ = 0;
+    minOccur.Get(&min_);
+    if (min_ > 0) {
+        return RqType::Required;
+    }
+
+    SdaiInteger max_ = MAXINT;
+    const char* max__ = nullptr;
+    maxOccur.Get(&max__);
+    if (*max__) {
+        maxOccur.Get(&max_);
+    }
+
+    if (max_ == 0)
+        return RqType::Prohibited;
+
+    return RqType::Optional;
+}
+
 #include "Context.h"
 
 /// <summary>
@@ -348,7 +380,22 @@ void Facet::ResetCache()
 /// </summary>
 bool Facet::Match(SdaiInstance inst, Context& ctx)
 {
-    return MatchImpl(inst, ctx);
+    bool match = MatchImpl(inst, ctx);
+
+    auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Required);
+
+    switch (rq) {
+        case RqType::Prohibited:
+            match = !match;
+            break;
+
+        case RqType::Optional:
+            ctx.LogMsg(MsgLevel::Info, "Optional requirement%s match", match ? "" : " does not");
+            match = true;
+            break;
+    }
+
+    return match;
 }
 
 /// <summary>
@@ -603,31 +650,6 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
     return ok;
 }
 
-/// <summary>
-/// 
-/// </summary>
-enum class RqType { Required, Optional, Prohibited };
-
-static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur)
-{
-    SdaiInteger min_ = 0;
-    minOccur.Get(&min_);
-
-    SdaiInteger max_ = MAXINT;
-    const char* max__ = nullptr;
-    maxOccur.Get(&max__);
-    if (*max__) {
-        maxOccur.Get(&max_);
-    }
-
-    if (max_ < min_)
-        return RqType::Prohibited;
-
-    if (min_ == 0)
-        return RqType::Optional;
-
-    return RqType::Required;
-}
 
 /// <summary>
 /// 
@@ -638,7 +660,7 @@ bool Specification::CheckUsed(Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         
-        auto rq = GetRqType(m_minOccursVal, m_maxOccursVal);
+        auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Optional);
         
         switch (rq) {
             case RqType::Required:
