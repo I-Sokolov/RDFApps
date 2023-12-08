@@ -1185,6 +1185,10 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
 /// </summary>
 bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx)
 {
+    if (engiAttrIsInverse(attr)) {
+        return false; //do not apply to imverse attribute
+    }
+
     bool match = false;
 
     auto sdaiType = engiGetInstanceAttrType(inst, attr);
@@ -1248,9 +1252,13 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
             }
             break;
         }
-        case sdaiINSTANCE:
-            //fail - inverse_attributes_cannot_be_checked_and_always_fail.ids
+        case sdaiINSTANCE: {
+            SdaiInstance value = 0;
+            if (sdaiGetAttr(inst, attr, sdaiINSTANCE, &value)) {
+                match = m_value.MatchInstance(value, ctx);
+            }
             break;
+        }
         case sdaiADB:
             //fail-value_checks_always_fail_for_selects
             break;
@@ -1334,9 +1342,13 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
                 }
                 break;
             }
-            case sdaiINSTANCE:
-                //fail - inverse_attributes_cannot_be_checked_and_always_fail.ids
+            case sdaiINSTANCE: {
+                SdaiInstance value = 0;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiINSTANCE, &value)) {
+                    match = m_value.MatchInstance(value, ctx);
+                }
                 break;
+            }
             case sdaiADB:
                 //fail-value_checks_always_fail_for_selects
                 break;
