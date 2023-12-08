@@ -50,8 +50,8 @@ namespace RDF
             MultiTypeValueCache(std::string& strVal) : m_strVal (strVal){}
 
             void Get(const char** pval)     { *pval = m_strVal.c_str(); }
-            void Get(double* pval)          { if (!m_dSet) { m_dVal = atof(m_strVal.c_str()); m_dSet = true; } *pval = m_dVal; }
-            void Get(SdaiInteger* pval)     { if (!m_iSet) { m_iVal = atoi(m_strVal.c_str()); m_iSet = true; } *pval = m_iVal; }
+            void Get(double* pval);
+            void Get(SdaiInteger* pval);
 
         private:
             std::string& m_strVal;

@@ -1933,6 +1933,46 @@ bool FacetMaterial::MatchMaterialList(SdaiInstance material, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
+void MultiTypeValueCache::Get(double* pval) 
+{ 
+    if (!m_dSet) {
+        m_dSet = true;
+
+        char* end = 0;
+        
+        m_dVal = strtod(m_strVal.c_str(), &end);
+
+        if (!end || *end) {
+            m_dVal = FLT_MAX;
+        }
+    }
+    
+    *pval = m_dVal; 
+}
+
+/// <summary>
+/// 
+/// </summary>
+void MultiTypeValueCache::Get(SdaiInteger* pval) 
+{ 
+    if (!m_iSet) { 
+        m_iSet = true; 
+    
+        char* end = 0;
+
+        m_iVal = strtol(m_strVal.c_str(), &end, 10);
+
+        if (!end || *end) {
+            m_iVal = MAXLONG;
+        }
+    }
+    
+    *pval = m_iVal; 
+}
+
+/// <summary>
+/// 
+/// </summary>
 struct ComparerStr
 {
     ComparerStr(bool compareNoCase) : m_compareNoCase(compareNoCase) {}
