@@ -1252,8 +1252,7 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
             //fail - inverse_attributes_cannot_be_checked_and_always_fail.ids
             break;
         case sdaiADB:
-            ctx.LogMsg(MsgLevel::NotImplemented, "Match this type of attributes");
-            assert(0);
+            //fail-value_checks_always_fail_for_selects
             break;
         default:
             ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
@@ -1339,8 +1338,7 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
                 //fail - inverse_attributes_cannot_be_checked_and_always_fail.ids
                 break;
             case sdaiADB:
-                ctx.LogMsg(MsgLevel::NotImplemented, "Match this type of attributes");
-                assert(0);
+                //fail-value_checks_always_fail_for_selects
                 break;
             default:
                 ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
