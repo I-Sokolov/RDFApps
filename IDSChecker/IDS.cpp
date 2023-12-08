@@ -770,17 +770,20 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
 
     auto instType = sdaiGetInstanceType(inst);
 
+    //doc says: The IFC Class must match exactly
     if (auto name = m_name.GetSimpleValue()) {
         if (!m_sdaiEntity) {
             m_sdaiEntity = sdaiGetEntity(ctx.model, name);
         }
-        entityNameMatch = sdaiIsInstanceOf (instType, m_sdaiEntity);
+
+        entityNameMatch = (instType == m_sdaiEntity);
     }
     else {
-        assert(!"to test, do we need polymorphic match");
+        assert(!"to test");
         auto instTypeName = engiGetEntityName(instType, sdaiSTRING);
         entityNameMatch = m_name.Match(instTypeName, true, ctx);
     }
+
 
     if (!entityNameMatch) {
         return false; //>>>>>>>>>>>>>>>>>>>>>>>
