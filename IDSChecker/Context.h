@@ -240,7 +240,7 @@ private:
 double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
 {
     if (unit) {
-        return getUnitInstanceConversionFactor(model, unit, nullptr, nullptr, nullptr);
+        return getIfcUnitConversionFactor(unit, nullptr, nullptr, nullptr);
     }
     else if (unitKind) {
         return getUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
