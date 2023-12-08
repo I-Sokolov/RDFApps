@@ -2095,16 +2095,15 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
         }
     }
 
-    /*
-    m_pattern;
-    m_minInclusive;
-    m_maxInclusive;
-    m_minExclusive;
-    m_maxExclusive;
-    m_length;
-    m_minLength;
-    m_maxLength;
-    */
+    //TODO
+    assert (m_pattern.empty());
+    assert (m_minInclusive.empty());
+    assert (m_maxInclusive.empty());
+    assert (m_minExclusive.empty());
+    assert (m_maxExclusive.empty());
+    assert (m_length.empty());
+    assert (m_minLength.empty());
+    assert (m_maxLength.empty());
 
     return true;
 }
