@@ -77,6 +77,8 @@ public:
     ~Context() {}
 
 public:
+    void LogMsg(MsgLevel type, const char* format, ...);
+
     IfcVersion GetIfcVersion(const char** pstr = nullptr);
     
     double GetUnitScale(SdaiInstance unit, const char* unitKind);

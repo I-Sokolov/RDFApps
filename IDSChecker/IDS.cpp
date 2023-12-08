@@ -32,7 +32,7 @@ using namespace RDF::IDS;
         }
 
 #define END_ATTR        \
-            else { LogMsg(ctx, MsgLevel::Warning, "Unknown attribute '%s'", attrName.c_str()); } } }
+            else { ctx.LogMsg(MsgLevel::Warning, "Unknown attribute '%s'", attrName.c_str()); } } }
 
 
 /// <summary>
@@ -65,7 +65,7 @@ using namespace RDF::IDS;
             }
 
 #define END_CHILDREN \
-            else { LogMsg(ctx, MsgLevel::Warning, "Unknown child element <%s>", tag.c_str()); } } }
+            else { ctx.LogMsg(MsgLevel::Warning, "Unknown child element <%s>", tag.c_str()); } } }
 
 
 /// <summary>
@@ -137,6 +137,7 @@ Context::IfcVersion Context::GetIfcVersion(const char** pstr)
         else {
             m_ifcVersion = IfcVersion::Unsupported;
             assert(0);
+            LogMsg(MsgLevel::NotImplemented, "Unknown IFC version %s", schemaName);
         }
     }
 
@@ -159,13 +160,13 @@ class DefaultConsole : public Console
 /// <summary>
 /// 
 /// </summary>
-static void LogMsg (Context& ctx, MsgLevel type, const char* format, ...)
+void Context::LogMsg (MsgLevel type, const char* format, ...)
 {
-    if (type < ctx.msgLevel) {
+    if (type < msgLevel) {
         return; //>>>>>>>>>>>>>
     }
 
-    auto& log = ctx.console;
+    auto& log = console;
 
     //
     log.out("\t<");
@@ -239,7 +240,7 @@ bool File::Read(const char* idsFilePath)
         }
     }
     catch (exception& ex) {
-        LogMsg(ctx, MsgLevel::Error, "Failed read IDS file: '%s', error: %s", idsFilePath, ex.what());
+        ctx.LogMsg(MsgLevel::Error, "Failed read IDS file: '%s', error: %s", idsFilePath, ex.what());
     }
 
     return ok;
@@ -494,7 +495,7 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
         ctx.model = 0;
     }
     else {
-        LogMsg(ctx, MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
+        ctx.LogMsg(MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
         ok = false;
     }
 
@@ -589,10 +590,10 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
             ok = m_requirements.Match(inst, ctx);
 
             if (ok) {
-                LogMsg(ctx, MsgLevel::Info, "Checked ok");
+                ctx.LogMsg(MsgLevel::Info, "Checked ok");
             }
             else {
-                LogMsg(ctx, MsgLevel::Error, "Instance does not match specification");
+                ctx.LogMsg(MsgLevel::Error, "Instance does not match specification");
             }
         }
     }
@@ -612,10 +613,10 @@ bool Specification::CheckUsed(Context& ctx)
         ok = m_wasMatch;
         
         if (ok) {
-            LogMsg(ctx, MsgLevel::Info, "OK, required specification matched some instances");
+            ctx.LogMsg(MsgLevel::Info, "OK, required specification matched some instances");
         }
         else {
-            LogMsg(ctx, MsgLevel::Error, "ERROR, required specification never match");
+            ctx.LogMsg(MsgLevel::Error, "ERROR, required specification never match");
         }
     }
 
@@ -647,11 +648,11 @@ bool Specification::SuitableIfcVersion(Context& ctx)
                     break;
                 default:
                     assert(0);
-                    LogMsg(ctx, MsgLevel::NotImplemented, "Model has unknown IFC version: %s", ifcVersion);
+                    ctx.LogMsg(MsgLevel::NotImplemented, "Model has unknown IFC version: %s", ifcVersion);
             }
 
             if (!match) {
-                LogMsg(ctx, MsgLevel::Warning, "Specification is intended for %s but model has version %s", m_ifcVersion.c_str(), ifcVersion);
+                ctx.LogMsg(MsgLevel::Warning, "Specification is intended for %s but model has version %s", m_ifcVersion.c_str(), ifcVersion);
             }
         }
     }
@@ -813,7 +814,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
         CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
     }
     else {
-        LogMsg(ctx, MsgLevel::NotImplemented, "Unsupported relationship %s", m_relation.c_str());
+        ctx.LogMsg(MsgLevel::NotImplemented, "Unsupported relationship %s", m_relation.c_str());
         assert(0);
     }
 }
@@ -993,7 +994,7 @@ void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context&
 
     auto clsfTypeName = engiGetEntityName(clsfType, sdaiSTRING);
     assert(clsfTypeName);
-    LogMsg(ctx, MsgLevel::NotImplemented, "Not implemented IfcClassificationSelect type %s", clsfTypeName ? clsfTypeName : NULL);
+    ctx.LogMsg(MsgLevel::NotImplemented, "Not implemented IfcClassificationSelect type %s", clsfTypeName ? clsfTypeName : NULL);
     assert(0);
 }
 
@@ -1061,7 +1062,7 @@ void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx)
 /// </summary>
 void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx)
 {
-    LogMsg(ctx, MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
+    ctx.LogMsg(MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
     assert(!"TODO... if somebody uses");
 }
 
@@ -1138,11 +1139,11 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiLOGICAL:
         case sdaiADB:
         case sdaiAGGR:
-            LogMsg(ctx, MsgLevel::NotImplemented, "Match this type of attributes");
+            ctx.LogMsg(MsgLevel::NotImplemented, "Match this type of attributes");
             assert(0);
             break;
         default:
-            LogMsg(ctx, MsgLevel::NotImplemented, "Match unknown attribute type");
+            ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
             assert(0);
     }
     return match;
@@ -1277,27 +1278,27 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
     auto entity = sdaiGetInstanceType(prop);
 
     if (entity == ctx._IfcComplexProperty()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "IfcComplexProperty");
+        ctx.LogMsg(MsgLevel::NotImplemented, "IfcComplexProperty");
         assert(0);
         return false;
     }
     else if (entity == ctx._IfcPropertyBoundedValue()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyBoundedValue");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyBoundedValue");
         assert(0);
         return false;
     }
     else if (entity == ctx._IfcPropertyEnumeratedValue()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyEnumeratedValue");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyEnumeratedValue");
         assert(0);
         return false;
     }
     else if (entity == ctx._IfcPropertyListValue()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyListValue");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyListValue");
         assert(0);
         return false;
     }
     else if (entity == ctx._IfcPropertyReferenceValue()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyReferenceValue");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyReferenceValue");
         assert(0);
         return false;
     }
@@ -1305,12 +1306,12 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
         return MatchPropertySingleValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyTableValue()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPropertyTableValue");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyTableValue");
         assert(0);
         return false;
     }
     else {
-        LogMsg(ctx, MsgLevel::NotImplemented, "Unknown entity");
+        ctx.LogMsg(MsgLevel::NotImplemented, "Unknown entity");
         assert(0);
         return false;
     }
@@ -1334,7 +1335,7 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
     auto entity = sdaiGetInstanceType(qto);
 
     if (entity == ctx._IfcPhysicalComplexQuantity()) {
-        LogMsg(ctx, MsgLevel::NotImplemented, "_IfcPhysicalComplexQuantity");
+        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPhysicalComplexQuantity");
         assert(0);
         return false;
     }
@@ -1378,7 +1379,7 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
         return MatchValue(value, unit, "MASSUNIT", ctx);
     }
     else {
-        LogMsg(ctx, MsgLevel::NotImplemented, "Unknown entity");
+        ctx.LogMsg(MsgLevel::NotImplemented, "Unknown entity");
         assert(0);
         return false;
     }
@@ -1456,7 +1457,7 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
         }
         default:
         {
-            LogMsg(ctx, MsgLevel::NotImplemented, "type of IfcValue");
+            ctx.LogMsg(MsgLevel::NotImplemented, "type of IfcValue");
             assert(0);
             return false;
         }
@@ -1546,7 +1547,7 @@ bool FacetMaterial::MatchMaterialSelect(SdaiInstance material, Context& ctx)
         return MatchMaterialList(material, ctx);
     }
     else {
-        LogMsg(ctx, MsgLevel::NotImplemented, "Material type");
+        ctx.LogMsg(MsgLevel::NotImplemented, "Material type");
         return false;
     }
 }
