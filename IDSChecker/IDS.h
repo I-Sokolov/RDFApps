@@ -222,10 +222,10 @@ namespace RDF
 
             struct NavigateByAttributes : public Navigator
             {
-                SdaiAttr    attrRelation;
-                SdaiInteger sdaiType;
-                SdaiEntity  relClass;
-                SdaiAttr    attrInstance;
+                SdaiAttr    attrRelation = 0;
+                SdaiInteger sdaiType = 0;
+                SdaiEntity  relClass = 0;
+                SdaiAttr    attrInstance = 0;
 
                 virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
             private:
@@ -234,9 +234,9 @@ namespace RDF
 
             struct NavigateByRelation : public Navigator
             {
-                SdaiEntity  relClass;
-                SdaiAttr    attrParent;
-                SdaiAttr    attrChildren;
+                SdaiEntity  relClass = 0;
+                SdaiAttr    attrParent = 0;
+                SdaiAttr    attrChildren = 0;
 
                 virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
             };
@@ -429,7 +429,7 @@ namespace RDF
             Requirements  m_requirements;
             
             bool          m_wasMatch = false;
-            int           m_suitableIfcVersion = -1;
+            bool          m_ifcVersionChecked = false;
         };
 
         /// <summary>

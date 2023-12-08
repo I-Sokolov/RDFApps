@@ -114,7 +114,7 @@ static int StrICmp(const char* s1, const char* s2)
 /// <summary>
 /// 
 /// </summary>
-Context::IfcVersion Context::GetIfcVersion()
+Context::IfcVersion Context::GetIfcVersion(const char** pstr)
 {
     if (m_ifcVersion == IfcVersion::NotItitialized) {
         assert(model);
@@ -122,6 +122,8 @@ Context::IfcVersion Context::GetIfcVersion()
         const char* schemaName = nullptr;
         GetSPFFHeaderItem(model, 9, 0, sdaiSTRING, &schemaName);
         assert(schemaName);
+
+        m_ifcVersionStr = schemaName;
 
         if (strstr(schemaName, "IFC4x3")) {
             m_ifcVersion = IfcVersion::Ifc4x3;
@@ -137,6 +139,11 @@ Context::IfcVersion Context::GetIfcVersion()
             assert(0);
         }
     }
+
+    if (pstr) {
+        *pstr = m_ifcVersionStr.c_str();
+    }
+
     return m_ifcVersion;
 }
 
@@ -562,7 +569,7 @@ bool File::CheckSpecificationsUsed(Context& ctx)
 void Specification::ResetCache() 
 { 
     m_wasMatch = false; 
-    m_suitableIfcVersion = -1; 
+    m_ifcVersionChecked = false;
 
     m_applicability.ResetCache();
     m_requirements.ResetCache();
@@ -613,6 +620,43 @@ bool Specification::CheckUsed(Context& ctx)
     }
 
     return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool Specification::SuitableIfcVersion(Context& ctx)
+{
+    //Each Specification may specify the IFC schema(s) that it applies to. This is purely for information purposes and a user may choose to audit the model with the specification and get a pass or fail result
+
+    if (!m_ifcVersionChecked) {
+        m_ifcVersionChecked = true;
+        
+        if (!m_ifcVersion.empty()) {
+            bool match = false;
+            const char* ifcVersion = nullptr;
+            switch (ctx.GetIfcVersion(&ifcVersion)) {
+                case Context::IfcVersion::Ifc2x3:
+                    match = m_ifcVersion == "IFC2x3";
+                    break;
+                case Context::IfcVersion::Ifc4:
+                    match = m_ifcVersion == "IFC4";
+                    break;
+                case Context::IfcVersion::Ifc4x3:
+                    match = m_ifcVersion == "IFC4x3";
+                    break;
+                default:
+                    assert(0);
+                    LogMsg(ctx, MsgLevel::NotImplemented, "Model has unknown IFC version: %s", ifcVersion);
+            }
+
+            if (!match) {
+                LogMsg(ctx, MsgLevel::Warning, "Specification is intended for %s but model has version %s", m_ifcVersion.c_str(), ifcVersion);
+            }
+        }
+    }
+
+    return true;
 }
 
 
@@ -777,7 +821,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, int_t sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
+void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiInteger sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
 {
     auto nav = new NavigateByAttributes ();
     m_navigations.push_back(nav);

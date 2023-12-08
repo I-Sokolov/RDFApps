@@ -77,7 +77,7 @@ public:
     ~Context() {}
 
 public:
-    IfcVersion GetIfcVersion();
+    IfcVersion GetIfcVersion(const char** pstr = nullptr);
     
     double GetUnitScale(SdaiInstance unit, const char* unitKind);
 
@@ -100,6 +100,7 @@ private:
 #endif
 private:
     IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
+    std::string m_ifcVersionStr;
 
     ENTITY(IfcRoot);
     ENTITY(IfcObjectDefinition);
