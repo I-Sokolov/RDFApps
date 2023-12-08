@@ -681,6 +681,19 @@ bool Specification::CheckUsed(Context& ctx)
     return ok;
 }
 
+
+/// <summary>
+/// Function to split a string by whitespaces 
+/// </summary>
+static void splitString(const std::string& input, std::set<std::string>& result)
+{
+    std::istringstream iss(input);
+    std::string token;
+    while (iss >> token) {
+        result.insert(token);
+    }
+}
+
 /// <summary>
 /// 
 /// </summary>
@@ -692,17 +705,22 @@ bool Specification::SuitableIfcVersion(Context& ctx)
         m_ifcVersionChecked = true;
         
         if (!m_ifcVersion.empty()) {
+
+            std::set<std::string> all;
+            splitString(m_ifcVersion, all);
+
             bool match = false;
+
             const char* ifcVersion = nullptr;
             switch (ctx.GetIfcVersion(&ifcVersion)) {
                 case Context::IfcVersion::Ifc2x3:
-                    match = m_ifcVersion == "IFC2x3";
+                    match = all.find("IFC2x3") != all.end();
                     break;
                 case Context::IfcVersion::Ifc4:
-                    match = m_ifcVersion == "IFC4";
+                    match = all.find("IFC4") != all.end();
                     break;
                 case Context::IfcVersion::Ifc4x3:
-                    match = m_ifcVersion == "IFC4x3";
+                    match = all.find("IFC4x3") != all.end();
                     break;
                 default:
                     assert(0);
