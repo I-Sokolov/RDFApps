@@ -1195,7 +1195,7 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiENUM:
         case sdaiSTRING: {
             const char* value = nullptr;
-            if (sdaiGetAttr(inst, attr, sdaiSTRING, &value)) {
+            if (sdaiGetAttr(inst, attr, sdaiSTRING, &value) && value && *value) {
                 match = m_value.Match(value, false, ctx);
             }
             break;
@@ -1280,7 +1280,7 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiENUM:
             case sdaiSTRING: {
                 const char* value = nullptr;
-                if (sdaiGetAggrByIndex(aggr, i, sdaiSTRING, &value)) {
+                if (sdaiGetAggrByIndex(aggr, i, sdaiSTRING, &value) && value && *value) {
                     match = m_value.Match(value, false, ctx);
                 }
                 break;
