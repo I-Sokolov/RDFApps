@@ -774,6 +774,7 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
     if (auto name = m_name.GetSimpleValue()) {
         if (!m_sdaiEntity) {
             m_sdaiEntity = sdaiGetEntity(ctx.model, name);
+            assert(m_sdaiEntity);
         }
 
         entityNameMatch = (instType == m_sdaiEntity);
@@ -1188,7 +1189,8 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
 
     auto sdaiType = engiGetInstanceAttrType(inst, attr);
     switch (sdaiType) {
-
+        case 0://$
+            break;
         case sdaiBINARY:
         case sdaiENUM:
         case sdaiSTRING: {
