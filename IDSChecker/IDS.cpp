@@ -1934,10 +1934,10 @@ void MultiTypeValueCache::Get(SdaiInteger* pval)
     if (!m_iSet) {
         m_iSet = true;
 
-        if (m_strVal == "true") {
+        if (m_strVal == "true" || m_strVal == "TRUE") {
             m_iVal = 1;
         }
-        else if (m_strVal == "false") {
+        else if (m_strVal == "false" || m_strVal == "FALSE") {
             m_iVal = 0;
         }
         else {
