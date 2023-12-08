@@ -902,7 +902,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiInteger sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
+void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
 {
     auto nav = new NavigateByAttributes ();
     m_navigations.push_back(nav);
@@ -1215,11 +1215,17 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
             }
             break;
         }
+        case sdaiAGGR: {
+            SdaiAggr aggr = 0;
+            if (sdaiGetAttr(inst, attr, sdaiAGGR, &aggr)) {
+                match = MatchAggr(aggr, ctx);
+            }
+            break;
+        }
         case sdaiBOOLEAN:
         case sdaiINSTANCE:
         case sdaiLOGICAL:
         case sdaiADB:
-        case sdaiAGGR:
             ctx.LogMsg(MsgLevel::NotImplemented, "Match this type of attributes");
             assert(0);
             break;
@@ -1228,6 +1234,74 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
             assert(0);
     }
     return match;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
+{
+    SdaiPrimitiveType sdaiType;
+    engiGetAggrType(aggr, &sdaiType);
+
+    auto N = sdaiGetMemberCount(aggr);
+    for (SdaiInteger i = 0; i < N; i++) {
+        switch (sdaiType) {
+            case 0://$
+                break;
+            case sdaiBINARY:
+            case sdaiENUM:
+            case sdaiSTRING: {
+                const char* value = nullptr;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiSTRING, &value)) {
+                    if (m_value.Match(value, false, ctx)) {
+                        return true;
+                    }
+                }
+                break;
+            }
+            case sdaiINTEGER: {
+                SdaiInteger value = 0;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiINTEGER, &value)) {
+                    if (m_value.Match(value, ctx)) {
+                        return true;
+                    }
+                }
+                break;
+            }
+            case sdaiREAL:
+            case sdaiNUMBER: {
+                double value = 0;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiREAL, &value)) {
+                    if (m_value.Match(value, ctx)) {
+                        return true;
+                    }
+                }
+                break;
+            }
+            case sdaiAGGR: {
+                SdaiAggr aggr = 0;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiAGGR, &aggr)) {
+                    if (MatchAggr(aggr, ctx)) {
+                        return true;
+                    }
+                }
+                break;
+            }
+            case sdaiBOOLEAN:
+            case sdaiINSTANCE:
+            case sdaiLOGICAL:
+            case sdaiADB:
+                ctx.LogMsg(MsgLevel::NotImplemented, "Match this type of attributes");
+                assert(0);
+                break;
+            default:
+                ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
+                assert(0);
+        }
+    }
+
+    return false;
 }
 
 /// <summary>

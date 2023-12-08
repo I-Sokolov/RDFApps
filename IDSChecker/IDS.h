@@ -225,10 +225,10 @@ namespace RDF
 
             struct NavigateByAttributes : public Navigator
             {
-                SdaiAttr    attrRelation = 0;
-                SdaiInteger sdaiType = 0;
-                SdaiEntity  relClass = 0;
-                SdaiAttr    attrInstance = 0;
+                SdaiAttr            attrRelation = 0;
+                SdaiPrimitiveType   sdaiType = 0;
+                SdaiEntity          relClass = 0;
+                SdaiAttr            attrInstance = 0;
 
                 virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
             private:
@@ -246,7 +246,7 @@ namespace RDF
 
         private:
             void FillParentsNavigators(Context& ctx);
-            void CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiInteger sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
+            void CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
             void CreateNavigatorByRelation(SdaiEntity relClass, SdaiAttr attrParent, SdaiAttr attrChildren, Context& ctx);
 
         private:
@@ -297,6 +297,7 @@ namespace RDF
 
         private:
             bool MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx);
+            bool MatchAggr(SdaiAggr aggr, Context& ctx);
 
         private:
             IdsValue   m_name;
