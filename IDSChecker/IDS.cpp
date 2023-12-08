@@ -1255,13 +1255,17 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiINSTANCE: {
             SdaiInstance value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINSTANCE, &value)) {
-                match = m_value.MatchInstance(value, ctx);
+                match = MatchInstance();
             }
             break;
         }
-        case sdaiADB:
-            //fail-value_checks_always_fail_for_selects
+        case sdaiADB: {
+            SdaiADB value = 0;
+            if (sdaiGetAttr(inst, attr, sdaiADB, &value)) {
+                match = MatchADB(value, ctx);
+            }
             break;
+        }
         default:
             ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
             assert(0);
@@ -1345,13 +1349,17 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiINSTANCE: {
                 SdaiInstance value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiINSTANCE, &value)) {
-                    match = m_value.MatchInstance(value, ctx);
+                    match = MatchInstance();
                 }
                 break;
             }
-            case sdaiADB:
-                //fail-value_checks_always_fail_for_selects
+            case sdaiADB: {
+                SdaiADB value = 0;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiADB, &value)) {
+                    match = MatchADB(value, ctx);
+                }
                 break;
+            }
             default:
                 ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
                 assert(0);
@@ -1363,6 +1371,97 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
     }
 
     return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
+{
+    bool match = false;
+
+    SdaiPrimitiveType sdaiType = sdaiGetADBType(adb);
+
+    switch (sdaiType) {
+        case 0://$
+            break;
+        case sdaiBINARY:
+        case sdaiENUM:
+        case sdaiSTRING: {
+            const char* value = nullptr;
+            if (sdaiGetADBValue(adb, sdaiSTRING, &value) && value && *value) {
+                match = m_value.Match(value, false, ctx);
+            }
+            break;
+        }
+        case sdaiINTEGER: {
+            SdaiInteger value = 0;
+            if (sdaiGetADBValue(adb, sdaiINTEGER, &value)) {
+                match = m_value.Match(value, ctx);
+            }
+            break;
+        }
+        case sdaiREAL:
+        case sdaiNUMBER: {
+            double value = 0;
+            if (sdaiGetADBValue(adb, sdaiREAL, &value)) {
+                match = m_value.Match(value, ctx);
+            }
+            break;
+        }
+        case sdaiAGGR: {
+            SdaiAggr value = 0;
+            if (sdaiGetADBValue(adb, sdaiAGGR, &value)) {
+                match = MatchAggr(value, ctx);
+            }
+            break;
+        }
+        case sdaiLOGICAL: {
+            const char* value = nullptr;
+            if (sdaiGetADBValue(adb, sdaiLOGICAL, &value)) {
+                if (value) {
+                    switch (*value) {
+                        case 'T':
+                        case 't':
+                            match = m_value.Match("TRUE", false, ctx);
+                            break;
+                        case 'F':
+                        case 'f':
+                            match = m_value.Match("FALSE", false, ctx);
+                            break;
+                            //U always fails
+                    }
+                }
+            }
+            break;
+        }
+        case sdaiBOOLEAN: {
+            bool value = false;
+            if (sdaiGetADBValue(adb, sdaiBOOLEAN, &value)) {
+                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+            }
+            break;
+        }
+        case sdaiINSTANCE: {
+            SdaiInstance value = 0;
+            if (sdaiGetADBValue(adb, sdaiINSTANCE, &value)) {
+                match = MatchInstance();
+            }
+            break;
+        }
+        case sdaiADB: {
+            SdaiADB value = 0;
+            if (sdaiGetADBValue(adb, sdaiADB, &value)) {
+                match = MatchADB(value, ctx);
+            }
+            break;
+        }
+        default:
+            ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
+            assert(0);
+    }
+
+    return match;
 }
 
 /// <summary>
