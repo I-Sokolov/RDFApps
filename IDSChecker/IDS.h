@@ -414,7 +414,6 @@ namespace RDF
 
         private:
             bool SuitableIfcVersion(Context& ctx);
-            bool IsRequired();
 
         private:
             std::string m_name;
@@ -428,8 +427,11 @@ namespace RDF
             Applicability m_applicability;
             Requirements  m_requirements;
             
-            bool          m_wasMatch = false;
+            SdaiInteger   m_nOccurs = 0;
             bool          m_ifcVersionChecked = false;
+
+            MultiTypeValueCache m_minOccursVal;
+            MultiTypeValueCache m_maxOccursVal;
         };
 
         /// <summary>

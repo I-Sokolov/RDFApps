@@ -280,6 +280,8 @@ void File::Read_specifications(_xml::_element& elem, Context& ctx)
 /// 
 /// </summary>
 Specification::Specification(_xml::_element& elem, Context& ctx)
+    : m_minOccursVal (m_minOccurs)
+    , m_maxOccursVal (m_maxOccurs)
 {
     GET_ATTR(name)
     NEXT_ATTR(minOccurs)
@@ -569,7 +571,7 @@ bool File::CheckSpecificationsUsed(Context& ctx)
 /// </summary>
 void Specification::ResetCache() 
 { 
-    m_wasMatch = false; 
+    m_nOccurs = 0;
     m_ifcVersionChecked = false;
 
     m_applicability.ResetCache();
@@ -585,7 +587,7 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         if (m_applicability.Match(inst, ctx)) {
-            m_wasMatch = true;
+            m_nOccurs++;
             
             ok = m_requirements.Match(inst, ctx);
 
@@ -604,21 +606,55 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
+enum class RqType { Required, Optional, Prohibited };
+
+static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur)
+{
+    SdaiInteger min_ = 0;
+    minOccur.Get(&min_);
+
+    SdaiInteger max_ = MAXINT;
+    const char* max__ = nullptr;
+    maxOccur.Get(&max__);
+    if (*max__) {
+        maxOccur.Get(&max_);
+    }
+
+    if (max_ < min_)
+        return RqType::Prohibited;
+
+    if (min_ == 0)
+        return RqType::Optional;
+
+    return RqType::Required;
+}
+
+/// <summary>
+/// 
+/// </summary>
 bool Specification::CheckUsed(Context& ctx)
 {
     bool ok = true;
 
-    if (SuitableIfcVersion(ctx) && IsRequired()) {
+    if (SuitableIfcVersion(ctx)) {
         
-        ok = m_wasMatch;
+        auto rq = GetRqType(m_minOccursVal, m_maxOccursVal);
         
-        if (ok) {
-            ctx.LogMsg(MsgLevel::Info, "OK, required specification matched some instances");
-        }
-        else {
-            ctx.LogMsg(MsgLevel::Error, "ERROR, required specification never match");
+        switch (rq) {
+            case RqType::Required:
+                if (m_nOccurs == 0) {
+                    ctx.LogMsg(MsgLevel::Error, "Required specification never match");
+                }
+                break;
+            case RqType::Prohibited:
+                if (m_nOccurs > 0) {
+                    ctx.LogMsg(MsgLevel::Error, "Prohibitet specification was match");
+                }
+                break;
         }
     }
+
+    ctx.LogMsg(MsgLevel::Info, "Specification was applied to %d instances", m_nOccurs);
 
     return ok;
 }
