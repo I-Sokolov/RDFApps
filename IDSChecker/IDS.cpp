@@ -1229,11 +1229,11 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
                     switch (*value) {
                         case 'T':
                         case 't':
-                            match = m_value.Match(true, ctx);
+                            match = m_value.Match("TRUE", false, ctx);
                             break;
                         case 'F':
                         case 'f':
-                            match = m_value.Match(false, ctx);
+                            match = m_value.Match("FALSE", false, ctx);
                             break;
                         //U always fails
                     }
@@ -1244,7 +1244,7 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiBOOLEAN: {
             bool value = false;
             if (sdaiGetAttr(inst, attr, sdaiBOOLEAN, &value)) {
-                match = m_value.Match(value, ctx);
+                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
             }
             break;
         }
@@ -1314,11 +1314,11 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
                         switch (*value) {
                             case 'T':
                             case 't':
-                                match = m_value.Match(true, ctx);
+                                match = m_value.Match("TRUE", false, ctx);
                                 break;
                             case 'F':
                             case 'f':
-                                match = m_value.Match(false, ctx);
+                                match = m_value.Match("FALSE", false, ctx);
                                 break;
                                 //U always fails
                         }
@@ -1329,7 +1329,7 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiBOOLEAN: {
                 bool value = false;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiBOOLEAN, &value)) {
-                    match = m_value.Match(value, ctx);
+                    match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
                 }
                 break;
             }
@@ -1924,28 +1924,6 @@ bool FacetMaterial::MatchMaterialList(SdaiInstance material, Context& ctx)
     }
 
     return false;
-}
-
-/// <summary>
-/// 
-/// </summary>
-void MultiTypeValueCache::Get(SdaiInteger* pval) 
-{ 
-    if (!m_iSet) {
-        m_iSet = true;
-
-        if (m_strVal == "true" || m_strVal == "TRUE") {
-            m_iVal = 1;
-        }
-        else if (m_strVal == "false" || m_strVal == "FALSE") {
-            m_iVal = 0;
-        }
-        else {
-            m_iVal = atoi(m_strVal.c_str());
-        }        
-    } 
-
-    *pval = m_iVal; 
 }
 
 /// <summary>
