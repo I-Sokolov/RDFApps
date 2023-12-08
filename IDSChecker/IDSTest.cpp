@@ -5,14 +5,15 @@
 bool stopAtFirstError;
 RDF::IDS::MsgLevel msgLevel;
 
+static int s_testNum = 0;
+
 static void IDSTest(std::string& idsFile, std::string& ifcFile)
 {
     //make various options
     stopAtFirstError = !stopAtFirstError;
     msgLevel = (RDF::IDS::MsgLevel)((int(msgLevel) + 1) % (int(RDF::IDS::MsgLevel::Error)+1));
-        
-        
-    printf("<Test idspath='%s' stopAtFirstError='%d' msgLevel='%d'>\n", idsFile.c_str(), stopAtFirstError, msgLevel);
+            
+    printf("<Test num='%d', idspath='%s' stopAtFirstError='%d' msgLevel='%d'>\n", ++s_testNum, idsFile.c_str(), stopAtFirstError, msgLevel);
 
     bool ok = false;
 

@@ -2118,6 +2118,7 @@ struct ComparerFloat
     double m_precision;
 };
 
+#if 0
 /// <summary>
 /// 
 /// </summary>
@@ -2133,6 +2134,7 @@ struct ComparerInt
             return 0;
     }
 };
+#endif
 
 /// <summary>
 /// 
@@ -2180,15 +2182,20 @@ bool IdsValue::Match(const char* value, bool compareNoCase, Context&)
 /// <summary>
 /// 
 /// </summary>
-bool IdsValue::Match(SdaiInteger value, Context&)
+bool IdsValue::Match(SdaiInteger value, Context& ctx)
 {
+#if 1
+    //pass-integers_follow_the_same_rules_as_numbers_2_2
+    return Match((double)value, ctx);
+#else
     if (!m_isSet) {
         return true;
     }
 
     ComparerInt cmp;
-
+ 
     return MatchValue(value, cmp);
+#endif
 }
 
 /// <summary>
