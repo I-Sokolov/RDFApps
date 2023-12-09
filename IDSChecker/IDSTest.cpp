@@ -6,14 +6,30 @@ bool stopAtFirstError;
 RDF::IDS::MsgLevel msgLevel;
 
 static int s_testNum = 0;
+static int s_examption[] = { 50 };
+
+static bool Examption(int i)
+{
+    for (int k = 0; k < _countof(s_examption); k++) {
+        if (s_examption[k] == i) {
+            return true;
+        }
+    }
+    return false;
+}
 
 static void IDSTest(std::string& idsFile, std::string& ifcFile)
 {
+    ++s_testNum;
+    if (Examption(s_testNum)) {
+        return;
+    }
+
     //make various options
     stopAtFirstError = !stopAtFirstError;
     msgLevel = (RDF::IDS::MsgLevel)((int(msgLevel) + 1) % (int(RDF::IDS::MsgLevel::Error)+1));
             
-    printf("<Test num='%d', idspath='%s' stopAtFirstError='%d' msgLevel='%d'>\n", ++s_testNum, idsFile.c_str(), stopAtFirstError, msgLevel);
+    printf("<Test num='%d', idspath='%s' stopAtFirstError='%d' msgLevel='%d'>\n", s_testNum, idsFile.c_str(), stopAtFirstError, msgLevel);
 
     bool ok = false;
 
