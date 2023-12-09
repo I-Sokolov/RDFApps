@@ -110,6 +110,7 @@ private:
     ENTITY(IfcRelAssociatesMaterial);
     ENTITY(IfcClassificationReference);
     ENTITY(IfcExternalReference);
+    ENTITY(IfcExternalReferenceRelationship);
     ENTITY(IfcClassification);
     ENTITY(IfcClassificationNotation);
     ENTITY(IfcRelDecomposes);
@@ -183,6 +184,7 @@ private:
     ATTR(IfcRelFillsElement, RelatingOpeningElement, IfcRelFillsElement_RelatingOpeningElement);
     ATTR(IfcRelContainedInSpatialStructure, RelatingStructure, IfcRelContainedInSpatialStructure_RelatingStructure);
     ATTR(IfcRelContainedInSpatialStructure, RelatedElements, IfcRelContainedInSpatialStructure_RelatedElements);
+    ATTR(IfcExternalReferenceRelationship, RelatingReference, IfcExternalReferenceRelationship_RelatingReference);
     ATTR(IfcExternalReference, Identification, IfcExternalReference_Identification);
     ATTR(IfcExternalReference, ItemReference, IfcExternalReference_ItemReference);
     ATTR(IfcExternalReference, Location, IfcExternalReference_Location);

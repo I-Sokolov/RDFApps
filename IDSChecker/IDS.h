@@ -267,6 +267,9 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
+            bool MatchByIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx);
+            bool MatchByIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx);
+
             void HandleClassificationSelect(SdaiInstance clsf, Context& ctx);
             void HandleClassificationReference(SdaiInstance clsf, Context& ctx);
             void HandleClassification(SdaiInstance clsf, Context& ctx);

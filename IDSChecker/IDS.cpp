@@ -1013,26 +1013,79 @@ void FacetClassification::ResetCacheImpl()
 /// </summary>
 bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 {
-    //inst IfcPropertyDefinition or IfcObjectDefinition
+    if (MatchByIfcRelAssociatesClassification(inst, ctx)) {
+        return true;
+    }
+
+    return MatchByIfcExternalReferenceRelationship(inst, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::MatchByIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx)
+{
+    //when inst is IfcPropertyDefinition or IfcObjectDefinition
     SdaiAggr aggrAssoc = 0;
     sdaiGetAttrBN(inst, "HasAssociations", sdaiAGGR, &aggrAssoc); 
 
-    SdaiInstance relAssoc = 0;
-    SdaiInteger i = 0;
-    while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
+    if (aggrAssoc) {
+        SdaiInstance relAssoc = 0;
+        SdaiInteger i = 0;
+        while (sdaiGetAggrByIndex(aggrAssoc, i++, sdaiINSTANCE, &relAssoc)) {
 
-        auto entityAssoc = sdaiGetInstanceType(relAssoc);
-        if (entityAssoc == ctx._IfcRelAssociatesClassification()) {
+            auto entityAssoc = sdaiGetInstanceType(relAssoc);
+            if (entityAssoc == ctx._IfcRelAssociatesClassification()) {
 
-            SdaiInstance clsf = 0;
-            sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
-            if (clsf) {
+                SdaiInstance clsf = 0;
+                sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
+                if (clsf) {
+
+                    m_valueMatch = false;
+                    m_systemMatch = false;
+                    m_uriMatch = false;
+
+                    HandleClassificationSelect(clsf, ctx);
+
+                    if (m_valueMatch || !m_value.IsSet()) {
+                        if (m_systemMatch || !m_system.IsSet()) {
+                            if (m_uriMatch || !m_URI.IsSet()) {
+                                return true; //>>>>>>>>>>>>>
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::MatchByIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx)
+{
+    //when inst is IfcResourceObjectSelect
+    SdaiAggr aggrExternalRefs = 0;
+    sdaiGetAttrBN(inst, "HasExternalReferences", sdaiAGGR, &aggrExternalRefs);
+
+    if (aggrExternalRefs) {
+        SdaiInstance relExternalRefRel = 0;
+        SdaiInteger i = 0;
+        while (sdaiGetAggrByIndex(aggrExternalRefs, i++, sdaiINSTANCE, &relExternalRefRel)) {
+
+            SdaiInstance externalRef = 0;
+            sdaiGetAttr(relExternalRefRel, ctx._IfcExternalReferenceRelationship_RelatingReference(), sdaiINSTANCE, &externalRef);
+
+            auto entityRef = sdaiGetInstanceType(externalRef);
+            if (entityRef == ctx._IfcClassificationReference()) {
 
                 m_valueMatch = false;
                 m_systemMatch = false;
                 m_uriMatch = false;
 
-                HandleClassificationSelect(clsf, ctx);
+                HandleClassificationReference(externalRef, ctx);
 
                 if (m_valueMatch || !m_value.IsSet()) {
                     if (m_systemMatch || !m_system.IsSet()) {
@@ -1044,9 +1097,9 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
             }
         }
     }
-    
     return false;
 }
+
 
 /// <summary>
 /// 
