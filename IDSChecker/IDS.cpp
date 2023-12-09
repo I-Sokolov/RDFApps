@@ -1165,9 +1165,10 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
     else {
 
         //attribute name must match
-        auto N = engiGetEntityNoAttributes(ent);
+        const bool useInverse = false;
+        auto N = engiGetEntityNoAttributesEx (ent, true, useInverse);
         for (SdaiInteger i = 0; i < N; i++) {
-            auto attr = engiGetEntityAttributeByIndex(ent, i, true, true);
+            auto attr = engiGetEntityAttributeByIndex(ent, i, true, useInverse);
             const char* name = 0;
             engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
             if (m_name.Match(name, true, ctx)) {
