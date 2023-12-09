@@ -2096,6 +2096,11 @@ struct ComparerStr
         }
     }
 
+    std::string ToString(const char* v)
+    {
+        return v;
+    }
+
     bool m_compareNoCase;
 };
 
@@ -2115,6 +2120,15 @@ struct ComparerFloat
         else
             return 0;
     }
+
+    std::string ToString(double v)
+    {
+        assert(0); //not expected to use
+        char buff[80];
+        snprintf(buff, 79, "%g", v);
+        return buff;
+    }
+
     double m_precision;
 };
 
@@ -2233,8 +2247,20 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
         }
     }
 
-    //TODO
-    assert (m_pattern.empty());
+    //
+    for (auto& patt : m_pattern) {
+        const char* r = nullptr;
+        patt->Get(&r);
+
+        auto str = cmp.ToString(value);
+
+        bool match = std::regex_match(str, std::regex(r));
+
+        if (!match) {
+            return false; //>>>>>>
+        }
+    }
+
     assert (m_minInclusive.empty());
     assert (m_maxInclusive.empty());
     assert (m_minExclusive.empty());
