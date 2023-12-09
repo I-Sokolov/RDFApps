@@ -2097,7 +2097,7 @@ struct ComparerStr
         }
     }
 
-    std::string ToString(const char* v)
+    const char* ToString(const char* v)
     {
         return v;
     }
@@ -2122,15 +2122,15 @@ struct ComparerFloat
             return 0;
     }
 
-    std::string ToString(double v)
+    const char* ToString(double v)
     {
         assert(0); //not expected to use
-        char buff[80];
-        snprintf(buff, 79, "%g", v);
-        return buff;
+        snprintf(m_buff, 79, "%g", v);
+        return m_buff;
     }
 
     double m_precision;
+    char   m_buff[80];
 };
 
 #if 0
@@ -2236,7 +2236,7 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     if (!m_enumeration.empty()) {
         bool match = false;
         for (auto& val : m_enumeration) {
-            T v;
+            T v = 0;
             val->Get(&v);
             if (0 == cmp.compare(value, v)) {
                 match = true;
@@ -2252,23 +2252,82 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& patt : m_pattern) {
         const char* r = nullptr;
         patt->Get(&r);
-
         auto str = cmp.ToString(value);
-
         bool match = std::regex_match(str, std::regex(r));
-
         if (!match) {
             return false; //>>>>>>
         }
     }
 
-    assert (m_minInclusive.empty());
-    assert (m_maxInclusive.empty());
-    assert (m_minExclusive.empty());
-    assert (m_maxExclusive.empty());
-    assert (m_length.empty());
-    assert (m_minLength.empty());
-    assert (m_maxLength.empty());
+    //
+    for (auto& r : m_minInclusive) {
+        T v = 0;
+        r->Get(&v);
+        auto c = cmp.compare(value, v);
+        if (c == -1) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_maxInclusive) {
+        T v = 0;
+        r->Get(&v);
+        auto c = cmp.compare(value, v);
+        if (c == 1) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_minExclusive) {
+        T v = 0;
+        r->Get(&v);
+        auto c = cmp.compare(value, v);
+        if (c != 1) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_maxExclusive) {
+        T v = 0;
+        r->Get(&v);
+        auto c = cmp.compare(value, v);
+        if (c != -1) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_length) {
+        SdaiInteger len = 0;
+        r->Get(&len);
+        auto str = cmp.ToString(value);
+        if ((SdaiInteger)strlen(str) != len) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_minLength) {
+        SdaiInteger len = 0;
+        r->Get(&len);
+        auto str = cmp.ToString(value);
+        if ((SdaiInteger)strlen(str) < len) {
+            return false; //>>>>>>
+        }
+    }
+
+    //
+    for (auto& r : m_maxLength) {
+        SdaiInteger len = 0;
+        r->Get(&len);
+        auto str = cmp.ToString(value);
+        if ((SdaiInteger)strlen(str) > len) {
+            return false; //>>>>>>
+        }
+    }
 
     return true;
 }
