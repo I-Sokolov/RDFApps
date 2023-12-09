@@ -1017,7 +1017,17 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
         return true;
     }
 
-    return MatchByIfcExternalReferenceRelationship(inst, ctx);
+    if (MatchByIfcExternalReferenceRelationship(inst, ctx)) {
+        return true;
+    }
+
+    //if was not own classification
+    SdaiInstance type = 0;
+    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &type)) {
+        return MatchImpl(type, ctx);
+    }
+
+    return false;
 }
 
 /// <summary>

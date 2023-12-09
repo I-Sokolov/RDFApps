@@ -194,6 +194,7 @@ private:
     ATTR(IfcClassification, Specification, IfcClassification_Specification);
     ATTR(IfcClassification, Source, IfcClassification_Source);
     ATTR(IfcObject, IsDefinedBy, IfcObject_IsDefinedBy);
+    ATTR(IfcObject, IsTypedBy, IfcObject_IsTypedBy);
     ATTR(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
     ATTR(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
     ATTR(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
