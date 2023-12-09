@@ -2114,9 +2114,9 @@ struct ComparerFloat
 
     int compare(double v1, double v2)
     {
-        if (v1 < v2 - m_precision)
+        if (v1 <= v2 * (1 - m_precision) - m_precision)
             return -1;
-        else if (v1 > v2 + m_precision)
+        else if (v1 >= v2 * (1 + m_precision) + m_precision)
             return 1;
         else
             return 0;
