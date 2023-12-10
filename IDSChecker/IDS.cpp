@@ -821,10 +821,10 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
             if (!m_attrPredefinedType) {
                 m_attrPredefinedType = sdaiGetAttrDefinition(m_sdaiEntity, "PredefinedType");
             }
-            getResult = sdaiGetAttr(inst, m_attrPredefinedType, sdaiSTRING, &predTypeValue);
+            getResult = sdaiGetAttr(inst, m_attrPredefinedType, sdaiENUM, &predTypeValue);
         }
         else {
-            getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiSTRING, &predTypeValue);
+            getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiENUM, &predTypeValue);
         }
 
         bool predTypeMatch = getResult && predTypeValue && m_predefinedType.Match(predTypeValue, false, ctx);
