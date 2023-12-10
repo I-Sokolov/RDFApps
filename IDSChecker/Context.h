@@ -91,7 +91,8 @@ public:
     bool        stopAtFirstError;
 
     SdaiModel       model = 0;
-    SdaiInstance    currentInstane = 0;    Specification* currentSpecification = nullptr;
+    SdaiInstance    currentInstane = 0;    
+    Specification*  currentSpecification = nullptr;
 
 private:
 #if 0
@@ -129,6 +130,8 @@ private:
     ENTITY(IfcRelDefinesByProperties);
     ENTITY(IfcPropertySet);
     ENTITY(IfcElementQuantity);
+
+    ENTITY(IfcRelDefinesByType);
 
     ENTITY(IfcProperty);
     ENTITY(IfcComplexProperty);
@@ -198,6 +201,7 @@ private:
     ATTR(IfcTypeObject, HasPropertySets, IfcTypeObject_HasPropertySets);
     ATTR(IfcContext, IsDefinedBy, IfcContext_IsDefinedBy);
     ATTR(IfcRelDefinesByProperties, RelatingPropertyDefinition, IfcRelDefinesByProperties_RelatingPropertyDefinition);
+    ATTR(IfcRelDefinesByType, RelatingType, IfcRelDefinesByType_RelatingType);
     ATTR(IfcPropertySet, HasProperties, IfcPropertySet_HasProperties);
     ATTR(IfcElementQuantity, Quantities, IfcElementQuantity_Quantities);
     ATTR(IfcProperty, Name, IfcProperty_Name);

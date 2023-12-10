@@ -267,23 +267,30 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
-            bool MatchByIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx);
-            bool MatchByIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx);
+            struct Reference //One classification reference
+            {
+                std::string            system;
+                std::list<std::string> items;
+                std::list<std::string> URI;
+            };
 
-            void HandleClassificationSelect(SdaiInstance clsf, Context& ctx);
-            void HandleClassificationReference(SdaiInstance clsf, Context& ctx);
-            void HandleClassification(SdaiInstance clsf, Context& ctx);
-            void HandleClassificationNotation(SdaiInstance clsf, Context& ctx);
+            typedef std::map<std::string, Reference> References; //all references sorted by system
+
+        private:
+            void CollectIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx, References& references);
+            void CollectIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx, References& references);
+
+            void HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
+            void HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
+            void HandleClassification(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
+            void HandleClassificationNotation(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
+
+            bool Match(References& references, Context& ctx);
 
         private:
             IdsValue m_value;
             IdsValue m_system;
             IdsValue m_URI;
-
-            bool m_valueMatch = false;
-            bool m_systemMatch = false;
-            bool m_uriMatch = false;
-
         };
 
         /// <summary>
@@ -420,6 +427,8 @@ namespace RDF
             void ResetCache();
             bool Check(SdaiInstance inst, Context& ctx);
             bool CheckUsed(Context& ctx);
+
+            std::string DisplayName();
 
         private:
             bool SuitableIfcVersion(Context& ctx);

@@ -212,27 +212,21 @@ void Context::LogMsg (MsgLevel type, const char* format, ...)
 
     log.out(msgType);
 
-#if 0
-    //
-    std::string xpath;
-    for (auto xml : ctx.GetXmlStack()) {
-        if (xml) {
-            auto name = xml->getName();
-            if (!name.empty()) {
-                if (!xpath.empty()) {
-                    xpath.append("/");
-                }
-                xpath.append(name);
-            }
-        }
-    }
-
-    if (!xpath.empty()) {
-        log.out(" ids='");
-        log.out(xpath.c_str());
+    if (currentInstane > 0) {
+        log.out(" stepId='#");
+        auto id = internalGetP21Line(currentInstane);
+        char str[64];
+        sprintf(str, "%lld", id);
+        log.out(str);
         log.out("'");
     }
-#endif
+
+    if (currentSpecification) {
+        log.out(" specification='");
+        auto name = currentSpecification->DisplayName();
+        log.out(name.c_str());
+        log.out("'");
+    }
 
     //
     log.out(">\n\t\t");
@@ -610,6 +604,33 @@ bool File::CheckSpecificationsUsed(Context& ctx)
     }
 
     return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+std::string Specification::DisplayName()
+{
+    std::string ret;
+
+    if (!m_identifier.empty()) {
+        ret = m_identifier;
+    }
+
+    if (!m_name.empty()) {
+        if (ret.empty()) {
+            ret = m_name;
+        }
+        else {
+            ret += "(" + m_name + ")";
+        }
+    }
+
+    if (ret.empty()) {
+        ret = m_description;
+    }
+
+    return ret;
 }
 
 
@@ -1013,27 +1034,27 @@ void FacetClassification::ResetCacheImpl()
 /// </summary>
 bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 {
-    if (MatchByIfcRelAssociatesClassification(inst, ctx)) {
-        return true;
+    References references;
+
+    CollectIfcRelAssociatesClassification(inst, ctx, references);
+
+    CollectIfcExternalReferenceRelationship(inst, ctx, references);
+
+    SdaiInstance relType = 0;
+    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &relType)) {
+        SdaiInstance type = 0;
+        if (sdaiGetAttr(relType, ctx._IfcRelDefinesByType_RelatingType(), sdaiINSTANCE, &type)) {
+            CollectIfcRelAssociatesClassification(type, ctx, references);
+        }
     }
 
-    if (MatchByIfcExternalReferenceRelationship(inst, ctx)) {
-        return true;
-    }
-
-    //if was not own classification
-    SdaiInstance type = 0;
-    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &type)) {
-        return MatchImpl(type, ctx);
-    }
-
-    return false;
+    return Match (references, ctx);
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::MatchByIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx)
+void FacetClassification::CollectIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx, References& references)
 {
     //when inst is IfcPropertyDefinition or IfcObjectDefinition
     SdaiAggr aggrAssoc = 0;
@@ -1051,30 +1072,22 @@ bool FacetClassification::MatchByIfcRelAssociatesClassification(SdaiInstance ins
                 sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
                 if (clsf) {
 
-                    m_valueMatch = false;
-                    m_systemMatch = false;
-                    m_uriMatch = false;
+                    std::string system;
+                    Reference reference;
 
-                    HandleClassificationSelect(clsf, ctx);
-
-                    if (m_valueMatch || !m_value.IsSet()) {
-                        if (m_systemMatch || !m_system.IsSet()) {
-                            if (m_uriMatch || !m_URI.IsSet()) {
-                                return true; //>>>>>>>>>>>>>
-                            }
-                        }
-                    }
+                    HandleClassificationSelect(clsf, ctx, system, reference);
+                    
+                    references.insert(References::value_type(system, reference));
                 }
             }
         }
     }
-    return false;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::MatchByIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx)
+void FacetClassification::CollectIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx, References& references)
 {
     //when inst is IfcResourceObjectSelect
     SdaiAggr aggrExternalRefs = 0;
@@ -1091,46 +1104,38 @@ bool FacetClassification::MatchByIfcExternalReferenceRelationship(SdaiInstance i
             auto entityRef = sdaiGetInstanceType(externalRef);
             if (entityRef == ctx._IfcClassificationReference()) {
 
-                m_valueMatch = false;
-                m_systemMatch = false;
-                m_uriMatch = false;
+                std::string system;
+                Reference reference;
 
-                HandleClassificationReference(externalRef, ctx);
+                HandleClassificationSelect(externalRef, ctx, system, reference);
 
-                if (m_valueMatch || !m_value.IsSet()) {
-                    if (m_systemMatch || !m_system.IsSet()) {
-                        if (m_uriMatch || !m_URI.IsSet()) {
-                            return true; //>>>>>>>>>>>>>
-                        }
-                    }
-                }
+                references.insert (References::value_type (system, reference));
             }
         }
     }
-    return false;
 }
 
 
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
 {
     auto clsfType = sdaiGetInstanceType(clsf);
     if (clsfType == ctx._IfcClassificationReference()) {
-        HandleClassificationReference(clsf, ctx);
+        HandleClassificationReference(clsf, ctx, system, reference);
         return;
     }
 
     if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
         if (clsfType == ctx._IfcClassificationNotation()) {
-            HandleClassificationNotation(clsf, ctx);
+            HandleClassificationNotation(clsf, ctx, system, reference);
             return;
         }
     }
     else {
         if (clsfType == ctx._IfcClassification()) {
-            HandleClassification(clsf, ctx);
+            HandleClassification(clsf, ctx, system, reference);
             return;
         }
     }
@@ -1144,69 +1149,111 @@ void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context&
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
 {
-    if (!m_valueMatch && m_value.IsSet()) {
-        const char* value = nullptr;
+    //
+    const char* item = nullptr;
 
-        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
-            sdaiGetAttr(clsf, ctx._IfcExternalReference_ItemReference(), sdaiSTRING, &value);
-        }
-        else {
-            sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiSTRING, &value);
-        }
-
-        m_valueMatch = m_value.Match(value, false, ctx);
+    if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+        sdaiGetAttr(clsf, ctx._IfcExternalReference_ItemReference(), sdaiSTRING, &item);
+    }
+    else {
+        sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiSTRING, &item);
     }
 
-    if (!m_uriMatch && m_URI.IsSet()) {
-        const char* uri = nullptr;
-        sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiSTRING, &uri);
-        m_uriMatch = m_URI.Match(uri, true, ctx);
+    if (item) {
+        reference.items.push_back(item);
     }
 
+    //
+    const char* uri = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiSTRING, &uri);
+
+    if (uri) {
+        reference.URI.push_back(uri);
+    }
+
+    //
     SdaiInstance source = 0;
     sdaiGetAttr(clsf, ctx._IfcClassificationReference_ReferencedSource(), sdaiINSTANCE, &source);
-    HandleClassificationSelect(source, ctx);
+    HandleClassificationSelect(source, ctx, system, reference);
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx)
+void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
 {
-    if (!m_systemMatch && m_system.IsSet()) {
-        const char* name = nullptr;
-        sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiSTRING, &name);
-        m_systemMatch = m_system.Match(name, true, ctx);
+    const char* name = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiSTRING, &name);
+    if (name) {
+        assert(system.empty());
+        system = name;
     }
 
-    if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() == Context::IfcVersion::Ifc4) {
+    if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc4) {
         const char* source = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Location(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true, ctx);
+        if (source) {
+            reference.URI.push_back(source);
+        }
     }
 
-    if (!m_uriMatch && m_URI.IsSet() && ctx.GetIfcVersion() > Context::IfcVersion::Ifc4) {
+    if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc4) {
         const char* source = nullptr;
         sdaiGetAttr(clsf, ctx._IfcClassification_Specification(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true, ctx);
+        if (source) {
+            reference.URI.push_back(source);
+        }
     }
 
-    if (!m_uriMatch && m_URI.IsSet()) {
-        const char* source = nullptr;
-        sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiSTRING, &source);
-        m_uriMatch = m_URI.Match(source, true, ctx);
+    const char* source = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiSTRING, &source);
+    if (source) {
+        reference.URI.push_back(source);
     }
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx)
+void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx, std::string& /*system*/, Reference& /*reference*/)
 {
     ctx.LogMsg(MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
     assert(!"TODO... if somebody uses");
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetClassification::Match(References& references, Context& ctx)
+{
+    for (auto& ref : references) {
+        if (m_system.Match(ref.first.c_str(), true, ctx)) {
+
+            bool itemMatch = !m_value.IsSet();
+            for (auto& item : ref.second.items) {
+                itemMatch = m_value.Match(item.c_str(), true, ctx);
+                if (itemMatch) {
+                    break;
+                }
+            }
+
+            if (itemMatch) {
+
+                bool uriMatch = !m_URI.IsSet();
+                for (auto& uri : ref.second.URI) {
+                    uriMatch = m_URI.Match(uri.c_str(), true, ctx);
+                }
+
+                if (uriMatch) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }
 
 
