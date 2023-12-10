@@ -112,6 +112,15 @@ static int StrICmp(const char* s1, const char* s2)
 /// <summary>
 /// 
 /// </summary>
+static void ToUpper(std::string& str)
+{
+    //need UTF8 transform?
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+}
+
+/// <summary>
+/// 
+/// </summary>
 enum class RqType { Required, Optional, Prohibited };
 static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur, RqType def)
 {
@@ -794,16 +803,26 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
     //doc says: The IFC Class must match exactly
     if (auto name = m_name.GetSimpleValue()) {
         if (!m_sdaiEntity) {
-            m_sdaiEntity = sdaiGetEntity(ctx.model, name);
-            assert(m_sdaiEntity);
+            //entities_must_be_specified_as_uppercase_strings
+            std::string uppercase = name;
+            ToUpper(uppercase);
+            if (strcmp(name, uppercase.c_str())) {
+                m_sdaiEntity = -1;
+            }
+            else {
+                m_sdaiEntity = sdaiGetEntity(ctx.model, name);
+                if (!m_sdaiEntity) {
+                    m_sdaiEntity = -1;
+                }
+            }
         }
 
         entityNameMatch = (instType == m_sdaiEntity);
     }
     else {
-        assert(!"to test");
-        auto instTypeName = engiGetEntityName(instType, sdaiSTRING);
-        entityNameMatch = m_name.Match(instTypeName, true, ctx);
+        std::string instTypeName = engiGetEntityName(instType, sdaiSTRING);
+        ToUpper (instTypeName);
+        entityNameMatch = m_name.Match(instTypeName.c_str(), false, ctx);
     }
 
 
@@ -827,7 +846,19 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
             getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiENUM, &predTypeValue);
         }
 
-        bool predTypeMatch = getResult && predTypeValue && m_predefinedType.Match(predTypeValue, false, ctx);
+        bool predTypeMatch = false;
+
+        if (getResult && predTypeValue) {
+            if (strcmp(predTypeValue, "USERDEFINED")) {
+                predTypeMatch = m_predefinedType.Match(predTypeValue, false, ctx);
+            }
+            else {
+                const char* objType = nullptr;
+                if (sdaiGetAttr(inst, ctx._IfcObjectDefinition_ObjectType(), sdaiSTRING, &objType)) {
+                    predTypeMatch = m_predefinedType.Match(objType, false, ctx);
+                }
+            }
+        }
 
         if (!predTypeMatch) {
             return false; //>>>>>>>>>>>>>>>>>>>>>>>
