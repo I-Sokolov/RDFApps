@@ -6,7 +6,7 @@ bool stopAtFirstError;
 RDF::IDS::MsgLevel msgLevel;
 
 static int s_testNum = 0;
-static int s_examption[] = { 50 };
+static int s_examption[] = { -1 };
 
 static bool Examption(int i)
 {

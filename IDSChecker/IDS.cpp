@@ -114,8 +114,9 @@ static int StrICmp(const char* s1, const char* s2)
 /// </summary>
 static void ToUpper(std::string& str)
 {
-    //need UTF8 transform?
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    for (size_t i = 0; i < str.length(); i++) {
+        str[i] = (char)toupper (str[i]);
+    }
 }
 
 /// <summary>
@@ -853,8 +854,8 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
                 predTypeMatch = m_predefinedType.Match(predTypeValue, false, ctx);
             }
             else {
-                const char* objType = nullptr;
-                if (sdaiGetAttr(inst, ctx._IfcObjectDefinition_ObjectType(), sdaiSTRING, &objType)) {
+                const wchar_t* objType = nullptr;
+                if (sdaiGetAttr(inst, ctx._IfcObjectDefinition_ObjectType(), sdaiUNICODE, &objType)) {
                     predTypeMatch = m_predefinedType.Match(objType, false, ctx);
                 }
             }
@@ -1103,7 +1104,7 @@ void FacetClassification::CollectIfcRelAssociatesClassification(SdaiInstance ins
                 sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesClassification_RelatingClassification(), sdaiINSTANCE, &clsf);
                 if (clsf) {
 
-                    std::string system;
+                    std::wstring system;
                     Reference reference;
 
                     HandleClassificationSelect(clsf, ctx, system, reference);
@@ -1135,7 +1136,7 @@ void FacetClassification::CollectIfcExternalReferenceRelationship(SdaiInstance i
             auto entityRef = sdaiGetInstanceType(externalRef);
             if (entityRef == ctx._IfcClassificationReference()) {
 
-                std::string system;
+                std::wstring system;
                 Reference reference;
 
                 HandleClassificationSelect(externalRef, ctx, system, reference);
@@ -1150,7 +1151,7 @@ void FacetClassification::CollectIfcExternalReferenceRelationship(SdaiInstance i
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
+void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference)
 {
     auto clsfType = sdaiGetInstanceType(clsf);
     if (clsfType == ctx._IfcClassificationReference()) {
@@ -1180,16 +1181,16 @@ void FacetClassification::HandleClassificationSelect(SdaiInstance clsf, Context&
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
+void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference)
 {
     //
-    const char* item = nullptr;
+    const wchar_t* item = nullptr;
 
     if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
-        sdaiGetAttr(clsf, ctx._IfcExternalReference_ItemReference(), sdaiSTRING, &item);
+        sdaiGetAttr(clsf, ctx._IfcExternalReference_ItemReference(), sdaiUNICODE, &item);
     }
     else {
-        sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiSTRING, &item);
+        sdaiGetAttr(clsf, ctx._IfcExternalReference_Identification(), sdaiUNICODE, &item);
     }
 
     if (item) {
@@ -1197,8 +1198,8 @@ void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Conte
     }
 
     //
-    const char* uri = nullptr;
-    sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiSTRING, &uri);
+    const wchar_t* uri = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcExternalReference_Location(), sdaiUNICODE, &uri);
 
     if (uri) {
         reference.URI.push_back(uri);
@@ -1213,33 +1214,33 @@ void FacetClassification::HandleClassificationReference(SdaiInstance clsf, Conte
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference)
+void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcClassification_Name(), sdaiUNICODE, &name);
     if (name) {
         assert(system.empty());
         system = name;
     }
 
     if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc4) {
-        const char* source = nullptr;
-        sdaiGetAttr(clsf, ctx._IfcClassification_Location(), sdaiSTRING, &source);
+        const wchar_t* source = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Location(), sdaiUNICODE, &source);
         if (source) {
             reference.URI.push_back(source);
         }
     }
 
     if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc4) {
-        const char* source = nullptr;
-        sdaiGetAttr(clsf, ctx._IfcClassification_Specification(), sdaiSTRING, &source);
+        const wchar_t* source = nullptr;
+        sdaiGetAttr(clsf, ctx._IfcClassification_Specification(), sdaiUNICODE, &source);
         if (source) {
             reference.URI.push_back(source);
         }
     }
 
-    const char* source = nullptr;
-    sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiSTRING, &source);
+    const wchar_t* source = nullptr;
+    sdaiGetAttr(clsf, ctx._IfcClassification_Source(), sdaiUNICODE, &source);
     if (source) {
         reference.URI.push_back(source);
     }
@@ -1248,7 +1249,7 @@ void FacetClassification::HandleClassification(SdaiInstance clsf, Context& ctx, 
 /// <summary>
 /// 
 /// </summary>
-void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx, std::string& /*system*/, Reference& /*reference*/)
+void FacetClassification::HandleClassificationNotation(SdaiInstance /*clsf*/, Context& ctx, std::wstring& /*system*/, Reference& /*reference*/)
 {
     ctx.LogMsg(MsgLevel::NotImplemented, "IfcClassificationNotation in facet classification");
     assert(!"TODO... if somebody uses");
@@ -1337,11 +1338,23 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
     switch (sdaiType) {
         case 0://$
             break;
-        case sdaiBINARY:
-        case sdaiENUM:
-        case sdaiSTRING: {
+        case sdaiBINARY: {
             const char* value = nullptr;
-            if (sdaiGetAttr(inst, attr, sdaiSTRING, &value) && value && *value) {
+            if (sdaiGetAttr(inst, attr, sdaiBINARY, &value) && value && *value) {
+                match = m_value.Match(value, false, ctx);
+            }
+            break;
+        }
+        case sdaiENUM: {
+            const char* value = nullptr;
+            if (sdaiGetAttr(inst, attr, sdaiENUM, &value) && value && *value) {
+                match = m_value.Match(value, false, ctx);
+            }
+            break;
+        }
+        case sdaiSTRING: {
+            const wchar_t* value = nullptr;
+            if (sdaiGetAttr(inst, attr, sdaiUNICODE, &value) && value && *value) {
                 match = m_value.Match(value, false, ctx);
             }
             break;
@@ -1431,11 +1444,23 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
         switch (sdaiType) {
             case 0://$
                 break;
-            case sdaiBINARY:
-            case sdaiENUM:
-            case sdaiSTRING: {
+            case sdaiBINARY: {
                 const char* value = nullptr;
-                if (sdaiGetAggrByIndex(aggr, i, sdaiSTRING, &value) && value && *value) {
+                if (sdaiGetAggrByIndex(aggr, i, sdaiBINARY, &value) && value && *value) {
+                    match = m_value.Match(value, false, ctx);
+                }
+                break;
+            }
+            case sdaiENUM: {
+                const char* value = nullptr;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiENUM, &value) && value && *value) {
+                    match = m_value.Match(value, false, ctx);
+                }
+                break;
+            }
+            case sdaiSTRING: {
+                const wchar_t* value = nullptr;
+                if (sdaiGetAggrByIndex(aggr, i, sdaiUNICODE, &value) && value && *value) {
                     match = m_value.Match(value, false, ctx);
                 }
                 break;
@@ -1527,11 +1552,23 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
     switch (sdaiType) {
         case 0://$
             break;
-        case sdaiBINARY:
-        case sdaiENUM:
-        case sdaiSTRING: {
+        case sdaiBINARY: {
             const char* value = nullptr;
-            if (sdaiGetADBValue(adb, sdaiSTRING, &value) && value && *value) {
+            if (sdaiGetADBValue(adb, sdaiBINARY, &value) && value && *value) {
+                match = m_value.Match(value, false, ctx);
+            }
+            break;
+        }
+        case sdaiENUM: {
+            const char* value = nullptr;
+            if (sdaiGetADBValue(adb, sdaiENUM, &value) && value && *value) {
+                match = m_value.Match(value, false, ctx);
+            }
+            break;
+        }
+        case sdaiSTRING: {
+            const wchar_t* value = nullptr;
+            if (sdaiGetADBValue(adb, sdaiUNICODE, &value) && value && *value) {
                 match = m_value.Match(value, false, ctx);
             }
             break;
@@ -1682,8 +1719,8 @@ bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx)
 bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
 {
     if (m_propertySet.IsSet()) {
-        const char* name = 0;
-        sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiSTRING, &name);
+        const wchar_t* name = 0;
+        sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiUNICODE, &name);
         if (!m_name.Match(name, false, ctx)) {
             return false;
         }
@@ -1722,8 +1759,8 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx)
 /// </summary>
 bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiUNICODE, &name);
     if (!m_name.Match(name, false, ctx)) {
         return false;
     }
@@ -1779,8 +1816,8 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx)
 /// </summary>
 bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiUNICODE, &name);
     if (!m_name.Match(name, false, ctx)) {
         return false;
     }
@@ -1868,8 +1905,8 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
         }
         case enum_express_attr_type::__STRING:
         {
-            const char* value = nullptr;
-            sdaiGetADBValue(nominalValue, sdaiSTRING, &value);
+            const wchar_t* value = nullptr;
+            sdaiGetADBValue(nominalValue, sdaiUNICODE, &value);
             return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__ENUMERATION:
@@ -2014,8 +2051,8 @@ bool FacetMaterial::MatchMaterialSelect(SdaiInstance material, Context& ctx)
 /// </summary>
 bool FacetMaterial::MatchMaterialSimple(SdaiInstance material, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(material, ctx._IfcMaterial_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterial_Name(), sdaiUNICODE, &name);
     return m_value.Match(name, false, ctx);
 }
 
@@ -2024,8 +2061,8 @@ bool FacetMaterial::MatchMaterialSimple(SdaiInstance material, Context& ctx)
 /// </summary>
 bool FacetMaterial::MatchMaterialLayer(SdaiInstance layer, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(layer, ctx._IfcMaterialLayer_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(layer, ctx._IfcMaterialLayer_Name(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2040,8 +2077,8 @@ bool FacetMaterial::MatchMaterialLayer(SdaiInstance layer, Context& ctx)
 /// </summary>
 bool FacetMaterial::MatchMaterialLayerSet(SdaiInstance material, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(material, ctx._IfcMaterialLayerSet_LayerSetName(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialLayerSet_LayerSetName(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2075,8 +2112,8 @@ bool FacetMaterial::MatchMaterialLayerSetUsage(SdaiInstance material, Context& c
 /// </summary>
 bool FacetMaterial::MatchMaterialProfile(SdaiInstance profile, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(profile, ctx._IfcMaterialProfile_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(profile, ctx._IfcMaterialProfile_Name(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2091,8 +2128,8 @@ bool FacetMaterial::MatchMaterialProfile(SdaiInstance profile, Context& ctx)
 /// </summary>
 bool FacetMaterial::MatchMaterialProfileSet(SdaiInstance material, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(material, ctx._IfcMaterialProfileSet_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialProfileSet_Name(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2126,8 +2163,8 @@ bool FacetMaterial::MatchMaterialProfileSetUsage(SdaiInstance material, Context&
 /// </summary>
 bool FacetMaterial::MatchMaterialConstituent(SdaiInstance constit, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Name(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2142,8 +2179,8 @@ bool FacetMaterial::MatchMaterialConstituent(SdaiInstance constit, Context& ctx)
 /// </summary>
 bool FacetMaterial::MatchMaterialConstituentSet(SdaiInstance material, Context& ctx)
 {
-    const char* name = nullptr;
-    sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_Name(), sdaiSTRING, &name);
+    const wchar_t* name = nullptr;
+    sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_Name(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
@@ -2316,6 +2353,18 @@ bool IdsValue::MatchValue(T value, Comparer& cmp)
     }
 
     return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool IdsValue::Match(const wchar_t* value, bool compareNoCase, Context& ctx)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    
+    std::string utf8 = converter.to_bytes(value);
+
+    return Match(utf8.c_str(), compareNoCase, ctx);
 }
 
 /// <summary>

@@ -129,6 +129,7 @@ namespace RDF
 
             //unset value matches to everything including NULL string
             bool Match(const char* value, bool compareNoCase, Context& ctx);
+            bool Match(const wchar_t* value, bool compareNoCase, Context& ctx);
             bool Match(SdaiInteger value, Context& ctx);
             bool Match(double value, Context& ctx);
             bool Match(bool value, Context& ctx) { return Match((SdaiInteger)value, ctx); }
@@ -269,21 +270,21 @@ namespace RDF
         private:
             struct Reference //One classification reference
             {
-                std::string            system;
-                std::list<std::string> items;
-                std::list<std::string> URI;
+                std::wstring            system;
+                std::list<std::wstring> items;
+                std::list<std::wstring> URI;
             };
 
-            typedef std::map<std::string, Reference> References; //all references sorted by system
+            typedef std::map<std::wstring, Reference> References; //all references sorted by system
 
         private:
             void CollectIfcRelAssociatesClassification(SdaiInstance inst, Context& ctx, References& references);
             void CollectIfcExternalReferenceRelationship(SdaiInstance inst, Context& ctx, References& references);
 
-            void HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
-            void HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
-            void HandleClassification(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
-            void HandleClassificationNotation(SdaiInstance clsf, Context& ctx, std::string& system, Reference& reference);
+            void HandleClassificationSelect(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference);
+            void HandleClassificationReference(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference);
+            void HandleClassification(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference);
+            void HandleClassificationNotation(SdaiInstance clsf, Context& ctx, std::wstring& system, Reference& reference);
 
             bool Match(References& references, Context& ctx);
 
