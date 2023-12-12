@@ -2185,6 +2185,11 @@ bool FacetMaterial::MatchMaterialConstituent(SdaiInstance constit, Context& ctx)
         return true;
     }
 
+    sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Category(), sdaiUNICODE, &name);
+    if (m_value.Match(name, false, ctx)) {
+        return true;
+    }
+
     SdaiInstance material = 0;
     sdaiGetAttr(constit, ctx._IfcMaterialConstituent_Material(), sdaiINSTANCE, &material);
     return MatchMaterialSimple(material, ctx);
@@ -2204,11 +2209,13 @@ bool FacetMaterial::MatchMaterialConstituentSet(SdaiInstance material, Context& 
     SdaiAggr parts = 0;
     sdaiGetAttr(material, ctx._IfcMaterialConstituentSet_MaterialConstituents(), sdaiAGGR, &parts);
 
-    SdaiInstance part = 0;
-    SdaiInteger i = 0;
-    while (sdaiGetAggrByIndex(parts, i++, sdaiINSTANCE, &part)) {
-        if (MatchMaterialConstituent(part, ctx)) {
-            return true;
+    if (parts) {
+        SdaiInstance part = 0;
+        SdaiInteger i = 0;
+        while (sdaiGetAggrByIndex(parts, i++, sdaiINSTANCE, &part)) {
+            if (MatchMaterialConstituent(part, ctx)) {
+                return true;
+            }
         }
     }
 

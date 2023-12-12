@@ -234,6 +234,7 @@ private:
     ATTR(IfcMaterialProfileSet, MaterialProfiles, IfcMaterialProfileSet_MaterialProfiles);
     ATTR(IfcMaterialProfileSetUsage, ForProfileSet, IfcMaterialProfileSetUsage_ForProfileSet);
     ATTR(IfcMaterialConstituent, Name, IfcMaterialConstituent_Name);
+    ATTR(IfcMaterialConstituent, Category, IfcMaterialConstituent_Category);
     ATTR(IfcMaterialConstituent, Material, IfcMaterialConstituent_Material);
     ATTR(IfcMaterialConstituentSet, Name, IfcMaterialConstituentSet_Name);
     ATTR(IfcMaterialConstituentSet, MaterialConstituents, IfcMaterialConstituentSet_MaterialConstituents);
