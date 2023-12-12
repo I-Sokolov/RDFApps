@@ -859,6 +859,9 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
                 if (!objType) {
                     sdaiGetAttrBN(inst, "ElementType", sdaiUNICODE, &objType);
                 }
+                if (!objType) {
+                    sdaiGetAttrBN(inst, "ProcessType", sdaiUNICODE, &objType);
+                }
                 predTypeMatch = m_predefinedType.Match(objType, false, ctx);
             }
         }
@@ -2362,11 +2365,14 @@ bool IdsValue::MatchValue(T value, Comparer& cmp)
 /// </summary>
 bool IdsValue::Match(const wchar_t* value, bool compareNoCase, Context& ctx)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    
-    std::string utf8 = converter.to_bytes(value);
-
-    return Match(utf8.c_str(), compareNoCase, ctx);
+    if (value) {
+        std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+        std::string utf8 = converter.to_bytes(value);
+        return Match(utf8.c_str(), compareNoCase, ctx);
+    }
+    else {
+        return !m_isSet;
+    }
 }
 
 /// <summary>
