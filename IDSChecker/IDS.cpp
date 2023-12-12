@@ -119,6 +119,7 @@ static void ToUpper(std::string& str)
     }
 }
 
+
 /// <summary>
 /// 
 /// </summary>
@@ -188,6 +189,21 @@ Context::IfcVersion Context::GetIfcVersion(const char** pstr)
     }
 
     return m_ifcVersion;
+}
+
+/// <summary>
+/// 
+/// </summary>
+static SdaiInstance GetTypeObject(SdaiInstance inst, Context& ctx)
+{
+    SdaiInstance relType = 0;
+    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &relType)) {
+        SdaiInstance type = 0;
+        if (sdaiGetAttr(relType, ctx._IfcRelDefinesByType_RelatingType(), sdaiINSTANCE, &type)) {
+            return type;
+        }
+    }
+    return NULL;
 }
 
 /// <summary>
@@ -787,7 +803,6 @@ bool Facets::Match(SdaiInstance inst, Context& ctx)
 void FacetEntity::ResetCacheImpl()
 {
     m_sdaiEntity = 0;
-    m_attrPredefinedType = 0;
 }
 
 /// <summary>
@@ -831,48 +846,46 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
         return false; //>>>>>>>>>>>>>>>>>>>>>>>
     }
     
+    //
     // check predefined type
     //
     if (m_predefinedType.IsSet()) {
-        const char* predTypeValue = nullptr;
-        void* getResult = nullptr;
-
-        if (m_sdaiEntity) {
-            if (!m_attrPredefinedType) {
-                m_attrPredefinedType = sdaiGetAttrDefinition(m_sdaiEntity, "PredefinedType");
-            }
-            getResult = sdaiGetAttr(inst, m_attrPredefinedType, sdaiENUM, &predTypeValue);
-        }
-        else {
-            getResult = sdaiGetAttrBN(inst, "PredefinedType", sdaiENUM, &predTypeValue);
-        }
-
-        bool predTypeMatch = false;
-
-        if (getResult && predTypeValue) {
-            if (strcmp(predTypeValue, "USERDEFINED")) {
-                predTypeMatch = m_predefinedType.Match(predTypeValue, false, ctx);
-            }
-            else {
-                const wchar_t* objType = nullptr;
-                sdaiGetAttrBN(inst, "ObjectType", sdaiUNICODE, &objType);
-                if (!objType) {
-                    sdaiGetAttrBN(inst, "ElementType", sdaiUNICODE, &objType);
-                }
-                if (!objType) {
-                    sdaiGetAttrBN(inst, "ProcessType", sdaiUNICODE, &objType);
-                }
-                predTypeMatch = m_predefinedType.Match(objType, false, ctx);
-            }
-        }
-
-        if (!predTypeMatch) {
-            return false; //>>>>>>>>>>>>>>>>>>>>>>>
-        }
+        return MatchPredefinedType(inst, ctx);
     }
 
     //
     return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetEntity::MatchPredefinedType(SdaiInstance inst, Context& ctx)
+{
+    const char* predType = nullptr;
+    sdaiGetAttrBN(inst, "PredefinedType", sdaiENUM, &predType);
+
+    if (predType){
+        if (strcmp(predType, "USERDEFINED")) {
+            return m_predefinedType.Match(predType, false, ctx); //>>>>>>>>>>
+        }
+        else {
+            const wchar_t* objType = nullptr;
+            sdaiGetAttrBN(inst, "ObjectType", sdaiUNICODE, &objType);
+            if (!objType) {
+                sdaiGetAttrBN(inst, "ElementType", sdaiUNICODE, &objType);
+            }
+            if (!objType) {
+                sdaiGetAttrBN(inst, "ProcessType", sdaiUNICODE, &objType);
+            }
+            return m_predefinedType.Match(objType, false, ctx); //>>>>>>>>>
+        }
+    }
+    else if (auto type = GetTypeObject (inst, ctx)){
+        return MatchPredefinedType(type, ctx); //>>>>>>>>>>
+    }
+
+    return false;
 }
 
 /// <summary>
@@ -1077,12 +1090,8 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 
     CollectIfcExternalReferenceRelationship(inst, ctx, references);
 
-    SdaiInstance relType = 0;
-    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &relType)) {
-        SdaiInstance type = 0;
-        if (sdaiGetAttr(relType, ctx._IfcRelDefinesByType_RelatingType(), sdaiINSTANCE, &type)) {
-            CollectIfcRelAssociatesClassification(type, ctx, references);
-        }
+    if (auto type = GetTypeObject(inst, ctx)) {
+        CollectIfcRelAssociatesClassification(type, ctx, references);
     }
 
     return Match (references, ctx);

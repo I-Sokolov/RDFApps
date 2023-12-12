@@ -197,11 +197,13 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
+            bool MatchPredefinedType(SdaiInstance inst, Context& ctx);
+
+        private:
             IdsValue m_name;
             IdsValue m_predefinedType;
 
             SdaiEntity  m_sdaiEntity = 0;
-            SdaiAttr    m_attrPredefinedType = 0;
         };
 
         /// <summary>
