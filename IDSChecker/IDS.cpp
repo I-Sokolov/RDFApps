@@ -681,12 +681,18 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         if (m_applicability.Match(inst, ctx)) {
-            m_nOccurs++;
             
+            auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Optional);
+
             ok = m_requirements.Match(inst, ctx);
+
+            if (rq == RqType::Prohibited) {
+                ok = !ok;
+            }
 
             if (ok) {
                 ctx.LogMsg(MsgLevel::Info, "Checked ok");
+                m_nOccurs++;
             }
             else {
                 ctx.LogMsg(MsgLevel::Error, "Instance does not match specification");
@@ -712,12 +718,8 @@ bool Specification::CheckUsed(Context& ctx)
         switch (rq) {
             case RqType::Required:
                 if (m_nOccurs == 0) {
+                    ok = false;
                     ctx.LogMsg(MsgLevel::Error, "Required specification never match");
-                }
-                break;
-            case RqType::Prohibited:
-                if (m_nOccurs > 0) {
-                    ctx.LogMsg(MsgLevel::Error, "Prohibitet specification was match");
                 }
                 break;
         }

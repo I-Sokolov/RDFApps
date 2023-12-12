@@ -41,7 +41,7 @@ static void IDSTest(std::string& idsFile, std::string& ifcFile)
         assert(!"Failed to read IDS file");
     }
 
-    bool pass = (idsFile.find("pass")!=std::string::npos);
+    bool pass = (idsFile.find("\\pass-")!=std::string::npos);
 
     if (ok != pass)
         assert(0);
