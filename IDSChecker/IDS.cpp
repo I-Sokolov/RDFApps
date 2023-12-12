@@ -855,9 +855,11 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
             }
             else {
                 const wchar_t* objType = nullptr;
-                if (sdaiGetAttr(inst, ctx._IfcObjectDefinition_ObjectType(), sdaiUNICODE, &objType)) {
-                    predTypeMatch = m_predefinedType.Match(objType, false, ctx);
+                sdaiGetAttrBN(inst, "ObjectType", sdaiUNICODE, &objType);
+                if (!objType) {
+                    sdaiGetAttrBN(inst, "ElementType", sdaiUNICODE, &objType);
                 }
+                predTypeMatch = m_predefinedType.Match(objType, false, ctx);
             }
         }
 
