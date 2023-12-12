@@ -223,7 +223,9 @@ private:
     ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);
 
     ATTR(IfcMaterial, Name, IfcMaterial_Name);
+    ATTR(IfcMaterial, Category, IfcMaterial_Category);
     ATTR(IfcMaterialLayer, Name, IfcMaterialLayer_Name);
+    ATTR(IfcMaterialLayer, Category, IfcMaterialLayer_Category);
     ATTR(IfcMaterialLayer, Material, IfcMaterialLayer_Material);
     ATTR(IfcMaterialLayerSet, LayerSetName, IfcMaterialLayerSet_LayerSetName);
     ATTR(IfcMaterialLayerSet, MaterialLayers, IfcMaterialLayerSet_MaterialLayers);

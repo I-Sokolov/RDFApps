@@ -2069,7 +2069,18 @@ bool FacetMaterial::MatchMaterialSimple(SdaiInstance material, Context& ctx)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(material, ctx._IfcMaterial_Name(), sdaiUNICODE, &name);
-    return m_value.Match(name, false, ctx);
+    if (m_value.Match(name, false, ctx)) {
+        return true;
+    }
+
+    if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc2x3) {
+        sdaiGetAttr(material, ctx._IfcMaterial_Category(), sdaiUNICODE, &name);
+        if (m_value.Match(name, false, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /// <summary>
@@ -2079,6 +2090,11 @@ bool FacetMaterial::MatchMaterialLayer(SdaiInstance layer, Context& ctx)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(layer, ctx._IfcMaterialLayer_Name(), sdaiUNICODE, &name);
+    if (m_value.Match(name, false, ctx)) {
+        return true;
+    }
+
+    sdaiGetAttr(layer, ctx._IfcMaterialLayer_Category(), sdaiUNICODE, &name);
     if (m_value.Match(name, false, ctx)) {
         return true;
     }
