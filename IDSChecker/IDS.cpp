@@ -2150,6 +2150,11 @@ bool FacetMaterial::MatchMaterialProfile(SdaiInstance profile, Context& ctx)
         return true;
     }
 
+    sdaiGetAttr(profile, ctx._IfcMaterialProfile_Category(), sdaiUNICODE, &name);
+    if (m_value.Match(name, false, ctx)) {
+        return true;
+    }
+
     SdaiInstance material = 0;
     sdaiGetAttr(profile, ctx._IfcMaterialProfile_Material(), sdaiINSTANCE, &material);
     return MatchMaterialSimple(material, ctx);
