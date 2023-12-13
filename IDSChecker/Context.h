@@ -173,7 +173,8 @@ private:
 
 
     ATTR(IfcRoot, Name, IfcRoot_Name);
-    ATTR(IfcObjectDefinition, IsDecomposedBy, IfcObjectDefinition_IsDecomposedBy);
+    ATTR(IfcObjectDefinition, Decomposes, IfcObjectDefinition_Decomposes);
+    ATTR(IfcObjectDefinition, Nests, IfcObjectDefinition_Nests);
     ATTR(IfcObjectDefinition, HasAssignments, IfcObjectDefinition_HasAssignments);
     ATTR(IfcObjectDefinition, HasAssociations, IfcObjectDefinition_HasAssociations);
     ATTR(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);

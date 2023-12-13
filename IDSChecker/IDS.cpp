@@ -943,15 +943,31 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
         CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
         CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatingGroup(), ctx);
 
-        CreateNavigatorBN2(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, NULL, "RelatingObject", ctx);
+        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            CreateNavigatorBN2(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, "RelatingObject", ctx);
+        }
+        else {
+            CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, ctx._IfcRelAggregates_RelatingObject(), ctx);
+            CreateNavigator(ctx._IfcObjectDefinition_Nests(), sdaiAGGR, NULL, ctx._IfcRelNests_RelatingObject(), ctx);
+        }
 
         CreateNavigatorBN("ContainedInStructure", sdaiAGGR, NULL, ctx._IfcRelContainedInSpatialStructure_RelatingStructure(), ctx);
     }
     else if (m_relation == "IFCRELAGGREGATES") {
-        CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelAggregates_RelatingObject(), ctx);
+        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelAggregates_RelatingObject(), ctx);
+        }
+        else {
+            CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, ctx._IfcRelAggregates_RelatingObject(), ctx);
+        }
     }
     else if (m_relation == "IFCRELNESTS") {
-        CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelNests_RelatingObject(), ctx);
+        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelNests_RelatingObject(), ctx);
+        }
+        else {
+            CreateNavigator(ctx._IfcObjectDefinition_Nests(), sdaiAGGR, NULL, ctx._IfcRelNests_RelatingObject(), ctx);
+        }
     }
     else if (m_relation == "IFCRELASSIGNSTOGROUP") {
         CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatingGroup(), ctx);

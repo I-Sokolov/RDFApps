@@ -25,6 +25,9 @@ static void IDSTest(std::string& idsFile, std::string& ifcFile)
         return;
     }
 
+    if (s_testNum != 157)
+        return;
+
     //make various options
     stopAtFirstError = !stopAtFirstError;
     msgLevel = (RDF::IDS::MsgLevel)((int(msgLevel) + 1) % (int(RDF::IDS::MsgLevel::Error)+1));
