@@ -114,7 +114,6 @@ private:
     ENTITY(IfcExternalReferenceRelationship);
     ENTITY(IfcClassification);
     ENTITY(IfcClassificationNotation);
-    ENTITY(IfcRelDecomposes);
     ENTITY(IfcRelAssignsToGroup);
     ENTITY(IfcFeatureElementSubtraction);
     ENTITY(IfcRelVoidsElement);
@@ -179,7 +178,8 @@ private:
     ATTR(IfcObjectDefinition, HasAssociations, IfcObjectDefinition_HasAssociations);
     ATTR(IfcRelAssociatesClassification, RelatingClassification, IfcRelAssociatesClassification_RelatingClassification);
     ATTR(IfcRelAssociatesMaterial, RelatingMaterial, IfcRelAssociatesMaterial_RelatingMaterial);
-    ATTR(IfcRelDecomposes, RelatingObject, IfcRelDecomposes_RelatingObject);
+    ATTR(IfcRelAggregates, RelatingObject, IfcRelAggregates_RelatingObject);
+    ATTR(IfcRelNests, RelatingObject, IfcRelNests_RelatingObject);
     ATTR(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
     ATTR(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
     ATTR(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);

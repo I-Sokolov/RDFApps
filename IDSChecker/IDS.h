@@ -221,36 +221,29 @@ namespace RDF
         private:
             struct Navigator
             {
-                virtual ~Navigator() {}
-                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) = 0;
-            
-                void FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow);
+                void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx);
+
+                SdaiAttr            attrRelation = 0;   //one of this
+                const char*         attrRelationBN = 0;
+
+                SdaiPrimitiveType   sdaiType = 0;
 
                 SdaiEntity          relClass = 0;
-                SdaiAttr            attrInstance = 0;
+
+                SdaiAttr            attrParent = 0;    //one of this
+                const char*         attrParentBN = 0;
+
+            private:
+                void FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow);
             };
+
             typedef OwningPtrList<Navigator> Navigators;
-
-            struct NavigateByAttr : public Navigator
-            {
-                SdaiAttr            attrRelation = 0;
-                SdaiPrimitiveType   sdaiType = 0;
-
-                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
-            };
-
-            struct NavigateByAttrName : public Navigator
-            {
-                const char*         attrRelation = 0;
-                SdaiPrimitiveType   sdaiType = 0;
-
-                virtual void Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx) override;
-            };
 
         private:
             void FillParentsNavigators(Context& ctx);
             void CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
             void CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
+            void CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, const char* attrParent, Context& ctx);
 
         private:
             FacetEntity         m_entity;
