@@ -941,7 +941,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
     if (m_relation.empty()) {
         CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
         CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
-        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatingGroup(), ctx);
 
         CreateNavigatorBN2(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, NULL, "RelatingObject", ctx);
 
@@ -954,7 +954,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
         CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelNests_RelatingObject(), ctx);
     }
     else if (m_relation == "IFCRELASSIGNSTOGROUP") {
-        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatingGroup(), ctx);
     }
     else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
         CreateNavigatorBN("ContainedInStructure", sdaiAGGR, NULL, ctx._IfcRelContainedInSpatialStructure_RelatingStructure(), ctx);

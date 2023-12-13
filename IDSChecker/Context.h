@@ -180,7 +180,7 @@ private:
     ATTR(IfcRelAssociatesMaterial, RelatingMaterial, IfcRelAssociatesMaterial_RelatingMaterial);
     ATTR(IfcRelAggregates, RelatingObject, IfcRelAggregates_RelatingObject);
     ATTR(IfcRelNests, RelatingObject, IfcRelNests_RelatingObject);
-    ATTR(IfcRelAssignsToGroup, RelatedGroup, IfcRelAssignsToGroup_RelatedGroup);
+    ATTR(IfcRelAssignsToGroup, RelatingGroup, IfcRelAssignsToGroup_RelatingGroup);
     ATTR(IfcFeatureElementSubtraction, VoidsElements, IfcFeatureElementSubtraction_VoidsElements);
     ATTR(IfcRelVoidsElement, RelatingBuildingElement, IfcRelVoidsElement_RelatingBuildingElement);
     ATTR(IfcElement, FillsVoids, IfcElement_FillsVoids);
