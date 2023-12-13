@@ -936,35 +936,33 @@ bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
 /// </summary>
 void FacetPartOf::FillParentsNavigators(Context& ctx)
 {
-    if (m_relation.empty()) {
-        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, NULL, ctx._IfcRelDecomposes_RelatingObject(), ctx);
-        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
-        CreateNavigatorByAttributes(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
-        CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
+    ToUpper(m_relation);
 
-        CreateNavigatorByRelation(ctx._IfcRelContainedInSpatialStructure(),
-                                  ctx._IfcRelContainedInSpatialStructure_RelatingStructure(),
-                                  ctx._IfcRelContainedInSpatialStructure_RelatedElements(), ctx);
+    if (m_relation.empty()) {
+        CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, NULL, ctx._IfcRelDecomposes_RelatingObject(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
+        CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
+        CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
+
+        CreateNavigatorBN("ContainedInStructure", sdaiAGGR, NULL, ctx._IfcRelContainedInSpatialStructure_RelatingStructure(), ctx);
     }
     else if (m_relation == "IFCRELAGGREGATES") {
-        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
     }
     else if (m_relation == "IFCRELNESTS") {
-        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_IsDecomposedBy(), sdaiAGGR, ctx._IfcRelNests(), ctx._IfcRelDecomposes_RelatingObject(), ctx);
     }
     else if (m_relation == "IFCRELASSIGNSTOGROUP") {
-        CreateNavigatorByAttributes(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
+        CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatedGroup(), ctx);
     }
     else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
-        CreateNavigatorByRelation(ctx._IfcRelContainedInSpatialStructure(),
-                                  ctx._IfcRelContainedInSpatialStructure_RelatingStructure(),
-                                  ctx._IfcRelContainedInSpatialStructure_RelatedElements(), ctx);
+        CreateNavigatorBN("ContainedInStructure", sdaiAGGR, NULL, ctx._IfcRelContainedInSpatialStructure_RelatingStructure(), ctx);
     }
     else if (m_relation == "IFCRELVOIDSELEMENT") {
-        CreateNavigatorByAttributes(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
+        CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
     }
     else if (m_relation == "IFCRELFILLSELEMENT") {
-        CreateNavigatorByAttributes(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
+        CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
     }
     else {
         ctx.LogMsg(MsgLevel::NotImplemented, "Unsupported relationship %s", m_relation.c_str());
@@ -975,9 +973,9 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
+void FacetPartOf::CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
 {
-    auto nav = new NavigateByAttributes ();
+    auto nav = new NavigateByAttr ();
     m_navigations.push_back(nav);
 
     nav->attrRelation = attrRelation;
@@ -989,20 +987,21 @@ void FacetPartOf::CreateNavigatorByAttributes(SdaiAttr attrRelation, SdaiPrimiti
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorByRelation(SdaiEntity relClass, SdaiAttr attrParent, SdaiAttr attrChildren, Context&)
+void FacetPartOf::CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
 {
-    auto rel = new NavigateByRelation();
-    m_navigations.push_back(rel);
+    auto nav = new NavigateByAttrName();
+    m_navigations.push_back(nav);
 
-    rel->relClass = relClass;
-    rel->attrParent = attrParent;
-    rel->attrChildren = attrChildren;
+    nav->attrRelation = attrRelation;
+    nav->sdaiType = sdaiType;
+    nav->relClass = relClass;
+    nav->attrInstance = attrParent;
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::NavigateByAttributes::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context&)
+void FacetPartOf::NavigateByAttr::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context&)
 {
     if (sdaiType == sdaiAGGR) {
         SdaiAggr aggr = 0;
@@ -1025,7 +1024,7 @@ void FacetPartOf::NavigateByAttributes::Follow(SdaiInstance inst, std::list<Sdai
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::NavigateByAttributes::FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow)
+void FacetPartOf::Navigator::FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow)
 {
     if (!rel) {
         return;
@@ -1048,8 +1047,25 @@ void FacetPartOf::NavigateByAttributes::FollowRel(SdaiInstance rel, std::list<Sd
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context& ctx)
+void FacetPartOf::NavigateByAttrName::Follow(SdaiInstance inst, std::list<SdaiInstance>& follow, Context&)
 {
+    if (sdaiType == sdaiAGGR) {
+        SdaiAggr aggr = 0;
+        sdaiGetAttrBN(inst, attrRelation, sdaiAGGR, &aggr);
+        if (aggr) {
+            int i = 0;
+            SdaiInstance rel = 0;
+            while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &rel)) {
+                FollowRel(rel, follow);
+            }
+        }
+    }
+    else {
+        SdaiInstance rel = 0;
+        sdaiGetAttrBN(inst, attrRelation, sdaiINSTANCE, &rel);
+        FollowRel(rel, follow);
+    }
+#if 0
     auto ext = xxxxGetEntityAndSubTypesExtent(ctx.model, relClass);
 
     SdaiInstance rel = 0;
@@ -1072,6 +1088,7 @@ void FacetPartOf::NavigateByRelation::Follow(SdaiInstance inst, std::list<SdaiIn
             }
         }
     }
+#endif
 }
 
 /// <summary>
@@ -2005,11 +2022,14 @@ bool FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
             sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesMaterial_RelatingMaterial(), sdaiINSTANCE, &material);
             if (material) {
 
-                if (MatchMaterialSelect(material, ctx)) {
-                    return true;
-                }
+                return MatchMaterialSelect(material, ctx);
             }
         }
+    }
+
+    auto type = GetTypeObject(inst, ctx);
+    if (type) {
+        return MatchImpl(type, ctx);
     }
 
     return false;
