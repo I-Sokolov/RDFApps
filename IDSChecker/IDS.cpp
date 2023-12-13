@@ -921,7 +921,7 @@ bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
             std::list<SdaiInstance> follow;
             nav->Follow(inst, follow, ctx);
             for (auto parent : follow) {
-                if (m_entity.Match(parent, ctx)) {
+                if (nav->canMatch && m_entity.Match(parent, ctx)) {
                     return true; //>>>>>>>>>>>>>>>>>>>>>>>>>
                 }
                 toCheckParents.push_back(parent);
@@ -975,6 +975,19 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
     }
     else if (m_relation == "IFCRELCONTAINEDINSPATIALSTRUCTURE") {
         CreateNavigatorBN("ContainedInStructure", sdaiAGGR, NULL, ctx._IfcRelContainedInSpatialStructure_RelatingStructure(), ctx);
+
+        //parts of objects belongs to parents spatial structure
+        CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx, false);
+        CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx, false);
+
+        if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            CreateNavigatorBN2(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, "RelatingObject", ctx, false);
+        }
+        else {
+            CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, ctx._IfcRelAggregates_RelatingObject(), ctx, false);
+            CreateNavigator(ctx._IfcObjectDefinition_Nests(), sdaiAGGR, NULL, ctx._IfcRelNests_RelatingObject(), ctx, false);
+        }
+
     }
     else if (m_relation == "IFCRELVOIDSELEMENT") {
         CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
@@ -991,7 +1004,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
+void FacetPartOf::CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&, bool canMatch)
 {
     auto nav = new Navigator ();
     m_navigations.push_back(nav);
@@ -1000,12 +1013,13 @@ void FacetPartOf::CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiT
     nav->sdaiType = sdaiType;
     nav->relClass = relClass;
     nav->attrParent = attrParent;
+    nav->canMatch = canMatch;
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&)
+void FacetPartOf::CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context&, bool canMatch)
 {
     auto nav = new Navigator();
     m_navigations.push_back(nav);
@@ -1014,12 +1028,13 @@ void FacetPartOf::CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType 
     nav->sdaiType = sdaiType;
     nav->relClass = relClass;
     nav->attrParent = attrParent;
+    nav->canMatch = canMatch;
 }
 
 /// <summary>
 /// 
 /// </summary>
-void FacetPartOf::CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, const char* attrParent, Context&)
+void FacetPartOf::CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, const char* attrParent, Context&, bool canMatch)
 {
     auto nav = new Navigator();
     m_navigations.push_back(nav);
@@ -1028,6 +1043,7 @@ void FacetPartOf::CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sd
     nav->sdaiType = sdaiType;
     nav->relClass = relClass;
     nav->attrParentBN = attrParent;
+    nav->canMatch = canMatch;
 }
 
 /// <summary>

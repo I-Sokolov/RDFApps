@@ -25,8 +25,8 @@ static void IDSTest(std::string& idsFile, std::string& ifcFile)
         return;
     }
 
-    //if (s_testNum != 173)
-    //    return;
+    //if (s_testNum != 157)
+     //   return;
 
     //make various options
     stopAtFirstError = !stopAtFirstError;

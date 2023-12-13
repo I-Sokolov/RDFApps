@@ -233,6 +233,8 @@ namespace RDF
                 SdaiAttr            attrParent = 0;    //one of this
                 const char*         attrParentBN = 0;
 
+                bool                canMatch = true;
+
             private:
                 void FollowRel(SdaiInstance rel, std::list<SdaiInstance>& follow);
             };
@@ -241,9 +243,9 @@ namespace RDF
 
         private:
             void FillParentsNavigators(Context& ctx);
-            void CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
-            void CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx);
-            void CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, const char* attrParent, Context& ctx);
+            void CreateNavigator(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx, bool canMatch = true);
+            void CreateNavigatorBN(const char* attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, SdaiAttr attrParent, Context& ctx, bool canMatch = true);
+            void CreateNavigatorBN2(SdaiAttr attrRelation, SdaiPrimitiveType sdaiType, SdaiEntity relClass, const char* attrParent, Context& ctx, bool canMatch = true);
 
         private:
             FacetEntity         m_entity;
