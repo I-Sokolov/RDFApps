@@ -327,16 +327,16 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
-            bool SearchProperties(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps);
+            bool TestProperties(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps);
 
-            bool MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps);
-            bool MatchInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps);
-            bool MatchInPSDef(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps);
+            bool TestInSetOfPSDef(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps);
+            bool TestInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps);
+            bool TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps);
 
-            bool MatchProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps);
+            bool TestProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps);
             bool MatchPropertySingleValue(SdaiInstance prop, Context& ctx);
 
-            bool MatchQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps);
+            bool TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps);
             bool MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx);
             
         private:

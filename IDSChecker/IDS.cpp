@@ -1727,27 +1727,32 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
 bool FacetProperty::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     std::set<std::wstring> testedProps;
-    return SearchProperties(inst, ctx, testedProps);
+
+    if (!TestProperties(inst, ctx, testedProps)) {
+        return false;
+    }
+
+    return testedProps.size() > 0;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::SearchProperties(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestProperties(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps)
 {
     if (sdaiIsKindOf(inst, ctx._IfcTypeObject())) {
         SdaiAggr aggr = 0;
         sdaiGetAttr(inst, ctx._IfcTypeObject_HasPropertySets(), sdaiAGGR, &aggr);
-        if (MatchInSetOfPSDef(aggr, ctx, testedProps)) {
-            return true;
+        if (!TestInSetOfPSDef(aggr, ctx, testedProps)) {
+            return false;
         }
     }
 
     if (sdaiIsKindOf(inst, ctx._IfcObject())) {
         SdaiAggr aggr = 0;
         sdaiGetAttr(inst, ctx._IfcObject_IsDefinedBy(), sdaiAGGR, &aggr);
-        if (MatchInSetOfRel(aggr, ctx, testedProps)) {
-            return true;
+        if (!TestInSetOfRel(aggr, ctx, testedProps)) {
+            return false;
         }
     }
 
@@ -1755,46 +1760,48 @@ bool FacetProperty::SearchProperties(SdaiInstance inst, Context& ctx, std::set<s
         SdaiAggr aggr = 0;
         if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc2x3) {
             sdaiGetAttr(inst, ctx._IfcContext_IsDefinedBy(), sdaiAGGR, &aggr);
-            if (MatchInSetOfRel(aggr, ctx, testedProps)) {
-                return true;
+            if (!TestInSetOfRel(aggr, ctx, testedProps)) {
+                return false;
             }
         }
     }
 
     if (auto type = GetTypeObject(inst, ctx)) {
-        return SearchProperties(type, ctx, testedProps);
+        if (!TestProperties(type, ctx, testedProps)) {
+            return false;
+        }
     }
 
-    return false;
+    return true;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchInSetOfPSDef(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestInSetOfPSDef(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps)
 {
     SdaiInstance pset = 0;
     SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &pset)) {
-        if (MatchInPSDef(pset, ctx, testedProps)) {
-            return true;
+        if (!TestInPSDef(pset, ctx, testedProps)) {
+            return false;
         }
     }
-    return false;
+    return true;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::wstring>& testedProps)
 {
     SdaiInstance rel = 0;
     SdaiInteger i = 0;
     while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &rel)) {
         SdaiInstance pset = 0;
         if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiINSTANCE, &pset)) {
-            if (MatchInPSDef(pset, ctx, testedProps)) {
-                return true;
+            if (!TestInPSDef(pset, ctx, testedProps)) {
+                return false;
             }
         }
         else {
@@ -1802,27 +1809,27 @@ bool FacetProperty::MatchInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::w
             if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiAGGR, &psdefset)) {
                 SdaiInteger j = 0;
                 while (sdaiGetAggrByIndex(psdefset, j++, sdaiINSTANCE, &pset)) {
-                    if (MatchInPSDef(pset, ctx, testedProps)) {
-                        return true;
+                    if (!TestInPSDef(pset, ctx, testedProps)) {
+                        return false;
                     }
                 }
             }
         }
     }
-    return false;
+    return true;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps)
 {
     const wchar_t* psetName = 0;
 
     if (m_propertySet.IsSet()) {
         sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiUNICODE, &psetName);
         if (!m_name.Match(psetName, false, ctx)) {
-            return false;
+            return true; //not to test
         }
     }
 
@@ -1834,8 +1841,8 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx, std::set<std::
         SdaiInstance prop = 0;
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &prop)) {
-            if (MatchProperty(prop, ctx, psetName, testedProps)) {
-                return true;
+            if (!TestProperty(prop, ctx, psetName, testedProps)) {
+                return false;
             }
         }
     }
@@ -1845,28 +1852,24 @@ bool FacetProperty::MatchInPSDef(SdaiInstance inst, Context& ctx, std::set<std::
         SdaiInstance quant = 0;
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &quant)) {
-            if (MatchQuantity(quant, ctx, psetName, testedProps)) {
-                return true;
+            if (!TestQuantity(quant, ctx, psetName, testedProps)) {
+                return false;
             }
         }
     }
 
-    return false;
+    return true;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiUNICODE, &name);
     if (!m_name.Match(name, false, ctx)) {
-        return false;
-    }
-
-    if (!m_value.IsSet()) {
-        return true;
+        return true;  //not to test
     }
 
     std::wstring testedName(pset);
@@ -1874,7 +1877,11 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx, const wchar_t
     testedName.append(name);
 
     if (!testedProps.insert(testedName).second) {
-        return false; //type property was overriden in instnce
+        return true; //already tested, this type property was overriden in instnce
+    }
+
+    if (!m_value.IsSet()) {
+        return true;
     }
 
     auto entity = sdaiGetInstanceType(prop);
@@ -1922,16 +1929,12 @@ bool FacetProperty::MatchProperty(SdaiInstance prop, Context& ctx, const wchar_t
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiUNICODE, &name);
     if (!m_name.Match(name, false, ctx)) {
-        return false;
-    }
-
-    if (!m_value.IsSet()) {
-        return true;
+        return true; //not to test
     }
 
     std::wstring testedName(pset);
@@ -1939,7 +1942,12 @@ bool FacetProperty::MatchQuantity(SdaiInstance qto, Context& ctx, const wchar_t*
     testedName.append(name);
 
     if (!testedProps.insert(testedName).second) {
-        return false; //type property was overriden in instnce
+        return true; //already tested, this type property was overriden in instnce
+    }
+
+
+    if (!m_value.IsSet()) {
+        return true;
     }
 
     auto entity = sdaiGetInstanceType(qto);
