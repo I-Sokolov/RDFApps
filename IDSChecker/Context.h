@@ -140,6 +140,7 @@ private:
     ENTITY(IfcPropertyReferenceValue);
     ENTITY(IfcPropertySingleValue);
     ENTITY(IfcPropertyTableValue);
+    ENTITY(IfcPropertyEnumeration);
 
     ENTITY(IfcPhysicalQuantity);
     ENTITY(IfcPhysicalComplexQuantity);
@@ -219,6 +220,9 @@ private:
     ATTR(IfcQuantityWeight, WeightValue, IfcQuantityWeight_WeightValue);
     ATTR(IfcPropertySingleValue, NominalValue, IfcPropertySingleValue_NominalValue);
     ATTR(IfcPropertySingleValue, Unit, IfcPropertySingleValue_Unit);
+    ATTR(IfcPropertyEnumeratedValue, EnumerationValues, IfcPropertyEnumeratedValue_EnumerationValues);
+    ATTR(IfcPropertyEnumeratedValue, EnumerationReference, IfcPropertyEnumeratedValue_EnumerationReference);
+    ATTR(IfcPropertyEnumeration, Unit, IfcPropertyEnumeration_Unit);
     ATTR(IfcDerivedUnit, Elements, IfcDerivedUnit_Elements);
     ATTR(IfcDerivedUnitElement, Unit, IfcDerivedUnitElement_Unit);
     ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);

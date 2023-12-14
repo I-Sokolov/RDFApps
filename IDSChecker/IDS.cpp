@@ -1834,6 +1834,8 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
     }
 
     auto type = sdaiGetInstanceType(inst);
+    
+    bool propNameMatched = false;
 
     if (type == ctx._IfcPropertySet()) {
         SdaiAggr aggr = 0;
@@ -1841,7 +1843,7 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
         SdaiInstance prop = 0;
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &prop)) {
-            if (!TestProperty(prop, ctx, psetName, testedProps)) {
+            if (!TestProperty(prop, ctx, psetName, testedProps, propNameMatched)) {
                 return false;
             }
         }
@@ -1852,19 +1854,19 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
         SdaiInstance quant = 0;
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &quant)) {
-            if (!TestQuantity(quant, ctx, psetName, testedProps)) {
-                return false;
+            if (!TestQuantity(quant, ctx, psetName, testedProps, propNameMatched)) {
+                return false; //
             }
         }
     }
 
-    return true;
+    return propNameMatched; //fail-all_matching_property_sets_must_satisfy_requirements_2_3.ids
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps, bool& propNameMatched)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiUNICODE, &name);
@@ -1872,6 +1874,8 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return true;  //not to test
     }
 
+    propNameMatched = true;
+    
     std::wstring testedName(pset);
     testedName.append(L"/@");
     testedName.append(name);
@@ -1897,9 +1901,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return false;
     }
     else if (entity == ctx._IfcPropertyEnumeratedValue()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyEnumeratedValue");
-        assert(0);
-        return false;
+        return MatchPropertyEnumeratedValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyListValue()) {
         ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyListValue");
@@ -1929,13 +1931,15 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps)
+bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps, bool& propNameMatched)
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiUNICODE, &name);
     if (!m_name.Match(name, false, ctx)) {
         return true; //not to test
     }
+
+    propNameMatched = true;
 
     std::wstring testedName(pset);
     testedName.append(L"/@");
@@ -2003,6 +2007,32 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchPropertyEnumeratedValue(SdaiInstance prop, Context& ctx)
+{
+    SdaiInstance unit = 0;
+    SdaiInstance enumeration = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertyEnumeratedValue_EnumerationReference(), sdaiINSTANCE, &enumeration);
+    if (enumeration) {
+        sdaiGetAttr(enumeration, ctx._IfcPropertyEnumeration_Unit(), sdaiINSTANCE, &unit);
+    }
+
+    SdaiAggr values = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertyEnumeratedValue_EnumerationValues(), sdaiAGGR, &values);
+    if (values) {
+        SdaiADB value = 0;
+        SdaiInteger i = 0;
+        while (sdaiGetAggrByIndex(values, i++, sdaiADB, &value)) {
+            if (MatchValue(value, unit, ctx)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 /// <summary>
 /// 
@@ -2012,8 +2042,21 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
     SdaiADB nominalValue = 0;
     sdaiGetAttr(prop, ctx._IfcPropertySingleValue_NominalValue(), sdaiADB, &nominalValue);
 
+    SdaiInstance            unit = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertySingleValue_Unit(), sdaiINSTANCE, &unit);
+
+    return MatchValue(nominalValue, unit, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx)
+{
     enum_express_attr_type  attrType = enum_express_attr_type::__NONE;
-    auto ifcType = sdaiGetADBTypePath(nominalValue, 0);
+
+    auto ifcType = sdaiGetADBTypePath(adbValue, 0);
+
     if (ifcType) {
         auto type = sdaiGetEntity(ctx.model, ifcType);
         attrType = engiGetDefinedType(type, nullptr, nullptr);
@@ -2024,54 +2067,45 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
         case enum_express_attr_type::__BINARY_32:
         {
             const char* value = nullptr;
-            sdaiGetADBValue(nominalValue, sdaiBINARY, &value);
+            sdaiGetADBValue(adbValue, sdaiBINARY, &value);
             return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__STRING:
         {
             const wchar_t* value = nullptr;
-            sdaiGetADBValue(nominalValue, sdaiUNICODE, &value);
+            sdaiGetADBValue(adbValue, sdaiUNICODE, &value);
             return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__ENUMERATION:
         {
             const char* value = nullptr;
-            sdaiGetADBValue(nominalValue, sdaiENUM, &value);
+            sdaiGetADBValue(adbValue, sdaiENUM, &value);
             return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__BOOLEAN:
         {
             bool value = 0;
-            sdaiGetADBValue(nominalValue, sdaiBOOLEAN, &value);
+            sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value);
             return m_value.Match(value, ctx);
         }
         case enum_express_attr_type::__INTEGER:
         {
             SdaiInteger value = 0;
-            sdaiGetADBValue(nominalValue, sdaiINTEGER, &value);
+            sdaiGetADBValue(adbValue, sdaiINTEGER, &value);
             return m_value.Match(value, ctx);
         }
         case enum_express_attr_type::__LOGICAL:
         {
             const char* value = 0;
-            sdaiGetADBValue(nominalValue, sdaiLOGICAL, &value);
+            sdaiGetADBValue(adbValue, sdaiLOGICAL, &value);
             return m_value.Match(value, false, ctx);
         }
         case enum_express_attr_type::__NUMBER:
         case enum_express_attr_type::__REAL:
         {
-            SdaiInstance            unit = 0;
-            sdaiGetAttr(prop, ctx._IfcPropertySingleValue_Unit(), sdaiINSTANCE, &unit);
-
-            const char* unitKind = nullptr;
-            auto it = s_ifcDataTypesUnits.find(ifcType);
-            if (it != s_ifcDataTypesUnits.end()) {
-                unitKind = it->second.c_str();
-            }
-
             double value = 0;
-            sdaiGetADBValue(nominalValue, sdaiREAL, &value);
-            return MatchValue(value, unit, unitKind, ctx);
+            sdaiGetADBValue(adbValue, sdaiREAL, &value);
+            return MatchValue(value, unit, ifcType, ctx);
         }
         default:
         {
@@ -2085,8 +2119,14 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* unitKind, Context& ctx)
+bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* ifcType, Context& ctx)
 {
+    const char* unitKind = nullptr;
+    auto it = s_ifcDataTypesUnits.find(ifcType);
+    if (it != s_ifcDataTypesUnits.end()) {
+        unitKind = it->second.c_str();
+    }
+
     double scale = ctx.GetUnitScale(unit, unitKind);
 
     value *= scale;
