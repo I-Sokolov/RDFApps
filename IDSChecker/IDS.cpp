@@ -1828,7 +1828,7 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
 
     if (m_propertySet.IsSet()) {
         sdaiGetAttr(inst, ctx._IfcRoot_Name(), sdaiUNICODE, &psetName);
-        if (!m_name.Match(psetName, false, ctx)) {
+        if (!m_propertySet.Match(psetName, false, ctx)) {
             return true; //not to test
         }
     }
