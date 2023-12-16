@@ -227,6 +227,8 @@ private:
     ATTR(IfcPropertyBoundedValue, UpperBoundValue, IfcPropertyBoundedValue_UpperBoundValue);
     ATTR(IfcPropertyBoundedValue, LowerBoundValue, IfcPropertyBoundedValue_LowerBoundValue);
     ATTR(IfcPropertyBoundedValue, SetPointValue, IfcPropertyBoundedValue_SetPointValue);
+    ATTR(IfcPropertyListValue, Unit, IfcPropertyListValue_Unit);
+    ATTR(IfcPropertyListValue, ListValues, IfcPropertyListValue_ListValues);
     ATTR(IfcDerivedUnit, Elements, IfcDerivedUnit_Elements);
     ATTR(IfcDerivedUnitElement, Unit, IfcDerivedUnitElement_Unit);
     ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);

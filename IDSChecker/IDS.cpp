@@ -1902,9 +1902,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return MatchPropertyEnumeratedValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyListValue()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyListValue");
-        assert(0);
-        return false;
+        return MatchPropertyListValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyReferenceValue()) {
         ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyReferenceValue");
@@ -2019,6 +2017,29 @@ bool FacetProperty::MatchPropertyEnumeratedValue(SdaiInstance prop, Context& ctx
 
     SdaiAggr values = 0;
     sdaiGetAttr(prop, ctx._IfcPropertyEnumeratedValue_EnumerationValues(), sdaiAGGR, &values);
+    if (values) {
+        SdaiADB value = 0;
+        SdaiInteger i = 0;
+        while (sdaiGetAggrByIndex(values, i++, sdaiADB, &value)) {
+            if (MatchValue(value, unit, ctx)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchPropertyListValue(SdaiInstance prop, Context& ctx)
+{
+    SdaiInstance unit = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertyListValue_Unit(), sdaiINSTANCE, &unit);
+
+    SdaiAggr values = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertyListValue_ListValues(), sdaiAGGR, &values);
     if (values) {
         SdaiADB value = 0;
         SdaiInteger i = 0;
