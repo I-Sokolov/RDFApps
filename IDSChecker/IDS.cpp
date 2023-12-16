@@ -2164,7 +2164,7 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         case enum_express_attr_type::__LOGICAL:
         {
             const char* value = 0;
-            if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value) && value && *value)
+            if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value) && value && *value != 'U')
                 return m_value.Match(value, false, ctx);
             else
                 return false;
