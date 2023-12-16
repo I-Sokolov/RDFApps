@@ -1940,15 +1940,10 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     }
 
 
-    if (!m_value.IsSet()) {
-        return true;
-    }
-
     auto entity = sdaiGetInstanceType(qto);
 
     if (entity == ctx._IfcPhysicalComplexQuantity()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPhysicalComplexQuantity");
-        assert(0);
+        //complex_properties_are_not_supported
         return false;
     }
 
@@ -1957,38 +1952,52 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
 
     if (entity == ctx._IfcQuantityArea()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityArea_AreaValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, "AREAUNIT", ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityArea_AreaValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, "AREAUNIT", ctx);
+        else
+            return false;
     }
     else if (entity == ctx._IfcQuantityCount()) {
         SdaiInteger value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value);
-        return m_value.Match(value, ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value))
+            return m_value.Match(value, ctx);
+        else
+            return false;
     }
     else if (entity == ctx._IfcQuantityLength()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityLength_LengthValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, "LENGTHUNIT", ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityLength_LengthValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, "LENGTHUNIT", ctx);
+        else
+            return false;
     }
     else if (entity == ctx._IfcQuantityNumber()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityNumber_NumberValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, nullptr, ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityNumber_NumberValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, nullptr, ctx);
+        else
+            return;
     }
     else if (entity == ctx._IfcQuantityTime()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityTime_TimeValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, "TIMEUNIT", ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityTime_TimeValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, "TIMEUNIT", ctx);
+        else
+            return false;
     }
     if (entity == ctx._IfcQuantityVolume()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityVolume_VolumeValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, "VOLUMEUNIT", ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityVolume_VolumeValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, "VOLUMEUNIT", ctx);
+        else
+            return false;
     }
     else if (entity == ctx._IfcQuantityWeight()) {
         double value = 0;
-        sdaiGetAttr(qto, ctx._IfcQuantityWeight_WeightValue(), sdaiREAL, &value);
-        return MatchValue(value, unit, "MASSUNIT", ctx);
+        if (sdaiGetAttr(qto, ctx._IfcQuantityWeight_WeightValue(), sdaiREAL, &value))
+            return MatchValue(value, unit, "MASSUNIT", ctx);
+        else
+            return false;
     }
     else {
         ctx.LogMsg(MsgLevel::NotImplemented, "Unknown entity");
