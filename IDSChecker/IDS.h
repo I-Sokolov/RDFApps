@@ -338,6 +338,10 @@ namespace RDF
             bool MatchPropertyEnumeratedValue(SdaiInstance prop, Context& ctx);
             bool MatchPropertyBoundedValue(SdaiInstance prop, Context& ctx);
             bool MatchPropertyListValue(SdaiInstance prop, Context& ctx);
+            bool MatchPropertyTableValue(SdaiInstance prop, Context& ctx);
+
+            bool MatchListOfValues(SdaiInstance prop, SdaiAttr attrUnit, SdaiAttr attrValues, Context& ctx);
+
 
             bool TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps, bool& propNameMatched);
             

@@ -1913,9 +1913,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return MatchPropertySingleValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyTableValue()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyTableValue");
-        assert(0);
-        return false;
+        return MatchPropertyTableValue(prop, ctx);
     }
     else {
         ctx.LogMsg(MsgLevel::NotImplemented, "Unknown entity");
@@ -2033,13 +2031,13 @@ bool FacetProperty::MatchPropertyEnumeratedValue(SdaiInstance prop, Context& ctx
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchPropertyListValue(SdaiInstance prop, Context& ctx)
+bool FacetProperty::MatchListOfValues(SdaiInstance prop, SdaiAttr attrUnit, SdaiAttr attrValues, Context& ctx)
 {
     SdaiInstance unit = 0;
-    sdaiGetAttr(prop, ctx._IfcPropertyListValue_Unit(), sdaiINSTANCE, &unit);
+    sdaiGetAttr(prop, attrUnit, sdaiINSTANCE, &unit);
 
     SdaiAggr values = 0;
-    sdaiGetAttr(prop, ctx._IfcPropertyListValue_ListValues(), sdaiAGGR, &values);
+    sdaiGetAttr(prop, attrValues, sdaiAGGR, &values);
     if (values) {
         SdaiADB value = 0;
         SdaiInteger i = 0;
@@ -2051,6 +2049,26 @@ bool FacetProperty::MatchPropertyListValue(SdaiInstance prop, Context& ctx)
     }
 
     return false;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchPropertyListValue(SdaiInstance prop, Context& ctx)
+{
+    return MatchListOfValues(prop, ctx._IfcPropertyListValue_Unit(), ctx._IfcPropertyListValue_ListValues(), ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchPropertyTableValue(SdaiInstance prop, Context& ctx)
+{
+    if (MatchListOfValues(prop, ctx._IfcPropertyTableValue_DefiningUnit(), ctx._IfcPropertyTableValue_DefiningValues(), ctx)) {
+        return true;
+    }
+
+    return MatchListOfValues(prop, ctx._IfcPropertyTableValue_DefinedUnit(), ctx._IfcPropertyTableValue_DefinedValues(), ctx);
 }
 
 /// <summary>
