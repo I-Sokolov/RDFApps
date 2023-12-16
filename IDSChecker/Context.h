@@ -265,7 +265,7 @@ double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
         scale = getIfcUnitConversionFactor(unit, nullptr, nullptr, nullptr);
     }
     else if (unitKind) {
-        scale = getUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
+        scale = getIfcProjectUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
     }
 
     if (scale < FLT_MIN) {
