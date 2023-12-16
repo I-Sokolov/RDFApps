@@ -2221,6 +2221,16 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
 /// </summary>
 bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* ifcType, Context& ctx)
 {
+    if (!m_datatype.empty()) {
+        if (StrICmp(m_datatype.c_str(), ifcType)) { //quantities_must_also_match_the_appropriate_measure
+            return false;//datatype mismatch
+        }
+    }
+
+    if (!m_value.IsSet()) {
+        return true; //no need to calculate units
+    }
+
     const char* unitKind = nullptr;
     auto it = s_ifcDataTypesUnits.find(ifcType);
     if (it != s_ifcDataTypesUnits.end()) {
