@@ -1884,10 +1884,6 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return true; //already tested, this type property was overriden in instnce
     }
 
-    if (!m_value.IsSet()) {
-        return true;
-    }
-
     auto entity = sdaiGetInstanceType(prop);
 
     if (entity == ctx._IfcComplexProperty()) {
@@ -2110,6 +2106,10 @@ bool FacetProperty::MatchPropertyBoundedValue(SdaiInstance prop, Context& ctx)
 /// </summary>
 bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx)
 {
+    if (!adbValue) {
+        return false;
+    }
+
     enum_express_attr_type  attrType = enum_express_attr_type::__NONE;
 
     auto ifcType = sdaiGetADBTypePath(adbValue, 0);
@@ -2124,45 +2124,59 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         case enum_express_attr_type::__BINARY_32:
         {
             const char* value = nullptr;
-            sdaiGetADBValue(adbValue, sdaiBINARY, &value);
-            return m_value.Match(value, false, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiBINARY, &value) && value && *value)
+                return m_value.Match(value, false, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__STRING:
         {
             const wchar_t* value = nullptr;
-            sdaiGetADBValue(adbValue, sdaiUNICODE, &value);
-            return m_value.Match(value, false, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiUNICODE, &value) && value && *value)
+                return m_value.Match(value, false, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__ENUMERATION:
         {
             const char* value = nullptr;
-            sdaiGetADBValue(adbValue, sdaiENUM, &value);
-            return m_value.Match(value, false, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiENUM, &value) && value && *value)
+                return m_value.Match(value, false, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__BOOLEAN:
         {
             bool value = 0;
-            sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value);
-            return m_value.Match(value, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value))
+                return m_value.Match(value, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__INTEGER:
         {
             SdaiInteger value = 0;
-            sdaiGetADBValue(adbValue, sdaiINTEGER, &value);
-            return m_value.Match(value, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiINTEGER, &value))
+                return m_value.Match(value, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__LOGICAL:
         {
             const char* value = 0;
-            sdaiGetADBValue(adbValue, sdaiLOGICAL, &value);
-            return m_value.Match(value, false, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value) && value && *value)
+                return m_value.Match(value, false, ctx);
+            else
+                return false;
         }
         case enum_express_attr_type::__NUMBER:
         case enum_express_attr_type::__REAL:
         {
             double value = 0;
-            sdaiGetADBValue(adbValue, sdaiREAL, &value);
-            return MatchValue(value, unit, ifcType, ctx);
+            if (sdaiGetADBValue(adbValue, sdaiREAL, &value))
+                return MatchValue(value, unit, ifcType, ctx);
+            else
+                return false;
         }
         default:
         {
@@ -2618,7 +2632,7 @@ bool IdsValue::Match(const wchar_t* value, bool compareNoCase, Context& ctx)
         return Match(utf8.c_str(), compareNoCase, ctx);
     }
     else {
-        return !m_isSet;
+        return Match ((const char*) nullptr, compareNoCase, ctx);
     }
 }
 
@@ -2630,7 +2644,7 @@ bool IdsValue::Match(const char* value, bool compareNoCase, Context&)
     if (!m_isSet) {
         return true;
     }
-    if (!value) {
+    if (!value || !*value) {
         return false;
     }
 
