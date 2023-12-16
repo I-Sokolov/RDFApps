@@ -1976,7 +1976,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
         if (sdaiGetAttr(qto, ctx._IfcQuantityNumber_NumberValue(), sdaiREAL, &value))
             return MatchValue(value, unit, nullptr, ctx);
         else
-            return;
+            return false;
     }
     else if (entity == ctx._IfcQuantityTime()) {
         double value = 0;
@@ -2122,6 +2122,12 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
     enum_express_attr_type  attrType = enum_express_attr_type::__NONE;
 
     auto ifcType = sdaiGetADBTypePath(adbValue, 0);
+
+    if (!m_datatype.empty()) {
+        if (StrICmp(m_datatype.c_str(), ifcType)) {
+            return false;//datatype mismatch
+        }
+    }
 
     if (ifcType) {
         auto type = sdaiGetEntity(ctx.model, ifcType);
