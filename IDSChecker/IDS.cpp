@@ -1896,9 +1896,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return false;
     }
     else if (entity == ctx._IfcPropertyBoundedValue()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyBoundedValue");
-        assert(0);
-        return false;
+        return MatchPropertyBoundedValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyEnumeratedValue()) {
         return MatchPropertyEnumeratedValue(prop, ctx);
@@ -2046,6 +2044,26 @@ bool FacetProperty::MatchPropertySingleValue(SdaiInstance prop, Context& ctx)
     sdaiGetAttr(prop, ctx._IfcPropertySingleValue_Unit(), sdaiINSTANCE, &unit);
 
     return MatchValue(nominalValue, unit, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::MatchPropertyBoundedValue(SdaiInstance prop, Context& ctx)
+{
+    SdaiInstance            unit = 0;
+    sdaiGetAttr(prop, ctx._IfcPropertyBoundedValue_Unit(), sdaiINSTANCE, &unit);
+
+    SdaiAttr rAttr[] = { ctx._IfcPropertyBoundedValue_UpperBoundValue(), ctx._IfcPropertyBoundedValue_LowerBoundValue(), ctx._IfcPropertyBoundedValue_SetPointValue()};
+    for (auto attr : rAttr) {
+        SdaiADB value = 0;
+        sdaiGetAttr(prop, attr, sdaiADB, &value);
+        if (MatchValue(value, unit, ctx)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /// <summary>

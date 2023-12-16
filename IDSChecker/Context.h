@@ -223,6 +223,10 @@ private:
     ATTR(IfcPropertyEnumeratedValue, EnumerationValues, IfcPropertyEnumeratedValue_EnumerationValues);
     ATTR(IfcPropertyEnumeratedValue, EnumerationReference, IfcPropertyEnumeratedValue_EnumerationReference);
     ATTR(IfcPropertyEnumeration, Unit, IfcPropertyEnumeration_Unit);
+    ATTR(IfcPropertyBoundedValue, Unit, IfcPropertyBoundedValue_Unit);
+    ATTR(IfcPropertyBoundedValue, UpperBoundValue, IfcPropertyBoundedValue_UpperBoundValue);
+    ATTR(IfcPropertyBoundedValue, LowerBoundValue, IfcPropertyBoundedValue_LowerBoundValue);
+    ATTR(IfcPropertyBoundedValue, SetPointValue, IfcPropertyBoundedValue_SetPointValue);
     ATTR(IfcDerivedUnit, Elements, IfcDerivedUnit_Elements);
     ATTR(IfcDerivedUnitElement, Unit, IfcDerivedUnitElement_Unit);
     ATTR(IfcDerivedUnitElement, Exponent, IfcDerivedUnitElement_Exponent);
