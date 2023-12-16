@@ -2147,11 +2147,12 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         }
         case enum_express_attr_type::__BOOLEAN:
         {
-            bool value = 0;
-            if (sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value))
-                return m_value.Match(value, ctx);
-            else
-                return false;
+            bool match = false;
+            bool value = false;
+            if (sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value)) {
+                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+            }
+            return match;
         }
         case enum_express_attr_type::__INTEGER:
         {
@@ -2163,11 +2164,24 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         }
         case enum_express_attr_type::__LOGICAL:
         {
-            const char* value = 0;
-            if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value) && value && *value != 'U')
-                return m_value.Match(value, false, ctx);
-            else
-                return false;
+            bool match = false;
+            const char* value = nullptr;
+            if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value)) {
+                if (value) {
+                    switch (*value) {
+                        case 'T':
+                        case 't':
+                            match = m_value.Match("TRUE", false, ctx);
+                            break;
+                        case 'F':
+                        case 'f':
+                            match = m_value.Match("FALSE", false, ctx);
+                            break;
+                            //U always fails
+                    }
+                }
+            }
+            return match;
         }
         case enum_express_attr_type::__NUMBER:
         case enum_express_attr_type::__REAL:

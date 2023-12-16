@@ -132,7 +132,6 @@ namespace RDF
             bool Match(const wchar_t* value, bool compareNoCase, Context& ctx);
             bool Match(SdaiInteger value, Context& ctx);
             bool Match(double value, Context& ctx);
-            bool Match(bool value, Context& ctx) { return Match((SdaiInteger)value, ctx); }
 
         private:
             void Read_simpleValue(_xml::_element& elem, Context&) { m_simpleValue = elem.getContent(); }
