@@ -1901,9 +1901,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
         return MatchPropertyListValue(prop, ctx);
     }
     else if (entity == ctx._IfcPropertyReferenceValue()) {
-        ctx.LogMsg(MsgLevel::NotImplemented, "_IfcPropertyReferenceValue");
-        assert(0);
-        return false;
+        return false; //reference_properties_are_treated_as_objects_and_not_supported
     }
     else if (entity == ctx._IfcPropertySingleValue()) {
         return MatchPropertySingleValue(prop, ctx);
