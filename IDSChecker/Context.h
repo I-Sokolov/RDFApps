@@ -260,15 +260,20 @@ private:
 /// </summary>
 double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
 {
+    double scale = 1;
     if (unit) {
-        return getIfcUnitConversionFactor(unit, nullptr, nullptr, nullptr);
+        scale = getIfcUnitConversionFactor(unit, nullptr, nullptr, nullptr);
     }
     else if (unitKind) {
-        return getUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
+        scale = getUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
     }
-    else {
-        return 1;
+
+    if (scale < FLT_MIN) {
+        scale = 1;
     }
+
+    return scale;
+
 #if 0
     auto entity = sdaiGetInstanceType(unit);
 
