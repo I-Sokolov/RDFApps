@@ -1951,7 +1951,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     if (entity == ctx._IfcQuantityArea()) {
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityArea_AreaValue(), sdaiREAL, &value))
-            return MatchValue(value, unit, "AREAUNIT", ctx);
+            return MatchValue(value, unit, "IFCAREAMEASURE", ctx);
         else
             return false;
     }
@@ -1965,7 +1965,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     else if (entity == ctx._IfcQuantityLength()) {
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityLength_LengthValue(), sdaiREAL, &value))
-            return MatchValue(value, unit, "LENGTHUNIT", ctx);
+            return MatchValue(value, unit, "IFCLENGTHMEASURE", ctx);
         else
             return false;
     }
@@ -1979,21 +1979,21 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     else if (entity == ctx._IfcQuantityTime()) {
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityTime_TimeValue(), sdaiREAL, &value))
-            return MatchValue(value, unit, "TIMEUNIT", ctx);
+            return MatchValue(value, unit, "IFCTIMEMEASURE", ctx);
         else
             return false;
     }
     if (entity == ctx._IfcQuantityVolume()) {
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityVolume_VolumeValue(), sdaiREAL, &value))
-            return MatchValue(value, unit, "VOLUMEUNIT", ctx);
+            return MatchValue(value, unit, "IFCVOLUMEMEASURE", ctx);
         else
             return false;
     }
     else if (entity == ctx._IfcQuantityWeight()) {
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityWeight_WeightValue(), sdaiREAL, &value))
-            return MatchValue(value, unit, "MASSUNIT", ctx);
+            return MatchValue(value, unit, "IFCMASSMEASURE", ctx);
         else
             return false;
     }
