@@ -2615,7 +2615,7 @@ struct ComparerStr
         }
     }
 
-    const char* ToString(const char* v)
+    const char* GetString(const char* v)
     {
         return v;
     }
@@ -2640,15 +2640,16 @@ struct ComparerFloat
             return 0;
     }
 
-    const char* ToString(double v)
+    const char* GetString(double)
     {
-        assert(0); //not expected to use
-        snprintf(m_buff, 79, "%g", v);
-        return m_buff;
+        //assert(0); //not expected to use
+        //snprintf(m_buff, 79, "%g", v);
+        //return m_buff;
+        return nullptr;
     }
 
     double m_precision;
-    char   m_buff[80];
+    //char   m_buff[80];
 };
 
 #if 0
@@ -2785,7 +2786,10 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& patt : m_pattern) {
         const char* r = nullptr;
         patt->Get(&r);
-        auto str = cmp.ToString(value);
+        auto str = cmp.GetString(value);
+        if (!str) {
+            return false; //>>>>>>
+        }
         bool match = std::regex_match(str, std::regex(r));
         if (!match) {
             return false; //>>>>>>
@@ -2836,7 +2840,10 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& r : m_length) {
         SdaiInteger len = 0;
         r->Get(&len);
-        auto str = cmp.ToString(value);
+        auto str = cmp.GetString(value);
+        if (!str) {
+            return false; //>>>>>>
+        }
         if ((SdaiInteger)strlen(str) != len) {
             return false; //>>>>>>
         }
@@ -2846,7 +2853,10 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& r : m_minLength) {
         SdaiInteger len = 0;
         r->Get(&len);
-        auto str = cmp.ToString(value);
+        auto str = cmp.GetString(value);
+        if (!str) {
+            return false; //>>>>>>
+        }
         if ((SdaiInteger)strlen(str) < len) {
             return false; //>>>>>>
         }
@@ -2856,7 +2866,10 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& r : m_maxLength) {
         SdaiInteger len = 0;
         r->Get(&len);
-        auto str = cmp.ToString(value);
+        auto str = cmp.GetString(value);
+        if (!str) {
+            return false; //>>>>>>
+        }
         if ((SdaiInteger)strlen(str) > len) {
             return false; //>>>>>>
         }
