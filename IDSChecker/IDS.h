@@ -169,6 +169,11 @@ namespace RDF
         protected:
             void Read(_xml::_element& elem, Context& ctx);
 
+            bool MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& value, Context& ctx);
+            bool MatchAggrValue(SdaiAggr aggr, IdsValue& valuse, Context& ctx);
+            bool MatchInstanceValue(IdsValue& idsvalue) { return !idsvalue.IsSet(); }
+            bool MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx);
+
         protected:
             std::string m_minOccurs;
             std::string m_maxOccurs;
@@ -303,12 +308,6 @@ namespace RDF
             virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
-            bool MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx);
-            bool MatchAggr(SdaiAggr aggr, Context& ctx);
-            bool MatchInstance() { return !m_value.IsSet(); }
-            bool MatchADB(SdaiADB adb, Context& ctx);
-
-        private:
             IdsValue   m_name;
             IdsValue   m_value;
         };
@@ -344,6 +343,8 @@ namespace RDF
 
             bool TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* pset, std::set<std::wstring>& testedProps, bool& propNameMatched);
             
+            bool TestPredefinedProperty(SdaiInstance pset, SdaiAttr prop, const wchar_t* psetName, std::set<std::wstring>& testedProps, bool& propNameMatched, Context& ctx);
+
             bool MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx);
             bool MatchValue(double value, SdaiInstance unit, const char* ifcType, Context& ctx);
             

@@ -1379,7 +1379,7 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
         //explicitly specified attribute
         auto attr = sdaiGetAttrDefinition(ent, attrName);
         if (attr) {
-            return MatchAttribute(inst, attr, ctx); //>>>>>>>>>>>>>>>>
+            return MatchAttributeValue(inst, attr, m_value, ctx); //>>>>>>>>>>>>>>>>
         }
     }
     else {
@@ -1392,7 +1392,7 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
             const char* name = 0;
             engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
             if (m_name.Match(name, true, ctx)) {
-                if (MatchAttribute(inst, attr, ctx)) {
+                if (MatchAttributeValue(inst, attr, m_value, ctx)) {
                     return true; //>>>>>>>>>>>>>
                 }
             }
@@ -1404,7 +1404,7 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& ctx)
+bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsvalue, Context& ctx)
 {
     if (engiAttrIsInverse(attr)) {
         return false; //do not apply to imverse attribute
@@ -1419,28 +1419,28 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiBINARY: {
             const char* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiBINARY, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiENUM: {
             const char* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiENUM, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiSTRING: {
             const wchar_t* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiUNICODE, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiINTEGER: {
             SdaiInteger value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINTEGER, &value)) {
-                match = m_value.Match(value, ctx);
+                match = idsvalue.Match(value, ctx);
             }
             break;
         }
@@ -1448,14 +1448,14 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiNUMBER: {
             double value = 0;
             if (sdaiGetAttr(inst, attr, sdaiREAL, &value)) {
-                match = m_value.Match(value, ctx);
+                match = idsvalue.Match(value, ctx);
             }
             break;
         }
         case sdaiAGGR: {
             SdaiAggr aggr = 0;
             if (sdaiGetAttr(inst, attr, sdaiAGGR, &aggr)) {
-                match = MatchAggr(aggr, ctx);
+                match = MatchAggrValue(aggr, idsvalue, ctx);
             }
             break;
         }
@@ -1466,11 +1466,11 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
                     switch (*value) {
                         case 'T':
                         case 't':
-                            match = m_value.Match("TRUE", false, ctx);
+                            match = idsvalue.Match("TRUE", false, ctx);
                             break;
                         case 'F':
                         case 'f':
-                            match = m_value.Match("FALSE", false, ctx);
+                            match = idsvalue.Match("FALSE", false, ctx);
                             break;
                         //U always fails
                     }
@@ -1481,21 +1481,21 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
         case sdaiBOOLEAN: {
             bool value = false;
             if (sdaiGetAttr(inst, attr, sdaiBOOLEAN, &value)) {
-                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+                match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
             }
             break;
         }
         case sdaiINSTANCE: {
             SdaiInstance value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINSTANCE, &value)) {
-                match = MatchInstance();
+                match = MatchInstanceValue (idsvalue);
             }
             break;
         }
         case sdaiADB: {
             SdaiADB value = 0;
             if (sdaiGetAttr(inst, attr, sdaiADB, &value)) {
-                match = MatchADB(value, ctx);
+                match = MatchADBValue(value, idsvalue, ctx);
             }
             break;
         }
@@ -1509,7 +1509,7 @@ bool FacetAttribute::MatchAttribute(SdaiInstance inst, SdaiAttr attr, Context& c
 /// <summary>
 /// 
 /// </summary>
-bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
+bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
 {
     SdaiPrimitiveType sdaiType;
     engiGetAggrType(aggr, &sdaiType);
@@ -1525,28 +1525,28 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiBINARY: {
                 const char* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiBINARY, &value) && value && *value) {
-                    match = m_value.Match(value, false, ctx);
+                    match = idsvalue.Match(value, false, ctx);
                 }
                 break;
             }
             case sdaiENUM: {
                 const char* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiENUM, &value) && value && *value) {
-                    match = m_value.Match(value, false, ctx);
+                    match = idsvalue.Match(value, false, ctx);
                 }
                 break;
             }
             case sdaiSTRING: {
                 const wchar_t* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiUNICODE, &value) && value && *value) {
-                    match = m_value.Match(value, false, ctx);
+                    match = idsvalue.Match(value, false, ctx);
                 }
                 break;
             }
             case sdaiINTEGER: {
                 SdaiInteger value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiINTEGER, &value)) {
-                    match = m_value.Match(value, ctx);
+                    match = idsvalue.Match(value, ctx);
                 }
                 break;
             }
@@ -1554,14 +1554,14 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiNUMBER: {
                 double value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiREAL, &value)) {
-                    match = m_value.Match(value, ctx);
+                    match = idsvalue.Match(value, ctx);
                 }
                 break;
             }
             case sdaiAGGR: {
                 SdaiAggr value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiAGGR, &value)) {
-                    match = MatchAggr(value, ctx);
+                    match = MatchAggrValue(value, idsvalue, ctx);
                 }
                 break;
             }
@@ -1572,11 +1572,11 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
                         switch (*value) {
                             case 'T':
                             case 't':
-                                match = m_value.Match("TRUE", false, ctx);
+                                match = idsvalue.Match("TRUE", false, ctx);
                                 break;
                             case 'F':
                             case 'f':
-                                match = m_value.Match("FALSE", false, ctx);
+                                match = idsvalue.Match("FALSE", false, ctx);
                                 break;
                                 //U always fails
                         }
@@ -1587,21 +1587,21 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
             case sdaiBOOLEAN: {
                 bool value = false;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiBOOLEAN, &value)) {
-                    match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+                    match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
                 }
                 break;
             }
             case sdaiINSTANCE: {
                 SdaiInstance value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiINSTANCE, &value)) {
-                    match = MatchInstance();
+                    match = MatchInstanceValue(idsvalue);
                 }
                 break;
             }
             case sdaiADB: {
                 SdaiADB value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiADB, &value)) {
-                    match = MatchADB(value, ctx);
+                    match = MatchADBValue(value, idsvalue, ctx);
                 }
                 break;
             }
@@ -1621,7 +1621,7 @@ bool FacetAttribute::MatchAggr(SdaiAggr aggr, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
+bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
 {
     bool match = false;
 
@@ -1633,28 +1633,28 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
         case sdaiBINARY: {
             const char* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiBINARY, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiENUM: {
             const char* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiENUM, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiSTRING: {
             const wchar_t* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiUNICODE, &value) && value && *value) {
-                match = m_value.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx);
             }
             break;
         }
         case sdaiINTEGER: {
             SdaiInteger value = 0;
             if (sdaiGetADBValue(adb, sdaiINTEGER, &value)) {
-                match = m_value.Match(value, ctx);
+                match = idsvalue.Match(value, ctx);
             }
             break;
         }
@@ -1662,14 +1662,14 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
         case sdaiNUMBER: {
             double value = 0;
             if (sdaiGetADBValue(adb, sdaiREAL, &value)) {
-                match = m_value.Match(value, ctx);
+                match = idsvalue.Match(value, ctx);
             }
             break;
         }
         case sdaiAGGR: {
             SdaiAggr value = 0;
             if (sdaiGetADBValue(adb, sdaiAGGR, &value)) {
-                match = MatchAggr(value, ctx);
+                match = MatchAggrValue(value, idsvalue, ctx);
             }
             break;
         }
@@ -1680,11 +1680,11 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
                     switch (*value) {
                         case 'T':
                         case 't':
-                            match = m_value.Match("TRUE", false, ctx);
+                            match = idsvalue.Match("TRUE", false, ctx);
                             break;
                         case 'F':
                         case 'f':
-                            match = m_value.Match("FALSE", false, ctx);
+                            match = idsvalue.Match("FALSE", false, ctx);
                             break;
                             //U always fails
                     }
@@ -1695,21 +1695,21 @@ bool FacetAttribute::MatchADB(SdaiADB adb, Context& ctx)
         case sdaiBOOLEAN: {
             bool value = false;
             if (sdaiGetADBValue(adb, sdaiBOOLEAN, &value)) {
-                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+                match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
             }
             break;
         }
         case sdaiINSTANCE: {
             SdaiInstance value = 0;
             if (sdaiGetADBValue(adb, sdaiINSTANCE, &value)) {
-                match = MatchInstance();
+                match = MatchInstanceValue(idsvalue);
             }
             break;
         }
         case sdaiADB: {
             SdaiADB value = 0;
             if (sdaiGetADBValue(adb, sdaiADB, &value)) {
-                match = MatchADB(value, ctx);
+                match = MatchADBValue(value, idsvalue, ctx);
             }
             break;
         }
@@ -1844,7 +1844,7 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &prop)) {
             if (!TestProperty(prop, ctx, psetName, testedProps, propNameMatched)) {
-                return false;
+                return false;//>>>>>
             }
         }
     }
@@ -1855,7 +1855,16 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
         SdaiInteger i = 0;
         while (sdaiGetAggrByIndex(aggr, i++, sdaiINSTANCE, &quant)) {
             if (!TestQuantity(quant, ctx, psetName, testedProps, propNameMatched)) {
-                return false; //
+                return false; //>>>>>>
+            }
+        }
+    }
+    else {
+        auto N = engiGetEntityNoAttributesEx(type, false, false);
+        for (SdaiInteger i = 0; i < N; i++) {
+            auto attr = engiGetEntityAttributeByIndex(type, i, false, false);
+            if (!TestPredefinedProperty(inst, attr, psetName, testedProps, propNameMatched, ctx)) {
+                return false; //>>>>>>
             }
         }
     }
@@ -1881,7 +1890,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
     testedName.append(name);
 
     if (!testedProps.insert(testedName).second) {
-        return true; //already tested, this type property was overriden in instnce
+        return true; //already tested, this type property was overriden in insatnce
     }
 
     auto entity = sdaiGetInstanceType(prop);
@@ -1934,7 +1943,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     testedName.append(name);
 
     if (!testedProps.insert(testedName).second) {
-        return true; //already tested, this type property was overriden in instnce
+        return true; //already tested, this type property was overriden in insatnce
     }
 
 
@@ -2002,6 +2011,34 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
         assert(0);
         return false;
     }
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool FacetProperty::TestPredefinedProperty(SdaiInstance pset, SdaiAttr prop, const wchar_t* psetName, std::set<std::wstring>& testedProps, bool& propNameMatched, Context& ctx)
+{
+    const char* name = 0;
+    engiGetAttributeTraits(prop, &name, NULL, NULL, nullptr, nullptr, NULL, NULL, NULL);
+    if (!m_name.Match(name, false, ctx)) {
+        return true; //not to test
+    }
+
+    propNameMatched = true;
+
+    //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::wstring wname = converter.from_bytes(name);
+
+    std::wstring testedName(psetName);
+    testedName.append(L"/@");
+    testedName.append(wname);
+
+    if (!testedProps.insert(testedName).second) {
+        return true; //already tested, this type property was overriden in insatnce
+    }
+
+    return MatchAttributeValue(pset, prop, m_value, ctx);
 }
 
 /// <summary>
