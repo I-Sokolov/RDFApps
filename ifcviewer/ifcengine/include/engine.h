@@ -51,7 +51,7 @@ typedef		int64_t										ConceptualFace;
 
 #define		OBJECTPROPERTY_TYPE							1
 #define		OBJECTTYPEPROPERTY_TYPE						1
-#define		DATATYPEPROPERTY_TYPE_BOOLEAN 				2
+#define		DATATYPEPROPERTY_TYPE_BOOLEAN				2
 #define		DATATYPEPROPERTY_TYPE_STRING				3		//	DATATYPEPROPERTY_TYPE_CHAR
 #define		DATATYPEPROPERTY_TYPE_INTEGER				4
 #define		DATATYPEPROPERTY_TYPE_DOUBLE				5
@@ -1899,7 +1899,7 @@ static	inline	OwlClass	CreateClass(
 {
 	return	CreateClass(
 					model,
-					(const char*) nullptr					//	name
+					(const char*) nullptr				//	name
 				);
 }
 
@@ -1954,7 +1954,7 @@ static	inline	OwlClass	CreateClassW(
 {
 	return	CreateClassW(
 					model,
-					(const wchar_t*) nullptr				//	name
+					(const wchar_t*) nullptr			//	name
 				);
 }
 
@@ -2094,7 +2094,7 @@ int64_t			DECL STDC	SetClassParent(
 //
 //	When unset: it removes parentOwlClass from immediate parents and returns 1, 
 //	or retunrs 0 if parentOwlClass is not immediate parent
-// 
+//
 //	This call has the same behavior as SetClassParent, however needs to be
 //	used in case classes are exchanged as a successive series of integers.
 //
@@ -3669,12 +3669,12 @@ RdfPropertyType	DECL STDC	GetPropertyTypeEx(
 //			0	Vertex does not contain second 2D texture info
 //			1	Vertex does contain second 2D texture info => if set, bit 6 will also be set
 //
-//		0	The property is not defined yet
-//		1	The property is an Object Type Property
-//		2	The property is an Data Type Property of type Boolean
-//		3	The property is an Data Type Property of type Char
-//		4	The property is an Data Type Property of type Integer
-//		5	The property is an Data Type Property of type Double
+//	Error return codes:
+//		0	successful
+//		1	argument rdfProperty is incorrect (not a proper handle to an active property)
+//		2	another property is dependent on the property to be deleted (for example through an inheritance relation)
+//		3	an instance has a non-zero cardinality for the property to be deleted
+//		4	undefined error
 //
 int64_t			DECL STDC	RemoveProperty(
 									RdfProperty				rdfProperty
@@ -3693,7 +3693,7 @@ int64_t			DECL STDC	RemoveProperty(
 //	The return value represents a bit set defining findings during the removal, if a clean removal with no side effects was possible the return value is 0. In all other cases 
 //	the following bits represent the findings during removal:
 //		bit 0:
-//			0	Iunput as expected
+//			0	Input as expected
 //			1	Encountered an issue on input value, i.e. property was not recognized as property
 //		bit 1:
 //			0	No 'child' properties found
@@ -3711,13 +3711,12 @@ int64_t			DECL STDC	RemoveProperty(
 //			0	Vertex does not contain second 2D texture info
 //			1	Vertex does contain second 2D texture info => if set, bit 6 will also be set
 //
-//		0	The property is not defined yet
-//		1	The property is an Object Type Property
-//		2	The property is an Data Type Property of type Boolean
-//		3	The property is an Data Type Property of type Char
-//		4	The property is an Data Type Property of type Integer
-//		5	The property is an Data Type Property of type Double
-//
+//	Error return codes:
+//		0	successful
+//		1	argument model or rdfProperty is incorrect (not a proper handle to an active model)
+//		2	another property is dependent on the property to be deleted (for example through an inheritance relation)
+//		3	an instance has a non-zero cardinality for the property to be deleted
+//		4	undefined error
 //
 //	This call has the same behavior as RemoveProperty, however needs to be
 //	used in case properties are exchanged as a successive series of integers.
@@ -7526,7 +7525,7 @@ int64_t			DECL STDC	SetDataTypeProperty(
 //		GetDataTypeProperty                                     (http://rdf.bg/gkdoc/CP64/GetDataTypeProperty___.html)
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
-//				const void				** values							IN
+//				const void				** values							IN / OUT
 //				int64_t					* card								IN / OUT
 //
 //				int64_t					returns								OUT

@@ -261,12 +261,6 @@ namespace RDF
 		public static extern int_t sdaiCreateModelBN(int_t repository, string fileName, string schemaName);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-		public static extern int_t sdaiCreateModelBN(int_t repository, string fileName, byte[] schemaName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
-		public static extern int_t sdaiCreateModelBN(int_t repository, byte[] fileName, string schemaName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBN")]
 		public static extern int_t sdaiCreateModelBN(int_t repository, byte[] fileName, byte[] schemaName);
 
 		/// <summary>
@@ -277,16 +271,10 @@ namespace RDF
 		///	A handle to the model will be returned, or 0 in case something went wrong.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, string fileName, string schemaName);
+		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, string schemaName);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, string fileName, byte[] schemaName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, byte[] fileName, string schemaName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateModelBNUnicode")]
-		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, byte[] fileName, byte[] schemaName);
+		public static extern int_t sdaiCreateModelBNUnicode(int_t repository, byte[] schemaName);
 
 		/// <summary>
 		///		sdaiOpenModelBN                                         (http://rdf.bg/ifcdoc/CS64/sdaiOpenModelBN.html)
@@ -576,17 +564,6 @@ namespace RDF
 		public static extern int_t engiGetEntityModel(int_t entity);
 
 		/// <summary>
-		///		engiGetEntityArgument                                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
-		public static extern int_t engiGetEntityArgument(int_t entity, string argumentName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
-		public static extern int_t engiGetEntityArgument(int_t entity, byte[] argumentName);
-
-		/// <summary>
 		///		engiGetEntityAttributeIndex                             (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndex.html)
 		///
 		///	...
@@ -607,17 +584,6 @@ namespace RDF
 
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
 		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, byte countedWithParents, byte countedWithInverse);
-
-		/// <summary>
-		///		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
-		///
-		///	DEPRECATED use engiGetEntityAttributeIndex
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
-		public static extern int_t engiGetEntityArgumentIndex(int_t entity, string argumentName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
-		public static extern int_t engiGetEntityArgumentIndex(int_t entity, byte[] argumentName);
 
 		/// <summary>
 		///		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
@@ -716,22 +682,6 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoAttributesEx")]
 		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, byte includeParent, byte includeInverse);
-
-		/// <summary>
-		///		engiGetEntityNoArguments                                (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
-		///
-		///	DEPRECATED use engiGetEntityNoAttributes
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoArguments")]
-		public static extern int_t engiGetEntityNoArguments(int_t entity);
-
-		/// <summary>
-		///		engiGetAttributeType                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttributeType.html)
-		///
-		///	DEPRECATED use engiGetAttrType
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttributeType")]
-		public static extern int_t engiGetAttributeType(int_t attribute);
 
 		/// <summary>
 		///		engiGetArgumentType                                     (http://rdf.bg/ifcdoc/CS64/engiGetArgumentType.html)
@@ -996,14 +946,6 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItem")]
 		public static extern int_t GetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, out IntPtr value);
 
-		/// <summary>
-		///		GetSPFFHeaderItemUnicode                                (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItemUnicode.html)
-		///
-		///	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItemUnicode")]
-		public static extern int_t GetSPFFHeaderItemUnicode(int_t model, int_t itemIndex, int_t itemSubIndex, byte[] buffer, int_t bufferLength);
-
         //
         //  Instance Reading API Calls
         //
@@ -1156,7 +1098,7 @@ namespace RDF
 		/// <summary>
 		///		sdaiCreateEmptyADB                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateEmptyADB.html)
 		///
-		///	...
+		///	Creates an empty ADB (Attribute Data Block).
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateEmptyADB")]
 		public static extern int_t sdaiCreateEmptyADB();
@@ -1164,7 +1106,7 @@ namespace RDF
 		/// <summary>
 		///		sdaiDeleteADB                                           (http://rdf.bg/ifcdoc/CS64/sdaiDeleteADB.html)
 		///
-		///	...
+		///	Deletes an ADB (Attribute Data Block).
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiDeleteADB")]
 		public static extern void sdaiDeleteADB(int_t ADB);
@@ -1659,9 +1601,17 @@ namespace RDF
 		public static extern int_t sdaiGetAttrDefinition(int_t entity, byte[] attributeName);
 
 		/// <summary>
+		///		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
+		///
+		///	Returns the model based on an instance.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetInstanceModel")]
+		public static extern int_t sdaiGetInstanceModel(int_t instance);
+
+		/// <summary>
 		///		sdaiGetInstanceType                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceType.html)
 		///
-		///	...
+		///	Returns the entity based on an instance.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetInstanceType")]
 		public static extern int_t sdaiGetInstanceType(int_t instance);
@@ -1936,7 +1886,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiPrepend (aggr, sdaiADB, val);							ifcengine.sdaiPrepend (aggr, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2033,7 +1983,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiAppend (aggr, sdaiADB, val);							ifcengine.sdaiAppend (aggr, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2130,7 +2080,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiAdd (aggr, sdaiADB, val);								ifcengine.sdaiAdd (aggr, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2227,7 +2177,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiInsertByIndex (aggr, sdaiADB, val);						ifcengine.sdaiInsertByIndex (aggr, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2322,11 +2272,7 @@ namespace RDF
 		///							sdaiAppend (val, sdaiINSTANCE, inst);						ifcengine.sdaiAppend (val, ifcengine.sdaiINSTANCE, inst);
 		///							SdaiADB adb = sdaiCreateADB (sdaiAGGR, val);				int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiAGGR, val);
 		///
-		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
-		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
-		///							SdaiADB adb = sdaiCreateADB (sdaiADB, val);					int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiADB, val);	
-		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
+		///	sdaiADB					not applicable
 		///
 		///	TCHAR is “char” or “wchar_t” depending on setStringUnicode.
 		///	(Non-standard behavior) sdaiLOGICAL behaves differently from ISO 10303-24-2001: it expects char* while standard declares int_t
@@ -2349,7 +2295,7 @@ namespace RDF
 		///	sdaiEXPRESSSTRING	 .			 .			 .			 .			 .			 .			Yes			 .			 .			 .
 		///	sdaiINSTANCE		 .			 .			 .			 .			 .			 .			 .			Yes			 .			 .
 		///	sdaiAGGR			 .			 .			 .			 .			 .			 .			 .			 .			Yes			 .
-		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
+		///	sdaiADB				 .			 .			 .			 .			 .			 .			 .			 .			 .			 .
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, ref bool value);
@@ -2533,7 +2479,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiPutAttr (inst, attr, sdaiADB, val);						ifcengine.sdaiPutAttr (inst, attr, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2630,7 +2576,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiPutAttrBN (inst, "attrName", sdaiADB, val);				ifcengine.sdaiPutAttrBN (inst, "attrName", ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -2808,7 +2754,14 @@ namespace RDF
 		/// <summary>
 		///		setSegmentation                                         (http://rdf.bg/ifcdoc/CS64/setSegmentation.html)
 		///
-		///	...
+		///	This call sets the segmentation for any curved part of an object in case it is defined by a circle, ellipse, nurbs etc.
+		///
+		///	If segmentationParts is set to 0 it will fallback on the default setting (i.e. 36),
+		///	it makes sense to change the segmentation depending on the entity type that is visualized.
+		///
+		///	in case segmentationLength is non-zero, this is the maximum length (in file length unit definition) of a segment
+		///	For example a slightly curved wall with large size will get much more precise segmentation as the segmentLength
+		///	will force the segmentation for the wall to increase.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "setSegmentation")]
 		public static extern void setSegmentation(int_t model, int_t segmentationParts, double segmentationLength);
@@ -2816,7 +2769,11 @@ namespace RDF
 		/// <summary>
 		///		getSegmentation                                         (http://rdf.bg/ifcdoc/CS64/getSegmentation.html)
 		///
-		///	...
+		///	This returns the set values for segmentationParts and segmentationLength. Both attributes are optional.
+		///	The values can be changed through the API call setSegmentation().
+		///	The default values are
+		///		segmentationParts  = 36
+		///		segmentationLength = 0.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "getSegmentation")]
 		public static extern void getSegmentation(int_t model, out int_t segmentationParts, out double segmentationLength);
@@ -2844,7 +2801,12 @@ namespace RDF
 		/// <summary>
 		///		circleSegments                                          (http://rdf.bg/ifcdoc/CS64/circleSegments.html)
 		///
-		///	...
+		///	Please use the setSegmentation call, note it is now a call that is model dependent.
+		///
+		///	The circleSegments(circles, smallCircles) can be replaced with
+		///		double	segmentationLength = 0.;
+		///		getSegmentation(model, nullptr, &segmentationLength);
+		///		setSegmentation(model, circles, segmentationLength);
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "circleSegments")]
 		public static extern void circleSegments(int_t circles, int_t smallCircles);
@@ -2852,7 +2814,12 @@ namespace RDF
 		/// <summary>
 		///		setMaximumSegmentationLength                            (http://rdf.bg/ifcdoc/CS64/setMaximumSegmentationLength.html)
 		///
-		///	...
+		///	Please use setSegmentation call
+		///
+		///	The callsetMaximumSegmentationLength(model, length) can be replaced with
+		///		int_t segmentationParts = 0;
+		///		getSegmentation(model, &segmentationParts, nullptr);
+		///		setSegmentation(model, segmentationParts, length);
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "setMaximumSegmentationLength")]
 		public static extern void setMaximumSegmentationLength(int_t model, double length);
@@ -2871,7 +2838,32 @@ namespace RDF
 		/// <summary>
 		///		setBRepProperties                                       (http://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
 		///
-		///	...
+		///	This call can be used to optimize Boundary Representation geometries
+		///
+		///		consistencyCheck
+		///			bit0  (1)		merge elements in the vertex array are duplicated (epsilon used as distance)
+		///			bit1  (2)		remove elements in the vertex array that are not referenced by elements in the index array (interpreted as SET if flags are defined)
+		///			bit2  (4)		merge polygons placed in the same plane and sharing at least one edge
+		///			bit3  (8)		merge polygons advanced (check of polygons have the opposite direction and are overlapping, but don't share points)
+		///			bit4  (16)		check if faces are wrongly turned opposite from each other
+		///			bit5  (32)		check if faces are inside-out
+		///			bit6  (64)		check if faces result in solid, if not generate both sided faces
+		///			bit7  (128)		invert direction of the faces / normals
+		///			bit8  (256)		export all faces as one conceptual face
+		///			bit9  (512)		remove irrelevant intermediate points on lines
+		///			bit10 (1024)	check and repair faces that are not defined in a perfect plane
+		///
+		///		fraction
+		///			To compare adjecent faces, they will be defined as being part of the same conceptual face if the fraction
+		///			value is larger then the dot product of the normal vector's of the individual faces.
+		///
+		///		epsilon
+		///			This value is used to compare vertex elements, if vertex elements should be merged and the distance is smaller than this epsilon value
+		///			then it will be defined as equal
+		///
+		///		maxVerticesSize
+		///			if 0 this setting is applied to BoundaryRepresentation based geometries
+		///			if larger than 0 it is applied to all BoundaryRepresentation based geometries with vertices size smaller or equal to the given number
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "setBRepProperties")]
 		public static extern void setBRepProperties(int_t model, Int64 consistencyCheck, double fraction, double epsilon, int_t maxVerticesSize);
@@ -3133,7 +3125,7 @@ namespace RDF
 		///
 		///	sdaiADB					int_t integerValue = 123;									int_t integerValue = 123;	
 		///							SdaiADB val = sdaiCreateADB (sdaiINTEGER, &integerValue);	int_t val = ifcengine.sdaiCreateADB (ifcengine.sdaiINTEGER, ref integerValue);
-		///							sdaiPutADBTypePath (val, 1, "INTEGER");						ifcengine.sdaiPutADBTypePath (val, 1, "INTEGER");
+		///							sdaiPutADBTypePath (val, 1, "IFCINTEGER");					ifcengine.sdaiPutADBTypePath (val, 1, "IFCINTEGER");
 		///							sdaiPutAggrByIterator (iter, sdaiADB, val);					ifcengine.sdaiPutAggrByIterator (iter, ifcengine.sdaiADB, val);	
 		///							sdaiDeleteADB (val);										ifcengine.sdaiDeleteADB (val);
 		///
@@ -3249,7 +3241,11 @@ namespace RDF
 		/// <summary>
 		///		owlGetModel                                             (http://rdf.bg/ifcdoc/CS64/owlGetModel.html)
 		///
-		///	...
+		///	Returns a handle to the model within the Geometry Kernel.
+		///
+		///	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP model handle also,
+		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "owlGetModel")]
 		public static extern void owlGetModel(int_t model, out Int64 owlModel);
@@ -3257,7 +3253,11 @@ namespace RDF
 		/// <summary>
 		///		owlGetInstance                                          (http://rdf.bg/ifcdoc/CS64/owlGetInstance.html)
 		///
-		///	...
+		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
+		///
+		///	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
+		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "owlGetInstance")]
 		public static extern void owlGetInstance(int_t model, int_t instance, out Int64 owlInstance);
@@ -3273,7 +3273,12 @@ namespace RDF
 		/// <summary>
 		///		owlBuildInstance                                        (http://rdf.bg/ifcdoc/CS64/owlBuildInstance.html)
 		///
-		///	...
+		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
+		///	If no design tree is created yet it will be created on-the-fly.
+		///
+		///	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
+		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "owlBuildInstance")]
 		public static extern void owlBuildInstance(int_t model, int_t instance, out Int64 owlInstance);
@@ -3281,7 +3286,12 @@ namespace RDF
 		/// <summary>
 		///		owlBuildInstanceInContext                               (http://rdf.bg/ifcdoc/CS64/owlBuildInstanceInContext.html)
 		///
-		///	...
+		///	Returns a handle to the instance representing the head of design tree within the Geometry Kernel.
+		///	If no design tree is created yet it will be created on-the-fly.
+		///
+		///	Note: the STEP Engine uses one or more models within the Geometry Kernel to generate design trees
+		///		  within the Geometry Kernel. All Geometry Kernel calls can be called with the STEP instance handle also,
+		///		  however most correct would be to get and use the Geometry Kernel handle.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "owlBuildInstanceInContext")]
 		public static extern void owlBuildInstanceInContext(int_t instanceBase, int_t instanceContext, out Int64 owlInstance);
@@ -3409,7 +3419,15 @@ namespace RDF
 		/// <summary>
 		///		inferenceInstance                                       (http://rdf.bg/ifcdoc/CS64/inferenceInstance.html)
 		///
-		///	...
+		///	This call allows certain constructs to complete implicitely already available data
+		///	Specifically for IFC4.3 and higher calls using the instances of the following entities are supported:
+		///		IfcAlignment	   => in case business logic is defined and not geometricaly representation is available yet
+		///							  the geometrical representation will be constructed on the fly, i.e.
+		///							  an IfcCompositeCurve with IfcCurveSegment instances for the horizontal alignment 
+		///							  an IfcGradientCurve with IfcCurveSegment instances for the vertical alignment 
+		///							  an IfcSegmentedReferenceCurve with IfcCurveSegment instances for the cant alignment
+		///		IfcLinearPlacement => in case CartesianPosition is empty the internally calculated matrix will be
+		///							  represented as an IfcAxis2Placement
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "inferenceInstance")]
 		public static extern int_t inferenceInstance(int_t instance);
@@ -3425,6 +3443,41 @@ namespace RDF
         //
         //  Deprecated API Calls (GENERIC)
         //
+
+		/// <summary>
+		///		engiGetEntityNoArguments                                (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoArguments.html)
+		///
+		///	DEPRECATED use engiGetEntityNoAttributes
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoArguments")]
+		public static extern int_t engiGetEntityNoArguments(int_t entity);
+
+		/// <summary>
+		///		engiGetAttributeType                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttributeType.html)
+		///
+		///	DEPRECATED use engiGetAttrType
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttributeType")]
+		public static extern int_t engiGetAttributeType(int_t attribute);
+
+		/// <summary>
+		///		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
+		///
+		///	DEPRECATED use engiGetEntityAttributeIndex
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		public static extern int_t engiGetEntityArgumentIndex(int_t entity, string argumentName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		public static extern int_t engiGetEntityArgumentIndex(int_t entity, byte[] argumentName);
+
+		/// <summary>
+		///		engiAttrIsInverse                                       (http://rdf.bg/ifcdoc/CS64/engiAttrIsInverse.html)
+		///
+		///	This call is deprecated, please use call engiAttrIsInverse instead.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiAttrIsInverse")]
+		public static extern int_t engiAttrIsInverse(int_t attribute);
 
 		/// <summary>
 		///		engiGetAggrElement                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
@@ -3461,12 +3514,15 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiAttrIsInverse                                       (http://rdf.bg/ifcdoc/CS64/engiAttrIsInverse.html)
+		///		engiGetEntityArgument                                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgument.html)
 		///
-		///	This call is deprecated, please use call engiAttrIsInverse instead.
+		///	Deprecated, please use the API call sdaiGetAttrDefinition() instead
 		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiAttrIsInverse")]
-		public static extern int_t engiAttrIsInverse(int_t attribute);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
+		public static extern int_t engiGetEntityArgument(int_t entity, string argumentName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgument")]
+		public static extern int_t engiGetEntityArgument(int_t entity, byte[] argumentName);
 
 		/// <summary>
 		///		xxxxOpenModelByStream                                   (http://rdf.bg/ifcdoc/CS64/xxxxOpenModelByStream.html)
@@ -3566,6 +3622,14 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrTypeBN")]
 		public static extern int_t xxxxGetAttrTypeBN(int_t instance, byte[] attributeName, out IntPtr attributeType);
 
+		/// <summary>
+		///		GetSPFFHeaderItemUnicode                                (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItemUnicode.html)
+		///
+		///	This call is deprecated, please use call GetSPFFHeaderItem instead
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItemUnicode")]
+		public static extern int_t GetSPFFHeaderItemUnicode(int_t model, int_t itemIndex, int_t itemSubIndex, byte[] buffer, int_t bufferLength);
+
         //
         //  Validation
         //
@@ -3573,7 +3637,7 @@ namespace RDF
 		/// <summary>
 		///		validateSetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateSetOptions.html)
 		///
-		///	Allows to set a timne limit in seconds, setting to 0 means no time limite.
+		///	Allows to set a timne limit in seconds, setting to 0 means no time limit.
 		///	Allows to set a count limit, setting to 0 means no count limit.
 		///	Allows to hide redundent issues.
 		///

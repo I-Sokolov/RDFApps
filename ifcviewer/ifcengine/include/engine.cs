@@ -1151,6 +1151,13 @@ namespace RDF
 		///	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 		///	object properties (relations).
 		///
+		///	When set: it adds parentOwlClass as immediate parent of owlClass if and only if 
+		///	parentOwlClass is not ancestor of owlClass and owlClass is not ancestor of parentOwlClass.
+		///	Returns the same value as IsClassAncestor after the call.
+		///
+		///	When unset: it removes parentOwlClass from immediate parents and returns 1, 
+		///	or retunrs 0 if parentOwlClass is not immediate parent
+		///
 		///	This call has the same behavior as SetClassParent, however needs to be
 		///	used in case classes are exchanged as a successive series of integers.
 		/// </summary>
@@ -1840,7 +1847,7 @@ namespace RDF
 		///	The return value represents a bit set defining findings during the removal, if a clean removal with no side effects was possible the return value is 0. In all other cases 
 		///	the following bits represent the findings during removal:
 		///		bit 0:
-		///			0	Iunput as expected
+		///			0	Input as expected
 		///			1	Encountered an issue on input value, i.e. property was not recognized as property
 		///		bit 1:
 		///			0	No 'child' properties found
@@ -1858,12 +1865,12 @@ namespace RDF
 		///			0	Vertex does not contain second 2D texture info
 		///			1	Vertex does contain second 2D texture info => if set, bit 6 will also be set
 		///
-		///		0	The property is not defined yet
-		///		1	The property is an Object Type Property
-		///		2	The property is an Data Type Property of type Boolean
-		///		3	The property is an Data Type Property of type Char
-		///		4	The property is an Data Type Property of type Integer
-		///		5	The property is an Data Type Property of type Double
+		///	Error return codes:
+		///		0	successful
+		///		1	argument rdfProperty is incorrect (not a proper handle to an active property)
+		///		2	another property is dependent on the property to be deleted (for example through an inheritance relation)
+		///		3	an instance has a non-zero cardinality for the property to be deleted
+		///		4	undefined error
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "RemoveProperty")]
 		public static extern Int64 RemoveProperty(Int64 rdfProperty);
@@ -1877,7 +1884,7 @@ namespace RDF
 		///	The return value represents a bit set defining findings during the removal, if a clean removal with no side effects was possible the return value is 0. In all other cases 
 		///	the following bits represent the findings during removal:
 		///		bit 0:
-		///			0	Iunput as expected
+		///			0	Input as expected
 		///			1	Encountered an issue on input value, i.e. property was not recognized as property
 		///		bit 1:
 		///			0	No 'child' properties found
@@ -1895,13 +1902,12 @@ namespace RDF
 		///			0	Vertex does not contain second 2D texture info
 		///			1	Vertex does contain second 2D texture info => if set, bit 6 will also be set
 		///
-		///		0	The property is not defined yet
-		///		1	The property is an Object Type Property
-		///		2	The property is an Data Type Property of type Boolean
-		///		3	The property is an Data Type Property of type Char
-		///		4	The property is an Data Type Property of type Integer
-		///		5	The property is an Data Type Property of type Double
-		///
+		///	Error return codes:
+		///		0	successful
+		///		1	argument model or rdfProperty is incorrect (not a proper handle to an active model)
+		///		2	another property is dependent on the property to be deleted (for example through an inheritance relation)
+		///		3	an instance has a non-zero cardinality for the property to be deleted
+		///		4	undefined error
 		///
 		///	This call has the same behavior as RemoveProperty, however needs to be
 		///	used in case properties are exchanged as a successive series of integers.
@@ -3896,7 +3902,7 @@ namespace RDF
 
 		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, out double pointFirstInstance, out double pointSecondInstance)
 		{
-			return GetDistance(firstOwlInstance, secondOwlInstance, pointFirstInstance, pointSecondInstance, 1);
+			return GetDistance(firstOwlInstance, secondOwlInstance, out pointFirstInstance, out pointSecondInstance, 1);
 		}
 
 		public static double GetDistance(Int64 firstOwlInstance, Int64 secondOwlInstance, IntPtr pointFirstInstance, IntPtr pointSecondInstance)
