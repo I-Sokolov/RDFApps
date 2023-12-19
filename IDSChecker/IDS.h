@@ -482,14 +482,17 @@ namespace RDF
         {
         public:
             bool Read(const char* idsFilePath);
-            bool Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output = nullptr);
+            bool Read(std::istream* idsStream);
+            
+            void Read(_xml::_element& elem, Context& ctx);
+
+            bool Check(SdaiModel model, bool stopAtFirstError, MsgLevel msgLevel, Console* output = nullptr);
 
         private:
             bool CheckInstances(Context& ctx);
             bool CheckSpecificationsUsed (Context& ctx);
 
         private:
-            void Read(_xml::_element& elem, Context& ctx);
             void Read_info(_xml::_element& elem, Context& ctx);
             void Read_title(_xml::_element& elem, Context&) { m_title = elem.getContent(); }
             void Read_specifications(_xml::_element& elem, Context& ctx);

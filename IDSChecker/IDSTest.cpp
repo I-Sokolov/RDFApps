@@ -38,7 +38,9 @@ static void IDSTest(std::string& idsFile, std::string& ifcFile)
 
     RDF::IDS::File ids;
     if (ids.Read(idsFile.c_str())) {
-        ok = ids.Check(ifcFile.c_str(), stopAtFirstError, msgLevel);
+        SdaiModel model = sdaiOpenModelBN((SdaiRep)0, ifcFile.c_str(), "");
+        ok = ids.Check(model, stopAtFirstError, msgLevel);
+        sdaiCloseModel(model);
     }
     else {
         assert(!"Failed to read IDS file");

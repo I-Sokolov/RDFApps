@@ -546,10 +546,11 @@ void Context::LogMsg (MsgLevel type, const char* format, ...)
     log.out(">\n");
 }
 
+
 /// <summary>
 /// 
 /// </summary>
-bool File::Read(const char* idsFilePath)
+template <typename TSrc> static bool ReadTpl(File& idsFile, TSrc idsSrc)
 {
     bool ok = false;
 
@@ -558,18 +559,34 @@ bool File::Read(const char* idsFilePath)
 
     try {
         _xml::_document doc(nullptr);
-        doc.load(idsFilePath);
+        doc.load(idsSrc);
 
         if (auto root = doc.getRoot()) {
-            Read(*root, ctx);
+            idsFile.Read(*root, ctx);
             ok = true;
         }
     }
     catch (exception& ex) {
-        ctx.LogMsg(MsgLevel::Error, "Failed read IDS file: '%s', error: %s", idsFilePath, ex.what());
+        ctx.LogMsg(MsgLevel::Error, "Failed read IDS file: %s", ex.what());
     }
 
     return ok;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool File::Read(const char* idsFilePath)
+{
+    return ReadTpl(*this, idsFilePath);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool File::Read(std::istream* idsStream)
+{
+    return ReadTpl(*this, idsStream);
 }
 
 
@@ -807,15 +824,15 @@ Restriction::Restriction(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLevel, Console* output)
+bool File::Check(SdaiModel model, bool stopAtFirstError, MsgLevel msgLevel, Console* output)
 {
+    bool ok = false;
+
     for (auto spec : m_specifications) {
         if (spec) {
             spec->ResetCache();
         }
     }
-     
-    bool ok = false;
 
     DefaultConsole con;
     if (!output) {
@@ -823,24 +840,17 @@ bool File::Check(const char* ifcFilePath, bool stopAtFirstError, MsgLevel msgLev
     }
 
     Context ctx(*output, msgLevel, stopAtFirstError);
+    ctx.model = model;
 
-    ctx.model = sdaiOpenModelBN((SdaiRep)0, ifcFilePath, "");
-    if (ctx.model) {       
-        ok = CheckInstances(ctx);
+    ok = CheckInstances(ctx);
 
-        if (ok || !ctx.stopAtFirstError) {
-            if (!CheckSpecificationsUsed(ctx)) {
-                ok = false;
-            }
+    if (ok || !ctx.stopAtFirstError) {
+        if (!CheckSpecificationsUsed(ctx)) {
+            ok = false;
         }
+    }
 
-        sdaiCloseModel(ctx.model);
-        ctx.model = 0;
-    }
-    else {
-        ctx.LogMsg(MsgLevel::Error, "Failed to read IFC file '%s'", ifcFilePath);
-        ok = false;
-    }
+    ctx.model = 0;
 
     return ok;
 }
