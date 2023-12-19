@@ -182,7 +182,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Context.h" />
     <ClInclude Include="IDS.h" />
     <ClInclude Include="IDSTest.h" />
     <ClInclude Include="parser\_errors.h" />
