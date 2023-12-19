@@ -940,6 +940,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
     ToUpper(m_relation);
 
     if (m_relation.empty()) {
+        assert(!"to test");
         CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
         CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
         CreateNavigator(ctx._IfcObjectDefinition_HasAssignments(), sdaiAGGR, ctx._IfcRelAssignsToGroup(), ctx._IfcRelAssignsToGroup_RelatingGroup(), ctx);
@@ -956,6 +957,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
     }
     else if (m_relation == "IFCRELAGGREGATES") {
         if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            assert(!"to test");
             CreateNavigator(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, ctx._IfcRelAggregates(), ctx._IfcRelAggregates_RelatingObject(), ctx);
         }
         else {
@@ -981,6 +983,7 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
         CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx, false);
 
         if (ctx.GetIfcVersion() == Context::IfcVersion::Ifc2x3) {
+            assert(!"to test");
             CreateNavigatorBN2(ctx._IfcObjectDefinition_Decomposes(), sdaiAGGR, NULL, "RelatingObject", ctx, false);
         }
         else {
@@ -990,9 +993,11 @@ void FacetPartOf::FillParentsNavigators(Context& ctx)
 
     }
     else if (m_relation == "IFCRELVOIDSELEMENT") {
+        assert(!"to test");
         CreateNavigator(ctx._IfcFeatureElementSubtraction_VoidsElements(), sdaiINSTANCE, NULL, ctx._IfcRelVoidsElement_RelatingBuildingElement(), ctx);
     }
     else if (m_relation == "IFCRELFILLSELEMENT") {
+        assert(!"to test");
         CreateNavigator(ctx._IfcElement_FillsVoids(), sdaiAGGR, NULL, ctx._IfcRelFillsElement_RelatingOpeningElement(), ctx);
     }
     else {
@@ -1110,31 +1115,6 @@ void FacetPartOf::Navigator::FollowRel(SdaiInstance rel, std::list<SdaiInstance>
         follow.push_back(inst);
     }
 }
-
-#if 0
-    auto ext = xxxxGetEntityAndSubTypesExtent(ctx.model, relClass);
-
-    SdaiInstance rel = 0;
-    SdaiInteger i = 0;
-    while (sdaiGetAggrByIndex(ext, i++, sdaiINSTANCE, &rel)) {
-        SdaiAggr aggr = 0;
-        sdaiGetAttr(rel, attrChildren, sdaiAGGR, &aggr);
-        if (aggr) {
-            SdaiInstance ai;
-            SdaiInteger j = 0;
-            while (sdaiGetAggrByIndex(aggr, j++, sdaiINSTANCE, &ai)) {
-                if (ai == inst) {
-                    SdaiInstance f = 0;
-                    sdaiGetAttr(rel, attrParent, sdaiINSTANCE, &f);
-                    if (f) {
-                        follow.push_back(f);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-#endif
 
 /// <summary>
 /// 
@@ -1521,8 +1501,10 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
 
         switch (sdaiType) {
             case 0://$
+                assert(!"to test");
                 break;
             case sdaiBINARY: {
+                assert(!"to test");
                 const char* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiBINARY, &value) && value && *value) {
                     match = idsvalue.Match(value, false, ctx);
@@ -1530,6 +1512,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiENUM: {
+                assert(!"to test");
                 const char* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiENUM, &value) && value && *value) {
                     match = idsvalue.Match(value, false, ctx);
@@ -1537,6 +1520,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiSTRING: {
+                assert(!"to test");
                 const wchar_t* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiUNICODE, &value) && value && *value) {
                     match = idsvalue.Match(value, false, ctx);
@@ -1544,6 +1528,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiINTEGER: {
+                assert(!"to test");
                 SdaiInteger value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiINTEGER, &value)) {
                     match = idsvalue.Match(value, ctx);
@@ -1559,6 +1544,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiAGGR: {
+                assert(!"to test");
                 SdaiAggr value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiAGGR, &value)) {
                     match = MatchAggrValue(value, idsvalue, ctx);
@@ -1566,6 +1552,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiLOGICAL: {
+                assert(!"to test");
                 const char* value = nullptr;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiLOGICAL, &value)) {
                     if (value) {
@@ -1585,6 +1572,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiBOOLEAN: {
+                assert(!"to test");
                 bool value = false;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiBOOLEAN, &value)) {
                     match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
@@ -1592,6 +1580,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiINSTANCE: {
+                assert(!"to test");
                 SdaiInstance value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiINSTANCE, &value)) {
                     match = MatchInstanceValue(idsvalue);
@@ -1599,6 +1588,7 @@ bool Facet::MatchAggrValue(SdaiAggr aggr, IdsValue& idsvalue, Context& ctx)
                 break;
             }
             case sdaiADB: {
+                assert(!"to test");
                 SdaiADB value = 0;
                 if (sdaiGetAggrByIndex(aggr, i, sdaiADB, &value)) {
                     match = MatchADBValue(value, idsvalue, ctx);
@@ -1629,8 +1619,10 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
 
     switch (sdaiType) {
         case 0://$
+            assert(!"to test");
             break;
         case sdaiBINARY: {
+            assert(!"to test");
             const char* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiBINARY, &value) && value && *value) {
                 match = idsvalue.Match(value, false, ctx);
@@ -1638,6 +1630,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiENUM: {
+            assert(!"to test");
             const char* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiENUM, &value) && value && *value) {
                 match = idsvalue.Match(value, false, ctx);
@@ -1645,6 +1638,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiSTRING: {
+            assert(!"to test");
             const wchar_t* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiUNICODE, &value) && value && *value) {
                 match = idsvalue.Match(value, false, ctx);
@@ -1652,6 +1646,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiINTEGER: {
+            assert(!"to test");
             SdaiInteger value = 0;
             if (sdaiGetADBValue(adb, sdaiINTEGER, &value)) {
                 match = idsvalue.Match(value, ctx);
@@ -1667,6 +1662,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiAGGR: {
+            assert(!"to test");
             SdaiAggr value = 0;
             if (sdaiGetADBValue(adb, sdaiAGGR, &value)) {
                 match = MatchAggrValue(value, idsvalue, ctx);
@@ -1674,6 +1670,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiLOGICAL: {
+            assert(!"to test");
             const char* value = nullptr;
             if (sdaiGetADBValue(adb, sdaiLOGICAL, &value)) {
                 if (value) {
@@ -1693,6 +1690,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiBOOLEAN: {
+            assert(!"to test");
             bool value = false;
             if (sdaiGetADBValue(adb, sdaiBOOLEAN, &value)) {
                 match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
@@ -1700,6 +1698,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiINSTANCE: {
+            assert(!"to test");
             SdaiInstance value = 0;
             if (sdaiGetADBValue(adb, sdaiINSTANCE, &value)) {
                 match = MatchInstanceValue(idsvalue);
@@ -1707,6 +1706,7 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
             break;
         }
         case sdaiADB: {
+            assert(!"to test");
             SdaiADB value = 0;
             if (sdaiGetADBValue(adb, sdaiADB, &value)) {
                 match = MatchADBValue(value, idsvalue, ctx);
@@ -1805,6 +1805,7 @@ bool FacetProperty::TestInSetOfRel(SdaiAggr aggr, Context& ctx, std::set<std::ws
             }
         }
         else {
+            assert(!"not tested");
             SdaiAggr psdefset = 0;
             if (sdaiGetAttr(rel, ctx._IfcRelDefinesByProperties_RelatingPropertyDefinition(), sdaiAGGR, &psdefset)) {
                 SdaiInteger j = 0;
@@ -1958,6 +1959,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
     sdaiGetAttr(qto, ctx._IfcPhysicalSimpleQuantity_Unit(), sdaiINSTANCE, &unit);
 
     if (entity == ctx._IfcQuantityArea()) {
+        assert(!"to test");
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityArea_AreaValue(), sdaiREAL, &value))
             return MatchValue(value, unit, "IFCAREAMEASURE", ctx);
@@ -1965,6 +1967,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
             return false;
     }
     else if (entity == ctx._IfcQuantityCount()) {
+        assert(!"not tested");
         SdaiInteger value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityCount_CountValue(), sdaiINTEGER, &value))
             return m_value.Match(value, ctx);
@@ -1979,6 +1982,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
             return false;
     }
     else if (entity == ctx._IfcQuantityNumber()) {
+        assert(!"not tested");
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityNumber_NumberValue(), sdaiREAL, &value))
             return MatchValue(value, unit, nullptr, ctx);
@@ -1986,6 +1990,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
             return false;
     }
     else if (entity == ctx._IfcQuantityTime()) {
+        assert(!"to test");
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityTime_TimeValue(), sdaiREAL, &value))
             return MatchValue(value, unit, "IFCTIMEMEASURE", ctx);
@@ -1993,6 +1998,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
             return false;
     }
     if (entity == ctx._IfcQuantityVolume()) {
+        assert(!"to test");
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityVolume_VolumeValue(), sdaiREAL, &value))
             return MatchValue(value, unit, "IFCVOLUMEMEASURE", ctx);
@@ -2000,6 +2006,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
             return false;
     }
     else if (entity == ctx._IfcQuantityWeight()) {
+        assert(!"to test");
         double value = 0;
         if (sdaiGetAttr(qto, ctx._IfcQuantityWeight_WeightValue(), sdaiREAL, &value))
             return MatchValue(value, unit, "IFCMASSMEASURE", ctx);
@@ -2173,6 +2180,7 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         case enum_express_attr_type::__BINARY:
         case enum_express_attr_type::__BINARY_32:
         {
+            assert(!"to test");
             const char* value = nullptr;
             if (sdaiGetADBValue(adbValue, sdaiBINARY, &value) && value && *value)
                 return m_value.Match(value, false, ctx);
@@ -2189,6 +2197,7 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         }
         case enum_express_attr_type::__ENUMERATION:
         {
+            assert(!"to test");
             const char* value = nullptr;
             if (sdaiGetADBValue(adbValue, sdaiENUM, &value) && value && *value)
                 return m_value.Match(value, false, ctx);
@@ -2214,6 +2223,7 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
         }
         case enum_express_attr_type::__LOGICAL:
         {
+            assert(!"to test");
             bool match = false;
             const char* value = nullptr;
             if (sdaiGetADBValue(adbValue, sdaiLOGICAL, &value)) {
