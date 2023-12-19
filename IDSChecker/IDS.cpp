@@ -414,10 +414,10 @@ double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
 {
     double scale = 1;
     if (unit) {
-        scale = getIfcUnitConversionFactor(unit, nullptr, nullptr, nullptr);
+        scale = getUnitInstanceConversionFactor(unit, nullptr, nullptr, nullptr);
     }
     else if (unitKind) {
-        scale = getIfcProjectUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
+        scale = getProjectUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
     }
 
     if (scale < FLT_MIN) {
