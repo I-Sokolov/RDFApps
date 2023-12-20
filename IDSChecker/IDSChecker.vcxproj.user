@@ -1,4 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommandArguments>E:\DevArea\buildingSMART\IDS\Documentation\testcases\attribute\fail-attributes_are_not_inherited_by_the_occurrence.ifc E:\DevArea\buildingSMART\IDS\Documentation\testcases\attribute\fail-attributes_are_not_inherited_by_the_occurrence.ids -l1</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>E:\DevArea\buildingSMART\IDS\Documentation\testcases\attribute\fail-attributes_are_not_inherited_by_the_occurrence.ids E:\DevArea\buildingSMART\IDS\Documentation\testcases\attribute\fail-attributes_are_not_inherited_by_the_occurrence.ifc -l2 -s</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>

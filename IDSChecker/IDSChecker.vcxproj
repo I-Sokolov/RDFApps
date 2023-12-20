@@ -168,7 +168,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="IDS.cpp" />
-    <ClCompile Include="IDSTest.cpp" />
+    <ClCompile Include="IDSRun.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="parser\_net.cpp" />
     <ClCompile Include="parser\_reader.cpp" />
@@ -183,7 +183,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IDS.h" />
-    <ClInclude Include="IDSTest.h" />
+    <ClInclude Include="IDSRun.h" />
     <ClInclude Include="parser\_errors.h" />
     <ClInclude Include="parser\_io.h" />
     <ClInclude Include="parser\_log.h" />
