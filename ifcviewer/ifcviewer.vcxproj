@@ -98,7 +98,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)ifcengine/include/;$(ProjectDir)../IDSChecker/parser/;$(ProjectDir)../IDSChecker/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -127,7 +128,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN64;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;WIN64;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)ifcengine/include/;$(ProjectDir)../IDSChecker/parser/;$(ProjectDir)../IDSChecker/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,7 +159,8 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)ifcengine/include/;$(ProjectDir)../IDSChecker/parser/;$(ProjectDir)../IDSChecker/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -190,7 +193,8 @@
       <Optimization>Disabled</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN64;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING;_CRT_SECURE_NO_WARNINGS;WIN64;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)ifcengine/include/;$(ProjectDir)../IDSChecker/parser/;$(ProjectDir)../IDSChecker/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -231,6 +235,17 @@
     <None Include="UpdateIfcEngine.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\IDSChecker\IDS.h" />
+    <ClInclude Include="..\IDSChecker\parser\_errors.h" />
+    <ClInclude Include="..\IDSChecker\parser\_io.h" />
+    <ClInclude Include="..\IDSChecker\parser\_log.h" />
+    <ClInclude Include="..\IDSChecker\parser\_net.h" />
+    <ClInclude Include="..\IDSChecker\parser\_reader.h" />
+    <ClInclude Include="..\IDSChecker\parser\_schema_storage.h" />
+    <ClInclude Include="..\IDSChecker\parser\_serialization.h" />
+    <ClInclude Include="..\IDSChecker\parser\_string.h" />
+    <ClInclude Include="..\IDSChecker\parser\_time.h" />
+    <ClInclude Include="..\IDSChecker\parser\_xml.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="containsdecomposedby.h" />
     <ClInclude Include="DesignTree.h" />
@@ -240,6 +255,7 @@
     <ClInclude Include="generic.h" />
     <ClInclude Include="GenericTreeItem.h" />
     <ClInclude Include="headerInfo.h" />
+    <ClInclude Include="IDSCheckDlg.h" />
     <ClInclude Include="IFCEngineInteract.h" />
     <ClInclude Include="ifcengine\include\engdef.h" />
     <ClInclude Include="ifcengine\include\engine.h" />
@@ -267,6 +283,36 @@
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\IDSChecker\IDS.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_net.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_reader.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_serialization.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_xml.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="containsdecomposedby.cpp" />
     <ClCompile Include="DesignTree.cpp" />
@@ -274,6 +320,7 @@
     <ClCompile Include="generic.cpp" />
     <ClCompile Include="GenericTreeItem.cpp" />
     <ClCompile Include="headerInfo.cpp" />
+    <ClCompile Include="IDSCheckDlg.cpp" />
     <ClCompile Include="IFCEngineInteract.cpp" />
     <ClCompile Include="IfcSiteTranslation.cpp" />
     <ClCompile Include="ifcviewer.cpp" />

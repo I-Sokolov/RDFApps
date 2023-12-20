@@ -25,6 +25,9 @@
     <Filter Include="Header Files\ifcengine\include">
       <UniqueIdentifier>{ffdca079-1d28-4b8d-b9c4-cb507346f2c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IDS">
+      <UniqueIdentifier>{c3b41ebf-c68c-4922-b279-ccfdbd9a3079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
@@ -164,6 +167,42 @@
     <ClInclude Include="DlgReferenceTree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\IDSChecker\IDS.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_errors.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_io.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_log.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_net.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_reader.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_schema_storage.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_serialization.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_string.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_time.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_xml.h">
+      <Filter>IDS</Filter>
+    </ClInclude>
+    <ClInclude Include="IDSCheckDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ifcviewer.cpp">
@@ -245,6 +284,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DlgReferenceTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\IDS.cpp">
+      <Filter>IDS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_net.cpp">
+      <Filter>IDS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_reader.cpp">
+      <Filter>IDS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_serialization.cpp">
+      <Filter>IDS</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_xml.cpp">
+      <Filter>IDS</Filter>
+    </ClCompile>
+    <ClCompile Include="IDSCheckDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

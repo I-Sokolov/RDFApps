@@ -6,6 +6,7 @@
 #include "RightPane.h"
 #include "InstanceInfoPane.h"
 #include "ifcviewerDoc.h"
+#include "IDSCheckDlg.h"
 
 
 #ifdef _DEBUG
@@ -103,9 +104,9 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_ENCODING_ISO8859_16, &CMainFrame::OnEncodingISO8859_16)
 	ON_COMMAND(ID_ENCODING_MACINTOSH_CENTRAL_EUROPEAN, &CMainFrame::OnEncodingMacintosCentralEuropean)
 	ON_COMMAND(ID_ENCODING_SHIFT_JIS_X_213, &CMainFrame::OnEncodingShiftJIS_X_213)
-
 	ON_COMMAND(ID_VIEW_MODELCHECKER, &CMainFrame::OnViewModelChecker)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MODELCHECKER, &CMainFrame::OnUpdateViewModelChecker)
+	ON_COMMAND(ID_VIEW_IDSCHECKER, &CMainFrame::OnViewIDSChecker)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -647,6 +648,11 @@ void CMainFrame::OnViewModelChecker()
 	}
 }
 
+void CMainFrame::OnViewIDSChecker()
+{
+	CIDSCheckDlg dlg;
+	dlg.DoModal();
+}
 
 void CMainFrame::OnUpdateViewModelChecker(CCmdUI* pCmdUI)
 {

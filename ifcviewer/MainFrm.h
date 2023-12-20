@@ -51,6 +51,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 public:
+	afx_msg void OnViewIDSChecker();
 	afx_msg void OnViewModelChecker();
 	afx_msg void OnUpdateViewModelChecker(CCmdUI* pCmdUI);
 	afx_msg void OnViewPoints();
