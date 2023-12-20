@@ -529,7 +529,7 @@ void Context::LogMsg (MsgLevel type, const char* format, ...)
     }
 
     //
-    log.out(">\n\t\t");
+    log.out(">\r\n\t\t");
 
     char msg[512];
     va_list args;
@@ -538,12 +538,12 @@ void Context::LogMsg (MsgLevel type, const char* format, ...)
     va_end(args);
 
     log.out(msg);
-    log.out("\n");
+    log.out("\r\n");
 
     //
     log.out("\t</");
     log.out(msgType);
-    log.out(">\n");
+    log.out(">\r\n");
 }
 
 
@@ -579,6 +579,17 @@ template <typename TSrc> static bool ReadTpl(File& idsFile, TSrc idsSrc)
 bool File::Read(const char* idsFilePath)
 {
     return ReadTpl(*this, idsFilePath);
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool File::Read(const wchar_t* idsFilePath)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    std::string utf8 = converter.to_bytes(idsFilePath);
+
+    return ReadTpl(*this, utf8.c_str());
 }
 
 /// <summary>
@@ -839,6 +850,9 @@ bool File::Check(SdaiModel model, bool stopAtFirstError, MsgLevel msgLevel, Cons
         output = &con;
     }
 
+    auto saveUnicode = getStringUnicode();
+    setStringUnicode(0);
+
     Context ctx(*output, msgLevel, stopAtFirstError);
     ctx.model = model;
 
@@ -850,6 +864,7 @@ bool File::Check(SdaiModel model, bool stopAtFirstError, MsgLevel msgLevel, Cons
         }
     }
 
+    setStringUnicode(saveUnicode);
     ctx.model = 0;
 
     return ok;

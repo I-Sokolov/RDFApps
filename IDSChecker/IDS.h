@@ -482,6 +482,7 @@ namespace RDF
         {
         public:
             bool Read(const char* idsFilePath);
+            bool Read(const wchar_t* idsFilePath);
             bool Read(std::istream* idsStream);
             
             void Read(_xml::_element& elem, Context& ctx);
