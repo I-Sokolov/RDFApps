@@ -119,6 +119,15 @@ static void ToUpper(std::string& str)
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
+{
+    SdaiEntity entity = 0;
+    engiGetAttributeTraits(attr, (char**)0, &entity, 0, 0, 0, 0, 0, 0);
+    return sdaiIsKindOf(inst, entity);
+}
 
 /// <summary>
 /// 
@@ -470,11 +479,13 @@ Context::IfcVersion Context::GetIfcVersion(const char** pstr)
 /// </summary>
 static SdaiInstance GetTypeObject(SdaiInstance inst, Context& ctx)
 {
-    SdaiInstance relType = 0;
-    if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &relType)) {
-        SdaiInstance type = 0;
-        if (sdaiGetAttr(relType, ctx._IfcRelDefinesByType_RelatingType(), sdaiINSTANCE, &type)) {
-            return type;
+    if (sdaiIsKindOf(inst, ctx._IfcObject())) {
+        SdaiInstance relType = 0;
+        if (sdaiGetAttr(inst, ctx._IfcObject_IsTypedBy(), sdaiINSTANCE, &relType)) {
+            SdaiInstance type = 0;
+            if (sdaiGetAttr(relType, ctx._IfcRelDefinesByType_RelatingType(), sdaiINSTANCE, &type)) {
+                return type;
+            }
         }
     }
     return NULL;
@@ -1359,7 +1370,9 @@ void FacetPartOf::Navigator::Follow(SdaiInstance inst, std::list<SdaiInstance>& 
         SdaiAggr aggr = 0;
         
         if (attrRelation) {
-            sdaiGetAttr(inst, attrRelation, sdaiAGGR, &aggr);
+            if (IsAttrSuitable(attrRelation, inst)) {
+                sdaiGetAttr(inst, attrRelation, sdaiAGGR, &aggr);
+            }
         }
         else if (attrRelationBN) {
             sdaiGetAttrBN(inst, attrRelationBN, sdaiAGGR, &aggr);
@@ -1377,7 +1390,9 @@ void FacetPartOf::Navigator::Follow(SdaiInstance inst, std::list<SdaiInstance>& 
         SdaiInstance rel = 0;
 
         if (attrRelation) {
-            sdaiGetAttr(inst, attrRelation, sdaiINSTANCE, &rel);
+            if (IsAttrSuitable(attrRelation, inst)) {
+                sdaiGetAttr(inst, attrRelation, sdaiINSTANCE, &rel);
+            }
         }
         else if (attrRelationBN) {
             sdaiGetAttrBN(inst, attrRelationBN, sdaiINSTANCE, &rel);
