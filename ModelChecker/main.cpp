@@ -58,6 +58,44 @@ static int_t GetAttrIndex(ValidationIssue issue)
     }
 }
 
+static ExpressID GetInstanceRelatesd(ValidationIssue issue)
+{
+    auto inst = validateGetInstanceRelated(issue);
+    if (inst) {
+        return internalGetP21Line(inst);
+    }
+    else {
+        return 0;
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+const char* GetIssueType(enum_validation_type type)
+{
+    switch (type) {
+        case enum_validation_type::__NONE: return "__NONE";
+        case enum_validation_type::__KNOWN_ENTITY: return "__UNKNOWN_ENTITY";
+        case enum_validation_type::__NO_OF_ARGUMENTS: return "__NO_OF_ARGUMENTS";
+        case enum_validation_type::__ARGUMENT_EXPRESS_TYPE: return "__ARGUMENT_EXPRESS_TYPE";
+        case enum_validation_type::__ARGUMENT_PRIM_TYPE: return "__ARGUMENT_PRIM_TYP";
+        case enum_validation_type::__REQUIRED_ARGUMENTS: return "__REQUIRED_ARGUMENT";
+        case enum_validation_type::__ARRGEGATION_EXPECTED: return "__ARRGEGATION_EXPECTED";
+        case enum_validation_type::__AGGREGATION_NOT_EXPECTED: return "__AGGREGATION_NOT_EXPECTED";
+        case enum_validation_type::__AGGREGATION_SIZE: return "__AGGREGATION_SIZE";
+        case enum_validation_type::__AGGREGATION_UNIQUE: return "__AGGREGATION_UNIQUE";
+        case enum_validation_type::__COMPLEX_INSTANCE: return "__COMPLEX_INSTANCE";
+        case enum_validation_type::__REFERENCE_EXISTS: return "__REFERENCE_EXISTS";
+        case enum_validation_type::__ABSTRACT_ENTITY: return "__ABSTRACT_ENTITY";
+        case enum_validation_type::__WHERE_RULE: return "__WHERE_RULE";
+        case enum_validation_type::__UNIQUE_RULE: return "__UNIQUE_RULE";
+        case enum_validation_type::__STAR_USAGE: return "__STAR_USAGE";
+        case enum_validation_type::__CALL_ARGUMENT: return "__CALL_ARGUMENT";
+        case enum_validation_type::__INTERNAL_ERROR: return "__INTERNAL_ERROR";
+        default: assert(0); return "unknown";
+    }
+}
 
 /// <summary>
 /// Issue reporting 
@@ -97,9 +135,15 @@ static void PrintIssue(ValidationIssue issue)
         }
     }
 
+    ExpressID id2 = GetInstanceRelatesd(issue);
+    if (id2 > 0)
+    {
+        printf(" relatedInstance='#%lld'", id2);
+    }
+
     auto issueId = validateGetIssueType(issue);
     auto level = validateGetIssueLevel(issue);
-    printf(" issueId='0x%x' issueLevel='%I64d'>\n", (unsigned int)issueId, level);
+    printf(" issueId='%s' issueLevel='%I64d'>\n", GetIssueType(issueId), level);
 
     auto text = validateGetDescription(issue);
     if (text) {
