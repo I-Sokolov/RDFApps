@@ -2825,15 +2825,23 @@ namespace RDF
 		public static extern void setMaximumSegmentationLength(int_t model, double length);
 
 		/// <summary>
-		///		getUnitConversionFactor                                 (http://rdf.bg/ifcdoc/CS64/getUnitConversionFactor.html)
+		///		getProjectUnitConversionFactor                          (http://rdf.bg/ifcdoc/CS64/getProjectUnitConversionFactor.html)
 		///
 		///	...
 		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "getUnitConversionFactor")]
-		public static extern double getUnitConversionFactor(int_t model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+		[DllImport(IFCEngineDLL, EntryPoint = "getProjectUnitConversionFactor")]
+		public static extern double getProjectUnitConversionFactor(int_t model, string unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "getUnitConversionFactor")]
-		public static extern double getUnitConversionFactor(int_t model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+		[DllImport(IFCEngineDLL, EntryPoint = "getProjectUnitConversionFactor")]
+		public static extern double getProjectUnitConversionFactor(int_t model, byte[] unitType, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
+
+		/// <summary>
+		///		getUnitInstanceConversionFactor                         (http://rdf.bg/ifcdoc/CS64/getUnitInstanceConversionFactor.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "getUnitInstanceConversionFactor")]
+		public static extern double getUnitInstanceConversionFactor(int_t unitInstance, out IntPtr unitPrefix, out IntPtr unitName, out IntPtr SIUnitName);
 
 		/// <summary>
 		///		setBRepProperties                                       (http://rdf.bg/ifcdoc/CS64/setBRepProperties.html)
@@ -2871,7 +2879,12 @@ namespace RDF
 		/// <summary>
 		///		cleanMemory                                             (http://rdf.bg/ifcdoc/CS64/cleanMemory.html)
 		///
-		///	...
+		///	This call forces cleaning of memory allocated.
+		///	The following mode values are effected:
+		///		0	non-cached geometry tree structures
+		///		1	cached and non-cached geometry tree structures + resetting buffers for internally used Geometry Kernel instance
+		///		3	cached and non-cached geometry tree structures
+		///		4	clean memory allocated within a session for ADB structures and string values (including enumerations requested as wide char).
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "cleanMemory")]
 		public static extern void cleanMemory(int_t model, int_t mode);
@@ -2879,7 +2892,7 @@ namespace RDF
 		/// <summary>
 		///		internalGetP21Line                                      (http://rdf.bg/ifcdoc/CS64/internalGetP21Line.html)
 		///
-		///	...
+		///	Returns the line STEP / Express ID of an instance
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "internalGetP21Line")]
 		public static extern Int64 internalGetP21Line(int_t instance);
@@ -2887,7 +2900,7 @@ namespace RDF
 		/// <summary>
 		///		internalForceInstanceFromP21Line                        (http://rdf.bg/ifcdoc/CS64/internalForceInstanceFromP21Line.html)
 		///
-		///	...
+		///	Returns an instance based on the model and STEP / Express ID (even when the instance itself might be non-existant)
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "internalForceInstanceFromP21Line")]
 		public static extern int_t internalForceInstanceFromP21Line(int_t model, Int64 P21Line);
@@ -2895,7 +2908,7 @@ namespace RDF
 		/// <summary>
 		///		internalGetInstanceFromP21Line                          (http://rdf.bg/ifcdoc/CS64/internalGetInstanceFromP21Line.html)
 		///
-		///	...
+		///	Returns an instance based on the model and STEP / Express ID
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "internalGetInstanceFromP21Line")]
 		public static extern int_t internalGetInstanceFromP21Line(int_t model, Int64 P21Line);
@@ -2980,7 +2993,7 @@ namespace RDF
 		/// <summary>
 		///		xxxxGetAllInstances                                     (http://rdf.bg/ifcdoc/CS64/xxxxGetAllInstances.html)
 		///
-		///	...
+		///	This call returns an aggregation containing all instances.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAllInstances")]
 		public static extern int_t xxxxGetAllInstances(int_t model);
@@ -2988,7 +3001,9 @@ namespace RDF
 		/// <summary>
 		///		xxxxGetInstancesUsing                                   (http://rdf.bg/ifcdoc/CS64/xxxxGetInstancesUsing.html)
 		///
-		///	...
+		///	This call returns an aggregation containing all instances referencing the given instance.
+		///
+		///	note: this is independent from if there are inverse relations defining such an aggregation or parts of it.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "xxxxGetInstancesUsing")]
 		public static extern int_t xxxxGetInstancesUsing(int_t instance);

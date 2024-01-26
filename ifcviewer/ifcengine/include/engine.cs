@@ -1014,6 +1014,70 @@ namespace RDF
 		public static extern Int64 CopyInstanceNetwork(Int64 owlInstance, byte includeInverseRelations, Int64 targetModel);
 
 		/// <summary>
+		///		EncodeBase64                                            (http://rdf.bg/gkdoc/CS64/EncodeBase64.html)
+		///
+		///	Function to encode any data input array into a BASE64 string.
+		///
+		///	The output string has to be allocated by the host. The return value defines the length of the string size in bytes.
+		///
+		///	Terminator adds a 0 element to the end of the BASE64 generated string, it will NOT increase the length.
+		///
+		///	If output is nullptr the length will be calculated but the string itself will not be generated.
+		/// </summary>
+		[DllImport(enginedll, EntryPoint = "EncodeBase64")]
+		public static extern Int64 EncodeBase64(string output, byte[] input, Int64 size, byte terminator);
+
+		[DllImport(enginedll, EntryPoint = "EncodeBase64")]
+		public static extern Int64 EncodeBase64(byte[] output, byte[] input, Int64 size, byte terminator);
+
+		/// <summary>
+		///		EncodeBase64W                                           (http://rdf.bg/gkdoc/CS64/EncodeBase64W.html)
+		///
+		///	Function to encode any data input array into a BASE64 string.
+		///
+		///	The output string has to be allocated by the host. The return value defines the length of the string size in bytes.
+		///
+		///	Terminator adds a 0 element to the end of the BASE64 generated string, it will NOT increase the length.
+		///
+		///	If output is nullptr the length will be calculated but the string itself will not be generated.
+		/// </summary>
+		[DllImport(enginedll, EntryPoint = "EncodeBase64W")]
+		public static extern Int64 EncodeBase64W(string output, byte[] input, Int64 size, byte terminator);
+
+		[DllImport(enginedll, EntryPoint = "EncodeBase64W")]
+		public static extern Int64 EncodeBase64W(byte[] output, byte[] input, Int64 size, byte terminator);
+
+		/// <summary>
+		///		DecodeBase64                                            (http://rdf.bg/gkdoc/CS64/DecodeBase64.html)
+		///
+		///	Function to decode a BASE64 string into any data output array.
+		///
+		///	The BASE64 string is measured by the (non-zero) size given or by the terminator.
+		///
+		///	If output is nullptr the length will be calculated but the string itself will not be generated.
+		/// </summary>
+		[DllImport(enginedll, EntryPoint = "DecodeBase64")]
+		public static extern Int64 DecodeBase64(byte[] output, string input, Int64 size);
+
+		[DllImport(enginedll, EntryPoint = "DecodeBase64")]
+		public static extern Int64 DecodeBase64(byte[] output, byte[] input, Int64 size);
+
+		/// <summary>
+		///		DecodeBase64W                                           (http://rdf.bg/gkdoc/CS64/DecodeBase64W.html)
+		///
+		///	Function to decode a BASE64 string into any data output array.
+		///
+		///	The BASE64 string is measured by the (non-zero) size given or by the terminator.
+		///
+		///	If output is nullptr the length will be calculated but the string itself will not be generated.
+		/// </summary>
+		[DllImport(enginedll, EntryPoint = "DecodeBase64W")]
+		public static extern Int64 DecodeBase64W(byte[] output, string input, Int64 size);
+
+		[DllImport(enginedll, EntryPoint = "DecodeBase64W")]
+		public static extern Int64 DecodeBase64W(byte[] output, byte[] input, Int64 size);
+
+		/// <summary>
 		///		CopyModel                                               (http://rdf.bg/gkdoc/CS64/CopyModel.html)
 		///
 		///	This function copies the complete structure of a model towards another or new model.

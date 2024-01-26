@@ -4731,7 +4731,7 @@ void			DECL STDC	setMaximumSegmentationLength(
 								);
 
 //
-//		getProjectUnitConversionFactor                                 (http://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
+//		getProjectUnitConversionFactor                          (http://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
 //				SdaiModel				model								IN
 //				const char				* unitType							IN
 //				const char				** unitPrefix						IN / OUT
@@ -4750,9 +4750,36 @@ double			DECL STDC	getProjectUnitConversionFactor(
 									const char				** SIUnitName
 								);
 
+#ifdef __cplusplus
+	}
+#endif
+
 //
-//		getUnitInstanceConversionFactor                                 (http://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
-//				SdaiInstance			ifcunit								IN
+//
+static	inline	double	getProjectUnitConversionFactor(
+								SdaiModel				model,
+								char					* unitType,
+								char					** unitPrefix,
+								char					** unitName,
+								char					** SIUnitName
+							)
+{
+	return	getProjectUnitConversionFactor(
+					model,
+					(const char*) unitType,
+					(const char**) unitPrefix,
+					(const char**) unitName,
+					(const char**) SIUnitName
+				);
+}
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+//
+//		getUnitInstanceConversionFactor                         (http://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
+//				SdaiInstance			unitInstance						IN
 //				const char				** unitPrefix						IN / OUT
 //				const char				** unitName							IN / OUT
 //				const char				** SIUnitName						IN / OUT
@@ -4762,7 +4789,7 @@ double			DECL STDC	getProjectUnitConversionFactor(
 //	...
 //
 double			DECL STDC	getUnitInstanceConversionFactor(
-									SdaiInstance			ifcunit,
+									SdaiInstance			unitInstance,
 									const char				** unitPrefix,
 									const char				** unitName,
 									const char				** SIUnitName
@@ -4774,17 +4801,15 @@ double			DECL STDC	getUnitInstanceConversionFactor(
 
 //
 //
-static	inline	double	getIfcProjecUnitConversionFactor(
-								SdaiModel				model,
-								char					* unitType,
+static	inline	double	getUnitInstanceConversionFactor(
+								SdaiInstance			unitInstance,
 								char					** unitPrefix,
 								char					** unitName,
 								char					** SIUnitName
 							)
 {
-	return	getProjectUnitConversionFactor(
-					model,
-					(const char*) unitType,
+	return	getUnitInstanceConversionFactor(
+					unitInstance,
 					(const char**) unitPrefix,
 					(const char**) unitName,
 					(const char**) SIUnitName
@@ -4847,7 +4872,12 @@ void			DECL STDC	setBRepProperties(
 //
 //				void					returns
 //
-//	...
+//	This call forces cleaning of memory allocated.
+//	The following mode values are effected:
+//		0	non-cached geometry tree structures
+//		1	cached and non-cached geometry tree structures + resetting buffers for internally used Geometry Kernel instance
+//		3	cached and non-cached geometry tree structures
+//		4	clean memory allocated within a session for ADB structures and string values (including enumerations requested as wide char).
 //
 void			DECL STDC	cleanMemory(
 									SdaiModel				model,
@@ -4860,7 +4890,7 @@ void			DECL STDC	cleanMemory(
 //
 //				ExpressID				returns								OUT
 //
-//	...
+//	Returns the line STEP / Express ID of an instance
 //
 ExpressID		DECL STDC	internalGetP21Line(
 									SdaiInstance			instance
@@ -4873,7 +4903,7 @@ ExpressID		DECL STDC	internalGetP21Line(
 //
 //				SdaiInstance			returns								OUT
 //
-//	...
+//	Returns an instance based on the model and STEP / Express ID (even when the instance itself might be non-existant)
 //
 SdaiInstance	DECL STDC	internalForceInstanceFromP21Line(
 									SdaiModel				model,
@@ -4887,7 +4917,7 @@ SdaiInstance	DECL STDC	internalForceInstanceFromP21Line(
 //
 //				SdaiInstance			returns								OUT
 //
-//	...
+//	Returns an instance based on the model and STEP / Express ID
 //
 SdaiInstance	DECL STDC	internalGetInstanceFromP21Line(
 									SdaiModel				model,
@@ -5058,7 +5088,7 @@ static	inline	SdaiAggr	xxxxGetEntityAndSubTypesExtentBN(
 //
 //				SdaiAggr				returns								OUT
 //
-//	...
+//	This call returns an aggregation containing all instances.
 //
 SdaiAggr		DECL STDC	xxxxGetAllInstances(
 									SdaiModel				model
@@ -5070,7 +5100,9 @@ SdaiAggr		DECL STDC	xxxxGetAllInstances(
 //
 //				SdaiAggr				returns								OUT
 //
-//	...
+//	This call returns an aggregation containing all instances referencing the given instance.
+//
+//	note: this is independent from if there are inverse relations defining such an aggregation or parts of it.
 //
 SdaiAggr		DECL STDC	xxxxGetInstancesUsing(
 									SdaiInstance			instance
