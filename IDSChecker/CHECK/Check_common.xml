@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<PropertySetDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ifdguid="9f80f380d21511e1800000215ad4efdf" templatetype="PSET_TYPEDRIVENOVERRIDE" xsi:noNamespaceSchemaLocation="http://buildingSMART-tech.org/xml/psd/PSD_IFC4.xsd">
+  <IfcVersion version="IFC4" />
+  <Name>Check_common</Name>
+  <Definition>Specific properties for CHEK project.</Definition>
+  <Applicability />
+  <PropertyDefs>
+    <PropertyDef ifdguid="2c2ixfu3QK2hF6Fdd5bp5u">
+      <Name>TypeOfConstruction</Name>
+      <Definition>CHECK type of building construction.</Definition>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcLabel" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+    <PropertyDef ifdguid="2c2ixfu3QK2hF6Fdd5bp6u">
+      <Name>Height</Name>
+      <Definition>Height of building construction.</Definition>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcPositiveLengthMeasure" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+    <PropertyDef ifdguid="2c2ixfu3QK2hF6Fdd5bp7u">
+      <Name>IsCornerBuilding</Name>
+      <Definition>Is it corner building.</Definition>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcBoolean" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+    <PropertyDef ifdguid="2c2ixfu3QK2hF6Fdd5bp8u">
+      <Name>NumberofBuildingLevels</Name>
+      <Definition>Number of levels.</Definition>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcCountMeasure" />
+    <PropertyDef ifdguid="b0ca0000d21511e1800000215ad4efdf">
+  </PropertyDefs>
+</PropertySetDef>
+      
