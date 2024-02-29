@@ -155,5 +155,14 @@
                 </property>
             </requirements>
         </specification>
+        <specification name="At least one IfcSlab instance" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCSLAB</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+        </specification>
     </specifications>
 </ids>
