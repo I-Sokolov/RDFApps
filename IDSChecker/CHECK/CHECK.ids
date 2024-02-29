@@ -98,5 +98,43 @@
                 </property>
             </requirements>
         </specification>
+        <specification name="Each building should have Pset_BuildingUse.MarketCategory property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_BuildingUse</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>MarketCategory</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Pset_BuildingUse.MarketSubCategory property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_BuildingUse</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>MarketSubCategory</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
     </specifications>
 </ids>
