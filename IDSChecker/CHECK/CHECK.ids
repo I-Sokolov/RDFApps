@@ -136,5 +136,24 @@
                 </property>
             </requirements>
         </specification>
+        <specification name="Each roof should have Check_common.RoofAngle property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCROOF</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Check_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>RoofAngle</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
     </specifications>
 </ids>
