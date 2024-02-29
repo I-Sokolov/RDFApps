@@ -173,5 +173,14 @@
                 </entity>
             </applicability>
         </specification>
+        <specification name="At least one IfcRelSpaceBoundary2ndLevel instance" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCRELSPACEBOUNDARY2NDLEVEL</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+        </specification>
     </specifications>
 </ids>
