@@ -196,6 +196,9 @@
     <ClInclude Include="parser\_xml.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="CHECK\CHECK.ids" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

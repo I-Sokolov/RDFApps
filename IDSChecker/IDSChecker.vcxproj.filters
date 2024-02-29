@@ -16,6 +16,9 @@
     <Filter Include="Parser">
       <UniqueIdentifier>{415f7ceb-5d8f-4339-b7d6-4d4839b7ad34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CHECK">
+      <UniqueIdentifier>{a516c23a-0a7b-46ff-9123-057e2f462707}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -83,5 +86,10 @@
     <ClInclude Include="IDSRun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CHECK\CHECK.ids">
+      <Filter>CHECK</Filter>
+    </None>
   </ItemGroup>
 </Project>

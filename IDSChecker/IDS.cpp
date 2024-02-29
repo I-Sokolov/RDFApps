@@ -991,7 +991,8 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         if (m_applicability.Match(inst, ctx)) {
-            
+            m_nOccurs++;
+
             auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Optional);
 
             ok = m_requirements.Match(inst, ctx);
@@ -1002,7 +1003,6 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
 
             if (ok) {
                 ctx.LogMsg(MsgLevel::Info, "Checked ok");
-                m_nOccurs++;
             }
             else {
                 ctx.LogMsg(MsgLevel::Error, "Instance does not match specification");

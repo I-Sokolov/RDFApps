@@ -1,0 +1,102 @@
+<ids xmlns="http://standards.buildingsmart.org/IDS/0.9.7/ids.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS/ids_05.xsd">
+    <info>
+        <title>D2.2 CHEK IFC Specification (M18)</title>
+    </info>
+    <specifications>
+        <specification name="Each wall should have Pset_WallCommon.IsExternal property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCWALL</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_WallCommon</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>IsExternal</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Check_common.TypeOfConstruction property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Check_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>TypeOfConstruction</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Check_common.Height property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Check_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>Height</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Check_common.IsCornerBuilding property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Check_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>IsCornerBuilding</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Check_common.NumberofBuildingLevels property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Check_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>NumberofBuildingLevels</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+    </specifications>
+</ids>

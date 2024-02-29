@@ -9,7 +9,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>O:\DevArea\RDF\RDFSmokeTests\TestData\ModelCheckerIFC4.ifc</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>E:\DevArea\IMIFC\Wall-01\OBD_Wall-01.v1.ifc4x3.ifc</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
