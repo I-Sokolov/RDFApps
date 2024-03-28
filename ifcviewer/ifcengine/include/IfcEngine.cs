@@ -176,23 +176,24 @@ namespace RDF
 	public enum enum_validation_type : System.UInt64
 	{
 		__NONE						= 0,
-		__NO_OF_ARGUMENTS			= 1 << 0,	//number of arguments
-		__ARGUMENT_EXPRESS_TYPE		= 1 << 1,	//argument value is correct entity, defined type or enumeration value
-		__ARGUMENT_PRIM_TYPE		= 1 << 2,	//argument value has correct primitive type
-		__REQUIRED_ARGUMENTS		= 1 << 3,	//non-optional arguments values are provided
-		__ARRGEGATION_EXPECTED		= 1 << 4,	//aggregation is provided when expected
-		__AGGREGATION_NOT_EXPECTED	= 1 << 5,   //aggregation is not used when not expected
-		__AGGREGATION_SIZE			= 1 << 6,   //aggregation size
-		__AGGREGATION_UNIQUE		= 1 << 7,	//elements in aggregations are unique when required
-		__COMPLEX_INSTANCE			= 1 << 8,	//complex instances contains full parent chains
-		__REFERENCE_EXISTS			= 1 << 9,	//referenced instance exists
-		__ABSTRACT_ENTITY			= 1 << 10,  //abstract entity should not instantiate
-		__WHERE_RULE				= 1 << 11,  //where-rule check
-		__UNIQUE_RULE				= 1 << 12,	//unique-rule check
-		__STAR_USAGE				= 1 << 13,  //* is used only for derived arguments
-		__CALL_ARGUMENT				= 1 << 14,  //validateModel/validateInstance function argument should be model/instance
-		__INTERNAL_ERROR			= 1 << 15   //unspecified error
-	};
+		__KNOWN_ENTITY				= 1 << 0,   //  entity is defined in the schema
+		__NO_OF_ARGUMENTS			= 1 << 1,   //	number of arguments
+		__ARGUMENT_EXPRESS_TYPE		= 1 << 2,   //	argument value is correct entity, defined type or enumeration value
+		__ARGUMENT_PRIM_TYPE		= 1 << 3,   //	argument value has correct primitive type
+		__REQUIRED_ARGUMENTS		= 1 << 4,   //	non-optional arguments values are provided
+		__ARRGEGATION_EXPECTED		= 1 << 5,   //	aggregation is provided when expected
+		__AGGREGATION_NOT_EXPECTED	= 1 << 6,   //	aggregation is not used when not expected
+		__AGGREGATION_SIZE			= 1 << 7,   //	aggregation size
+		__AGGREGATION_UNIQUE		= 1 << 8,   //	elements in aggregations are unique when required
+		__COMPLEX_INSTANCE			= 1 << 9,   //	complex instances contains full parent chains
+		__REFERENCE_EXISTS			= 1 << 10,  //	referenced instance exists
+		__ABSTRACT_ENTITY			= 1 << 11,  //	abstract entity should not instantiate
+		__WHERE_RULE				= 1 << 12,  //	where-rule check
+		__UNIQUE_RULE				= 1 << 13,  //	unique-rule check
+		__STAR_USAGE				= 1 << 14,  //	* is used only for derived arguments
+		__CALL_ARGUMENT				= 1 << 15,  //	validateModel / validateInstance function argument should be model / instance
+		__INTERNAL_ERROR = ((UInt64)1) << 63	//	unspecified error
+		};
 
 	public enum enum_validation_status : byte
 	{
@@ -3783,7 +3784,7 @@ namespace RDF
 		///		bit 15:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetIssueType")]
-		public static extern UInt64 validateGetIssueType(int_t issue);
+		public static extern enum_validation_type validateGetIssueType (int_t issue);
 
 		/// <summary>
 		///		validateGetInstance                                     (http://rdf.bg/ifcdoc/CS64/validateGetInstance.html)
@@ -3849,9 +3850,16 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetDescription")]
 		public static extern IntPtr validateGetDescription(int_t issue);
 
-        //
-        //  Deprecated API Calls (GEOMETRY)
-        //
+		public static string validateGetDescriptionString (int_t issue)
+			{
+			IntPtr descr = validateGetDescription(issue);
+			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(descr);
+			}
+
+
+		//
+		//  Deprecated API Calls (GEOMETRY)
+		//
 
 		/// <summary>
 		///		initializeModellingInstance                             (http://rdf.bg/ifcdoc/CS64/initializeModellingInstance.html)
