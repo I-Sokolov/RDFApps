@@ -22,7 +22,7 @@
                 </property>
             </requirements>
         </specification>
-        <specification name="Each building should have Check_common.TypeOfConstruction property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+        <specification name="Each building should have CHEK_common.TypeOfConstruction property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
@@ -33,7 +33,7 @@
             <requirements>
                 <property minOccurs="1" maxOccurs="1">
                     <propertySet>
-                        <simpleValue>Check_common</simpleValue>
+                        <simpleValue>CHEK_common</simpleValue>
                     </propertySet>
                     <name>
                         <simpleValue>TypeOfConstruction</simpleValue>
@@ -41,7 +41,7 @@
                 </property>
             </requirements>
         </specification>
-        <specification name="Each building should have Check_common.Height property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+        <specification name="Each building should have CHEK_common.Height property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
@@ -52,7 +52,7 @@
             <requirements>
                 <property minOccurs="1" maxOccurs="1">
                     <propertySet>
-                        <simpleValue>Check_common</simpleValue>
+                        <simpleValue>CHEK_common</simpleValue>
                     </propertySet>
                     <name>
                         <simpleValue>Height</simpleValue>
@@ -60,7 +60,7 @@
                 </property>
             </requirements>
         </specification>
-        <specification name="Each building should have Check_common.IsCornerBuilding property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+        <specification name="Each building should have CHEK_common.IsCornerBuilding property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
@@ -71,7 +71,7 @@
             <requirements>
                 <property minOccurs="1" maxOccurs="1">
                     <propertySet>
-                        <simpleValue>Check_common</simpleValue>
+                        <simpleValue>CHEK_common</simpleValue>
                     </propertySet>
                     <name>
                         <simpleValue>IsCornerBuilding</simpleValue>
@@ -79,7 +79,7 @@
                 </property>
             </requirements>
         </specification>
-        <specification name="Each building should have Check_common.NumberofBuildingLevels property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+        <specification name="Each building should have CHEK_common.NumberofBuildingLevels property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
@@ -90,7 +90,7 @@
             <requirements>
                 <property minOccurs="1" maxOccurs="1">
                     <propertySet>
-                        <simpleValue>Check_common</simpleValue>
+                        <simpleValue>CHEK_common</simpleValue>
                     </propertySet>
                     <name>
                         <simpleValue>NumberofBuildingLevels</simpleValue>
@@ -136,7 +136,7 @@
                 </property>
             </requirements>
         </specification>
-        <specification name="Each roof should have Check_common.RoofAngle property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+        <specification name="Each roof should have CHEK_common.RoofAngle property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
@@ -147,7 +147,7 @@
             <requirements>
                 <property minOccurs="1" maxOccurs="1">
                     <propertySet>
-                        <simpleValue>Check_common</simpleValue>
+                        <simpleValue>CHEK_common</simpleValue>
                     </propertySet>
                     <name>
                         <simpleValue>RoofAngle</simpleValue>

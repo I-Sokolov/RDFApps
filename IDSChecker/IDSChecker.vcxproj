@@ -197,7 +197,13 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHECK\CHECK.ids" />
+    <None Include="CHEK\CHEK.ids" />
+    <None Include="CHEK\fail-building-wall.ifc" />
+    <None Include="CHEK\fail-slab-boundaries.ifc" />
+    <None Include="CHEK\pass.ifc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="CHEK\CHEK_common.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

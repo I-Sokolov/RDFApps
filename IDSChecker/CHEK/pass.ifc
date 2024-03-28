@@ -13,7 +13,7 @@ FILE_DESCRIPTION(
 /* implementation_level */ '2;1');
 
 FILE_NAME(
-/* name */ 'check',
+/* name */ 'CHEK',
 /* time_stamp */ '2024-02-29T13:48:05+00:00',
 /* author */ ('First Name Last Name'),
 /* organization */ ('Organization Name'),
@@ -28,7 +28,7 @@ DATA;
 #10=IFCSLABTYPE('2TUb_BlYMY10_mlFSOJRqR',#245,'Single Layer Slab I',$,$,
 (#152,#153,#154,#155,#156,#157,#158),$,$,$,.NOTDEFINED.);
 #11=IFCSLAB('0YNXbstcT8PBZ1wjngMrq1',#245,'Single Layer Slab I',
-'19259*check!Design Model','Slab',#91,#48,'19259*check!Design Model',
+'19259*CHEK!Design Model','Slab',#91,#48,'19259*CHEK!Design Model',
  .NOTDEFINED.);
 #12=IFCINDEXEDPOLYGONALFACE((1,2,3,4));
 #13=IFCPOLYGONALFACESET(#72,.F.,(#12),$);
@@ -105,7 +105,7 @@ $,(#68,#30,#31,#32,#33,#34,#35));
 $,(#135,#136,#137,#138,#139,#140,#141,#142,#54,#143),$,$,$,
  .NOTDEFINED.);
 #70=IFCWALL('2KjMIezUH5NQFUgi_Uj_nH',#245,'Single Layer Wall - 1',
-'250 mm reinforced concrete','Wall',#90,#47,'19249*check!Design Model',
+'250 mm reinforced concrete','Wall',#90,#47,'19249*CHEK!Design Model',
  .NOTDEFINED.);
 #71=IFCCARTESIANPOINTLIST3D(((0.,0.,0.),(18.6292597879192,0.,0.)));
 #72=IFCCARTESIANPOINTLIST3D(((13.9676157214796,3.63782257156449,0.),(13.9676157214796,
@@ -198,7 +198,7 @@ $,(#163));
 #132=IFCPROPERTYSET('2s8YiOzwORDcG2GRdem_cP',#245,'Site',$,(#166,#167));
 #133=IFCPROPERTYSET('03FUq4OOYqPt5U9zIBL2Ga',#245,'Pset_BuildingUse',$,(#168,
 #169));
-#134=IFCPROPERTYSET('0MaipdmzVYNXvbyle5hefB',#245,'Check_common',$,(#170,
+#134=IFCPROPERTYSET('0MaipdmzVYNXvbyle5hefB',#245,'CHEK_common',$,(#170,
 #171,#172,#173));
 #135=IFCPROPERTYSET('0rWE4cwQ26Hzx5I7wWAExg',#245,'Pset_WallCommon',$,(#174,
 #175,#176,#177,#187));
@@ -222,7 +222,7 @@ $,(#184));
 #202));
 #147=IFCPROPERTYSET('0rvP$a_xh0XQ3kNpyH$LRO',#245,
 'StructuralFloorCommon',$,(#209));
-#148=IFCPROPERTYSET('12paRpAFG7q0Ul8n9CcqWK',#245,'Check_common',$,(#210));
+#148=IFCPROPERTYSET('12paRpAFG7q0Ul8n9CcqWK',#245,'CHEK_common',$,(#210));
 #149=IFCPROPERTYSET('0__JSNUnMckSPM85fGuxsw',#245,'Pset_WallCommon',$,(#211,
 #213));
 #150=IFCPROPERTYSET('3LtXauPa4j10bRmf9RtIdx',#245,

@@ -13,7 +13,7 @@ FILE_DESCRIPTION(
 /* implementation_level */ '2;1');
 
 FILE_NAME(
-/* name */ 'check',
+/* name */ 'CHEK',
 /* time_stamp */ '2024-02-29T11:24:42+00:00',
 /* author */ ('First Name Last Name'),
 /* organization */ ('Organization Name'),
@@ -79,7 +79,7 @@ $,(#47,#48,#49,#18,#19,#20,#21,#22,#23,#14,#15));
 #50=IFCWALLTYPE('0MOMYhKBKxpdFW7KeMNzb6',#116,'Single Layer Wall - 1',$,
 $,(#69,#39),$,$,$,.NOTDEFINED.);
 #51=IFCWALL('2KjMIezUH5NQFUgi_Uj_nH',#116,'Single Layer Wall - 1',
-'250 mm reinforced concrete','Wall',#91,#34,'19249*check!Design Model',
+'250 mm reinforced concrete','Wall',#91,#34,'19249*CHEK!Design Model',
  .NOTDEFINED.);
 #52=IFCCARTESIANPOINTLIST3D(((0.,0.,0.),(18.6292597879192,0.,0.)));
 #53=IFCSTYLEDITEM(#58,(#55),$);

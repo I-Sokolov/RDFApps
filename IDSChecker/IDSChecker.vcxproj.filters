@@ -16,8 +16,8 @@
     <Filter Include="Parser">
       <UniqueIdentifier>{415f7ceb-5d8f-4339-b7d6-4d4839b7ad34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CHECK">
-      <UniqueIdentifier>{a516c23a-0a7b-46ff-9123-057e2f462707}</UniqueIdentifier>
+    <Filter Include="CHEK">
+      <UniqueIdentifier>{849620f8-903c-4159-b19c-391fee6fbe10}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -88,8 +88,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CHECK\CHECK.ids">
-      <Filter>CHECK</Filter>
+    <None Include="CHEK\CHEK.ids">
+      <Filter>CHEK</Filter>
     </None>
+    <None Include="CHEK\fail-building-wall.ifc">
+      <Filter>CHEK</Filter>
+    </None>
+    <None Include="CHEK\fail-slab-boundaries.ifc">
+      <Filter>CHEK</Filter>
+    </None>
+    <None Include="CHEK\pass.ifc">
+      <Filter>CHEK</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="CHEK\CHEK_common.xml">
+      <Filter>CHEK</Filter>
+    </Xml>
   </ItemGroup>
 </Project>
