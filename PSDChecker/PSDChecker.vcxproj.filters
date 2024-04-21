@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\XmlParser">
+      <UniqueIdentifier>{a48f8464-705d-4ffb-882e-f8b82468fde9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PSD">
+      <UniqueIdentifier>{614bcbd2-abb1-4268-8a89-cdde99e68b6f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_errors.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_io.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_log.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_net.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_reader.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_schema_storage.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_serialization.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_string.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_time.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="..\IDSChecker\parser\_xml.h">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClInclude>
+    <ClInclude Include="PSDChecker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_net.cpp">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_reader.cpp">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_serialization.cpp">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClCompile>
+    <ClCompile Include="..\IDSChecker\parser\_xml.cpp">
+      <Filter>Source Files\XmlParser</Filter>
+    </ClCompile>
+    <ClCompile Include="PSDChecker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PSD\PSD_IFC4.xsd">
+      <Filter>PSD</Filter>
+    </None>
+  </ItemGroup>
+</Project>

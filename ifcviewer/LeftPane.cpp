@@ -53,7 +53,7 @@ BEGIN_MESSAGE_MAP(CLeftPane, CTreeView)
 END_MESSAGE_MAP()
 
 
-void CLeftPane::OnGetInfoTip(NMHDR *pNMHDR, LRESULT *pResult)
+void CLeftPane::OnGetInfoTip(NMHDR* /*pNMHDR*/, LRESULT* pResult)
 {
 #if 0
 	LPNMTVGETINFOTIP	pGetInfoTip = (LPNMTVGETINFOTIP)pNMHDR;

@@ -827,15 +827,15 @@ namespace _xml
 					// <?xml...?>
 					strTag = strTag.substr(1).substr(0, strTag.size() - 2);
 
-					if (m_pVersion != nullptr)
-					{
-						THROW_ERROR(_err::_format);
-					}
+					if (_string::startsWith(strTag, "xml ")) {
+						if (m_pVersion != nullptr) {
+							THROW_ERROR(_err::_format);
+						}
 
-					m_pVersion = new _version(this, strTag);
-					if (m_pVersion->getName() != "xml")
-					{
-						THROW_ERROR(_err::_format);
+						m_pVersion = new _version(this, strTag);
+						if (m_pVersion->getName() != "xml") {
+							THROW_ERROR(_err::_format);
+						}
 					}
 
 					ch = m_pReader->getChar();

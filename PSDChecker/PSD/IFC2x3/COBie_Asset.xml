@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2013 sp1 (x64) (http://www.altova.com) by RDITLACB (private) -->
+<PropertySetDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="psd_2x3.xsd">
+	<IfcVersion version="2x3" schema="COBie 2.4"/>
+	<Name>COBie_Asset</Name>
+	<Definition>Definition from IAI:  An asset is a uniquely identifiable element which has a financial value and against which maintenance actions are recorded. </Definition>
+	<Applicability>
+		IfcTypeObject Entity for COBie Type Worksheet
+	</Applicability>
+	<ApplicableClasses>
+		<ClassName>IfcTypeObject</ClassName>
+	</ApplicableClasses>
+	<PropertyDefs>
+		<PropertyDef>
+			<Name>AssetType</Name>
+			<PropertyType>
+				<TypePropertyEnumeratedValue>
+					<EnumList name="COBie_Enum_AssetType">
+						<EnumItem>Fixed</EnumItem>
+						<EnumItem>Moveable</EnumItem>
+					</EnumList>
+				</TypePropertyEnumeratedValue>
+			</PropertyType>
+			<Definition>Identifies whether or not this is a fixed or movable item.</Definition>
+		</PropertyDef>
+	</PropertyDefs>
+</PropertySetDef>

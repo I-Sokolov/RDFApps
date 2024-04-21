@@ -52,6 +52,7 @@ protected:
 
 public:
 	afx_msg void OnViewIDSChecker();
+	afx_msg void OnViewPSDChecker();
 	afx_msg void OnViewModelChecker();
 	afx_msg void OnUpdateViewModelChecker(CCmdUI* pCmdUI);
 	afx_msg void OnViewPoints();

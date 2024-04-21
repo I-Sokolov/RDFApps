@@ -191,7 +191,7 @@ static ValidationIssueLevel CheckModel(const char* filePath, const char* express
 /// <summary>
 /// 
 /// </summary>
-static ValidationIssueLevel CheckModels(const char* filePathWC, const char* expressSchemaFilePath)
+static ValidationIssueLevel CheckModelsByWC(const char* filePathWC, const char* expressSchemaFilePath)
 {
     ValidationIssueLevel res = 0;
 
@@ -199,24 +199,51 @@ static ValidationIssueLevel CheckModels(const char* filePathWC, const char* expr
 
     WIN32_FIND_DATA ffd;
     auto hFind = FindFirstFile(filePathWC, &ffd);
-    if (hFind == INVALID_HANDLE_VALUE) {
-        printf("\t\t<Failure call='FindFirstFile'>%s</Failure>\n", filePathWC);
-        return -13;
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                //_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
+            }
+            else {
+                std::filesystem::path filePath(directory);
+                filePath.append(ffd.cFileName);
+                res += CheckModel(filePath.string().c_str(), expressSchemaFilePath);
+            }
+        } while (FindNextFile(hFind, &ffd) != 0);
+        FindClose(hFind);
     }
+    return res;
+}
 
-    do {
-        if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-            //_tprintf(TEXT("  %s   <DIR>\n"), ffd.cFileName);
-        }
-        else {
-            std::filesystem::path filePath(directory);
-            filePath.append(ffd.cFileName);
-            res += CheckModel(filePath.string().c_str(), expressSchemaFilePath);
-        }
-    } while (FindNextFile(hFind, &ffd) != 0);
+/// <summary>
+/// 
+/// </summary>
+static ValidationIssueLevel CheckIfcFilesRecursively(const char* directory, const char* expressSchemaFilePath)
+{
+    ValidationIssueLevel res = 0;
 
-    FindClose(hFind);
+    std::filesystem::path wcIfc (directory);
+    wcIfc.append("*.ifc");
+    CheckModelsByWC(wcIfc.string().c_str(), expressSchemaFilePath);
 
+    //subfolders
+    std::filesystem::path wcAll(directory);
+    wcAll.append("*");
+    WIN32_FIND_DATA ffd;
+    auto hFind = FindFirstFile(wcAll.string().c_str(), &ffd);
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                if (strcmp(ffd.cFileName, ".") && strcmp(ffd.cFileName, "..")) {
+                    std::filesystem::path path(directory);
+                    path.append(ffd.cFileName);
+                    CheckIfcFilesRecursively(path.string().c_str(), expressSchemaFilePath);
+                }
+            }
+        } while (FindNextFile(hFind, &ffd) != 0);
+
+        FindClose(hFind);
+    }
     return res;
 }
 
@@ -235,9 +262,19 @@ int main(int argc, char* argv[])
             validateSetOptions(-1, -1, false, 0, 0);
         }*/
 
-        auto   level = CheckModels(argv[1], argc > 2 ? argv[2] : NULL);
+        int level = -13;
+        
+        auto path = argv[1];
+        auto schema = argc > 2 ? argv[2] : NULL;
 
-        printf("\t<Finished errorLevel='%I64d' />\n", level);
+        if (std::filesystem::is_directory(path)) {
+            level = (int)CheckIfcFilesRecursively(path, schema);
+        }
+        else {
+            level = (int)CheckModelsByWC(path, schema);
+        }
+
+        printf("\t<Finished errorLevel='%d' />\n", level);
         printf("</RDFExpressModelChecker>\n");
 
         return (int)level;

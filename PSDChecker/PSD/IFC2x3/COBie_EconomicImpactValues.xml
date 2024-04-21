@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PropertySetDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <IfcVersion version="2x3" schema="COBie" />
+  <Name>COBie_EconomicImpactValues</Name>
+  <Definition>COBie_EconomicImpactValues was converted from Bentley OpenBuildings Designer DataGroup scheme 22.05.2015 5:33:21</Definition>
+  <Applicability>Entity for COBie Worksheet</Applicability>
+  <PropertyDefs>
+    <PropertyDef>
+      <Name>ReplacementCost</Name>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcLabel" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+  </PropertyDefs>
+</PropertySetDef>

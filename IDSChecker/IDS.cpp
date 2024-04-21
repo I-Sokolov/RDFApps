@@ -450,14 +450,15 @@ Context::IfcVersion Context::GetIfcVersion(const char** pstr)
         assert(schemaName);
 
         m_ifcVersionStr = schemaName;
+        ToUpper(m_ifcVersionStr);
 
-        if (strstr(schemaName, "IFC4x3")) {
+        if (strstr(m_ifcVersionStr.c_str(), "IFC4X3")) {
             m_ifcVersion = IfcVersion::Ifc4x3;
         }
-        else if (strstr(schemaName, "IFC4")) {
+        else if (strstr(m_ifcVersionStr.c_str(), "IFC4")) {
             m_ifcVersion = IfcVersion::Ifc4;
         }
-        else if (strstr(schemaName, "IFC2x3")) {
+        else if (strstr(m_ifcVersionStr.c_str(), "IFC2X3")) {
             m_ifcVersion = IfcVersion::Ifc2x3;
         }
         else {

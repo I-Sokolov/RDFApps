@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PropertySetDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <IfcVersion version="2x3" schema="COBie" />
+  <Name>COBie_Warranty</Name>
+  <Definition>COBie_Warranty was converted from Bentley OpenBuildings Designer DataGroup scheme 22.05.2015 5:33:21</Definition>
+  <Applicability>Entity for COBie Worksheet</Applicability>
+  <PropertyDefs>
+    <PropertyDef>
+      <Name>WarrantyDescription</Name>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcLabel" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+    <PropertyDef>
+      <Name>WarrantyDurationLabor</Name>
+        <PropertyType>
+            <TypePropertySingleValue>
+                <DataType type="IfcTimeMeasure"/>
+                <UnitType type="TIMEUNIT"/>
+            </TypePropertySingleValue>
+        </PropertyType>
+    </PropertyDef>
+    <PropertyDef>
+      <Name>WarrantyDurationParts</Name>
+        <PropertyType>
+            <TypePropertySingleValue>
+                <DataType type="IfcTimeMeasure"/>
+                <UnitType type="TIMEUNIT"/>
+            </TypePropertySingleValue>
+        </PropertyType>
+    </PropertyDef>
+    <PropertyDef>
+      <Name>WarrantyGuarantorLabor</Name>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcLabel" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+    <PropertyDef>
+      <Name>WarrantyGuarantorParts</Name>
+      <PropertyType>
+        <TypePropertySingleValue>
+          <DataType type="IfcLabel" />
+        </TypePropertySingleValue>
+      </PropertyType>
+    </PropertyDef>
+  </PropertyDefs>
+</PropertySetDef>

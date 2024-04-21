@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PropertySetDef xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="psd_2x3.xsd">
+	<IfcVersion version="2x3" schema="COBie 2.4"/>
+	<Name>COBie_ServiceLife</Name>
+	<Definition>Captures the period of time that an artifact will last along with various factors that impact the expected service life.</Definition>
+	<Applicability>IfcTypeObject Entity for COBie Type Worksheet</Applicability>
+	<ApplicableClasses> <ClassName>IfcTypeObject</ClassName></ApplicableClasses>
+	<PropertyDefs>
+		<PropertyDef>
+			<Name>ServiceLifeDuration</Name>
+			<Definition>The length or duration of a service life.
+			</Definition>
+            <PropertyType>
+                <TypePropertySingleValue>
+                    <DataType type="IfcTimeMeasure"/>
+                    <UnitType type="TIMEUNIT"/>
+                </TypePropertySingleValue>
+            </PropertyType>
+		</PropertyDef>
+	</PropertyDefs>
+</PropertySetDef>

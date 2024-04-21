@@ -107,6 +107,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_VIEW_MODELCHECKER, &CMainFrame::OnViewModelChecker)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_MODELCHECKER, &CMainFrame::OnUpdateViewModelChecker)
 	ON_COMMAND(ID_VIEW_IDSCHECKER, &CMainFrame::OnViewIDSChecker)
+	ON_COMMAND(ID_VIEW_PSDCHECKER, &CMainFrame::OnViewPSDChecker)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
@@ -650,7 +651,13 @@ void CMainFrame::OnViewModelChecker()
 
 void CMainFrame::OnViewIDSChecker()
 {
-	CIDSCheckDlg dlg;
+	CIDSCheckDlg dlg(CIDSCheckDlg::Check::IDS);
+	dlg.DoModal();
+}
+
+void CMainFrame::OnViewPSDChecker()
+{
+	CIDSCheckDlg dlg (CIDSCheckDlg::Check::PSD);
 	dlg.DoModal();
 }
 
