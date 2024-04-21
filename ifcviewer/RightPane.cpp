@@ -475,7 +475,7 @@ void	checkPickBoundingBoxNested(int_t * arrayOfIfcItems, double * arrayOfDistanc
 	STRUCT__IFC__OBJECT	* ifcObject = ifcObjectsLinkedList;
 
 	while  (ifcObject) {
-		if	(ifcObject->treeItemModel  &&  ifcObject->treeItemModel->selectState == TI_CHECKED) {
+		if	(ifcObject->treeItemModel  &&  ifcObject->treeItemModel->selectState != TI_UNCHECKED) {
 			checkPickBoundingBox(ifcObject, arrayOfIfcItems, arrayOfDistances, pArraySize);
 		}
 		ifcObject = ifcObject->next;
@@ -1532,7 +1532,7 @@ void	CRightPane::RenderFacesHighLighted()
 {
 	STRUCT__IFC__OBJECT	* ifcObject = ifcObjectsLinkedList;
 	while	(ifcObject) {
-		if	(ifcObject->treeItemModel  &&  ifcObject->treeItemModel->selectState == TI_CHECKED  &&  ifcObject == highLightedIfcObject) {
+		if	(ifcObject->treeItemModel  &&  ifcObject->treeItemModel->selectState != TI_UNCHECKED  &&  ifcObject == highLightedIfcObject) {
 			if	(ifcObject->noPrimitivesForFaces) {
 				STRUCT_MATERIALS	* materials = ifcObject->materials;
 				while  (materials) {
@@ -1563,7 +1563,7 @@ void	CRightPane::RenderFaces(D3DMATERIAL9 * mtrl)
 	while	(ifcObject) {
 		STRUCT_MATERIALS	* materials = ifcObject->materials;
 		while  (materials) {
-			if	(ifcObject->selectState == TI_CHECKED  &&  ifcObject->noPrimitivesForFaces  &&  materials->material->MTRL == (void*) mtrl  &&  ifcObject != highLightedIfcObject) {
+			if	(ifcObject->selectState != TI_UNCHECKED  &&  ifcObject->noPrimitivesForFaces  &&  materials->material->MTRL == (void*) mtrl  &&  ifcObject != highLightedIfcObject) {
 				if	(facesToDraw) {
 					if	(indexOffsetForFaces + 3 * noPrimitivesForFaces == materials->__indexOffsetForFaces) {
 						if	(ifcObject->vertexOffset < vertexOffset) {
@@ -1613,7 +1613,7 @@ void	CRightPane::RenderWireFrame()
 {
 	STRUCT__IFC__OBJECT	* ifcObject = ifcObjectsLinkedList;
 	while  (ifcObject) {
-		if	(ifcObject->selectState == TI_CHECKED  &&  ifcObject->noPrimitivesForWireFrame) {
+		if	(ifcObject->selectState != TI_UNCHECKED  &&  ifcObject->noPrimitivesForWireFrame) {
 			if	(wireFrameToDraw) {
 				if	(indexOffsetForWireFrame + 2 * noPrimitivesForWireFrame == ifcObject->indexOffsetForWireFrame) {
 					if	(ifcObject->vertexOffset < vertexOffset) {
@@ -1652,7 +1652,7 @@ void	CRightPane::RenderLines()
 {
 	STRUCT__IFC__OBJECT	* ifcObject = ifcObjectsLinkedList;
 	while  (ifcObject) {
-		if	(ifcObject->selectState == TI_CHECKED  &&  ifcObject->noPrimitivesForLines) {
+		if	(ifcObject->selectState != TI_UNCHECKED  &&  ifcObject->noPrimitivesForLines) {
 			if	(linesToDraw) {
 				if	(indexOffsetForLines + 2 * noPrimitivesForLines == ifcObject->indexOffsetForLines) {
 					if	(ifcObject->vertexOffset < vertexOffset) {
@@ -1691,7 +1691,7 @@ void	CRightPane::RenderPoints()
 {
 	STRUCT__IFC__OBJECT	* ifcObject = ifcObjectsLinkedList;
 	while  (ifcObject) {
-		if	(ifcObject->selectState == TI_CHECKED  &&  ifcObject->noPrimitivesForPoints) {
+		if	(ifcObject->selectState != TI_UNCHECKED  &&  ifcObject->noPrimitivesForPoints) {
 			if	(pointsToDraw) {
 				if	(indexOffsetForPoints + 1 * noPrimitivesForPoints == ifcObject->indexOffsetForPoints) {
 					if	(ifcObject->vertexOffset < vertexOffset) {
