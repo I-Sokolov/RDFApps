@@ -238,7 +238,6 @@ void	CLeftPane::Expand(
 {
 	if (treeItem) {
 		Expand(treeItem->parent);
-
 		if (treeItem->hTreeItem) {
 			GetTreeCtrl().Expand(treeItem->hTreeItem, TVE_EXPAND);
 		}
@@ -885,23 +884,26 @@ void	CLeftPane::OnClick(NMHDR* pNMHDR, LRESULT* pResult)
 
 void	CLeftPane::OnSelectionChanged(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	NMTREEVIEW	* pnmtv = (NMTREEVIEW*) pNMHDR;
-	HTREEITEM	hItem = pnmtv->itemNew.hItem;
-
 	pResult = 0;
-	hItem = 0;
+
+	NMTREEVIEW* pnmtv = (NMTREEVIEW*)pNMHDR;
+	HTREEITEM	hItem = pnmtv->itemNew.hItem;
 
 	auto instance = GetInstance();
 	CifcviewerDoc::ActiveInstanceHint hint(instance);
-	GetDocument()->UpdateAllViews(this, (LPARAM) CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
+	GetDocument()->UpdateAllViews(this, (LPARAM)CifcviewerDoc::UpdateHint::SetActiveInstance, &hint);
 
-////////////////////////////////////////	ASSERT(false);
-//	STRUCT__SELECTABLE__TREEITEM	* selectableTreeitem = (STRUCT__SELECTABLE__TREEITEM *) GetTreeCtrl().GetItemData(hItem);
-//	if	(selectableTreeitem->structType == STRUCT_TYPE_SELECTABLE_TREEITEM) {
-//		highLightedIfcObject = selectableTreeitem->ifcObject;
-//		GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
-//	}
+	/////
+	if (hItem) {
+		auto pItem = (STRUCT_TREE_ITEM*)GetTreeCtrl().GetItemData(hItem);
+		if (pItem && pItem->type == TREE_ITEM_IFCINSTANCE) {
+			auto pInstance = (STRUCT_TREE_ITEM_IFCINSTANCE*)pItem;
+			highLightedIfcObject = pInstance->ifcObject;
+			GetRightPane()->SendMessage(IDS_UPDATE_RIGHT_PANE, 0, 0);
+		}
+	}
 }
+
 
 void	CLeftPane::OnBeforeExpand(NMHDR* pNMHDR, LRESULT* pResult)
 {
