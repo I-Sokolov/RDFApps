@@ -156,6 +156,7 @@ void Checker::InitEntities()
         INIT_ENTITY(PropertySetTemplate);
     }
     INIT_ENTITY(RelDefinesByProperties);
+    INIT_ENTITY(ObjectDefinition);
     INIT_ENTITY(Object);
     INIT_ENTITY(TypeObject);
     INIT_ENTITY(Property);
@@ -279,6 +280,8 @@ void Checker::Check(SdaiModel model)
 /// </summary>
 void Checker::CheckObjectsApplicability()
 {
+    auto relatedEntity = (m_ifcVersion > IfcVersion::Ifc2x3) ? m_entityObjectDefinition : m_entityObject;
+
     auto rels = xxxxGetEntityAndSubTypesExtent(m_model, m_entityRelDefinesByProperties);
     
     int_t i = 0;
@@ -292,7 +295,7 @@ void Checker::CheckObjectsApplicability()
                     SdaiInstance obj = NULL;
                     int_t j = 0;
                     while (sdaiGetAggrByIndex(objects, j++, sdaiINSTANCE, &obj)) {
-                        if (sdaiIsKindOf(obj, m_entityObject)) {
+                        if (sdaiIsKindOf(obj, relatedEntity)) {
                             CheckApplicability(obj, propDefinition);
                         }
                         else {

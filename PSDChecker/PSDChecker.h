@@ -215,6 +215,7 @@ namespace RDF
             SdaiEntity   m_entityRelDefinesByProperties = NULL;
             SdaiEntity   m_entityTypeObject = NULL;
             SdaiEntity   m_entityObject = NULL;
+            SdaiEntity   m_entityObjectDefinition = NULL;
             SdaiEntity   m_entityProperty = NULL;
             SdaiEntity   m_entityPhysicalQuantity = NULL;
             SdaiEntity   m_entityPropertySingleValue = NULL;
