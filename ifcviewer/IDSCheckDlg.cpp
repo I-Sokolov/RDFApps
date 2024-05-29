@@ -79,6 +79,7 @@ BOOL CIDSCheckDlg::OnInitDialog()
 				show = DoIDS(globalIfcModel, m_strText);
 				break;
 			case Check::PSD:
+				SetWindowText(L"Check Property Sets Against Definitions");
 				show = DoPSD(globalIfcModel, m_strText);
 				break;
 		}

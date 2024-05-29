@@ -848,7 +848,7 @@ void Checker::LoadPSD(const char* psetName, PropertySetDef& psd)
         psd.Load(psdFilePath.c_str(), 0 == _strnicmp(psetName, "pset_", 4));
     }
     catch (exception& ex) {
-        std::string msg = "Failed read IDS file (";
+        std::string msg = "Failed read PSD file (";
         msg += ex.what();
         msg += "): ";
         msg += psdFilePath;
