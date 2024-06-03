@@ -1,0 +1,16 @@
+<ids xmlns="http://standards.buildingsmart.org/IDS/0.9.7/ids.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS/ids_05.xsd">
+    <info>
+        <title>CHEK IFC => CityGML converstion limitations Specification</title>
+    </info>
+    <specifications>
+        <specification name="Curtain walls not supported" ifcVersion="IFC4" minOccurs="0" maxOccurs="0">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCCURTAINWALL</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+        </specification>
+    </specifications>
+</ids>
