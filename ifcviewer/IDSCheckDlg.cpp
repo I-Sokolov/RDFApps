@@ -56,10 +56,12 @@ void CIDSCheckDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT, m_strText);
+	DDX_Control(pDX, IDC_CHECK_ONLY_ERRORS, m_showOnlyErrors);
 }
 
 
 BEGIN_MESSAGE_MAP(CIDSCheckDlg, CDialogEx)
+	ON_BN_CLICKED(IDC_CHECK_ONLY_ERRORS, &CIDSCheckDlg::OnClickedCheckOnlyErrors)
 END_MESSAGE_MAP()
 
 
@@ -70,24 +72,7 @@ BOOL CIDSCheckDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	bool show = true;
-
-	if (globalIfcModel) {
-
-		switch (m_check) {
-			case Check::IDS:
-				show = DoIDS(globalIfcModel, m_strText);
-				break;
-			case Check::PSD:
-				SetWindowText(L"Check Property Sets Against Definitions");
-				show = DoPSD(globalIfcModel, m_strText);
-				break;
-		}
-	}
-	else {
-		m_strText = "No open model to check";
-	}
-
+	bool show = Do();
 
 	if (show) {
 		UpdateData(FALSE);
@@ -98,6 +83,31 @@ BOOL CIDSCheckDlg::OnInitDialog()
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
+}
+
+bool CIDSCheckDlg::Do()
+{
+	bool show = true;
+
+	if (globalIfcModel) {
+
+		switch (m_check) {
+			case Check::IDS:
+				m_showOnlyErrors.SetCheck(TRUE);
+				show = DoIDS(globalIfcModel, m_strText);
+				break;
+			case Check::PSD:
+				m_showOnlyErrors.ShowWindow(SW_HIDE);
+				SetWindowText(L"Check Property Sets Against Definitions");
+				show = DoPSD(globalIfcModel, m_strText);
+				break;
+		}
+	}
+	else {
+		m_strText = "No open model to check";
+	}
+
+	return show;
 }
 
 bool CIDSCheckDlg::DoIDS(SdaiModel model, CString& log)
@@ -114,7 +124,11 @@ bool CIDSCheckDlg::DoIDS(SdaiModel model, CString& log)
 	if (ids.Read(idsFilePath)) {
 		IDSConsole output(log);
 
-		bool ok = ids.Check(model, false, RDF::IDS::MsgLevel::All, &output);
+		auto showOnlyErrors = m_showOnlyErrors.GetCheck();
+			
+		bool ok = ids.Check(model, false, 
+							showOnlyErrors ? RDF::IDS::MsgLevel::Error : RDF::IDS::MsgLevel::All, 
+							&output);
 
 		CString res;
 		res.Format(L"Result: %s\r\n\r\n", ok ? L"OK" : L"FAIL");
@@ -171,4 +185,10 @@ bool CIDSCheckDlg::DoPSD(SdaiModel model, CString& log)
 			ASSERT(FALSE);
 	}
 	return true;
+}
+
+
+void CIDSCheckDlg::OnClickedCheckOnlyErrors()
+{
+	Do();
 }

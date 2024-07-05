@@ -20,13 +20,17 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-	DECLARE_MESSAGE_MAP()
-public:
-	CString m_strText;
 	virtual BOOL OnInitDialog();
 
+	DECLARE_MESSAGE_MAP()
+	afx_msg void OnClickedCheckOnlyErrors();
+
+public:
+	CString m_strText;
+	CButton m_showOnlyErrors;
+
 private:
+	bool Do();
 	bool DoIDS(SdaiModel model, CString& log);
 	bool DoPSD(SdaiModel model, CString& log);
 
