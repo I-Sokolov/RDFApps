@@ -100,6 +100,15 @@
     <None Include="CHEK\pass.ifc">
       <Filter>CHEK</Filter>
     </None>
+    <None Include="CHEK\CHEK_Ascoli_Piceno.ids">
+      <Filter>CHEK</Filter>
+    </None>
+    <None Include="CHEK\CHEK_Lisbon.ids">
+      <Filter>CHEK</Filter>
+    </None>
+    <None Include="CHEK\CHEK_Prague.ids">
+      <Filter>CHEK</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="CHEK\CHEK_common.xml">

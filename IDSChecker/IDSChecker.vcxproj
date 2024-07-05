@@ -198,6 +198,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CHEK\CHEK.ids" />
+    <None Include="CHEK\CHEK_Ascoli_Piceno.ids" />
+    <None Include="CHEK\CHEK_Lisbon.ids" />
+    <None Include="CHEK\CHEK_Prague.ids" />
     <None Include="CHEK\fail-building-wall.ifc" />
     <None Include="CHEK\fail-slab-boundaries.ifc" />
     <None Include="CHEK\pass.ifc" />
