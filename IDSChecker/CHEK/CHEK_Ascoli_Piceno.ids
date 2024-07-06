@@ -164,11 +164,11 @@
 				</entity>
 			</applicability>
 		</specification>
-		<specification name="Use of IFCSPACIALZONE exclusively for relevant concepts within CHEK" description="Value of IFCSPACIALZONE.LongName should be Balcony / Canopy / Terrace in case of balconies / canopies / terrasses" instructions="In case of terrasses an IFCSPACIALZONE should be created with PredefinedType = .OCCUPANCY. And LongName = Terrace" ifcVersion="IFC4">
+		<specification name="Use of IFCSPATIALZONE exclusively for relevant concepts within CHEK" description="Value of IFCSPATIALZONE.LongName should be Balcony / Canopy / Terrace in case of balconies / canopies / terrasses" instructions="In case of terrasses an IFCSPATIALZONE should be created with PredefinedType = .OCCUPANCY. And LongName = Terrace" ifcVersion="IFC4">
 			<applicability>
 				<entity>
 					<name>
-						<simpleValue>IFCSPACIALZONE</simpleValue>
+						<simpleValue>IFCSPATIALZONE</simpleValue>
 					</name>
 				</entity>
 			</applicability>
