@@ -72,12 +72,11 @@ BOOL CIDSCheckDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
+	m_showOnlyErrors.SetCheck(TRUE);
+
 	bool show = Do();
 
-	if (show) {
-		UpdateData(FALSE);
-	}
-	else {
+	if (!show) {
 		EndDialog(IDCANCEL);
 	}
 
@@ -87,13 +86,14 @@ BOOL CIDSCheckDlg::OnInitDialog()
 
 bool CIDSCheckDlg::Do()
 {
+	m_strText.Empty();
+
 	bool show = true;
 
 	if (globalIfcModel) {
 
 		switch (m_check) {
 			case Check::IDS:
-				m_showOnlyErrors.SetCheck(TRUE);
 				show = DoIDS(globalIfcModel, m_strText);
 				break;
 			case Check::PSD:
@@ -107,21 +107,27 @@ bool CIDSCheckDlg::Do()
 		m_strText = "No open model to check";
 	}
 
+	if (show) {
+		UpdateData(FALSE);
+	}
+
 	return show;
 }
 
 bool CIDSCheckDlg::DoIDS(SdaiModel model, CString& log)
 {
-	const TCHAR szFilter[] = _T("IDS (*.ids)|*.ids||");
-	CFileDialog dlg(TRUE, _T("ids"), NULL, OFN_FILEMUSTEXIST | OFN_READONLY, szFilter, this);
-	if (dlg.DoModal() != IDOK) {
-		return false;
+	if (m_idsFilePath.IsEmpty()) {
+		const TCHAR szFilter[] = _T("IDS (*.ids)|*.ids||");
+		CFileDialog dlg(TRUE, _T("ids"), NULL, OFN_FILEMUSTEXIST | OFN_READONLY, szFilter, this);
+		if (dlg.DoModal() != IDOK) {
+			return false;
+		}
+
+		m_idsFilePath = dlg.GetPathName();
 	}
 
-	CString idsFilePath = dlg.GetPathName();
-
 	RDF::IDS::File ids;
-	if (ids.Read(idsFilePath)) {
+	if (ids.Read(m_idsFilePath)) {
 		IDSConsole output(log);
 
 		auto showOnlyErrors = m_showOnlyErrors.GetCheck();
@@ -136,7 +142,7 @@ bool CIDSCheckDlg::DoIDS(SdaiModel model, CString& log)
 		log.Insert(0, res);
 	}
 	else {
-		log.Format(L"Failed to read IDS file : %s", idsFilePath.GetString());
+		log.Format(L"Failed to read IDS file : %s", m_idsFilePath.GetString());
 	}
 
 	return true;

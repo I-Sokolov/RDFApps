@@ -28,6 +28,7 @@ protected:
 public:
 	CString m_strText;
 	CButton m_showOnlyErrors;
+	CString m_idsFilePath;
 
 private:
 	bool Do();
