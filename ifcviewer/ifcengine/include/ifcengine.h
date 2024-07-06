@@ -2706,7 +2706,7 @@ static	inline	int_t	sdaiGetAttrBNUnicode(
 //				char					* returns							OUT
 //
 //	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiSTRING.
-//	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+//	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 //	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 //
 //	Technically sdaiGetStringAttrBN will transform into the following call
@@ -2758,7 +2758,7 @@ static	inline	char	* sdaiGetStringAttrBN(
 //				SdaiInstance			returns								OUT
 //
 //	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiINSTANCE.
-//	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+//	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 //	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 //
 //	Technically sdaiGetInstanceAttrBN will transform into the following call
@@ -3948,7 +3948,7 @@ SdaiAggr		DECL STDC	sdaiCreateAggr(
 //	This call creates an aggregation.
 //	The instance has to be present,
 //	the attributeName argument can be NULL (0) in case the aggregation is an nested aggregation for this specific instance,
-//	prefered use would be use of sdaiCreateNestedAggr in such a case.
+//	preferred use would be use of sdaiCreateNestedAggr in such a case.
 //
 //	Technically sdaiCreateAggrBN will transform into the following call
 //		(attributeName) ?
@@ -4720,7 +4720,7 @@ void			DECL STDC	circleSegments(
 //
 //	Please use setSegmentation call
 //
-//	The callsetMaximumSegmentationLength(model, length) can be replaced with
+//	The call setMaximumSegmentationLength(model, length) can be replaced with
 //		int_t segmentationParts = 0;
 //		getSegmentation(model, &segmentationParts, nullptr);
 //		setSegmentation(model, segmentationParts, length);
@@ -4840,13 +4840,13 @@ static	inline	double	getUnitInstanceConversionFactor(
 //			bit4  (16)		check if faces are wrongly turned opposite from each other
 //			bit5  (32)		check if faces are inside-out
 //			bit6  (64)		check if faces result in solid, if not generate both sided faces
-//			bit7  (128)		invert direction of the faces / normals
+//			bit7  (128)		invert direction of the faces / normal's
 //			bit8  (256)		export all faces as one conceptual face
 //			bit9  (512)		remove irrelevant intermediate points on lines
 //			bit10 (1024)	check and repair faces that are not defined in a perfect plane
 //
 //		fraction
-//			To compare adjecent faces, they will be defined as being part of the same conceptual face if the fraction
+//			To compare adjacent faces, they will be defined as being part of the same conceptual face if the fraction
 //			value is larger then the dot product of the normal vector's of the individual faces.
 //
 //		epsilon
@@ -5200,7 +5200,7 @@ static	inline	const char	* xxxxGetAttrNameByIndex(
 //
 //				SdaiInstance			returns								OUT
 //
-//	This function interates over all available instances loaded in memory, it is the fastest way to find all instances.
+//	This function interate's over all available instances loaded in memory, it is the fastest way to find all instances.
 //	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
 //
 SdaiInstance	DECL STDC	iterateOverInstances(
@@ -6344,9 +6344,9 @@ int_t			DECL STDC	GetSPFFHeaderItemUnicode(
 //
 //				void					returns
 //
-//	Allows to set a timne limit in seconds, setting to 0 means no time limit.
+//	Allows to set a time limit in seconds, setting to 0 means no time limit.
 //	Allows to set a count limit, setting to 0 means no count limit.
-//	Allows to hide redundent issues.
+//	Allows to hide redundant issues.
 //
 //		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
 //		bit 1:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
@@ -6382,9 +6382,9 @@ void			DECL STDC	validateSetOptions(
 //
 //				uint64_t				returns								OUT
 //
-//	Allows to get the timne limit in seconds, value 0 means no time limite, input can be left to NULL if not relevant.
+//	Allows to get the time limit in seconds, value 0 means no time limit, input can be left to NULL if not relevant.
 //	Allows to get the count limit, value 0 means no count limit, input can be left to NULL if not relevant.
-//	Allows to get hide redundent issues, input can be left to NULL if not relevant.
+//	Allows to get hide redundant issues, input can be left to NULL if not relevant.
 //	Return value is the issueTypes enabled according to the mask given.
 //
 //		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
@@ -6586,7 +6586,7 @@ ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
 //
 //				const int_t				* returns							OUT
 //
-//	array of indecies for each aggregation lsize is aggrLevel
+//	array of indices for each aggregation size is aggrLevel
 //
 const int_t		DECL * STDC	validateGetAggrIndArray(
 									ValidationIssue			issue
@@ -6598,7 +6598,7 @@ const int_t		DECL * STDC	validateGetAggrIndArray(
 //
 //				int_t					returns								OUT
 //
-//	Returns the issue level (i.e. severaty of the issue) of the issue given as input
+//	Returns the issue level (i.e. severity of the issue) of the issue given as input
 //
 int_t			DECL STDC	validateGetIssueLevel(
 									ValidationIssue			issue
@@ -6767,7 +6767,7 @@ int_t			DECL STDC	getConceptualFaceEx(
 //
 //				void					returns
 //
-//	This call is deprecated, please use call ... .
+//	This call is deprecated, please use call owlBuildInstance.
 //
 void			DECL STDC	createGeometryConversion(
 									SdaiInstance			instance,
