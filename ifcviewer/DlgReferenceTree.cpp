@@ -104,7 +104,7 @@ void CDlgReferenceTree::InsertRegularItem(int_t instance, int_t* aggregation, vo
 	CString attrName;
 	if (attr) {
 		const char* name = nullptr;
-		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 		attrName = name;
 	}
 

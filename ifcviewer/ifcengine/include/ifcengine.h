@@ -1792,7 +1792,6 @@ SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
 //				SdaiEntity				* domainEntity						IN / OUT
 //				SchemaAggr				* aggregationDescriptor				IN / OUT
 //				bool					* optional							IN / OUT
-//				bool					* unique							IN / OUT
 //
 //				void					returns
 //
@@ -1806,8 +1805,7 @@ void			DECL STDC	engiGetAttributeTraits(
 									enum_express_attr_type	* attrType,
 									SdaiEntity				* domainEntity,
 									SchemaAggr				* aggregationDescriptor,
-									bool					* optional,
-									bool					* unique
+									bool					* optional
 								);
 
 #ifdef __cplusplus
@@ -1824,8 +1822,7 @@ static	inline	void	engiGetAttributeTraits(
 								enum_express_attr_type	* attrType,
 								SdaiEntity				* domainEntity,
 								SchemaAggr				* aggregationDescriptor,
-								bool					* optional,
-								bool					* unique
+								bool					* optional
 							)
 {
 	return	engiGetAttributeTraits(
@@ -1836,8 +1833,7 @@ static	inline	void	engiGetAttributeTraits(
 					attrType,
 					domainEntity,
 					aggregationDescriptor,
-					optional,
-					unique
+					optional
 				);
 }
 

@@ -488,7 +488,7 @@ void Checker::CheckDataType(SdaiInstance pset, SdaiInstance prop, SdaiAttr attr,
             auto adbTypePath = sdaiGetADBTypePath(nominalValue, 0);
             if (_stricmp(dataType.c_str(), adbTypePath)) {
                 const char* attrName = NULL;
-                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
                 AddLogMsg(ErrorLevel::Error, Format("%s of property must be of type %s", attrName, dataType.c_str()).c_str(), pset, prop);
             }
         }
@@ -521,7 +521,7 @@ void Checker::CheckUnitType(SdaiInstance pset, SdaiInstance prop, SdaiAttr attr,
 
             if (!uType || strcmp(uType, unitType.c_str())) {
                 const char* attrName = NULL;
-                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
                 AddLogMsg(ErrorLevel::Error, Format("%s of property must be of type %s", attrName, unitType.c_str()).c_str(), pset, prop);
             }
         }
@@ -622,13 +622,13 @@ void Checker::CheckBoundLimit(SdaiInstance pset, SdaiInstance prop, SdaiAttr att
 
             if (!ok) {
                 const char* attrName = NULL;
-                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
                 AddLogMsg(ErrorLevel::Error, Format("Value of %s is out of bound limit", attrName).c_str(), pset, prop);
             }
         }
         else {
             const char* attrName = NULL;
-            engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+            engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
             AddLogMsg(ErrorLevel::Error, Format("Expected number value for %s", attrName).c_str(), pset, prop);
         }
     }
@@ -664,7 +664,7 @@ void Checker::CheckListValue(SdaiInstance pset, SdaiInstance prop, SdaiAttr attr
                 auto adbTypePath = sdaiGetADBTypePath(adbVal, 0);
                 if (_stricmp(def.dataType.c_str(), adbTypePath)) {
                     const char* attrName = NULL;
-                    engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                    engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
                     AddLogMsg(ErrorLevel::Error, Format("%s must be a list of %s", attrName, def.dataType.c_str()).c_str(), pset, prop);
                     break;
                 }
@@ -702,7 +702,7 @@ void Checker::CheckListValue(SdaiInstance pset, SdaiInstance prop, SdaiAttr attr
                         list += s;
                     }
                     const char* attrName = NULL;
-                    engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                    engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
                     AddLogMsg(ErrorLevel::Error, Format("%s must be a list [1:*] of elemenets from the set {%s}", attrName, list.c_str()).c_str(), pset, prop);
                     break;
                 }
@@ -712,7 +712,7 @@ void Checker::CheckListValue(SdaiInstance pset, SdaiInstance prop, SdaiAttr attr
     }
     else {
         const char* attrName = NULL;
-        engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+        engiGetAttributeTraits(attr, &attrName, NULL, NULL, NULL, NULL, NULL, NULL);
         AddLogMsg(ErrorLevel::Error, Format("%s must be a list [1:*] of IfcValue", attrName).c_str(), pset, prop);
     }
 }
