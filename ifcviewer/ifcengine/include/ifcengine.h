@@ -1844,10 +1844,12 @@ static	inline	void	engiGetAttributeTraits(
 //
 //		engiGetAggregation                                      (http://rdf.bg/ifcdoc/CP64/engiGetAggregation.html)
 //				SchemaAggr				aggregationDescriptor				IN
-//				enum_express_aggr		* aggrType							IN / OUT
-//				int_t					* cardinalityMin					IN / OUT
-//				int_t					* cardinalityMax					IN / OUT
-//				SchemaAggr				* nextAggregationLevelDescriptor	IN / OUT
+//				enum_express_aggr		* aggrType							OUT
+//				int_t					* cardinalityMin					OUT
+//				int_t					* cardinalityMax					OUT
+//				bool					* optional							OUT
+//			    bool					* unique							OUT
+//				SchemaAggr				* nextAggregationLevelDescriptor	OUT
 //
 //				void					returns
 //
@@ -1858,6 +1860,8 @@ void			DECL STDC	engiGetAggregation(
 									enum_express_aggr		* aggrType,
 									int_t					* cardinalityMin,
 									int_t					* cardinalityMax,
+									bool					* optional,
+									bool					* unique,
 									SchemaAggr				* nextAggregationLevelDescriptor
 								);
 

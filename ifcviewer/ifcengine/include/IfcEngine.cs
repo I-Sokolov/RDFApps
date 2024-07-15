@@ -911,7 +911,7 @@ namespace RDF
 		///	...
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAggregation")]
-		public static extern void engiGetAggregation(int_t aggregationDescriptor, out enum_express_aggr aggrType, out int_t cardinalityMin, out int_t cardinalityMax, out int_t nextAggregationLevelDescriptor);
+		public static extern void engiGetAggregation(int_t aggregationDescriptor, out enum_express_aggr aggrType, out int_t cardinalityMin, out int_t cardinalityMax, out byte optional, out byte unique, out int_t nextAggregationLevelDescriptor);
 
         //
         //  Instance Header API Calls
