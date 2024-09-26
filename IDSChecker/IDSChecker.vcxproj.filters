@@ -115,4 +115,9 @@
       <Filter>CHEK</Filter>
     </Xml>
   </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="..\..\..\buildingSMART\IDS\Schema\ids.xsd">
+      <Filter>CHEK</Filter>
+    </Xsd>
+  </ItemGroup>
 </Project>

@@ -59,7 +59,7 @@ extern int IDSRun(std::string const& idsFile, std::string const& ifcFile, bool s
     return ok ? 0 : 1;
 }
 
-extern int IDSRun_dir(const char* folder, bool stopOnError, RDF::IDS::MsgLevel level)
+extern int IDSRun_dir(const char* folder, bool stopOnError, RDF::IDS::MsgLevel level, const char* filter)
 {
     int err = 0;
 
@@ -76,13 +76,15 @@ extern int IDSRun_dir(const char* folder, bool stopOnError, RDF::IDS::MsgLevel l
             path.append(ffd.cFileName);
             if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
                 if (ffd.cFileName[0] != '.') {
-                    err += IDSRun_dir(path.c_str(), stopOnError, level);
+                    err += IDSRun_dir(path.c_str(), stopOnError, level, filter);
                 }
             }
             else if (0 == _stricmp(ffd.cFileName + strlen(ffd.cFileName) - 4, ".ids")) {
                 auto ifcpath = path.substr(0, path.length() - 3);
-                ifcpath.append("ifc");
-                err += IDSRun(path, ifcpath, stopOnError, level);
+                if (!filter || !*filter || ifcpath.find(filter) != std::string::npos) {
+                    ifcpath.append("ifc");
+                    err += IDSRun(path, ifcpath, stopOnError, level);
+                }
             }
         } while (FindNextFile(hFind, &ffd) != 0);
     }
