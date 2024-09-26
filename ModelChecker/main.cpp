@@ -37,7 +37,7 @@ static const char* GetAttrName(ValidationIssue issue)
     auto attr = validateGetAttr(issue);
     if (attr) {
         const char* name = 0;
-        engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
+        engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0);
         return name;
     }
     else {
@@ -92,6 +92,7 @@ const char* GetIssueType(enum_validation_type type)
         case enum_validation_type::__UNIQUE_RULE: return "__UNIQUE_RULE";
         case enum_validation_type::__STAR_USAGE: return "__STAR_USAGE";
         case enum_validation_type::__CALL_ARGUMENT: return "__CALL_ARGUMENT";
+        case enum_validation_type::__INVALID_TEXT_LITERAL: return "__INVALID_TEXT_LITERAL";
         case enum_validation_type::__INTERNAL_ERROR: return "__INTERNAL_ERROR";
         default: assert(0); return "unknown";
     }
