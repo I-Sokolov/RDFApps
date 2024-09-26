@@ -132,9 +132,25 @@ static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
 /// <summary>
 /// 
 /// </summary>
-enum class RqType { Required, Optional, Prohibited };
-static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur, RqType def)
+enum class Cardinality { Required, Optional, Prohibited };
+static Cardinality GetCardinality(const char* cardinality, MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur, Cardinality def)
 {
+    if (cardinality && *cardinality) {
+        if (!strcmp(cardinality, "required")) {
+            return Cardinality::Required;
+        }
+        else if (!strcmp(cardinality, "prohibited")) {
+            return Cardinality::Prohibited;
+        }
+        else if (!strcmp(cardinality, "optional")) {
+            return Cardinality::Optional;
+        }
+        else {
+            assert(!"Invalid IDS");
+            return Cardinality::Required;
+        }
+    }
+    
     const char* min__ = nullptr;
     minOccur.Get(&min__);
 
@@ -145,7 +161,7 @@ static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxO
     SdaiInteger min_ = 0;
     minOccur.Get(&min_);
     if (min_ > 0) {
-        return RqType::Required;
+        return Cardinality::Required;
     }
 
     SdaiInteger max_ = MAXINT;
@@ -156,9 +172,9 @@ static RqType GetRqType(MultiTypeValueCache& minOccur, MultiTypeValueCache& maxO
     }
 
     if (max_ == 0)
-        return RqType::Prohibited;
+        return Cardinality::Prohibited;
 
-    return RqType::Optional;
+    return Cardinality::Optional;
 }
 
 
@@ -694,7 +710,8 @@ void Facets::Read(_xml::_element& elem, Context& ctx)
 /// </summary>
 void Facet::Read(_xml::_element& elem, Context& ctx)
 {
-    GET_ATTR(minOccurs)
+    GET_ATTR(cardinality)
+    NEXT_ATTR(minOccurs)
     NEXT_ATTR(maxOccurs)
     NEXT_ATTR(datatype)
     NEXT_ATTR(relation)
@@ -716,14 +733,14 @@ bool Facet::Match(SdaiInstance inst, Context& ctx)
 {
     bool match = MatchImpl(inst, ctx);
 
-    auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Required);
+    auto rq = GetCardinality(m_cardinality.c_str(), m_minOccursVal, m_maxOccursVal, Cardinality::Required);
 
     switch (rq) {
-        case RqType::Prohibited:
+        case Cardinality::Prohibited:
             match = !match;
             break;
 
-        case RqType::Optional:
+        case Cardinality::Optional:
             ctx.LogMsg(MsgLevel::Info, "Optional requirement%s match", match ? "" : " does not");
             match = true;
             break;
@@ -994,11 +1011,11 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
         if (m_applicability.Match(inst, ctx)) {
             m_nOccurs++;
 
-            auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Optional);
+            auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional);
 
             ok = m_requirements.Match(inst, ctx);
 
-            if (rq == RqType::Prohibited) {
+            if (rq == Cardinality::Prohibited) {
                 ok = !ok;
             }
 
@@ -1024,10 +1041,10 @@ bool Specification::CheckUsed(Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         
-        auto rq = GetRqType(m_minOccursVal, m_maxOccursVal, RqType::Optional);
+        auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional);
         
         switch (rq) {
-            case RqType::Required:
+            case Cardinality::Required:
                 if (m_nOccurs == 0) {
                     ok = false;
                     ctx.LogMsg(MsgLevel::Error, "Required specification never match");

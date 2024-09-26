@@ -175,6 +175,7 @@ namespace RDF
             bool MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx);
 
         protected:
+            std::string m_cardinality;
             std::string m_minOccurs;
             std::string m_maxOccurs;
             std::string m_datatype;
