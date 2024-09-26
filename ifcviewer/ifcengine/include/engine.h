@@ -71,7 +71,7 @@ typedef		int64_t										ConceptualFace;
 
 //control vertex data
 #define		FORMAT_VERTEX_POINT							FLAGBIT(4)		//	Vertex contains 3D point info
-#define		FORMAT_VERTEX_NORMAL						FLAGBIT(5)		//	Vertex contains normat info
+#define		FORMAT_VERTEX_NORMAL						FLAGBIT(5)		//	Vertex contains normal info
 #define		FORMAT_VERTEX_TEXTURE_UV					FLAGBIT(6)		//	Vertex contains first 2D texture info
 #define		FORMAT_VERTEX_TEXTURE_TANGENT				FLAGBIT(28)		//	Vertex does contain tangent vector for first texture
 #define		FORMAT_VERTEX_TEXTURE_BINORMAL				FLAGBIT(29)		//	Vertex does contain binormal vector for first texture
@@ -90,7 +90,7 @@ typedef		int64_t										ConceptualFace;
 #define		FORMAT_EXPORT_FACE_POLYGONS					FLAGBIT(12)		//	Object face polygon lines (dense wireframe) are exported (requires FORMAT_FLAG_CONTAINS_TRIANGLES)
 #define		FORMAT_EXPORT_CONCEPTUAL_FACE_POLYGONS		FLAGBIT(13)		//	Object conceptual face polygon lines (wireframe) are exported 
 #define		FORMAT_EXPORT_POLYGONS_AS_TUPLES			FLAGBIT(14)		//	Polygon lines (wireframe) exported as tuples (edges) - else as list (loop)
-#define		FORMAT_EXPORT_ADVANCED_NORMALS				FLAGBIT(15)		//	Normals are exported to be in line with the original semantic form description (orthogonal to conceprual face, could be non orthogonal to the planar face or triangle) - else all normals of triangles are transformed orthogonal to the palnar face or triangle they belong to
+#define		FORMAT_EXPORT_ADVANCED_NORMALS				FLAGBIT(15)		//	Normal's are exported to be in line with the original semantic form description (orthogonal to conceptual face, could be non orthogonal to the planar face or triangle) - else all normals of triangles are transformed orthogonal to the palnar face or triangle they belong to
 #define		FORMAT_EXPORT_DIRECTX						FLAGBIT(16)		//	Where possible DirectX compatibility is given to exported data. Unsets FORMAT_FLAG_OPENGL, FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010
 #define		FORMAT_EXPORT_OPENGL						FLAGBIT(17)		//	Where possible OpenGL compatibility is given to exported data. Unsets FORMAT_FLAG_DIRECTX. Sets FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010
 #define		FORMAT_EXPORT_DOUBLE_SIDED					FLAGBIT(18)		//	Every face has exactly one opposite face (normally both index and vertex array are doubled in size)
@@ -99,7 +99,7 @@ typedef		int64_t										ConceptualFace;
 #define		FORMAT_EXPORT_VERSION_0100					FLAGBIT(22)
 #define		FORMAT_EXPORT_VERSION_1000					FLAGBIT(23)
 
-#define GetVertexElementsCount(setting) GetVertexDataOffset(0, setting)	// Get number of elements in verctor data array with the format settings
+#define GetVertexElementsCount(setting) GetVertexDataOffset(0, setting)	// Get number of elements in vector data array with the format settings
 
 //
 //  Color pack/unpack
@@ -697,7 +697,7 @@ int64_t			DECL STDC	GetInstanceMetaInfo(
 //		0 - continuous curve / surface (i.e. degree 9)
 //		1 - the direction of the curve / surface is gradually changing (i.e. degree 1)
 //		2 - the change of direction of the curve / surface is gradually changing (i.e. degree 2)
-//	In return value of this function retuns the dimension of the found smoothness:
+//	In return value of this function returns the dimension of the found smoothness:
 //		0 - smoothness could not be defined
 //		1 - found the smoothness of a curve
 //		2 - found the smoothness of a surface
@@ -1348,7 +1348,7 @@ static	inline	OwlInstance	ImportModelA(
 //
 //				int64_t					returns								OUT
 //
-//	This function saves the selected instance and its dependancies on location file name.
+//	This function saves the selected instance and its dependencies on location file name.
 //
 int64_t			DECL STDC	SaveInstanceTree(
 									OwlInstance				owlInstance,
@@ -1383,7 +1383,7 @@ static	inline	int64_t	SaveInstanceTree(
 //
 //				int64_t					returns								OUT
 //
-//	This function saves the selected instance and its dependancies on location file name.
+//	This function saves the selected instance and its dependencies on location file name.
 //
 int64_t			DECL STDC	SaveInstanceTreeW(
 									OwlInstance				owlInstance,
@@ -3340,7 +3340,7 @@ RdfProperty		DECL STDC	GetPropertiesByIterator(
 //				void					returns
 //
 //	Sets or unsets a specific owlClass as range restriction to an rdfProperty. The property is expected to
-//	be an objectp[roperty, i.e. relation.]
+//	be an object[property, i.e. relation.]
 //	If rdfProperty is not an object property this call has no effect.
 //
 void			DECL STDC	SetPropertyRangeRestriction(

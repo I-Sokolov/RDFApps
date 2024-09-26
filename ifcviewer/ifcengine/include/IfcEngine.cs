@@ -192,8 +192,8 @@ namespace RDF
 		__UNIQUE_RULE				= 1 << 13,  //	unique-rule check
 		__STAR_USAGE				= 1 << 14,  //	* is used only for derived arguments
 		__CALL_ARGUMENT				= 1 << 15,  //	validateModel / validateInstance function argument should be model / instance
-		__INTERNAL_ERROR = ((UInt64)1) << 63	//	unspecified error
-		};
+		__INTERNAL_ERROR = ((UInt64) 1) << 63	//	unspecified error
+	};
 
 	public enum enum_validation_status : byte
 	{
@@ -240,6 +240,70 @@ namespace RDF
 		public const int_t engiGLOBALID      = sdaiEXPRESSSTRING + 1;
 
 		public const string IFCEngineDLL = @"IFCEngine.dll";
+
+        //
+        //  Instance Header API Calls
+        //
+
+		/// <summary>
+		///		SetSPFFHeader                                           (http://rdf.bg/ifcdoc/CS64/SetSPFFHeader.html)
+		///
+		///	This call is an aggregate of several SetSPFFHeaderItem calls. In several cases the header can be set easily with this call. In case an argument is zero, this argument will not be updated, i.e. it will not be filled with 0.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
+		public static extern void SetSPFFHeader(int_t model, string description, string implementationLevel, string name, string timeStamp, string author, string organization, string preprocessorVersion, string originatingSystem, string authorization, string fileSchema);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
+		public static extern void SetSPFFHeader(int_t model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema);
+
+		/// <summary>
+		///		SetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
+		///
+		///	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
+		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, string value);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
+		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, byte[] value);
+
+		/// <summary>
+		///		GetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
+		///
+		///	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItem")]
+		public static extern int_t GetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, out IntPtr value);
+
+		/// <summary>
+		///		GetLibraryIdentifier                                    (http://rdf.bg/ifcdoc/CS64/GetLibraryIdentifier.html)
+		///
+		///	Returns an identifier for the current instance of this library including date stamp and revision number.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "GetLibraryIdentifier")]
+		public static extern IntPtr GetLibraryIdentifier(out IntPtr libraryIdentifier);
+
+		public static string GetLibraryIdentifier()
+		{
+			IntPtr libraryIdentifier = IntPtr.Zero;
+			GetLibraryIdentifier(out libraryIdentifier);
+			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(libraryIdentifier);
+		}
+
+		/// <summary>
+		///		GetSchemaName                                           (http://rdf.bg/ifcdoc/CS64/GetSchemaName.html)
+		///
+		///	Returns the value as defined by SCHEMA in the loaded EXPRESS schema.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "GetSchemaName")]
+		public static extern IntPtr GetSchemaName(int_t model, out IntPtr schemaName);
+
+		public static string GetSchemaName(int_t model)
+		{
+			IntPtr schemaName = IntPtr.Zero;
+			GetSchemaName(model, out schemaName);
+			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(schemaName);
+		}
 
         //
         //  File IO API Calls
@@ -589,7 +653,7 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
 		///
-		///	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
+		///	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentName")]
 		public static extern IntPtr engiGetEntityArgumentName(int_t entity, int_t index, int_t valueType, out IntPtr argumentName);
@@ -604,7 +668,7 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityArgumentType                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
 		///
-		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both direct and inverse arguments are included.
+		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentType")]
 		public static extern void engiGetEntityArgumentType(int_t entity, int_t index, out int_t argumentType);
@@ -695,7 +759,7 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityParent                                     (http://rdf.bg/ifcdoc/CS64/engiGetEntityParent.html)
 		///
-		///	Returns the first direct parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
+		///	Returns the first parent entity, for example the parent of IfcObject is IfcObjectDefinition, of IfcObjectDefinition is IfcRoot and of IfcRoot is 0.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityParent")]
 		public static extern int_t engiGetEntityParent(int_t entity);
@@ -703,7 +767,7 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityNoParents                                  (http://rdf.bg/ifcdoc/CS64/engiGetEntityNoParents.html)
 		///
-		///	Returns number of direct parents entity
+		///	Returns number of parent entities
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoParents")]
 		public static extern int_t engiGetEntityNoParents(int_t entity);
@@ -711,7 +775,7 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityParentEx                                   (http://rdf.bg/ifcdoc/CS64/engiGetEntityParentEx.html)
 		///
-		///	Returns the N-th direct parent of entity or NULL if index exceeds number of parents
+		///	Returns the N-th parent of entity or NULL if index exceeds number of parents
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityParentEx")]
 		public static extern int_t engiGetEntityParentEx(int_t entity, int_t index);
@@ -914,40 +978,6 @@ namespace RDF
 		public static extern void engiGetAggregation(int_t aggregationDescriptor, out enum_express_aggr aggrType, out int_t cardinalityMin, out int_t cardinalityMax, out byte optional, out byte unique, out int_t nextAggregationLevelDescriptor);
 
         //
-        //  Instance Header API Calls
-        //
-
-		/// <summary>
-		///		SetSPFFHeader                                           (http://rdf.bg/ifcdoc/CS64/SetSPFFHeader.html)
-		///
-		///	This call is an aggregate of several SetSPFFHeaderItem calls. In several cases the header can be set easily with this call. In case an argument is zero, this argument will not be updated, i.e. it will not be filled with 0.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
-		public static extern void SetSPFFHeader(int_t model, string description, string implementationLevel, string name, string timeStamp, string author, string organization, string preprocessorVersion, string originatingSystem, string authorization, string fileSchema);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeader")]
-		public static extern void SetSPFFHeader(int_t model, byte[] description, byte[] implementationLevel, byte[] name, byte[] timeStamp, byte[] author, byte[] organization, byte[] preprocessorVersion, byte[] originatingSystem, byte[] authorization, byte[] fileSchema);
-
-		/// <summary>
-		///		SetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/SetSPFFHeaderItem.html)
-		///
-		///	This call can be used to write a specific header item, the source code example is larger to show and explain how this call can be used.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
-		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, string value);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "SetSPFFHeaderItem")]
-		public static extern int_t SetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, byte[] value);
-
-		/// <summary>
-		///		GetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CS64/GetSPFFHeaderItem.html)
-		///
-		///	This call can be used to read a specific header item, the source code example is larger to show and explain how this call can be used.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "GetSPFFHeaderItem")]
-		public static extern int_t GetSPFFHeaderItem(int_t model, int_t itemIndex, int_t itemSubIndex, int_t valueType, out IntPtr value);
-
-        //
         //  Instance Reading API Calls
         //
 
@@ -1024,7 +1054,7 @@ namespace RDF
 		///							sdaiGetADBValue (ADB, sdaiSTRING, &val);			ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiSTRING, out val);
 		///
 		///	sdaiUNICODE				const wchar_t* val;									string val;
-		///							sdaiGetADBValue (ADB, sdaiUNICODE, &val);			ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiSTRING, out val);
+		///							sdaiGetADBValue (ADB, sdaiUNICODE, &val);			ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiUNICODE, out val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val;									string val;
 		///							sdaiGetADBValue (ADB, sdaiEXPRESSSTRING, &val);		ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiEXPRESSSTRING, out val);
@@ -1033,7 +1063,7 @@ namespace RDF
 		///							sdaiGetADBValue (ADB, sdaiINSTANCE, &val);			ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiINSTANCE, out val);
 		///
 		///	sdaiAGGR				SdaiAggr aggr;										int_t aggr;
-		///							sdaiGetADBValue (ADB, sdaiAGGR, &aggr);				ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiINSTANCE, out aggr);
+		///							sdaiGetADBValue (ADB, sdaiAGGR, &aggr);				ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiAGGR, out aggr);
 		///
 		///	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();					int_t adb = 0;	//	it is important to initialize
 		///							sdaiGetADBValue (ADB, sdaiADB, adb);				ifcengine.sdaiGetADBValue (ADB, ifcengine.sdaiADB, out adb);		
@@ -1154,7 +1184,7 @@ namespace RDF
 		///							sdaiGetAggrByIndex (aggr, index, sdaiSTRING, &val);				ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiSTRING, out val);
 		///
 		///	sdaiUNICODE				const wchar_t* val;												string val;
-		///							sdaiGetAggrByIndex (aggr, index, sdaiUNICODE, &val);			ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiSTRING, out val);
+		///							sdaiGetAggrByIndex (aggr, index, sdaiUNICODE, &val);			ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiUNICODE, out val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val;												string val;
 		///							sdaiGetAggrByIndex (aggr, index, sdaiEXPRESSSTRING, &val);		ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiEXPRESSSTRING, out val);
@@ -1163,7 +1193,7 @@ namespace RDF
 		///							sdaiGetAggrByIndex (aggr, index, sdaiINSTANCE, &val);			ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiINSTANCE, out val);
 		///
 		///	sdaiAGGR				SdaiAggr aggr;													int_t aggr;
-		///							sdaiGetAggrByIndex (aggr, index, sdaiAGGR, &aggr);				ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiINSTANCE, out aggr);
+		///							sdaiGetAggrByIndex (aggr, index, sdaiAGGR, &aggr);				ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiAGGR, out aggr);
 		///
 		///	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();								int_t adb = 0;	//	it is important to initialize
 		///							sdaiGetAggrByIndex (aggr, index, sdaiADB, adb);					ifcengine.sdaiGetAggrByIndex (aggr, index, ifcengine.sdaiADB, out adb);		
@@ -1284,7 +1314,7 @@ namespace RDF
 		///							sdaiGetAttr (inst, attr, sdaiSTRING, &val);				ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiSTRING, out val);
 		///
 		///	sdaiUNICODE				const wchar_t* val;										string val;
-		///							sdaiGetAttr (inst, attr, sdaiUNICODE, &val);			ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiSTRING, out val);
+		///							sdaiGetAttr (inst, attr, sdaiUNICODE, &val);			ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiUNICODE, out val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val;										string val;
 		///							sdaiGetAttr (inst, attr, sdaiEXPRESSSTRING, &val);		ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiEXPRESSSTRING, out val);
@@ -1293,7 +1323,7 @@ namespace RDF
 		///							sdaiGetAttr (inst, attr, sdaiINSTANCE, &val);			ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiINSTANCE, out val);
 		///
 		///	sdaiAGGR				SdaiAggr aggr;											int_t aggr;
-		///							sdaiGetAttr (inst, attr, sdaiAGGR, &aggr);				ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiINSTANCE, out aggr);
+		///							sdaiGetAttr (inst, attr, sdaiAGGR, &aggr);				ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiAGGR, out aggr);
 		///
 		///	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();						int_t adb = 0;	//	it is important to initialize
 		///							sdaiGetAttr (inst, attr, sdaiADB, adb);					ifcengine.sdaiGetAttr (inst, attr, ifcengine.sdaiADB, out adb);		
@@ -1398,7 +1428,7 @@ namespace RDF
 		///							sdaiGetAttrBN (inst, "attrName", sdaiSTRING, &val);			ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiSTRING, out val);
 		///
 		///	sdaiUNICODE				const wchar_t* val;											string val;
-		///							sdaiGetAttrBN (inst, "attrName", sdaiUNICODE, &val);		ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiSTRING, out val);
+		///							sdaiGetAttrBN (inst, "attrName", sdaiUNICODE, &val);		ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiUNICODE, out val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val;											string val;
 		///							sdaiGetAttrBN (inst, "attrName", sdaiEXPRESSSTRING, &val);	ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiEXPRESSSTRING, out val);
@@ -1407,7 +1437,7 @@ namespace RDF
 		///							sdaiGetAttrBN (inst, "attrName", sdaiINSTANCE, &val);		ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiINSTANCE, out val);
 		///
 		///	sdaiAGGR				SdaiAggr aggr;												int_t aggr;
-		///							sdaiGetAttrBN (inst, "attrName", sdaiAGGR, &aggr);			ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiINSTANCE, out aggr);
+		///							sdaiGetAttrBN (inst, "attrName", sdaiAGGR, &aggr);			ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiAGGR, out aggr);
 		///
 		///	sdaiADB					SdaiADB adb = sdaiCreateEmptyADB();							int_t adb = 0;	//	it is important to initialize
 		///							sdaiGetAttrBN (inst, "attrName", sdaiADB, adb);				ifcengine.sdaiGetAttrBN (inst, "attrName", ifcengine.sdaiADB, out adb);		
@@ -1510,7 +1540,7 @@ namespace RDF
 		///		sdaiGetStringAttrBN                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetStringAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiSTRING.
-		///	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 		///	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 		///
 		///	Technically sdaiGetStringAttrBN will transform into the following call
@@ -1538,7 +1568,7 @@ namespace RDF
 		///		sdaiGetInstanceAttrBN                                   (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiINSTANCE.
-		///	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 		///	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 		///
 		///	Technically sdaiGetInstanceAttrBN will transform into the following call
@@ -1566,7 +1596,7 @@ namespace RDF
 		///		sdaiGetAggregationAttrBN                                (http://rdf.bg/ifcdoc/CS64/sdaiGetAggregationAttrBN.html)
 		///
 		///	This function is a specific version of sdaiGetAttrBN(..), where the valueType is sdaiAGGR.
-		///	This call can be usefull in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
+		///	This call can be useful in case of specific programming languages that cannot map towards sdaiGetAttrBN(..) directly,
 		///	this function is useless for languages as C, C++, C#, JAVA, VB.NET, Delphi and similar as they are able to map sdaiGetAttrBN(..) directly.
 		///
 		///	Technically sdaiGetAggregationAttrBN will transform into the following call
@@ -1667,7 +1697,7 @@ namespace RDF
 		///	In case of SELECT and sdaiINSTANCE, return value will be combined with engiTypeFlagAggrOption if some options are aggregation
 		///	or engiTypeFlagAggr if all options are aggregations of instances
 		///
-		///	It works for direct and inverse attributes
+		///	It works for explicit and inverse attributes
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrType")]
 		public static extern int_t engiGetAttrType(int_t attribute);
@@ -1873,7 +1903,7 @@ namespace RDF
 		///							sdaiPrepend (aggr, sdaiSTRING, val);						ifcengine.sdaiPrepend (aggr, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiPrepend (aggr, sdaiUNICODE, val);						ifcengine.sdaiPrepend (aggr, ifcengine.sdaiSTRING, val);
+		///							sdaiPrepend (aggr, sdaiUNICODE, val);						ifcengine.sdaiPrepend (aggr, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiPrepend (aggr, sdaiEXPRESSSTRING, val);					ifcengine.sdaiPrepend (aggr, ifcengine.sdaiEXPRESSSTRING, val);
@@ -1932,8 +1962,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
 		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPrepend")]
-		public static extern void sdaiPrepend(int_t aggregate, int_t valueType, string value);
+		public static void sdaiPrepend(int_t aggregate, int_t valueType, string value)
+        {
+            valueType = getStringType(valueType);
+            if (valueType != 0)
+            {
+                var bytes = stringToBytes(valueType, value);
+                if (bytes != null)
+                {
+                    sdaiPrepend(aggregate, valueType, bytes);
+                }
+            }
+        }
 
 		/// <summary>
 		///		sdaiAppend                                              (http://rdf.bg/ifcdoc/CS64/sdaiAppend.html)
@@ -1970,7 +2010,7 @@ namespace RDF
 		///							sdaiAppend (aggr, sdaiSTRING, val);							ifcengine.sdaiAppend (aggr, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiAppend (aggr, sdaiUNICODE, val);						ifcengine.sdaiAppend (aggr, ifcengine.sdaiSTRING, val);
+		///							sdaiAppend (aggr, sdaiUNICODE, val);						ifcengine.sdaiAppend (aggr, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiAppend (aggr, sdaiEXPRESSSTRING, val);					ifcengine.sdaiAppend (aggr, ifcengine.sdaiEXPRESSSTRING, val);
@@ -2029,8 +2069,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiAppend")]
 		public static extern void sdaiAppend(int_t aggregate, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiAppend")]
-		public static extern void sdaiAppend(int_t aggregate, int_t valueType, string value);
+		public static void sdaiAppend(int_t aggregate, int_t valueType, string value)
+        {
+            valueType = getStringType(valueType);
+            if (valueType != 0)
+            {
+                var bytes = stringToBytes(valueType, value);
+                if (bytes != null)
+                {
+                    sdaiAppend(aggregate, valueType, bytes);
+                }
+            }
+        }
 
 		/// <summary>
 		///		sdaiAdd                                                 (http://rdf.bg/ifcdoc/CS64/sdaiAdd.html)
@@ -2067,7 +2117,7 @@ namespace RDF
 		///							sdaiAdd (aggr, sdaiSTRING, val);							ifcengine.sdaiAdd (aggr, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiAdd (aggr, sdaiUNICODE, val);							ifcengine.sdaiAdd (aggr, ifcengine.sdaiSTRING, val);
+		///							sdaiAdd (aggr, sdaiUNICODE, val);							ifcengine.sdaiAdd (aggr, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiAdd (aggr, sdaiEXPRESSSTRING, val);						ifcengine.sdaiAdd (aggr, ifcengine.sdaiEXPRESSSTRING, val);
@@ -2126,8 +2176,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiAdd")]
 		public static extern void sdaiAdd(int_t aggregate, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiAdd")]
-		public static extern void sdaiAdd(int_t aggregate, int_t valueType, string value);
+		public static void sdaiAdd(int_t aggregate, int_t valueType, string value)
+		{
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				var bytes = stringToBytes(valueType, value);
+				if (bytes != null)
+				{
+					sdaiAdd(aggregate, valueType, bytes);
+				}
+			}
+		}
 
 		/// <summary>
 		///		sdaiInsertByIndex                                       (http://rdf.bg/ifcdoc/CS64/sdaiInsertByIndex.html)
@@ -2164,7 +2224,7 @@ namespace RDF
 		///							sdaiInsertByIndex (aggr, sdaiSTRING, val);					ifcengine.sdaiInsertByIndex (aggr, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiInsertByIndex (aggr, sdaiUNICODE, val);					ifcengine.sdaiInsertByIndex (aggr, ifcengine.sdaiSTRING, val);
+		///							sdaiInsertByIndex (aggr, sdaiUNICODE, val);					ifcengine.sdaiInsertByIndex (aggr, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiInsertByIndex (aggr, sdaiEXPRESSSTRING, val);			ifcengine.sdaiInsertByIndex (aggr, ifcengine.sdaiEXPRESSSTRING, val);
@@ -2223,8 +2283,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiInsertByIndex")]
 		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiInsertByIndex")]
-		public static extern void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, string value);
+		public static void sdaiInsertByIndex(int_t aggregate, int_t index, int_t valueType, string value)
+		{
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				var bytes = stringToBytes(valueType, value);
+				if (bytes != null)
+				{
+					sdaiInsertByIndex(aggregate, index, valueType, bytes);
+				}
+			}
+		}
 
 		/// <summary>
 		///		sdaiCreateADB                                           (http://rdf.bg/ifcdoc/CS64/sdaiCreateADB.html)
@@ -2261,7 +2331,7 @@ namespace RDF
 		///							SdaiADB adb = sdaiCreateADB (sdaiSTRING, val);				int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							SdaiADB adb = sdaiCreateADB (sdaiUNICODE, val);				int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiSTRING, val);
+		///							SdaiADB adb = sdaiCreateADB (sdaiUNICODE, val);				int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							SdaiADB adb = sdaiCreateADB (sdaiEXPRESSSTRING, val);		int_t adb = ifcengine.sdaiCreateADB (ifcengine.sdaiEXPRESSSTRING, val);
@@ -2316,8 +2386,19 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
 		public static extern int_t sdaiCreateADB(int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateADB")]
-		public static extern int_t sdaiCreateADB(int_t valueType, string value);
+		public static int_t sdaiCreateADB(int_t valueType, string value)
+		{
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				var bytes = stringToBytes(valueType, value);
+				if (bytes != null)
+				{
+					return sdaiCreateADB(valueType, bytes);
+				}
+			}
+			return 0;
+		}
 
 		/// <summary>
 		///		sdaiCreateAggr                                          (http://rdf.bg/ifcdoc/CS64/sdaiCreateAggr.html)
@@ -2325,7 +2406,7 @@ namespace RDF
 		///	This call creates an aggregation.
 		///	The instance has to be present,
 		///	the attribute argument can be empty (0) in case the aggregation is an nested aggregation for this specific instance,
-		///	prefered use would be use of sdaiCreateNestedAggr in such a case.
+		///	preferred use would be use of sdaiCreateNestedAggr in such a case.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateAggr")]
 		public static extern int_t sdaiCreateAggr(int_t instance, int_t attribute);
@@ -2336,7 +2417,7 @@ namespace RDF
 		///	This call creates an aggregation.
 		///	The instance has to be present,
 		///	the attributeName argument can be NULL (0) in case the aggregation is an nested aggregation for this specific instance,
-		///	prefered use would be use of sdaiCreateNestedAggr in such a case.
+		///	preferred use would be use of sdaiCreateNestedAggr in such a case.
 		///
 		///	Technically sdaiCreateAggrBN will transform into the following call
 		///		(attributeName) ?
@@ -2466,7 +2547,7 @@ namespace RDF
 		///							sdaiPutAttr (inst, attr, sdaiSTRING, val);					ifcengine.sdaiPutAttr (inst, attr, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiPutAttr (inst, attr, sdaiUNICODE, val);					ifcengine.sdaiPutAttr (inst, attr, ifcengine.sdaiSTRING, val);
+		///							sdaiPutAttr (inst, attr, sdaiUNICODE, val);					ifcengine.sdaiPutAttr (inst, attr, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiPutAttr (inst, attr, sdaiEXPRESSSTRING, val);			ifcengine.sdaiPutAttr (inst, attr, ifcengine.sdaiEXPRESSSTRING, val);
@@ -2525,8 +2606,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttr")]
 		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttr")]
-		public static extern void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, string value);
+		public static void sdaiPutAttr(int_t instance, int_t attribute, int_t valueType, string value)
+		{
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				var bytes = stringToBytes(valueType, value);
+				if (bytes != null)
+				{
+					sdaiPutAttr (instance, attribute, valueType, bytes);
+				}
+			}
+		}
 
 		/// <summary>
 		///		sdaiPutAttrBN                                           (http://rdf.bg/ifcdoc/CS64/sdaiPutAttrBN.html)
@@ -2563,7 +2654,7 @@ namespace RDF
 		///							sdaiPutAttrBN (inst, "attrName", sdaiSTRING, val);			ifcengine.sdaiPutAttrBN (inst, "attrName", ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiPutAttrBN (inst, "attrName", sdaiUNICODE, val);			ifcengine.sdaiPutAttrBN (inst, "attrName", ifcengine.sdaiSTRING, val);
+		///							sdaiPutAttrBN (inst, "attrName", sdaiUNICODE, val);			ifcengine.sdaiPutAttrBN (inst, "attrName", ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiPutAttrBN (inst, "attrName", sdaiEXPRESSSTRING, val);	ifcengine.sdaiPutAttrBN (inst, "attrName", ifcengine.sdaiEXPRESSSTRING, val);
@@ -2635,8 +2726,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
-		public static extern void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, string value);
+		public static void sdaiPutAttrBN(int_t instance, string attributeName, int_t valueType, string value)
+		{
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				var bytes = stringToBytes(valueType, value);
+				if (bytes != null)
+				{
+					sdaiPutAttrBN(instance, attributeName, valueType, bytes);
+				}
+			}
+		}
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAttrBN")]
 		public static extern void sdaiPutAttrBN(int_t instance, byte[] attributeName, int_t valueType, ref bool value);
@@ -2817,7 +2918,7 @@ namespace RDF
 		///
 		///	Please use setSegmentation call
 		///
-		///	The callsetMaximumSegmentationLength(model, length) can be replaced with
+		///	The call setMaximumSegmentationLength(model, length) can be replaced with
 		///		int_t segmentationParts = 0;
 		///		getSegmentation(model, &segmentationParts, nullptr);
 		///		setSegmentation(model, segmentationParts, length);
@@ -2857,13 +2958,13 @@ namespace RDF
 		///			bit4  (16)		check if faces are wrongly turned opposite from each other
 		///			bit5  (32)		check if faces are inside-out
 		///			bit6  (64)		check if faces result in solid, if not generate both sided faces
-		///			bit7  (128)		invert direction of the faces / normals
+		///			bit7  (128)		invert direction of the faces / normal's
 		///			bit8  (256)		export all faces as one conceptual face
 		///			bit9  (512)		remove irrelevant intermediate points on lines
 		///			bit10 (1024)	check and repair faces that are not defined in a perfect plane
 		///
 		///		fraction
-		///			To compare adjecent faces, they will be defined as being part of the same conceptual face if the fraction
+		///			To compare adjacent faces, they will be defined as being part of the same conceptual face if the fraction
 		///			value is larger then the dot product of the normal vector's of the individual faces.
 		///
 		///		epsilon
@@ -2932,7 +3033,11 @@ namespace RDF
 		/// <summary>
 		///		setStringUnicode                                        (http://rdf.bg/ifcdoc/CS64/setStringUnicode.html)
 		///
-		///	...
+		///	Set mode of interpretation for arguments of type char*
+		///		0 - char* (default)
+		///		1 - wchar_t*
+		///		2 - char16_t*
+		///		4 - char32_t*
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "setStringUnicode")]
 		public static extern int_t setStringUnicode(int_t unicode);
@@ -2944,6 +3049,16 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "getStringUnicode")]
 		public static extern int_t getStringUnicode();
+
+		/// <summary>
+		///		engiSetStringEncoding                                   (http://rdf.bg/ifcdoc/CS64/engiSetStringEncoding.html)
+		///
+		///	sets encoding for sdaiSTRING data type in put and get functions
+		///	if model is NULL it will set codepage for models, created after the call or for contexts when model is not known
+		///	returns 1 when successfull of 0 when fails
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiSetStringEncoding")]
+		public static extern int_t engiSetStringEncoding(int_t model, byte encoding);
 
 		/// <summary>
 		///		setFilter                                               (http://rdf.bg/ifcdoc/CS64/setFilter.html)
@@ -3043,7 +3158,7 @@ namespace RDF
 		/// <summary>
 		///		iterateOverInstances                                    (http://rdf.bg/ifcdoc/CS64/iterateOverInstances.html)
 		///
-		///	This function interates over all available instances loaded in memory, it is the fastest way to find all instances.
+		///	This function iterates over all available instances loaded in memory, it is the fastest way to find all instances.
 		///	Argument entity and entityName are both optional and if non-zero are filled with respectively the entity handle and entity name as char array.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "iterateOverInstances")]
@@ -3127,7 +3242,7 @@ namespace RDF
 		///							sdaiPutAggrByIterator (iter, sdaiSTRING, val);				ifcengine.sdaiPutAggrByIterator (iter, ifcengine.sdaiSTRING, val);
 		///
 		///	sdaiUNICODE				const wchar_t* val = L"Any Unicode String";					string val = "Any Unicode String";
-		///							sdaiPutAggrByIterator (iter, sdaiUNICODE, val);				ifcengine.sdaiPutAggrByIterator (iter, ifcengine.sdaiSTRING, val);
+		///							sdaiPutAggrByIterator (iter, sdaiUNICODE, val);				ifcengine.sdaiPutAggrByIterator (iter, ifcengine.sdaiUNICODE, val);
 		///
 		///	sdaiEXPRESSSTRING		const char* val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";	string val = "EXPRESS format, i.e. \\X2\\00FC\\X0\\";
 		///							sdaiPutAggrByIterator (iter, sdaiEXPRESSSTRING, val);		ifcengine.sdaiPutAggrByIterator (iter, ifcengine.sdaiEXPRESSSTRING, val);
@@ -3186,8 +3301,18 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, byte[] value);
 
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
-		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, string value);
+		public static void sdaiPutAggrByIterator(int_t iterator, int_t valueType, string value)
+        {
+            valueType = getStringType(valueType);
+            if (valueType != 0)
+            {
+                var bytes = stringToBytes(valueType, value);
+                if (bytes != null)
+                {
+                    sdaiPutAggrByIterator(iterator, valueType, bytes);
+                }
+            }
+        }
 
 		/// <summary>
 		///		internalSetLink                                         (http://rdf.bg/ifcdoc/CS64/internalSetLink.html)
@@ -3653,26 +3778,27 @@ namespace RDF
 		/// <summary>
 		///		validateSetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateSetOptions.html)
 		///
-		///	Allows to set a timne limit in seconds, setting to 0 means no time limit.
+		///	Allows to set a time limit in seconds, setting to 0 means no time limit.
 		///	Allows to set a count limit, setting to 0 means no count limit.
-		///	Allows to hide redundent issues.
+		///	Allows to hide redundant issues.
 		///
-		///		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
-		///		bit 1:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
-		///		bit 2:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
-		///		bit 3:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
-		///		bit 4:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
-		///		bit 5:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
-		///		bit 6:	(__AGGREGATION_SIZE)				aggregation size
-		///		bit 7:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
-		///		bit 8:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
-		///		bit 9:	(__REFERENCE_EXISTS)				referenced instance exists
-		///		bit 10:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
-		///		bit 11:	(__WHERE_RULE)						where-rule check
-		///		bit 12:	(__UNIQUE_RULE)						unique-rule check
-		///		bit 13:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 14:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
-		///		bit 15:	(__INTERNAL_ERROR)					unspecified error
+		///		bit 0:	(__KNOWN_ENTITY)					entity is defined in the schema
+		///		bit 1:	(__NO_OF_ARGUMENTS)					number of arguments
+		///		bit 2:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
+		///		bit 3:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
+		///		bit 4:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
+		///		bit 5:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
+		///		bit 6:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
+		///		bit 7:	(__AGGREGATION_SIZE)				aggregation size
+		///		bit 8:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
+		///		bit 9:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
+		///		bit 10:	(__REFERENCE_EXISTS)				referenced instance exists
+		///		bit 11:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
+		///		bit 12:	(__WHERE_RULE)						where-rule check
+		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
+		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateSetOptions")]
 		public static extern void validateSetOptions(int_t timeLimitSeconds, int_t issueCntLimit, byte showEachIssueOnce, UInt64 issueTypes, UInt64 mask);
@@ -3680,27 +3806,28 @@ namespace RDF
 		/// <summary>
 		///		validateGetOptions                                      (http://rdf.bg/ifcdoc/CS64/validateGetOptions.html)
 		///
-		///	Allows to get the timne limit in seconds, value 0 means no time limite, input can be left to NULL if not relevant.
+		///	Allows to get the time limit in seconds, value 0 means no time limit, input can be left to NULL if not relevant.
 		///	Allows to get the count limit, value 0 means no count limit, input can be left to NULL if not relevant.
-		///	Allows to get hide redundent issues, input can be left to NULL if not relevant.
+		///	Allows to get hide redundant issues, input can be left to NULL if not relevant.
 		///	Return value is the issueTypes enabled according to the mask given.
 		///
-		///		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
-		///		bit 1:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
-		///		bit 2:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
-		///		bit 3:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
-		///		bit 4:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
-		///		bit 5:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
-		///		bit 6:	(__AGGREGATION_SIZE)				aggregation size
-		///		bit 7:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
-		///		bit 8:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
-		///		bit 9:	(__REFERENCE_EXISTS)				referenced instance exists
-		///		bit 10:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
-		///		bit 11:	(__WHERE_RULE)						where-rule check
-		///		bit 12:	(__UNIQUE_RULE)						unique-rule check
-		///		bit 13:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 14:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
-		///		bit 15:	(__INTERNAL_ERROR)					unspecified error
+		///		bit 0:	(__KNOWN_ENTITY)					entity is defined in the schema
+		///		bit 1:	(__NO_OF_ARGUMENTS)					number of arguments
+		///		bit 2:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
+		///		bit 3:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
+		///		bit 4:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
+		///		bit 5:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
+		///		bit 6:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
+		///		bit 7:	(__AGGREGATION_SIZE)				aggregation size
+		///		bit 8:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
+		///		bit 9:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
+		///		bit 10:	(__REFERENCE_EXISTS)				referenced instance exists
+		///		bit 11:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
+		///		bit 12:	(__WHERE_RULE)						where-rule check
+		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
+		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetOptions")]
 		public static extern UInt64 validateGetOptions(out int_t timeLimitSeconds, out int_t issueCntLimit, out byte showEachIssueOnce, UInt64 mask);
@@ -3766,22 +3893,23 @@ namespace RDF
 		///
 		///	Return value is the issueType (enum_validation_type):
 		///
-		///		bit 0:	(__NO_OF_ARGUMENTS)					number of arguments
-		///		bit 1:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
-		///		bit 2:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
-		///		bit 3:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
-		///		bit 4:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
-		///		bit 5:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
-		///		bit 6:	(__AGGREGATION_SIZE)				aggregation size
-		///		bit 7:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
-		///		bit 8:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
-		///		bit 9:	(__REFERENCE_EXISTS)				referenced instance exists
-		///		bit 10:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
-		///		bit 11:	(__WHERE_RULE)						where-rule check
-		///		bit 12:	(__UNIQUE_RULE)						unique-rule check
-		///		bit 13:	(__STAR_USAGE)						* is used only for derived arguments
-		///		bit 14:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
-		///		bit 15:	(__INTERNAL_ERROR)					unspecified error
+		///		bit 0:	(__KNOWN_ENTITY)					entity is defined in the schema
+		///		bit 1:	(__NO_OF_ARGUMENTS)					number of arguments
+		///		bit 2:	(__ARGUMENT_EXPRESS_TYPE)			argument value is correct entity, defined type or enumeration value
+		///		bit 3:	(__ARGUMENT_PRIM_TYPE)				argument value has correct primitive type
+		///		bit 4:	(__REQUIRED_ARGUMENTS)				non-optional arguments values are provided
+		///		bit 5:	(__ARRGEGATION_EXPECTED)			aggregation is provided when expected
+		///		bit 6:	(__AGGREGATION_NOT_EXPECTED)		aggregation is not used when not expected
+		///		bit 7:	(__AGGREGATION_SIZE)				aggregation size
+		///		bit 8:	(__AGGREGATION_UNIQUE)				elements in aggregations are unique when required
+		///		bit 9:	(__COMPLEX_INSTANCE)				complex instances contains full parent chains
+		///		bit 10:	(__REFERENCE_EXISTS)				referenced instance exists
+		///		bit 11:	(__ABSTRACT_ENTITY)					abstract entity should not instantiate
+		///		bit 12:	(__WHERE_RULE)						where-rule check
+		///		bit 13:	(__UNIQUE_RULE)						unique-rule check
+		///		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
+		///		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+		///		bit 63:	(__INTERNAL_ERROR)					unspecified error
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetIssueType")]
 		public static extern enum_validation_type validateGetIssueType (int_t issue);
@@ -3829,7 +3957,7 @@ namespace RDF
 		/// <summary>
 		///		validateGetAggrIndArray                                 (http://rdf.bg/ifcdoc/CS64/validateGetAggrIndArray.html)
 		///
-		///	array of indecies for each aggregation lsize is aggrLevel
+		///	array of indices for each aggregation size is aggrLevel
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetAggrIndArray")]
 		public static extern int_t validateGetAggrIndArray(int_t issue);
@@ -3837,7 +3965,7 @@ namespace RDF
 		/// <summary>
 		///		validateGetIssueLevel                                   (http://rdf.bg/ifcdoc/CS64/validateGetIssueLevel.html)
 		///
-		///	Returns the issue level (i.e. severaty of the issue) of the issue given as input
+		///	Returns the issue level (i.e. severity of the issue) of the issue given as input
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "validateGetIssueLevel")]
 		public static extern int_t validateGetIssueLevel(int_t issue);
@@ -3920,7 +4048,7 @@ namespace RDF
 		/// <summary>
 		///		createGeometryConversion                                (http://rdf.bg/ifcdoc/CS64/createGeometryConversion.html)
 		///
-		///	This call is deprecated, please use call ... .
+		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "createGeometryConversion")]
 		public static extern void createGeometryConversion(int_t instance, out Int64 owlInstance);
@@ -3928,7 +4056,7 @@ namespace RDF
 		/// <summary>
 		///		convertInstance                                         (http://rdf.bg/ifcdoc/CS64/convertInstance.html)
 		///
-		///	This call is deprecated, please use call ... .
+		///	This call is deprecated, please use call owlBuildInstance.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "convertInstance")]
 		public static extern void convertInstance(int_t instance);
@@ -3999,9 +4127,39 @@ namespace RDF
 		    }
 		    return null;
 		}
-	}
 
-	class engine
+		/// <summary>
+		/// 
+		/// </summary>
+		private static byte[] stringToBytes(int_t valueType, string value)
+		{
+			switch (valueType)
+			{
+                case sdaiUNICODE:
+                    return Encoding.Unicode.GetBytes(value);
+
+                case sdaiEXPRESSSTRING:
+                    return Encoding.ASCII.GetBytes(value);
+
+                case sdaiENUM:
+                case sdaiLOGICAL:
+                case sdaiBINARY:
+                    {
+                        var unicode = getStringUnicode();
+                        if (unicode == 0)
+                            return Encoding.ASCII.GetBytes (value);
+                        else if (unicode == 1 || unicode == 2)
+                            return Encoding.Unicode.GetBytes(value);
+                    }
+                    break;
+
+            }
+            return null;
+		}
+
+    }
+
+    class engine
 	{
 		public const Int64 OBJECTPROPERTY_TYPE             = 1;
 		public const Int64 DATATYPEPROPERTY_TYPE_BOOLEAN   = 2;

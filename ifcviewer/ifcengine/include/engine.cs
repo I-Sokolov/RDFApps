@@ -364,7 +364,7 @@ namespace RDF
 		///	Note: this setting is independent from the model, this call can also be called without a model defined.
 		///
 		///	The ascii value defines
-		///		true [default]	8 bit serializatiom (size of char returned in bits)
+		///		true [default]	8 bit serialization (size of char returned in bits)
 		///		false			16/32 bit serialization (depending on the operating system, i.e. sizeof of wchar_t returned in number of bits)
 		///	Note: this setting is model-dependent and requires a model present to have any effect.
 		///
@@ -473,7 +473,7 @@ namespace RDF
 		///		0 - continuous curve / surface (i.e. degree 9)
 		///		1 - the direction of the curve / surface is gradually changing (i.e. degree 1)
 		///		2 - the change of direction of the curve / surface is gradually changing (i.e. degree 2)
-		///	In return value of this function retuns the dimension of the found smoothness:
+		///	In return value of this function returns the dimension of the found smoothness:
 		///		0 - smoothness could not be defined
 		///		1 - found the smoothness of a curve
 		///		2 - found the smoothness of a surface
@@ -521,7 +521,7 @@ namespace RDF
 		///		  by the hosting application.
 		///	Note: internally there is no performance gain / loss. This is purely meant for situations
 		///		  where the hosting application can benefit performance wise from having an ordered list.
-		///	Note: use in combination with other libraries is not adviced, i.e. when combined with the
+		///	Note: use in combination with other libraries is not advised, i.e. when combined with the
 		///		  IFC generation from the IFC Engine component for example
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "OrderedHandles")]
@@ -563,7 +563,7 @@ namespace RDF
 		///		SetInternalCheck                                        (http://rdf.bg/gkdoc/CS64/SetInternalCheck.html)
 		///
 		///	This function allows to enable or disable several active consistency checks. Enabling the checks can 
-		///	introduce performance effects; it is helpfull for and meant for debugging on client side.
+		///	introduce performance effects; it is helpful for and meant for debugging on client side.
 		///	If model is zero the consistency checks are set for all open and to be created models.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetInternalCheck")]
@@ -574,7 +574,7 @@ namespace RDF
 		///
 		///	This function returns all current enabled active consistency checks given the mask the function is 
 		///	called for.
-		///	When leaving mask and settinbg zero it will return all bits that can be set.
+		///	When leaving mask and setting zero it will return all bits that can be set.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetInternalCheck")]
 		public static extern UInt64 GetInternalCheck(Int64 model, UInt64 mask);
@@ -594,7 +594,7 @@ namespace RDF
 		///	This function returns the oldest issues in the list of issues and reduces the list of issues with 1.
 		///	The name and description represent the issue as ASCII string, if relevant the relating owlInstance
 		///	will be returned through relatedOwlInstance.
-		///	Namer, Description and relatedOwlInstance are optional.
+		///	Name, Description and relatedOwlInstance are optional.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetInternalCheckIssue")]
 		public static extern void GetInternalCheckIssue(Int64 model, out IntPtr name, out IntPtr description, out Int64 relatedOwlInstance);
@@ -605,7 +605,7 @@ namespace RDF
 		///	This function returns the oldest issues in the list of issues and reduces the list of issues with 1.
 		///	The name and description represent the issue as Unicode string, if relevant the relating owlInstance
 		///	will be returned through relatedOwlInstance.
-		///	Namer, Description and relatedOwlInstance are optional.
+		///	Name, Description and relatedOwlInstance are optional.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetInternalCheckIssueW")]
 		public static extern void GetInternalCheckIssueW(Int64 model, out IntPtr name, out IntPtr description, out Int64 relatedOwlInstance);
@@ -797,7 +797,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceTree                                        (http://rdf.bg/gkdoc/CS64/SaveInstanceTree.html)
 		///
-		///	This function saves the selected instance and its dependancies on location file name.
+		///	This function saves the selected instance and its dependencies on location file name.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceTree")]
 		public static extern Int64 SaveInstanceTree(Int64 owlInstance, string fileName);
@@ -808,7 +808,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceTreeW                                       (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeW.html)
 		///
-		///	This function saves the selected instance and its dependancies on location file name.
+		///	This function saves the selected instance and its dependencies on location file name.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceTreeW")]
 		public static extern Int64 SaveInstanceTreeW(Int64 owlInstance, string fileName);
@@ -819,7 +819,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceTreeS                                       (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeS.html)
 		///
-		///	This function saves the selected instance and its dependancies in a stream.
+		///	This function saves the selected instance and its dependencies in a stream.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceTreeS")]
 		public static extern Int64 SaveInstanceTreeS(Int64 owlInstance, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, Int64 size);
@@ -827,7 +827,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceTreeA                                       (http://rdf.bg/gkdoc/CS64/SaveInstanceTreeA.html)
 		///
-		///	This function saves the selected instance and its dependancies in an array.
+		///	This function saves the selected instance and its dependencies in an array.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceTreeA")]
 		public static extern Int64 SaveInstanceTreeA(Int64 owlInstance, byte[] content, out Int64 size);
@@ -835,7 +835,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceNetwork                                     (http://rdf.bg/gkdoc/CS64/SaveInstanceNetwork.html)
 		///
-		///	This function saves the selected instance and its dependancies on location file name.
+		///	This function saves the selected instance and its dependencies on location file name.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceNetwork")]
 		public static extern Int64 SaveInstanceNetwork(Int64 owlInstance, byte includeInverseRelations, string fileName);
@@ -846,7 +846,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceNetworkW                                    (http://rdf.bg/gkdoc/CS64/SaveInstanceNetworkW.html)
 		///
-		///	This function saves the selected instance and its dependancies on location file name.
+		///	This function saves the selected instance and its dependencies on location file name.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceNetworkW")]
 		public static extern Int64 SaveInstanceNetworkW(Int64 owlInstance, byte includeInverseRelations, string fileName);
@@ -857,7 +857,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceNetworkS                                    (http://rdf.bg/gkdoc/CS64/SaveInstanceNetworkS.html)
 		///
-		///	This function saves the selected instance and its dependancies in a stream.
+		///	This function saves the selected instance and its dependencies in a stream.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceNetworkS")]
 		public static extern Int64 SaveInstanceNetworkS(Int64 owlInstance, byte includeInverseRelations, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, Int64 size);
@@ -865,7 +865,7 @@ namespace RDF
 		/// <summary>
 		///		SaveInstanceNetworkA                                    (http://rdf.bg/gkdoc/CS64/SaveInstanceNetworkA.html)
 		///
-		///	This function saves the selected instance and its dependancies in an array.
+		///	This function saves the selected instance and its dependencies in an array.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SaveInstanceNetworkA")]
 		public static extern Int64 SaveInstanceNetworkA(Int64 owlInstance, byte includeInverseRelations, byte[] content, out Int64 size);
@@ -955,7 +955,7 @@ namespace RDF
 		///	Available formats
 		///		RDF
 		///		TTL
-		///		BIN/L - readible but large BIN format
+		///		BIN/L - readable but large BIN format
 		///		BIN/S - Optimized Binary, only running within given revision 
 		///		BIN/X - Optimized Binary, running in all revisions supporting BIN/X
 		///
@@ -1129,7 +1129,7 @@ namespace RDF
 		///		-	when the name is already used for an instance or property;
 		///		-	if the model input is zero or not a model handle.
 		///
-		///	Giving the class a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	Giving the class a name is optional, if a name is not given it will receive an automatically generated name,
 		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateClass")]
@@ -1148,7 +1148,7 @@ namespace RDF
 		///		-	when the name is already used for an instance or property;
 		///		-	if the model input is zero or not a model handle.
 		///
-		///	Giving the class a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	Giving the class a name is optional, if a name is not given it will receive an automatically generated name,
 		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateClassW")]
@@ -1194,7 +1194,7 @@ namespace RDF
 		/// <summary>
 		///		SetClassParent                                          (http://rdf.bg/gkdoc/CS64/SetClassParent.html)
 		///
-		///	Defines (set/unset) the parent class of a given class. Multiple-inheritence is supported and behavior
+		///	Defines (set/unset) the parent class of a given class. Multiple-inheritance is supported and behavior
 		///	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 		///	object properties (relations).
 		///
@@ -1203,7 +1203,7 @@ namespace RDF
 		///	Returns the same value as IsClassAncestor after the call.
 		///
 		///	When unset: it removes parentOwlClass from immediate parents and returns 1, 
-		///	or retunrs 0 if parentOwlClass is not immediate parent
+		///	or returns 0 if parentOwlClass is not immediate parent
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetClassParent")]
 		public static extern Int64 SetClassParent(Int64 owlClass, Int64 parentOwlClass, Int64 setting);
@@ -1211,7 +1211,7 @@ namespace RDF
 		/// <summary>
 		///		SetClassParentEx                                        (http://rdf.bg/gkdoc/CS64/SetClassParentEx.html)
 		///
-		///	Defines (set/unset) the parent class of a given class. Multiple-inheritence is supported and behavior
+		///	Defines (set/unset) the parent class of a given class. Multiple-inheritance is supported and behavior
 		///	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 		///	object properties (relations).
 		///
@@ -1220,7 +1220,7 @@ namespace RDF
 		///	Returns the same value as IsClassAncestor after the call.
 		///
 		///	When unset: it removes parentOwlClass from immediate parents and returns 1, 
-		///	or retunrs 0 if parentOwlClass is not immediate parent
+		///	or returns 0 if parentOwlClass is not immediate parent
 		///
 		///	This call has the same behavior as SetClassParent, however needs to be
 		///	used in case classes are exchanged as a successive series of integers.
@@ -1408,7 +1408,7 @@ namespace RDF
 		///
 		///	Returns a handle to a property.
 		///	If input property is zero, the handle will point to the first property having cardinality restriction to the class.
-		///	else it will point to next propety with known restriction
+		///	else it will point to next property with known restriction
 		///	If all properties are past (or no relevant properties are found), the function will return 0.
 		///	minCard and maxCard will contain restrictions for returned property
 		///
@@ -1430,7 +1430,7 @@ namespace RDF
 		///
 		///	Returns a handle to a property.
 		///	If input property is zero, the handle will point to the first property having cardinality restriction to the class.
-		///	else it will point to next propety with known restriction
+		///	else it will point to next property with known restriction
 		///	If all properties are past (or no relevant properties are found), the function will return 0.
 		///	minCard and maxCard will contain restrictions for returned property
 		///
@@ -1590,7 +1590,7 @@ namespace RDF
 		///		-	when the name is already used for a class or instance;
 		///		-	if the model input is zero or not a model handle.
 		///
-		///	Giving the property a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	Giving the property a name is optional, if a name is not given it will receive an automatically generated name,
 		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreateProperty")]
@@ -1609,7 +1609,7 @@ namespace RDF
 		///		-	when the name is already used for a class or instance;
 		///		-	if the model input is zero or not a model handle.
 		///
-		///	Giving the property a name is optional, if a name is not given it will recieve an automatically generated name,
+		///	Giving the property a name is optional, if a name is not given it will receive an automatically generated name,
 		///	it's automatically generated name can change between sessions.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "CreatePropertyW")]
@@ -1656,7 +1656,7 @@ namespace RDF
 		///		SetPropertyRangeRestriction                             (http://rdf.bg/gkdoc/CS64/SetPropertyRangeRestriction.html)
 		///
 		///	Sets or unsets a specific owlClass as range restriction to an rdfProperty. The property is expected to
-		///	be an objectp[roperty, i.e. relation.]
+		///	be an object[property, i.e. relation.]
 		///	If rdfProperty is not an object property this call has no effect.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetPropertyRangeRestriction")]
@@ -1666,7 +1666,7 @@ namespace RDF
 		///		SetPropertyRangeRestrictionEx                           (http://rdf.bg/gkdoc/CS64/SetPropertyRangeRestrictionEx.html)
 		///
 		///	Sets or unsets a specific owlClass as range restriction to an rdfProperty. The property is expected to
-		///	be an objectp[roperty, i.e. relation.]
+		///	be an object[property, i.e. relation.]
 		///	If rdfProperty is not an object property this call has no effect.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "SetPropertyRangeRestrictionEx")]
@@ -2358,7 +2358,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of undefined (void) items is a list of booleans, chars, integers
-		///	or doubles, this list has a length as givin in the values card. The actual used type
+		///	or doubles, this list has a length as given in the values card. The actual used type
 		///	is given by the definition of the dataTypeProperty.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
@@ -2471,7 +2471,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of undefined (void) items is a list of booleans, chars, integers
-		///	or doubles, this list has a length as givin in the values card. The actual used type
+		///	or doubles, this list has a length as given in the values card. The actual used type
 		///	is given by the definition of the dataTypeProperty.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
@@ -2512,7 +2512,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of undefined (void) items is a list of booleans, chars, integers
-		///	or doubles, this list has a length as givin in the value card. The actual used type
+		///	or doubles, this list has a length as given in the value card. The actual used type
 		///	is given by the definition of the dataTypeProperty.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		/// </summary>
@@ -2627,7 +2627,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of undefined (void) items is a list of booleans, chars, integers
-		///	or doubles, this list has a length as givin in the value card. The actual used type
+		///	or doubles, this list has a length as given in the value card. The actual used type
 		///	is given by the definition of the dataTypeProperty.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
@@ -2644,7 +2644,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of integers is a list of handles to instances, this list
-		///	has a length as givin in the values card.
+		///	has a length as given in the values card.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
 		///	Note: the client application needs to make sure the cardinality of
@@ -2677,7 +2677,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of integers is a list of handles to instances, this list
-		///	has a length as givin in the values card.
+		///	has a length as given in the values card.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
 		///	This call has the same behavior as SetObjectProperty, however needs to be
@@ -2699,7 +2699,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of integers is a list of handles to instances, this list
-		///	has a length as givin in the value card.
+		///	has a length as given in the value card.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "GetObjectProperty")]
@@ -2730,7 +2730,7 @@ namespace RDF
 		///	in the context of an instance.
 		///	The value of card gives the actual card of the values list.
 		///	The list values of integers is a list of handles to instances, this list
-		///	has a length as givin in the values card.
+		///	has a length as given in the values card.
 		///	The return value always should be 0, if not something is wrong in the way this property is called.
 		///
 		///	This call has the same behavior as GetObjectProperty, however needs to be
@@ -2743,7 +2743,7 @@ namespace RDF
 		///		CreateInstanceInContextStructure                        (http://rdf.bg/gkdoc/CS64/CreateInstanceInContextStructure.html)
 		///
 		///	InstanceInContext structures give you more detailed information about
-		///	individual parts of the geometry of a certain instance viualized.
+		///	individual parts of the geometry of a certain instance visualized.
 		///	It is allowed to have more then 1 InstanceInContext structures per instance.
 		///	InstanceInContext structures are updated dynamically when the geometry
 		///	structure is updated.
@@ -2754,7 +2754,7 @@ namespace RDF
 		/// <summary>
 		///		DestroyInstanceInContextStructure                       (http://rdf.bg/gkdoc/CS64/DestroyInstanceInContextStructure.html)
 		///
-		///	InstanceInContext structures are updated dynamically and therfore even while the cost
+		///	InstanceInContext structures are updated dynamically and therefore even while the cost
 		///	in performance and memory is limited it is advised to destroy structures as soon
 		///	as they are obsolete.
 		/// </summary>
@@ -2932,7 +2932,7 @@ namespace RDF
 		/// <summary>
 		///		InferenceInstance                                       (http://rdf.bg/gkdoc/CS64/InferenceInstance.html)
 		///
-		///	This function fills in values that are implicitely known but not given by the user. This function
+		///	This function fills in values that are implicitly known but not given by the user. This function
 		///	can also be used to identify default values of properties if not given.
 		/// </summary>
 		[DllImport(enginedll, EntryPoint = "InferenceInstance")]
@@ -3675,7 +3675,7 @@ namespace RDF
 		///	This function calculates the perimeter of an instance.
 		///
 		///	Note: internally the call does not store its results, any optimization based on known
-		///		  dependancies between instances need to be implemented on the client.
+		///		  dependencies between instances need to be implemented on the client.
 		///	Note: due to internal structure using already calculated vertex buffer / index buffer does not
 		///		  give any performance benefits, in opposite to GetVolume and GetArea
 		/// </summary>
@@ -3686,7 +3686,7 @@ namespace RDF
 		///		GetArea                                                 (http://rdf.bg/gkdoc/CS64/GetArea.html)
 		///
 		///	This function calculates the area of an instance.
-		///	For perfomance reasons it is benefitial to call it with vertex and index buffer when
+		///	For performance reasons it is beneficial to call it with vertex and index buffer when
 		///	the arrays are calculated anyway or Volume and Area are needed.
 		///
 		///	There are two ways to call GetVolume:
@@ -3700,7 +3700,7 @@ namespace RDF
 		///				operation.
 		///
 		///	Note: internally the call does not store its results, any optimization based on known
-		///		  dependancies between instances need to be implemented on the client.
+		///		  dependencies between instances need to be implemented on the client.
 		///	Note: in case precision is important and vertex buffer is 32 bit it is advised to
 		///		  set vertexBuffer and indexBuffer to 0 even if arrays are existing.
 		/// </summary>
@@ -3728,7 +3728,7 @@ namespace RDF
 		///		GetVolume                                               (http://rdf.bg/gkdoc/CS64/GetVolume.html)
 		///
 		///	This function calculates the volume of an instance.
-		///	For perfomance reasons it is benefitial to call it with vertex and index buffer when
+		///	For performance reasons it is beneficial to call it with vertex and index buffer when
 		///	the arrays are calculated anyway or Volume and Area are needed.
 		///
 		///	There are two ways to call GetVolume:
@@ -3742,7 +3742,7 @@ namespace RDF
 		///				operation.
 		///
 		///	Note: internally the call does not store its results, any optimization based on known
-		///		  dependancies between instances need to be implemented on the client.
+		///		  dependencies between instances need to be implemented on the client.
 		///	Note: in case precision is important and vertex buffer is 32 bit it is advised to
 		///		  set vertexBuffer and indexBuffer to 0 even if arrays are existing.
 		/// </summary>
@@ -3770,7 +3770,7 @@ namespace RDF
 		///		GetCenter                                               (http://rdf.bg/gkdoc/CS64/GetCenter.html)
 		///
 		///	This function calculates the center of an instance.
-		///	For perfomance reasons it is benefitial to call it with vertex and index buffer when
+		///	For performance reasons it is beneficial to call it with vertex and index buffer when
 		///	the arrays are calculated anyway or Volume and Area are needed.
 		///
 		///	There are two ways to call GetCenter:
@@ -3784,7 +3784,7 @@ namespace RDF
 		///				operation.
 		///
 		///	Note: internally the call does not store its results, any optimization based on known
-		///		  dependancies between instances need to be implemented on the client.
+		///		  dependencies between instances need to be implemented on the client.
 		///	Note: in case precision is important and vertex array is 32 bit it is advised to
 		///		  set vertexBuffer and indexBuffer to 0 even if arrays are existing.
 		/// </summary>
