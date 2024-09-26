@@ -40,12 +40,17 @@ extern int IDSRun(std::string const& idsFile, std::string const& ifcFile, bool s
             assert(0);
         }
     }
-    else if (idsFile.find("\\fail-") != std::string::npos){
+    else if (idsFile.find("\\fail-") != std::string::npos || idsFile.find("\\invalid-") != std::string::npos){
         if (ok) {
-            printf(" <ERROR>\n  fail- test failed\n </ERROR>");
+            printf(" <ERROR>\n  fail- or invalid- test failed\n </ERROR>");
             assert(0);
         }
         ok = !ok;
+    }
+    else {
+        printf(" <ERROR>\n  unsupported file prefix, expected pass- or fail-\n </ERROR>");
+        assert(0);
+        ok = false;
     }
     //
 
