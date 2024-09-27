@@ -1805,11 +1805,11 @@ Facet::Matched Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsV
                     switch (*value) {
                         case 'T':
                         case 't':
-                            match = idsvalue.Match("TRUE", false, ctx) ? Matched::Yes : Matched::No;
+                            match = idsvalue.Match("true", false, ctx) ? Matched::Yes : Matched::No;
                             break;
                         case 'F':
                         case 'f':
-                            match = idsvalue.Match("FALSE", false, ctx) ? Matched::Yes : Matched::No;
+                            match = idsvalue.Match("false", false, ctx) ? Matched::Yes : Matched::No;
                             break;
                         //U always fails
                     }
@@ -1820,7 +1820,7 @@ Facet::Matched Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsV
         case sdaiBOOLEAN: {
             bool value = false;
             if (sdaiGetAttr(inst, attr, sdaiBOOLEAN, &value)) {
-                match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx) ? Matched::Yes : Matched::No;
+                match = idsvalue.Match(value ? "true" : "false", false, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
