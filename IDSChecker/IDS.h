@@ -160,16 +160,19 @@ namespace RDF
             bool Match(SdaiInstance inst, Context& ctx);
 
         protected:
+            enum class Matched {Undef, Yes, NotFound, No};
+
+        protected:
             Facet() : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) {}
             Facet(_xml::_element& elem, Context& ctx) : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) { Read(elem, ctx); }
 
             virtual void ResetCacheImpl() = 0;
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) = 0;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) = 0;
 
         protected:
             void Read(_xml::_element& elem, Context& ctx);
 
-            bool MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& value, Context& ctx);
+            Matched MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& value, Context& ctx);
             bool MatchAggrValue(SdaiAggr aggr, IdsValue& valuse, Context& ctx);
             bool MatchInstanceValue(IdsValue& idsvalue) { return !idsvalue.IsSet(); }
             bool MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx);
@@ -199,7 +202,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override;
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             bool MatchPredefinedType(SdaiInstance inst, Context& ctx);
@@ -221,7 +224,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override;
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             struct Navigator
@@ -267,7 +270,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override;
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             struct Reference //One classification reference
@@ -306,7 +309,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override {};
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             IdsValue   m_name;
@@ -323,7 +326,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override {}
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             bool TestProperties(SdaiInstance inst, Context& ctx, std::set<std::wstring>& testedProps);
@@ -365,7 +368,7 @@ namespace RDF
 
         protected:
             virtual void ResetCacheImpl() override {}
-            virtual bool MatchImpl(SdaiInstance inst, Context& ctx) override;
+            virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) override;
 
         private:
             bool MatchMaterialSelect(SdaiInstance material, Context& ctx);

@@ -101,144 +101,7 @@ using namespace RDF::IDS;
             return m_attribute_##EntAttr;                               \
         }
 
-/// <summary>
-/// 
-/// </summary>
-static int StrICmp(const char* s1, const char* s2)
-{
-    return _stricmp(s1, s2);
-}
 
-/// <summary>
-/// 
-/// </summary>
-static void ToUpper(std::string& str)
-{
-    for (size_t i = 0; i < str.length(); i++) {
-        str[i] = (char)toupper (str[i]);
-    }
-}
-
-/// <summary>
-/// 
-/// </summary>
-static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
-{
-    SdaiEntity entity = 0;
-    engiGetAttributeTraits(attr, (char**)0, &entity, 0, 0, 0, 0, 0);
-    return sdaiIsKindOf(inst, entity);
-}
-
-/// <summary>
-/// 
-/// </summary>
-enum class Cardinality { Required, Optional, Prohibited };
-static Cardinality GetCardinality(const char* cardinality, MultiTypeValueCache& minOccur, MultiTypeValueCache& maxOccur, Cardinality def)
-{
-    if (cardinality && *cardinality) {
-        if (!strcmp(cardinality, "required")) {
-            return Cardinality::Required;
-        }
-        else if (!strcmp(cardinality, "prohibited")) {
-            return Cardinality::Prohibited;
-        }
-        else if (!strcmp(cardinality, "optional")) {
-            return Cardinality::Optional;
-        }
-        else {
-            assert(!"Invalid IDS");
-            return Cardinality::Required;
-        }
-    }
-    
-    const char* min__ = nullptr;
-    minOccur.Get(&min__);
-
-    if (!min__ || !*min__) {
-        return def;
-    }
-
-    SdaiInteger min_ = 0;
-    minOccur.Get(&min_);
-    if (min_ > 0) {
-        return Cardinality::Required;
-    }
-
-    SdaiInteger max_ = MAXINT;
-    const char* max__ = nullptr;
-    maxOccur.Get(&max__);
-    if (*max__) {
-        maxOccur.Get(&max_);
-    }
-
-    if (max_ == 0)
-        return Cardinality::Prohibited;
-
-    return Cardinality::Optional;
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-static std::map<std::string, std::string> s_ifcDataTypesUnits;
-
-static bool InitIfcDataTypesUnits()
-{
-#define IGNORE_1ST(a,b) b
-    s_ifcDataTypesUnits["IFCAMOUNTOFSUBSTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "AMOUNTOFSUBSTANCEUNIT");
-    s_ifcDataTypesUnits["IFCAREADENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "AREADENSITYUNIT");
-    s_ifcDataTypesUnits["IFCAREAMEASURE"] = IGNORE_1ST("IFCUNITENUM", "AREAUNIT");
-    s_ifcDataTypesUnits["IFCDYNAMICVISCOSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "DYNAMICVISCOSITYUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICCAPACITANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCAPACITANCEUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICCHARGEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCHARGEUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICCONDUCTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCONDUCTANCEUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICCURRENTMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCURRENTUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICRESISTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICRESISTANCEUNIT");
-    s_ifcDataTypesUnits["IFCELECTRICVOLTAGEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICVOLTAGEUNIT");
-    s_ifcDataTypesUnits["IFCENERGYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ENERGYUNIT");
-    s_ifcDataTypesUnits["IFCFORCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "FORCEUNIT");
-    s_ifcDataTypesUnits["IFCFREQUENCYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "FREQUENCYUNIT");
-    s_ifcDataTypesUnits["IFCHEATFLUXDENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "HEATFLUXDENSITYUNIT");
-    s_ifcDataTypesUnits["IFCHEATINGVALUEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "HEATINGVALUEUNIT");
-    s_ifcDataTypesUnits["IFCILLUMINANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ILLUMINANCEUNIT");
-    s_ifcDataTypesUnits["IFCIONCONCENTRATIONMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "IONCONCENTRATIONUNIT");
-    s_ifcDataTypesUnits["IFCISOTHERMALMOISTURECAPACITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "ISOTHERMALMOISTURECAPACITYUNIT");
-    s_ifcDataTypesUnits["IFCLENGTHMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LENGTHUNIT");
-    s_ifcDataTypesUnits["IFCLINEARVELOCITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "LINEARVELOCITYUNIT");
-    s_ifcDataTypesUnits["IFCLUMINOUSFLUXMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LUMINOUSFLUXUNIT");
-    s_ifcDataTypesUnits["IFCLUMINOUSINTENSITYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LUMINOUSINTENSITYUNIT");
-    s_ifcDataTypesUnits["IFCMASSDENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSDENSITYUNIT");
-    s_ifcDataTypesUnits["IFCMASSFLOWRATEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSFLOWRATEUNIT");
-    s_ifcDataTypesUnits["IFCMASSMEASURE"] = IGNORE_1ST("IFCUNITENUM", "MASSUNIT");
-    s_ifcDataTypesUnits["IFCMASSPERLENGTHMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSPERLENGTHUNIT");
-    s_ifcDataTypesUnits["IFCMODULUSOFELASTICITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MODULUSOFELASTICITYUNIT");
-    s_ifcDataTypesUnits["IFCMOISTUREDIFFUSIVITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOISTUREDIFFUSIVITYUNIT");
-    s_ifcDataTypesUnits["IFCMOLECULARWEIGHTMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOLECULARWEIGHTUNIT");
-    s_ifcDataTypesUnits["IFCMOMENTOFINERTIAMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOMENTOFINERTIAUNIT");
-    s_ifcDataTypesUnits["IFCPHMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "PHUNIT");
-    s_ifcDataTypesUnits["IFCPLANARFORCEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "PLANARFORCEUNIT");
-    s_ifcDataTypesUnits["IFCPLANEANGLEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "PLANEANGLEUNIT");
-    s_ifcDataTypesUnits["IFCPOWERMEASURE"] = IGNORE_1ST("IFCUNITENUM", "POWERUNIT");
-    s_ifcDataTypesUnits["IFCPRESSUREMEASURE"] = IGNORE_1ST("IFCUNITENUM", "PRESSUREUNIT");
-    s_ifcDataTypesUnits["IFCRADIOACTIVITYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "RADIOACTIVITYUNIT");
-    s_ifcDataTypesUnits["IFCROTATIONALFREQUENCYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "ROTATIONALFREQUENCYUNIT");
-    s_ifcDataTypesUnits["IFCSECTIONMODULUSMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SECTIONMODULUSUNIT");
-    s_ifcDataTypesUnits["IFCSOUNDPOWERMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SOUNDPOWERUNIT");
-    s_ifcDataTypesUnits["IFCSOUNDPRESSUREMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SOUNDPRESSUREUNIT");
-    s_ifcDataTypesUnits["IFCSPECIFICHEATCAPACITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SPECIFICHEATCAPACITYUNIT");
-    s_ifcDataTypesUnits["IFCTEMPERATURERATEOFCHANGEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "TEMPERATURERATEOFCHANGEUNIT");
-    s_ifcDataTypesUnits["IFCTHERMALCONDUCTIVITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "THERMALCONDUCTANCEUNIT");
-    s_ifcDataTypesUnits["IFCTHERMODYNAMICTEMPERATUREMEASURE"] = IGNORE_1ST("IFCUNITENUM", "THERMODYNAMICTEMPERATUREUNIT");
-    s_ifcDataTypesUnits["IFCTIMEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "TIMEUNIT");
-    s_ifcDataTypesUnits["IFCTORQUEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "TORQUEUNIT");
-    s_ifcDataTypesUnits["IFCVAPORPERMEABILITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VAPORPERMEABILITYUNIT");
-    s_ifcDataTypesUnits["IFCVOLUMEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "VOLUMEUNIT");
-    s_ifcDataTypesUnits["IFCVOLUMETRICFLOWRATEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VOLUMETRICFLOWRATEUNIT");
-
-    return true;
-}
-static bool s_InitIfcDataTypesUnits = InitIfcDataTypesUnits();
 
 /// <summary>
 /// 
@@ -430,6 +293,151 @@ private:
     ATTR(IfcMaterialList, Materials, IfcMaterialList_Materials);
 };
 
+
+/// <summary>
+/// 
+/// </summary>
+static int StrICmp(const char* s1, const char* s2)
+{
+    return _stricmp(s1, s2);
+}
+
+/// <summary>
+/// 
+/// </summary>
+static void ToUpper(std::string& str)
+{
+    for (size_t i = 0; i < str.length(); i++) {
+        str[i] = (char)toupper (str[i]);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
+{
+    SdaiEntity entity = 0;
+    engiGetAttributeTraits(attr, (char**)0, &entity, 0, 0, 0, 0, 0);
+    return sdaiIsKindOf(inst, entity);
+}
+
+/// <summary>
+/// 
+/// </summary>
+enum class Cardinality { Required, Optional, Prohibited };
+static Cardinality GetCardinality(
+    const char* cardinality,
+    MultiTypeValueCache& minOccur,
+    MultiTypeValueCache& maxOccur,
+    Cardinality def,
+    Context& ctx
+)
+{
+    if (cardinality && *cardinality) {
+        if (!strcmp(cardinality, "required")) {
+            return Cardinality::Required;
+        }
+        else if (!strcmp(cardinality, "prohibited")) {
+            return Cardinality::Prohibited;
+        }
+        else if (!strcmp(cardinality, "optional")) {
+            return Cardinality::Optional;
+        }
+        else {
+            ctx.LogMsg (MsgLevel::Error, "Invalid IDS file, unallowed cardinality attribute value '%s'", cardinality);
+            return Cardinality::Required;
+        }
+    }
+
+    const char* min__ = nullptr;
+    minOccur.Get(&min__);
+
+    if (!min__ || !*min__) {
+        return def;
+    }
+
+    SdaiInteger min_ = 0;
+    minOccur.Get(&min_);
+    if (min_ > 0) {
+        return Cardinality::Required;
+    }
+
+    SdaiInteger max_ = MAXINT;
+    const char* max__ = nullptr;
+    maxOccur.Get(&max__);
+    if (*max__) {
+        maxOccur.Get(&max_);
+    }
+
+    if (max_ == 0)
+        return Cardinality::Prohibited;
+
+    return Cardinality::Optional;
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+static std::map<std::string, std::string> s_ifcDataTypesUnits;
+
+static bool InitIfcDataTypesUnits()
+{
+#define IGNORE_1ST(a,b) b
+    s_ifcDataTypesUnits["IFCAMOUNTOFSUBSTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "AMOUNTOFSUBSTANCEUNIT");
+    s_ifcDataTypesUnits["IFCAREADENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "AREADENSITYUNIT");
+    s_ifcDataTypesUnits["IFCAREAMEASURE"] = IGNORE_1ST("IFCUNITENUM", "AREAUNIT");
+    s_ifcDataTypesUnits["IFCDYNAMICVISCOSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "DYNAMICVISCOSITYUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICCAPACITANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCAPACITANCEUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICCHARGEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCHARGEUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICCONDUCTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCONDUCTANCEUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICCURRENTMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICCURRENTUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICRESISTANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICRESISTANCEUNIT");
+    s_ifcDataTypesUnits["IFCELECTRICVOLTAGEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ELECTRICVOLTAGEUNIT");
+    s_ifcDataTypesUnits["IFCENERGYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ENERGYUNIT");
+    s_ifcDataTypesUnits["IFCFORCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "FORCEUNIT");
+    s_ifcDataTypesUnits["IFCFREQUENCYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "FREQUENCYUNIT");
+    s_ifcDataTypesUnits["IFCHEATFLUXDENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "HEATFLUXDENSITYUNIT");
+    s_ifcDataTypesUnits["IFCHEATINGVALUEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "HEATINGVALUEUNIT");
+    s_ifcDataTypesUnits["IFCILLUMINANCEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "ILLUMINANCEUNIT");
+    s_ifcDataTypesUnits["IFCIONCONCENTRATIONMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "IONCONCENTRATIONUNIT");
+    s_ifcDataTypesUnits["IFCISOTHERMALMOISTURECAPACITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "ISOTHERMALMOISTURECAPACITYUNIT");
+    s_ifcDataTypesUnits["IFCLENGTHMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LENGTHUNIT");
+    s_ifcDataTypesUnits["IFCLINEARVELOCITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "LINEARVELOCITYUNIT");
+    s_ifcDataTypesUnits["IFCLUMINOUSFLUXMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LUMINOUSFLUXUNIT");
+    s_ifcDataTypesUnits["IFCLUMINOUSINTENSITYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "LUMINOUSINTENSITYUNIT");
+    s_ifcDataTypesUnits["IFCMASSDENSITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSDENSITYUNIT");
+    s_ifcDataTypesUnits["IFCMASSFLOWRATEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSFLOWRATEUNIT");
+    s_ifcDataTypesUnits["IFCMASSMEASURE"] = IGNORE_1ST("IFCUNITENUM", "MASSUNIT");
+    s_ifcDataTypesUnits["IFCMASSPERLENGTHMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MASSPERLENGTHUNIT");
+    s_ifcDataTypesUnits["IFCMODULUSOFELASTICITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MODULUSOFELASTICITYUNIT");
+    s_ifcDataTypesUnits["IFCMOISTUREDIFFUSIVITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOISTUREDIFFUSIVITYUNIT");
+    s_ifcDataTypesUnits["IFCMOLECULARWEIGHTMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOLECULARWEIGHTUNIT");
+    s_ifcDataTypesUnits["IFCMOMENTOFINERTIAMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "MOMENTOFINERTIAUNIT");
+    s_ifcDataTypesUnits["IFCPHMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "PHUNIT");
+    s_ifcDataTypesUnits["IFCPLANARFORCEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "PLANARFORCEUNIT");
+    s_ifcDataTypesUnits["IFCPLANEANGLEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "PLANEANGLEUNIT");
+    s_ifcDataTypesUnits["IFCPOWERMEASURE"] = IGNORE_1ST("IFCUNITENUM", "POWERUNIT");
+    s_ifcDataTypesUnits["IFCPRESSUREMEASURE"] = IGNORE_1ST("IFCUNITENUM", "PRESSUREUNIT");
+    s_ifcDataTypesUnits["IFCRADIOACTIVITYMEASURE"] = IGNORE_1ST("IFCUNITENUM", "RADIOACTIVITYUNIT");
+    s_ifcDataTypesUnits["IFCROTATIONALFREQUENCYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "ROTATIONALFREQUENCYUNIT");
+    s_ifcDataTypesUnits["IFCSECTIONMODULUSMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SECTIONMODULUSUNIT");
+    s_ifcDataTypesUnits["IFCSOUNDPOWERMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SOUNDPOWERUNIT");
+    s_ifcDataTypesUnits["IFCSOUNDPRESSUREMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SOUNDPRESSUREUNIT");
+    s_ifcDataTypesUnits["IFCSPECIFICHEATCAPACITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "SPECIFICHEATCAPACITYUNIT");
+    s_ifcDataTypesUnits["IFCTEMPERATURERATEOFCHANGEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "TEMPERATURERATEOFCHANGEUNIT");
+    s_ifcDataTypesUnits["IFCTHERMALCONDUCTIVITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "THERMALCONDUCTANCEUNIT");
+    s_ifcDataTypesUnits["IFCTHERMODYNAMICTEMPERATUREMEASURE"] = IGNORE_1ST("IFCUNITENUM", "THERMODYNAMICTEMPERATUREUNIT");
+    s_ifcDataTypesUnits["IFCTIMEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "TIMEUNIT");
+    s_ifcDataTypesUnits["IFCTORQUEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "TORQUEUNIT");
+    s_ifcDataTypesUnits["IFCVAPORPERMEABILITYMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VAPORPERMEABILITYUNIT");
+    s_ifcDataTypesUnits["IFCVOLUMEMEASURE"] = IGNORE_1ST("IFCUNITENUM", "VOLUMEUNIT");
+    s_ifcDataTypesUnits["IFCVOLUMETRICFLOWRATEMEASURE"] = IGNORE_1ST("IFCDERIVEDUNITENUM", "VOLUMETRICFLOWRATEUNIT");
+
+    return true;
+}
+static bool s_InitIfcDataTypesUnits = InitIfcDataTypesUnits();
 
 
 /// <summary>
@@ -731,22 +739,25 @@ void Facet::ResetCache()
 /// </summary>
 bool Facet::Match(SdaiInstance inst, Context& ctx)
 {
-    bool match = MatchImpl(inst, ctx);
+    Matched match = MatchImpl(inst, ctx);
 
-    auto rq = GetCardinality(m_cardinality.c_str(), m_minOccursVal, m_maxOccursVal, Cardinality::Required);
+    auto rq = GetCardinality(m_cardinality.c_str(), m_minOccursVal, m_maxOccursVal, Cardinality::Required, ctx);
 
     switch (rq) {
+        case Cardinality::Required:
+            return match == Matched::Yes;
+            break;
+
         case Cardinality::Prohibited:
-            match = !match;
+            return match == Matched::No || match == Matched::NotFound;
             break;
 
         case Cardinality::Optional:
-            ctx.LogMsg(MsgLevel::Info, "Optional requirement%s match", match ? "" : " does not");
-            match = true;
-            break;
-    }
+            return match == Matched::Yes || match == Matched::NotFound;
 
-    return match;
+        default:
+            return false;
+    }
 }
 
 /// <summary>
@@ -1011,7 +1022,7 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
         if (m_applicability.Match(inst, ctx)) {
             m_nOccurs++;
 
-            auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional);
+            auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional, ctx);
 
             ok = m_requirements.Match(inst, ctx);
 
@@ -1041,7 +1052,7 @@ bool Specification::CheckUsed(Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         
-        auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional);
+        auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional, ctx);
         
         switch (rq) {
             case Cardinality::Required:
@@ -1138,7 +1149,7 @@ void FacetEntity::ResetCacheImpl()
 /// <summary>
 /// 
 /// </summary>
-bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     // check entity name
     //
@@ -1173,18 +1184,18 @@ bool FacetEntity::MatchImpl(SdaiInstance inst, Context& ctx)
 
 
     if (!entityNameMatch) {
-        return false; //>>>>>>>>>>>>>>>>>>>>>>>
+        return Facet::Matched::No; //>>>>>>>>>>>>>>>>>>>>>>>
     }
     
     //
     // check predefined type
     //
-    if (m_predefinedType.IsSet()) {
-        return MatchPredefinedType(inst, ctx);
+    if (m_predefinedType.IsSet() && !MatchPredefinedType(inst, ctx)) {
+        return Matched::No;
     }
 
     //
-    return true;
+    return Facet::Matched::Yes;
 }
 
 /// <summary>
@@ -1231,7 +1242,7 @@ void FacetPartOf::ResetCacheImpl()
 /// <summary>
 /// 
 /// </summary>
-bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     if (m_navigations.empty()) {
         FillParentsNavigators(ctx);
@@ -1250,14 +1261,14 @@ bool FacetPartOf::MatchImpl(SdaiInstance inst, Context& ctx)
             nav->Follow(inst, follow, ctx);
             for (auto parent : follow) {
                 if (nav->canMatch && m_entity.Match(parent, ctx)) {
-                    return true; //>>>>>>>>>>>>>>>>>>>>>>>>>
+                    return Matched::Yes; //>>>>>>>>>>>>>>>>>>>>>>>>>
                 }
                 toCheckParents.push_back(parent);
             }
         }
     }
 
-    return false;
+    return Matched::No;
 }
 
 /// <summary>
@@ -1458,7 +1469,7 @@ void FacetClassification::ResetCacheImpl()
 /// <summary>
 /// 
 /// </summary>
-bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     References references;
 
@@ -1470,7 +1481,7 @@ bool FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
         CollectIfcRelAssociatesClassification(type, ctx, references);
     }
 
-    return Match (references, ctx);
+    return Match (references, ctx) ? Matched::Yes : Matched::No;
 }
 
 /// <summary>
@@ -1682,7 +1693,7 @@ bool FacetClassification::Match(References& references, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     SdaiEntity ent = sdaiGetInstanceType(inst);
 
@@ -1704,25 +1715,27 @@ bool FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
             const char* name = 0;
             engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL);
             if (m_name.Match(name, true, ctx)) {
-                if (MatchAttributeValue(inst, attr, m_value, ctx)) {
-                    return true; //>>>>>>>>>>>>>
+                auto matched = MatchAttributeValue(inst, attr, m_value, ctx);
+                if (matched != Matched::NotFound) {
+                    return matched; //>>>>>>>>>>>>>
                 }
             }
         }
     }
-    return false;
+
+    return Matched::NotFound;
 }
 
 /// <summary>
 /// 
 /// </summary>
-bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsvalue, Context& ctx)
+Facet::Matched Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsvalue, Context& ctx)
 {
     if (engiAttrIsInverse(attr)) {
-        return false; //do not apply to imverse attribute
+        return Matched::NotFound; //do not apply to imverse attribute
     }
 
-    bool match = false;
+    Matched match = Matched::NotFound;
 
     auto sdaiType = engiGetInstanceAttrType(inst, attr);
     switch (sdaiType) {
@@ -1731,28 +1744,28 @@ bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsv
         case sdaiBINARY: {
             const char* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiBINARY, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiENUM: {
             const char* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiENUM, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiSTRING: {
             const wchar_t* value = nullptr;
             if (sdaiGetAttr(inst, attr, sdaiUNICODE, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx);
+                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiINTEGER: {
             SdaiInteger value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINTEGER, &value)) {
-                match = idsvalue.Match(value, ctx);
+                match = idsvalue.Match(value, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
@@ -1760,14 +1773,14 @@ bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsv
         case sdaiNUMBER: {
             double value = 0;
             if (sdaiGetAttr(inst, attr, sdaiREAL, &value)) {
-                match = idsvalue.Match(value, ctx);
+                match = idsvalue.Match(value, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiAGGR: {
             SdaiAggr aggr = 0;
             if (sdaiGetAttr(inst, attr, sdaiAGGR, &aggr)) {
-                match = MatchAggrValue(aggr, idsvalue, ctx);
+                match = MatchAggrValue(aggr, idsvalue, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
@@ -1778,11 +1791,11 @@ bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsv
                     switch (*value) {
                         case 'T':
                         case 't':
-                            match = idsvalue.Match("TRUE", false, ctx);
+                            match = idsvalue.Match("TRUE", false, ctx) ? Matched::Yes : Matched::No;
                             break;
                         case 'F':
                         case 'f':
-                            match = idsvalue.Match("FALSE", false, ctx);
+                            match = idsvalue.Match("FALSE", false, ctx) ? Matched::Yes : Matched::No;
                             break;
                         //U always fails
                     }
@@ -1793,21 +1806,21 @@ bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsv
         case sdaiBOOLEAN: {
             bool value = false;
             if (sdaiGetAttr(inst, attr, sdaiBOOLEAN, &value)) {
-                match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx);
+                match = idsvalue.Match(value ? "TRUE" : "FALSE", false, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiINSTANCE: {
             SdaiInstance value = 0;
             if (sdaiGetAttr(inst, attr, sdaiINSTANCE, &value)) {
-                match = MatchInstanceValue (idsvalue);
+                match = MatchInstanceValue (idsvalue) ? Matched::Yes : Matched::No;
             }
             break;
         }
         case sdaiADB: {
             SdaiADB value = 0;
             if (sdaiGetAttr(inst, attr, sdaiADB, &value)) {
-                match = MatchADBValue(value, idsvalue, ctx);
+                match = MatchADBValue(value, idsvalue, ctx) ? Matched::Yes : Matched::No;
             }
             break;
         }
@@ -1815,6 +1828,7 @@ bool Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsValue& idsv
             ctx.LogMsg(MsgLevel::NotImplemented, "Match unknown attribute type");
             assert(0);
     }
+
     return match;
 }
 
@@ -2056,15 +2070,15 @@ bool Facet::MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
-bool FacetProperty::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetProperty::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     std::set<std::wstring> testedProps;
 
     if (!TestProperties(inst, ctx, testedProps)) {
-        return false;
+        return Matched::No;
     }
 
-    return testedProps.size() > 0;
+    return testedProps.size() > 0 ?  Matched::Yes : Matched::NotFound;
 }
 
 /// <summary>
@@ -2377,7 +2391,7 @@ bool FacetProperty::TestPredefinedProperty(SdaiInstance pset, SdaiAttr prop, con
         return true; //already tested, this type property was overriden in insatnce
     }
 
-    return MatchAttributeValue(pset, prop, m_value, ctx);
+    return MatchAttributeValue(pset, prop, m_value, ctx) == Matched::Yes;
 }
 
 /// <summary>
@@ -2624,7 +2638,7 @@ bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* ifcT
 /// <summary>
 /// 
 /// </summary>
-bool FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
+Facet::Matched FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
 {
     SdaiAggr aggrAssoc = 0;
     sdaiGetAttr(inst, ctx._IfcObjectDefinition_HasAssociations(), sdaiAGGR, &aggrAssoc);
@@ -2640,7 +2654,7 @@ bool FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
             sdaiGetAttr(relAssoc, ctx._IfcRelAssociatesMaterial_RelatingMaterial(), sdaiINSTANCE, &material);
             if (material) {
 
-                return MatchMaterialSelect(material, ctx);
+                return MatchMaterialSelect(material, ctx) ? Matched::Yes : Matched::No;
             }
         }
     }
@@ -2650,7 +2664,7 @@ bool FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
         return MatchImpl(type, ctx);
     }
 
-    return false;
+    return Matched::No;
 }
 
 /// <summary>
