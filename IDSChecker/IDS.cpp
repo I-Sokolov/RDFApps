@@ -325,7 +325,6 @@ static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
 /// <summary>
 /// 
 /// </summary>
-enum class Cardinality { Required, Optional, Prohibited };
 static Cardinality GetCardinality(
     const char* cardinality,
     MultiTypeValueCache& minOccur,
@@ -729,6 +728,14 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
 /// <summary>
 /// 
 /// </summary>
+Cardinality Facet::GetCardinality(Context& ctx)
+{
+    return ::GetCardinality(m_cardinality.c_str(), m_minOccursVal, m_maxOccursVal, Cardinality::Required, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
 void Facet::ResetCache()
 {
     ResetCacheImpl();
@@ -741,9 +748,8 @@ bool Facet::Match(SdaiInstance inst, Context& ctx)
 {
     Matched match = MatchImpl(inst, ctx);
 
-    auto rq = GetCardinality(m_cardinality.c_str(), m_minOccursVal, m_maxOccursVal, Cardinality::Required, ctx);
-
-    switch (rq) {
+    auto card = GetCardinality(ctx);
+    switch (card) {
         case Cardinality::Required:
             return match == Matched::Yes;
             break;
@@ -1736,6 +1742,8 @@ Facet::Matched Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsV
     }
 
     Matched match = Matched::NotFound;
+    
+    bool emptyStringIsValue = (GetCardinality(ctx) == Cardinality::Optional);
 
     auto sdaiType = engiGetInstanceAttrType(inst, attr);
     switch (sdaiType) {
@@ -1743,22 +1751,28 @@ Facet::Matched Facet::MatchAttributeValue(SdaiInstance inst, SdaiAttr attr, IdsV
             break;
         case sdaiBINARY: {
             const char* value = nullptr;
-            if (sdaiGetAttr(inst, attr, sdaiBINARY, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+            if (sdaiGetAttr(inst, attr, sdaiBINARY, &value) && value) {
+                if (emptyStringIsValue || *value) {
+                    match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+                }
             }
             break;
         }
         case sdaiENUM: {
             const char* value = nullptr;
-            if (sdaiGetAttr(inst, attr, sdaiENUM, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+            if (sdaiGetAttr(inst, attr, sdaiENUM, &value) && value) {
+                if (emptyStringIsValue || *value) {
+                    match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+                }
             }
             break;
         }
         case sdaiSTRING: {
             const wchar_t* value = nullptr;
-            if (sdaiGetAttr(inst, attr, sdaiUNICODE, &value) && value && *value) {
-                match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+            if (sdaiGetAttr(inst, attr, sdaiUNICODE, &value) && value) {
+                if (emptyStringIsValue || *value) {
+                    match = idsvalue.Match(value, false, ctx) ? Matched::Yes : Matched::No;
+                }
             }
             break;
         }

@@ -27,6 +27,11 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
+        enum class Cardinality { Required, Optional, Prohibited };
+
+        /// <summary>
+        /// 
+        /// </summary>
         template <typename T> class OwningPtrList : public std::list<T*>
         {
         public:
@@ -176,6 +181,8 @@ namespace RDF
             bool MatchAggrValue(SdaiAggr aggr, IdsValue& valuse, Context& ctx);
             bool MatchInstanceValue(IdsValue& idsvalue) { return !idsvalue.IsSet(); }
             bool MatchADBValue(SdaiADB adb, IdsValue& idsvalue, Context& ctx);
+
+            Cardinality GetCardinality(Context& ctx);
 
         protected:
             std::string m_cardinality;
