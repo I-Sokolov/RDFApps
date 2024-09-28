@@ -1213,8 +1213,14 @@ bool FacetEntity::MatchPredefinedType(SdaiInstance inst, Context& ctx)
     const char* predType = nullptr;
     sdaiGetAttrBN(inst, "PredefinedType", sdaiENUM, &predType);
 
+    if (predType) {
+        if (m_predefinedType.Match(predType, false, ctx)) {
+            return true; //>>>>>>>>>>
+        }
+    }
+
     const wchar_t* objType = nullptr;
-    if (!predType || !strcmp(predType, "USERDEFINED")) {
+    if (!predType || 0==strcmp(predType, "USERDEFINED")) {
         sdaiGetAttrBN(inst, "ObjectType", sdaiUNICODE, &objType);
         if (!objType) {
             sdaiGetAttrBN(inst, "ElementType", sdaiUNICODE, &objType);
@@ -1226,10 +1232,7 @@ bool FacetEntity::MatchPredefinedType(SdaiInstance inst, Context& ctx)
 
     if (objType) {
         return m_predefinedType.Match(objType, false, ctx); //>>>>>>>>>
-    }
-    else if (predType) {
-        return m_predefinedType.Match(predType, false, ctx); //>>>>>>>>>>
-    }
+    }    
     else if (auto type = GetTypeObject(inst, ctx)) {
         return MatchPredefinedType(type, ctx); //>>>>>>>>>>
     }
