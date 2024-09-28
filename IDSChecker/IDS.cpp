@@ -3022,7 +3022,7 @@ struct ComparerFloat
     //char   m_buff[80];
 };
 
-#if 0
+#if 1
 /// <summary>
 /// 
 /// </summary>
@@ -3036,6 +3036,14 @@ struct ComparerInt
             return 1;
         else
             return 0;
+    }
+
+    const char* GetString(double)
+    {
+        assert(0); //not expected to use
+        //snprintf(m_buff, 79, "%g", v);
+        //return m_buff;
+        return nullptr;
     }
 };
 #endif
@@ -3101,9 +3109,9 @@ bool IdsValue::Match(const char* value, bool compareNoCase, Context&)
 /// <summary>
 /// 
 /// </summary>
-bool IdsValue::Match(SdaiInteger value, Context& ctx)
+bool IdsValue::Match(SdaiInteger value, Context&)
 {
-#if 1
+#if 0
     //pass-integers_follow_the_same_rules_as_numbers_2_2
     return Match((double)value, ctx);
 #else
