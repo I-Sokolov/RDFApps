@@ -65,7 +65,7 @@ using namespace RDF::IDS;
             }
 
 #define END_CHILDREN \
-            else { ctx.LogMsg(MsgLevel::Warning, "Unknown child element <%s>", tag.c_str()); } } }
+            else { ctx.LogMsg(MsgLevel::Warning, "Unknown child element <%s> in " __FUNCTION__, tag.c_str()); } } }
 
 
 /// <summary>
@@ -652,6 +652,7 @@ void File::Read(_xml::_element& elem , Context& ctx)
 void File::Read_info(_xml::_element& elem, Context& ctx)
 {
     GET_CHILD(title)
+    NEXT_CHILD(description)
     END_CHILDREN
 }
 
@@ -1487,7 +1488,12 @@ Facet::Matched FacetClassification::MatchImpl(SdaiInstance inst, Context& ctx)
         CollectIfcRelAssociatesClassification(type, ctx, references);
     }
 
-    return Match (references, ctx) ? Matched::Yes : Matched::No;
+    if (references.empty()) {
+        return Matched::NotFound;
+    }
+    else {
+        return Match(references, ctx) ? Matched::Yes : Matched::No;
+    }
 }
 
 /// <summary>

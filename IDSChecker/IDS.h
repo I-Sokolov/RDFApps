@@ -507,11 +507,13 @@ namespace RDF
         private:
             void Read_info(_xml::_element& elem, Context& ctx);
             void Read_title(_xml::_element& elem, Context&) { m_title = elem.getContent(); }
+            void Read_description(_xml::_element& elem, Context&) { m_description = elem.getContent(); }
             void Read_specifications(_xml::_element& elem, Context& ctx);
             void Read_specification(_xml::_element& elem, Context& ctx) { m_specifications.push_back(new Specification(elem, ctx)); }
 
         private:
             std::string                    m_title;
+            std::string                    m_description;
             OwningPtrList<Specification>   m_specifications;
         };
     }
