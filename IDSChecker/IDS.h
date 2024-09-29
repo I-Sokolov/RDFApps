@@ -27,7 +27,7 @@ namespace RDF
         /// <summary>
         /// 
         /// </summary>
-        enum class Cardinality { Required, Optional, Prohibited };
+        enum class Cardinality { Undef, Required, Optional, Prohibited };
 
         /// <summary>
         /// 
@@ -421,6 +421,18 @@ namespace RDF
         /// </summary>
         class Applicability : public Facets
         {
+        public:
+            Applicability() : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) {}
+
+            void Read(_xml::_element& elem, Context& ctx);
+            Cardinality GetCardinality(Context& ctx);
+
+        private:
+            std::string m_minOccurs;
+            std::string m_maxOccurs;
+
+            MultiTypeValueCache m_minOccursVal;
+            MultiTypeValueCache m_maxOccursVal;
         };
 
         /// <summary>
@@ -452,6 +464,7 @@ namespace RDF
 
         private:
             bool SuitableIfcVersion(Context& ctx);
+            Cardinality GetCardinality(Context& ctx);
 
         private:
             std::string m_name;

@@ -978,6 +978,27 @@ bool File::CheckSpecificationsUsed(Context& ctx)
     return ok;
 }
 
+
+/// <summary>
+/// 
+/// </summary>
+void Applicability::Read(_xml::_element& elem, Context& ctx)
+{
+    GET_ATTR(minOccurs)
+    NEXT_ATTR(maxOccurs)
+    END_ATTR
+
+    Facets::Read(elem, ctx);
+}
+
+/// <summary>
+/// 
+/// </summary>
+Cardinality Applicability::GetCardinality(Context& ctx)
+{
+    return ::GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional, ctx);
+}
+
 /// <summary>
 /// 
 /// </summary>
@@ -1018,6 +1039,21 @@ void Specification::ResetCache()
     m_requirements.ResetCache();
 };
 
+
+/// <summary>
+/// 
+/// </summary>
+Cardinality Specification::GetCardinality(Context& ctx)
+{
+    Cardinality card = ::GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Undef, ctx);
+    if (card != Cardinality::Undef) {
+        return card;
+    }
+
+    return m_applicability.GetCardinality(ctx);
+}
+
+
 /// <summary>
 /// 
 /// </summary>
@@ -1029,7 +1065,7 @@ bool Specification::Check(SdaiInstance inst, Context& ctx)
         if (m_applicability.Match(inst, ctx)) {
             m_nOccurs++;
 
-            auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional, ctx);
+            auto rq = GetCardinality(ctx);
 
             ok = m_requirements.Match(inst, ctx);
 
@@ -1059,7 +1095,7 @@ bool Specification::CheckUsed(Context& ctx)
 
     if (SuitableIfcVersion(ctx)) {
         
-        auto rq = GetCardinality(NULL, m_minOccursVal, m_maxOccursVal, Cardinality::Optional, ctx);
+        auto rq = GetCardinality(ctx);
         
         switch (rq) {
             case Cardinality::Required:
@@ -3047,7 +3083,7 @@ struct ComparerInt
             return 0;
     }
 
-    const char* GetString(double)
+    const char* GetString(SdaiInteger)
     {
         assert(0); //not expected to use
         //snprintf(m_buff, 79, "%g", v);
