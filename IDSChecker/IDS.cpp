@@ -2723,7 +2723,7 @@ Facet::Matched FacetMaterial::MatchImpl(SdaiInstance inst, Context& ctx)
         return MatchImpl(type, ctx);
     }
 
-    return Matched::No;
+    return Matched::NotFound;
 }
 
 /// <summary>
