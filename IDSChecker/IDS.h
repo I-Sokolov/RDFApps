@@ -361,7 +361,8 @@ namespace RDF
             
         private:
             IdsValue m_propertySet;
-            IdsValue m_name;
+            IdsValue m_baseName;
+            IdsValue& m_name; //to support previouse version
             IdsValue m_value;
         };
 

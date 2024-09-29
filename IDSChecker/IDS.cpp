@@ -817,8 +817,10 @@ FacetAttribute::FacetAttribute(_xml::_element& elem, Context& ctx)
 /// </summary>
 FacetProperty::FacetProperty(_xml::_element& elem, Context& ctx)
     : Facet(elem, ctx)
+    , m_name (m_baseName)
 {
     GET_CHILD_MEMBER(propertySet)
+    NEXT_CHILD_MEMBER(baseName)
     NEXT_CHILD_MEMBER(name)
     NEXT_CHILD_MEMBER(value)
     END_CHILDREN
@@ -2285,7 +2287,7 @@ bool FacetProperty::TestProperty(SdaiInstance prop, Context& ctx, const wchar_t*
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(prop, ctx._IfcProperty_Name(), sdaiUNICODE, &name);
-    if (!m_name.Match(name, false, ctx)) {
+    if (!m_baseName.Match(name, false, ctx)) {
         return true;  //not to test
     }
 
@@ -2338,7 +2340,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
 {
     const wchar_t* name = nullptr;
     sdaiGetAttr(qto, ctx._IfcPhysicalQuantity_Name(), sdaiUNICODE, &name);
-    if (!m_name.Match(name, false, ctx)) {
+    if (!m_baseName.Match(name, false, ctx)) {
         return true; //not to test
     }
 
@@ -2432,7 +2434,7 @@ bool FacetProperty::TestPredefinedProperty(SdaiInstance pset, SdaiAttr prop, con
 {
     const char* name = 0;
     engiGetAttributeTraits(prop, &name, NULL, NULL, nullptr, nullptr, NULL, NULL);
-    if (!m_name.Match(name, false, ctx)) {
+    if (!m_baseName.Match(name, false, ctx)) {
         return true; //not to test
     }
 
