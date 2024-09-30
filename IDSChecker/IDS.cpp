@@ -2617,7 +2617,7 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
             bool match = false;
             bool value = false;
             if (sdaiGetADBValue(adbValue, sdaiBOOLEAN, &value)) {
-                match = m_value.Match(value ? "TRUE" : "FALSE", false, ctx);
+                match = m_value.Match(value ? "true" : "false", false, ctx);
             }
             return match;
         }
