@@ -721,6 +721,7 @@ void Facet::Read(_xml::_element& elem, Context& ctx)
     GET_ATTR(cardinality)
     NEXT_ATTR(minOccurs)
     NEXT_ATTR(maxOccurs)
+    NEXT_ATTR(dataType)
     NEXT_ATTR(datatype)
     NEXT_ATTR(relation)
     END_ATTR
@@ -2572,8 +2573,8 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
 
     auto ifcType = sdaiGetADBTypePath(adbValue, 0);
 
-    if (!m_datatype.empty()) {
-        if (StrICmp(m_datatype.c_str(), ifcType)) {
+    if (!m_dataType.empty()) {
+        if (StrICmp(m_dataType.c_str(), ifcType)) {
             return false;//datatype mismatch
         }
     }
@@ -2673,8 +2674,8 @@ bool FacetProperty::MatchValue(SdaiADB adbValue, SdaiInstance unit, Context& ctx
 /// </summary>
 bool FacetProperty::MatchValue(double value, SdaiInstance unit, const char* ifcType, Context& ctx)
 {
-    if (!m_datatype.empty()) {
-        if (StrICmp(m_datatype.c_str(), ifcType)) { //quantities_must_also_match_the_appropriate_measure
+    if (!m_dataType.empty()) {
+        if (StrICmp(m_dataType.c_str(), ifcType)) { //quantities_must_also_match_the_appropriate_measure
             return false;//datatype mismatch
         }
     }

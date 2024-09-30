@@ -168,8 +168,8 @@ namespace RDF
             enum class Matched {Undef, Yes, NotFound, No};
 
         protected:
-            Facet() : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) {}
-            Facet(_xml::_element& elem, Context& ctx) : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs) { Read(elem, ctx); }
+            Facet() : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs), m_datatype (m_dataType) {}
+            Facet(_xml::_element& elem, Context& ctx) : m_minOccursVal(m_minOccurs), m_maxOccursVal(m_maxOccurs), m_datatype (m_dataType) { Read(elem, ctx); }
 
             virtual void ResetCacheImpl() = 0;
             virtual Matched MatchImpl(SdaiInstance inst, Context& ctx) = 0;
@@ -188,7 +188,8 @@ namespace RDF
             std::string m_cardinality;
             std::string m_minOccurs;
             std::string m_maxOccurs;
-            std::string m_datatype;
+            std::string m_dataType;
+            std::string& m_datatype;
             std::string m_relation; //for partOf
 
         private:
