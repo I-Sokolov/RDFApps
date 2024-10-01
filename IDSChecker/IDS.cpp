@@ -2278,7 +2278,12 @@ bool FacetProperty::TestInPSDef(SdaiInstance inst, Context& ctx, std::set<std::w
         }
     }
 
-    return propNameMatched; //fail-all_matching_property_sets_must_satisfy_requirements_2_3.ids
+    if (GetCardinality(ctx) == Cardinality::Optional) {
+        return true;
+    }
+    else {
+        return propNameMatched; //fail-all_matching_property_sets_must_satisfy_requirements_2_3.ids
+    }
 }
 
 /// <summary>
