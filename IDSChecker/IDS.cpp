@@ -3028,6 +3028,27 @@ struct ComparerStr
 {
     ComparerStr(bool compareNoCase) : m_compareNoCase(compareNoCase) {}
 
+    bool equal(const char* v1, const char* v2)
+    {
+        return 0==compare (v1, v2);
+    }
+
+    bool less(const char* v1, const char* v2)
+    {
+        return 0 > compare(v1, v2);
+    }
+
+    bool lessOrEqual(const char* v1, const char* v2)
+    {
+        return 0 >= compare(v1, v2);
+    }
+
+    const char* GetString(const char* v)
+    {
+        return v;
+    }
+
+private:
     int compare(const char* v1, const char* v2)
     {
         if (m_compareNoCase) {
@@ -3036,11 +3057,6 @@ struct ComparerStr
         else {
             return strcmp(v1, v2);
         }
-    }
-
-    const char* GetString(const char* v)
-    {
-        return v;
     }
 
     bool m_compareNoCase;
@@ -3053,14 +3069,22 @@ struct ComparerFloat
 {
     ComparerFloat(double precision) : m_precision(precision) {}
 
-    int compare(double v1, double v2)
+    bool equal(double v2, double v1)
     {
-        if (v1 <= v2 * (1 - m_precision) - m_precision)
-            return -1;
-        else if (v1 >= v2 * (1 + m_precision) + m_precision)
-            return 1;
-        else
-            return 0;
+        double m0 = v1 - fabs(v1) * m_precision - m_precision - 1e-15;
+        double m1 = v1 + fabs(v1) * m_precision + m_precision + 1e-15;
+        bool eq = m0 <= v2 && v2 <= m1;
+        return eq;
+    }
+
+    bool less(double v1, double v2)
+    {
+        return v1 < v2;
+    }
+
+    bool lessOrEqual(double v1, double v2)
+    {
+        return v1 <= v2;
     }
 
     const char* GetString(double)
@@ -3070,8 +3094,8 @@ struct ComparerFloat
         //return m_buff;
         return nullptr;
     }
-
-    double m_precision;
+private:
+    double m_precision = 1e-6;
     //char   m_buff[80];
 };
 
@@ -3081,14 +3105,19 @@ struct ComparerFloat
 /// </summary>
 struct ComparerInt
 {
-    int compare(SdaiInteger v1, SdaiInteger v2)
+    bool equal(SdaiInteger v1, SdaiInteger v2)
     {
-        if (v1 < v2)
-            return -1;
-        else if (v1 > v2)
-            return 1;
-        else
-            return 0;
+        return v1 == v2;
+    }
+
+    bool less(SdaiInteger v1, SdaiInteger v2)
+    {
+        return v1 < v2;
+    }
+
+    bool lessOrEqual(SdaiInteger v1, SdaiInteger v2)
+    {
+        return v1 <= v2;
     }
 
     const char* GetString(SdaiInteger)
@@ -3111,7 +3140,7 @@ bool IdsValue::MatchValue(T value, Comparer& cmp)
     if (!m_simpleValue.empty()) {
         T v;
         m_simpleVal.Get(&v);
-        if (0!=cmp.compare(value, v)) {
+        if (!cmp.equal(value, v)) {
             return false;
         }
     }
@@ -3203,7 +3232,7 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
         for (auto& val : m_enumeration) {
             T v = 0;
             val->Get(&v);
-            if (0 == cmp.compare(value, v)) {
+            if (cmp.equal(value, v)) {
                 match = true;
                 break;
             }
@@ -3228,31 +3257,28 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     }
 
     //
-    for (auto& r : m_minInclusive) {
+    for (auto& r : m_minInclusive) { 
         T v = 0;
         r->Get(&v);
-        auto c = cmp.compare(value, v);
-        if (c == -1) {
+        if (!cmp.lessOrEqual(v, value)) {
             return false; //>>>>>>
         }
     }
 
     //
-    for (auto& r : m_maxInclusive) {
+    for (auto& r : m_maxInclusive) { 
         T v = 0;
         r->Get(&v);
-        auto c = cmp.compare(value, v);
-        if (c == 1) {
+        if (!cmp.lessOrEqual(value, v)) {
             return false; //>>>>>>
         }
     }
 
     //
-    for (auto& r : m_minExclusive) {
+    for (auto& r : m_minExclusive) { 
         T v = 0;
         r->Get(&v);
-        auto c = cmp.compare(value, v);
-        if (c != 1) {
+        if (!cmp.less(v, value)) {
             return false; //>>>>>>
         }
     }
@@ -3261,8 +3287,7 @@ template <typename T, class Comparer> bool Restriction::Fit(T value, Comparer& c
     for (auto& r : m_maxExclusive) {
         T v = 0;
         r->Get(&v);
-        auto c = cmp.compare(value, v);
-        if (c != -1) {
+        if (!cmp.less(value, v)) {
             return false; //>>>>>>
         }
     }
