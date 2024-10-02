@@ -79,7 +79,7 @@ using namespace RDF::IDS;
         {                                       \
             if (!m_entity##EntityName) {        \
                 m_entity##EntityName = sdaiGetEntity(model, #EntityName);  \
-                assert(m_entity##EntityName);   \
+                assert(m_entity##EntityName || m_ifcVersion < IfcVersion::Ifc4);   \
             }                                   \
             return m_entity##EntityName;        \
         }                                       
@@ -96,7 +96,7 @@ using namespace RDF::IDS;
             if (!m_attribute_##EntAttr){                                \
                 auto ent = _##Ent();                                    \
                 m_attribute_##EntAttr = sdaiGetAttrDefinition(ent, #Attr);\
-                assert(m_attribute_##EntAttr);                          \
+                assert(m_attribute_##EntAttr || m_ifcVersion < IfcVersion::Ifc4);                          \
             }                                                           \
             return m_attribute_##EntAttr;                               \
         }
@@ -2164,9 +2164,9 @@ bool FacetProperty::TestProperties(SdaiInstance inst, Context& ctx, std::set<std
         }
     }
 
-    if (sdaiIsKindOf(inst, ctx._IfcContext())) {
-        SdaiAggr aggr = 0;
-        if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc2x3) {
+    if (ctx.GetIfcVersion() > Context::IfcVersion::Ifc2x3) {
+        if (sdaiIsKindOf(inst, ctx._IfcContext())) {
+            SdaiAggr aggr = 0;
             sdaiGetAttr(inst, ctx._IfcContext_IsDefinedBy(), sdaiAGGR, &aggr);
             if (!TestInSetOfRel(aggr, ctx, testedProps)) {
                 return false;
