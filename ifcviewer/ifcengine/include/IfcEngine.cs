@@ -3525,12 +3525,15 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "getGlobalPlacement")]
 		public static extern int_t getGlobalPlacement(int_t model, out double origin);
 
-		/// <summary>
-		///		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
-		///
-		///	...
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "setGlobalPlacement")]
+        [DllImport(IFCEngineDLL, EntryPoint = "getGlobalPlacement")]
+        public static extern int_t getGlobalPlacement(int_t model, [Out] double[] origin);
+
+        /// <summary>
+        ///		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
+        ///
+        ///	...
+        /// </summary>
+        [DllImport(IFCEngineDLL, EntryPoint = "setGlobalPlacement")]
 		public static extern int_t setGlobalPlacement(int_t model, ref double origin, byte includeRotation);
 
 		/// <summary>

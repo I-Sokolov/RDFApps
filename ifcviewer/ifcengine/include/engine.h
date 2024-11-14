@@ -6155,6 +6155,17 @@ static	inline	uint64_t	GetFormat(
 				);
 }
 
+//
+//
+static	inline	uint64_t	GetFormat(
+								)
+{
+	return	GetFormat(
+					0,
+					0									//	mask
+				);
+}
+
 #ifdef __cplusplus
 	extern "C" {
 #endif
