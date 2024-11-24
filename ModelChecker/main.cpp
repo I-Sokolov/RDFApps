@@ -37,7 +37,7 @@ static const char* GetAttrName(ValidationIssue issue)
     auto attr = validateGetAttr(issue);
     if (attr) {
         const char* name = 0;
-        engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0);
+        engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
         return name;
     }
     else {

@@ -156,7 +156,7 @@ void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t
 
 			const char* attrName = nullptr;
 			bool inverse = false;
-			engiGetAttributeTraits(attr, &attrName, nullptr, &inverse, nullptr, nullptr, nullptr, nullptr);
+			engiGetAttributeTraits(attr, &attrName, nullptr, nullptr, &inverse, nullptr, nullptr, nullptr, nullptr);
 
 			CString attrIndName;
 			if (!inverse) {

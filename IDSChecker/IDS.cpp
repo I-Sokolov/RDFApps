@@ -318,7 +318,7 @@ static void ToUpper(std::string& str)
 static bool IsAttrSuitable(SdaiAttr attr, SdaiInstance inst)
 {
     SdaiEntity entity = 0;
-    engiGetAttributeTraits(attr, (char**)0, &entity, 0, 0, 0, 0, 0);
+    engiGetAttributeTraits(attr, (char**)0, &entity, 0, 0, 0, 0, 0, 0);
     return sdaiIsKindOf(inst, entity);
 }
 
@@ -1767,7 +1767,7 @@ Facet::Matched FacetAttribute::MatchImpl(SdaiInstance inst, Context& ctx)
         for (SdaiInteger i = 0; i < N; i++) {
             auto attr = engiGetEntityAttributeByIndex(ent, i, true, useInverse);
             const char* name = 0;
-            engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL);
+            engiGetAttributeTraits(attr, &name, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
             if (m_name.Match(name, true, ctx)) {
                 auto matched = MatchAttributeValue(inst, attr, m_value, ctx);
                 if (matched != Matched::NotFound) {
@@ -2439,7 +2439,7 @@ bool FacetProperty::TestQuantity(SdaiInstance qto, Context& ctx, const wchar_t* 
 bool FacetProperty::TestPredefinedProperty(SdaiInstance pset, SdaiAttr prop, const wchar_t* psetName, std::set<std::wstring>& testedProps, bool& propNameMatched, Context& ctx)
 {
     const char* name = 0;
-    engiGetAttributeTraits(prop, &name, NULL, NULL, nullptr, nullptr, NULL, NULL);
+    engiGetAttributeTraits(prop, &name, NULL, NULL, NULL, nullptr, nullptr, NULL, NULL);
     if (!m_baseName.Match(name, false, ctx)) {
         return true; //not to test
     }
