@@ -104,7 +104,7 @@ void CDlgReferenceTree::InsertRegularItem(int_t instance, int_t* aggregation, vo
 	CString attrName;
 	if (attr) {
 		const char* name = nullptr;
-		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+		engiGetAttrTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 		attrName = name;
 	}
 
@@ -388,7 +388,7 @@ void CDlgReferenceTree::CheckInsertReferencingInstance(int_t instance, int_t ref
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
 
 		//const char* attrName = NULL;
-		//engiGetAttributeTraits(attr, &attrName, 0, 0, 0, 0, 0, 0, 0);
+		//engiGetAttrTraits(attr, &attrName, 0, 0, 0, 0, 0, 0, 0);
 
 		auto sdaiType = engiGetAttrType(attr);
 		if (sdaiType & engiTypeFlagAggr) {

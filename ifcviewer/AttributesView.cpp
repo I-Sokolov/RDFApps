@@ -155,12 +155,12 @@ void CAttributesView::AddAttributes(int_t entity, int_t instance, std::set<int_t
 			auto attr = engiGetEntityAttributeByIndex(entity, ia, false, true);
 
 			const char* attrName = nullptr;
-			bool inverse = false;
-			engiGetAttributeTraits(attr, &attrName, nullptr, nullptr, &inverse, nullptr, nullptr, nullptr, nullptr);
+			SdaiBoolean inverse = false;
+			engiGetAttrTraits(attr, &attrName, nullptr, nullptr, &inverse, nullptr, nullptr, nullptr, nullptr);
 
 			CString attrIndName;
 			if (!inverse) {
-				auto ind = engiGetEntityAttributeIndexEx(entity, (const char*) (const wchar_t*) CString(attrName), true, false);
+				auto ind = engiGetAttrIndexExBN(entity, (const char*) (const wchar_t*) CString(attrName), true, false);
 				attrIndName.Format(L"%lld: %hs", ind+1, attrName);
 			}
 			else {

@@ -177,10 +177,10 @@ CString	CreateToolTipText(int_t ifcEntityInstance, int_t entity, int_t * pIndex)
 		int_t	argCnt = engiGetEntityNoArguments(entity);
 		while ((*pIndex) < argCnt) {
 			wchar_t	* propertyName = nullptr;
-			engiGetEntityArgumentName(entity, (*pIndex), sdaiUNICODE, (const char**)&propertyName);
+			engiGetAttrNameByIndex(entity, (*pIndex), sdaiUNICODE, (const char**)&propertyName);
 
 			int_t	propertyType = 0;
-			engiGetEntityArgumentType(entity, (*pIndex), &propertyType);
+			engiGetAttrPrimitiveTypeByIndex(entity, (*pIndex), &propertyType);
 			rValue += "  ";
 			rValue += propertyName;
 			rValue += " : ";

@@ -1168,7 +1168,7 @@ extern const char* GetAttrName(ValidationIssue issue)
 	auto attr = validateGetAttr(issue);
 	if (attr) {
 		const char* name = 0;
-		engiGetAttributeTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
+		engiGetAttrTraits(attr, &name, 0, 0, 0, 0, 0, 0, 0);
 		return name;
 	}
 	else {
@@ -1182,7 +1182,7 @@ extern int_t GetAttrIndex(ValidationIssue issue)
 	const char* name = GetAttrName(issue);
 	if (ent && name) {
 		CString str(name);
-		return engiGetEntityAttributeIndexEx(ent, (char*)str.GetBuffer(), true, false);
+		return engiGetAttrIndexExBN(ent, (char*)str.GetBuffer(), true, false);
 	}
 	else {
 		return -1;

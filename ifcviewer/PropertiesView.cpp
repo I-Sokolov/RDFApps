@@ -197,7 +197,7 @@ static void AddAttributes(SdaiInstance inst, CMFCPropertyGridProperty& parent, L
 		auto attr = engiGetEntityAttributeByIndex(entity, i, true, false);
 
 		const char* name = nullptr;
-		engiGetAttributeTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+		engiGetAttrTraits(attr, &name, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
 		const wchar_t* val = nullptr;
 		sdaiGetAttr(inst, attr, sdaiUNICODE, &val);
