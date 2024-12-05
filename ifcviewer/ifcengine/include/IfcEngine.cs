@@ -173,66 +173,66 @@ namespace RDF
 
 	public enum enum_express_aggr : byte
 	{
-	__NONE						= 0,
-	__ARRAY						= 1,
-	__BAG						= 2,
-	__LIST						= 3,
-	__SET						= 4,
-	__AGGREGATE					= 5						//	generic aggregate
+		__NONE						= 0,
+		__ARRAY						= 1,
+		__BAG						= 2,
+		__LIST						= 3,
+		__SET						= 4,
+		__AGGREGATE					= 5						//	generic aggregate
 	};
 
 	public enum enum_validation_type : System.UInt64
 	{
-	__NONE						= 0,
-	__KNOWN_ENTITY				= 1 << 0,				//  entity is defined in the schema
-	__NO_OF_ARGUMENTS			= 1 << 1,				//	number of arguments
-	__ARGUMENT_EXPRESS_TYPE		= 1 << 2,				//	argument value is correct entity, defined type or enumeration value
-	__ARGUMENT_PRIM_TYPE		= 1 << 3,				//	argument value has correct primitive type
-	__REQUIRED_ARGUMENTS		= 1 << 4,				//	non-optional arguments values are provided
-	__ARRGEGATION_EXPECTED		= 1 << 5,				//	aggregation is provided when expected
-	__AGGREGATION_NOT_EXPECTED	= 1 << 6,   			//	aggregation is not used when not expected
-	__AGGREGATION_SIZE			= 1 << 7,   			//	aggregation size
-	__AGGREGATION_UNIQUE		= 1 << 8,				//	elements in aggregations are unique when required
-	__COMPLEX_INSTANCE			= 1 << 9,				//	complex instances contains full parent chains
-	__REFERENCE_EXISTS			= 1 << 10,				//	referenced instance exists
-	__ABSTRACT_ENTITY			= 1 << 11,  			//	abstract entity should not instantiate
-	__WHERE_RULE				= 1 << 12,  			//	where-rule check
-	__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
-	__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
-	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel / validateInstance function argument should be model / instance
-	__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
-	__INTERNAL_ERROR			= ((UInt64)1) << 63   	//	unspecified error
+		__NONE						= 0,
+		__KNOWN_ENTITY				= 1 << 0,				//  entity is defined in the schema
+		__NO_OF_ARGUMENTS			= 1 << 1,				//	number of arguments
+		__ARGUMENT_EXPRESS_TYPE		= 1 << 2,				//	argument value is correct entity, defined type or enumeration value
+		__ARGUMENT_PRIM_TYPE		= 1 << 3,				//	argument value has correct primitive type
+		__REQUIRED_ARGUMENTS		= 1 << 4,				//	non-optional arguments values are provided
+		__ARRGEGATION_EXPECTED		= 1 << 5,				//	aggregation is provided when expected
+		__AGGREGATION_NOT_EXPECTED	= 1 << 6,   			//	aggregation is not used when not expected
+		__AGGREGATION_SIZE			= 1 << 7,   			//	aggregation size
+		__AGGREGATION_UNIQUE		= 1 << 8,				//	elements in aggregations are unique when required
+		__COMPLEX_INSTANCE			= 1 << 9,				//	complex instances contains full parent chains
+		__REFERENCE_EXISTS			= 1 << 10,				//	referenced instance exists
+		__ABSTRACT_ENTITY			= 1 << 11,  			//	abstract entity should not instantiate
+		__WHERE_RULE				= 1 << 12,  			//	where-rule check
+		__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
+		__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
+		__CALL_ARGUMENT				= 1 << 15,  			//	validateModel / validateInstance function argument should be model / instance
+		__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
+		__INTERNAL_ERROR			= ((UInt64)1) << 63   	//	unspecified error
 	};
 
 	public enum enum_validation_status : byte
 	{
-	__NONE						= 0,
-	__COMPLETE_ALL				= 1,					//	all issues proceed
-	__COMPLETE_NOT_ALL			= 2,					//	completed but some issues were excluded by option settings
-	__TIME_EXCEED				= 3,					//	validation was finished because of reach time limit
-	__COUNT_EXCEED				= 4						//	validation was finished because of reach of issue's numbers limit
+		__NONE						= 0,
+		__COMPLETE_ALL				= 1,					//	all issues proceed
+		__COMPLETE_NOT_ALL			= 2,					//	completed but some issues were excluded by option settings
+		__TIME_EXCEED				= 3,					//	validation was finished because of reach time limit
+		__COUNT_EXCEED				= 4						//	validation was finished because of reach of issue's numbers limit
 	};
 
 	class ifcengine
     {
-		public const int sdaiTYPE = 0; //C++ API generator specific
+		public const int sdaiTYPE			= 0;			//	C++ API generator specific
 
-		public const int_t flagbit0 = 1;           // 2^^0    0000.0000..0000.0001
-		public const int_t flagbit1 = 2;           // 2^^1    0000.0000..0000.0010
-		public const int_t flagbit2 = 4;           // 2^^2    0000.0000..0000.0100
-		public const int_t flagbit3 = 8;           // 2^^3    0000.0000..0000.1000
-		public const int_t flagbit4 = 16;          // 2^^4    0000.0000..0001.0000
-		public const int_t flagbit5 = 32;          // 2^^5    0000.0000..0010.0000
-		public const int_t flagbit6 = 64;          // 2^^6    0000.0000..0100.0000
-		public const int_t flagbit7 = 128;         // 2^^7    0000.0000..1000.0000
-		public const int_t flagbit8 = 256;         // 2^^8    0000.0001..0000.0000
-		public const int_t flagbit9 = 512;         // 2^^9    0000.0010..0000.0000
-		public const int_t flagbit10 = 1024;       // 2^^10   0000.0100..0000.0000
-		public const int_t flagbit11 = 2048;       // 2^^11   0000.1000..0000.0000
-		public const int_t flagbit12 = 4096;       // 2^^12   0001.0000..0000.0000
-		public const int_t flagbit13 = 8192;       // 2^^13   0010.0000..0000.0000
-		public const int_t flagbit14 = 16384;      // 2^^14   0100.0000..0000.0000
-		public const int_t flagbit15 = 32768;      // 2^^15   1000.0000..0000.0000
+		public const int_t flagbit0			= 1;			//	2^^0    0000.0000..0000.0001
+		public const int_t flagbit1			= 2;			//	2^^1    0000.0000..0000.0010
+		public const int_t flagbit2			= 4;			//	2^^2    0000.0000..0000.0100
+		public const int_t flagbit3			= 8;			//	2^^3    0000.0000..0000.1000
+		public const int_t flagbit4			= 16;			//	2^^4    0000.0000..0001.0000
+		public const int_t flagbit5			= 32;			//	2^^5    0000.0000..0010.0000
+		public const int_t flagbit6			= 64;			//	2^^6    0000.0000..0100.0000
+		public const int_t flagbit7			= 128;			//	2^^7    0000.0000..1000.0000
+		public const int_t flagbit8			= 256;			//	2^^8    0000.0001..0000.0000
+		public const int_t flagbit9			= 512;			//	2^^9    0000.0010..0000.0000
+		public const int_t flagbit10		= 1024;			//	2^^10   0000.0100..0000.0000
+		public const int_t flagbit11		= 2048;			//	2^^11   0000.1000..0000.0000
+		public const int_t flagbit12		= 4096;			//	2^^12   0001.0000..0000.0000
+		public const int_t flagbit13		= 8192;			//	2^^13   0010.0000..0000.0000
+		public const int_t flagbit14		= 16384;		//	2^^14   0100.0000..0000.0000
+		public const int_t flagbit15		= 32768;		//	2^^15   1000.0000..0000.0000
 
 		public const int_t sdaiADB           = 1;
 		public const int_t sdaiAGGR          = sdaiADB + 1;
@@ -877,12 +877,12 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrPrimitiveTypeByIndex                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrPrimitiveTypeByIndex.html)
+		///		engiGetAttrTypeByIndex                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrTypeByIndex.html)
 		///
 		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrPrimitiveTypeByIndex")]
-		public static extern void engiGetAttrPrimitiveTypeByIndex(int_t entity, int_t index, out int_t argumentType);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTypeByIndex")]
+		public static extern void engiGetAttrTypeByIndex(int_t entity, int_t index, out int_t argumentType);
 
 		/// <summary>
 		///		engiGetEntityCount                                      (http://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
@@ -1136,8 +1136,8 @@ namespace RDF
         ///		engiGetEntityAttributeByIterator                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIterator.html)
         ///
         ///	Iterates attribute definition of the entity.
-        /// 	Includes direct, inverse and derived attributes defined by this or parent entities.
-        /// 	If a direct attribute is also known as derived it's reported onces as direct.
+        /// 	Includes explicit, inverse and derived attributes defined by this or parent entities.
+        /// 	If a explicit attribute is also known as derived it's reported onces as explicit.
         ///  Returns first attribute if prev is NULL.
         ///  Returns NULL when prev is the last attribute.
         /// </summary>
@@ -1225,12 +1225,12 @@ namespace RDF
         ///	...
         /// </summary>
         [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTraits")]
-		public static extern void engiGetAttrTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool direct, out bool inverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool optional);
+		public static extern void engiGetAttrTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional);
 
-        public static void engiGetAttrTraits(int_t attribute, out string name, out int_t definingEntity, out bool direct, out bool inverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool optional)
+        public static void engiGetAttrTraits(int_t attribute, out string name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional)
 		{
 			IntPtr name_ = IntPtr.Zero;
-			engiGetAttrTraits(attribute, out name_, out definingEntity, out direct, out inverse, out attrType, out domainEntity, out aggregationDefinition, out optional);
+			engiGetAttrTraits(attribute, out name_, out definingEntity, out isExplicit, out isInverse, out attrType, out domainEntity, out aggregationDefinition, out isOptional);
 			name = marshalPtrToString(sdaiEXPRESSSTRING, name_);
 		}
 
@@ -1255,19 +1255,19 @@ namespace RDF
         public static extern int_t engiGetAttrDefiningEntity(int_t attribute);
 
 		//
-		//		engiIsAttrDirect                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrDirect.html)
+		//		engiIsAttrExplicit                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicit.html)
 		//
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrDirect")]
-		public static extern bool engiIsAttrDirect(int_t attribute);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicit")]
+		public static extern bool engiIsAttrExplicit(int_t attribute);
 
         //
-        //		engiIsAttrDirectBN                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrDirectBN.html)
+        //		engiIsAttrExplicitBN                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicitBN.html)
         //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrDirectBN")]
-        public static extern bool engiIsAttrDirectBN(int_t entity, string attributeName);
+        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrDirectBN")]
-        public static extern bool engiIsAttrDirectBN(int_t entity, byte[] attributeName);
+        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+        public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
         /// <summary>
         ///		engiGetAggregationDefinition                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
@@ -4509,14 +4509,6 @@ namespace RDF
 		public static extern int_t engiGetEntityNoArguments(int_t entity);
 
 		/// <summary>
-		///		engiGetAttrPrimitiveType                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrPrimitiveType.html)
-		///
-		///	DEPRECATED use engiGetAttrType
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrPrimitiveType")]
-		public static extern int_t engiGetAttrPrimitiveType(int_t attribute);
-
-		/// <summary>
 		///		engiIsAttrInverse                                       (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverse.html)
 		///
 		/// </summary>
@@ -4832,13 +4824,13 @@ namespace RDF
 		public static extern int_t engiGetComplexInstanceNextPart(int_t instance);
 
         //
-        //		engiEnableExpressScript                           (http://rdf.bg/ifcdoc/CP64/engiEnableExpressScript.html)
+        //		engiEnableDerivedAttributes                           (http://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
         //
         //	 The function enables calculation of derived attributes for sdaiGetAttr(BN) functions and dynamic aggregation indexes
         //	 Returns success flag. 
         //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEnableExpressScript")]
-        public static extern bool engiEnableExpressScript(int_t model, bool enable);
+        [DllImport(IFCEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
+        public static extern bool engiEnableDerivedAttributes(int_t model, bool enable);
 
         /// <summary>
         ///		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrType.html)
