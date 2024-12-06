@@ -144,16 +144,16 @@ namespace RDF
 
 	public enum enum_express_declaration : byte
 	{
-        __NONE						= 0,
-        __ENTITY					= 1,
-        __ENUM						= 2,
-        __SELECT					= 3,
-        __DEFINED_TYPE				= 4,
-        __FUNCTION					= 5,
-        __PROCEDURE					= 6,
-        __GLOBAL_RULE				= 7,
-        __WHERE_RULE				= 8
-    };
+		__NONE						= 0,
+		__ENTITY					= 1,
+		__ENUM						= 2,
+		__SELECT					= 3,
+		__DEFINED_TYPE				= 4,
+		__FUNCTION					= 5,
+		__PROCEDURE					= 6,
+		__GLOBAL_RULE				= 7,
+		__WHERE_RULE				= 8
+	};
 
 	public enum enum_express_attr_type : byte
 	{
@@ -214,25 +214,25 @@ namespace RDF
 	};
 
 	class ifcengine
-    {
-		public const int sdaiTYPE			= 0;			//	C++ API generator specific
+	{
+		public const int sdaiTYPE			 = 0;			//	C++ API generator specific
 
-		public const int_t flagbit0			= 1;			//	2^^0    0000.0000..0000.0001
-		public const int_t flagbit1			= 2;			//	2^^1    0000.0000..0000.0010
-		public const int_t flagbit2			= 4;			//	2^^2    0000.0000..0000.0100
-		public const int_t flagbit3			= 8;			//	2^^3    0000.0000..0000.1000
-		public const int_t flagbit4			= 16;			//	2^^4    0000.0000..0001.0000
-		public const int_t flagbit5			= 32;			//	2^^5    0000.0000..0010.0000
-		public const int_t flagbit6			= 64;			//	2^^6    0000.0000..0100.0000
-		public const int_t flagbit7			= 128;			//	2^^7    0000.0000..1000.0000
-		public const int_t flagbit8			= 256;			//	2^^8    0000.0001..0000.0000
-		public const int_t flagbit9			= 512;			//	2^^9    0000.0010..0000.0000
-		public const int_t flagbit10		= 1024;			//	2^^10   0000.0100..0000.0000
-		public const int_t flagbit11		= 2048;			//	2^^11   0000.1000..0000.0000
-		public const int_t flagbit12		= 4096;			//	2^^12   0001.0000..0000.0000
-		public const int_t flagbit13		= 8192;			//	2^^13   0010.0000..0000.0000
-		public const int_t flagbit14		= 16384;		//	2^^14   0100.0000..0000.0000
-		public const int_t flagbit15		= 32768;		//	2^^15   1000.0000..0000.0000
+		public const int_t flagbit0			 = 1;			//	2^^0    0000.0000..0000.0001
+		public const int_t flagbit1			 = 2;			//	2^^1    0000.0000..0000.0010
+		public const int_t flagbit2			 = 4;			//	2^^2    0000.0000..0000.0100
+		public const int_t flagbit3			 = 8;			//	2^^3    0000.0000..0000.1000
+		public const int_t flagbit4			 = 16;			//	2^^4    0000.0000..0001.0000
+		public const int_t flagbit5			 = 32;			//	2^^5    0000.0000..0010.0000
+		public const int_t flagbit6			 = 64;			//	2^^6    0000.0000..0100.0000
+		public const int_t flagbit7			 = 128;			//	2^^7    0000.0000..1000.0000
+		public const int_t flagbit8			 = 256;			//	2^^8    0000.0001..0000.0000
+		public const int_t flagbit9			 = 512;			//	2^^9    0000.0010..0000.0000
+		public const int_t flagbit10		 = 1024;		//	2^^10   0000.0100..0000.0000
+		public const int_t flagbit11		 = 2048;		//	2^^11   0000.1000..0000.0000
+		public const int_t flagbit12		 = 4096;		//	2^^12   0001.0000..0000.0000
+		public const int_t flagbit13		 = 8192;		//	2^^13   0010.0000..0000.0000
+		public const int_t flagbit14		 = 16384;		//	2^^14   0100.0000..0000.0000
+		public const int_t flagbit15		 = 32768;		//	2^^15   1000.0000..0000.0000
 
 		public const int_t sdaiADB           = 1;
 		public const int_t sdaiAGGR          = sdaiADB + 1;
@@ -693,9 +693,9 @@ namespace RDF
         //
 
 		/// <summary>
-		///		engiGetNextTypeDeclarationIterator                          (http://rdf.bg/ifcdoc/CS64/engiGetNextTypeDeclarationIterator.html)
+		///		engiGetNextTypeDeclarationIterator                      (http://rdf.bg/ifcdoc/CS64/engiGetNextTypeDeclarationIterator.html)
 		///
-		///	This call returns next iterator of EXPRESS schema declarations.
+		///	This call returns next iterator of EXPRESS schema declarations for entities and types.
 		///	If the input iterator is NULL it returns first iterator.
 		///	If the input iterator is last it returns NULL.
 		///	The declaration can be ENTITY, TYPE ENUM, TYPE SELECT, or defined TYPE.
@@ -705,46 +705,49 @@ namespace RDF
 		public static extern int_t engiGetNextTypeDeclarationIterator(int_t model, int_t iterator);
 
 		/// <summary>
-		///		engiGetTypeDeclarationFromIterator                          (http://rdf.bg/ifcdoc/CS64/engiGetTypeDeclarationFromIterator.html)
+		///		engiGetTypeDeclarationFromIterator                      (http://rdf.bg/ifcdoc/CS64/engiGetTypeDeclarationFromIterator.html)
 		///
 		///	This call returns handle to the EXPRESS schema declaration from iterator.
 		///	The declaration can be ENTITY, TYPE ENUM, TYPE SELECT, or defined TYPE.
 		///	Use engiGetDeclarationType to access the further information.
-		///	Use engiGetNextDeclarationIterator to iterate declarations.
+		///	Use engiGetNextTypeDeclarationIterator to iterate declarations.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetTypeDeclarationFromIterator")]
 		public static extern int_t engiGetTypeDeclarationFromIterator(int_t model, int_t iterator);
 
-        //
-        //		engiGetSchemaScriptDeclarationByIterator                          (http://rdf.bg/ifcdoc/CP64/engiGetSchemaScriptDeclarationByIterator.html)
-        //
-        //	This call iterates EXPRESS schema declarations of FUNCTION, PROCEDURE or RULE
-        //	If prev is NULL it returns first declaration of above kinds.
-        //	If prev is the last declaration it returns NULL.
-        //	Use engiGetDeclarationType to access the further information.
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetSchemaScriptDeclarationByIterator")]
-        public static extern int_t engiGetSchemaScriptDeclarationByIterator(int_t model, int_t prev);
+		/// <summary>
+		///		engiGetSchemaScriptDeclarationByIterator                (http://rdf.bg/ifcdoc/CS64/engiGetSchemaScriptDeclarationByIterator.html)
+		///
+		///	This call iterates EXPRESS schema declarations of FUNCTION, PROCEDURE or RULE.
+		///	If prev is NULL it returns first declaration of above kinds.
+		///	If prev is the last declaration it returns NULL.
+		///	Use engiGetDeclarationType to access the further information.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetSchemaScriptDeclarationByIterator")]
+		public static extern int_t engiGetSchemaScriptDeclarationByIterator(int_t model, int_t prev);
 
-
-        /// <summary>
-        ///		engiGetDeclarationType                                  (http://rdf.bg/ifcdoc/CS64/engiGetDeclarationType.html)
-        ///
-        //	The following functions can be used to get further information
-        //		ENTITY: this SchemaDecl can be casted to SdaiEntity and used in engiGetEntityName and any other entity inquiry function
-        //		TYPE ENUM: engiGetEnumerationElement
-        //		TYPE SELECT: engiGetSelectElement
-        //		DEFINED_TYPE: engiGetDefinedType
-        //		FUNCTION, PROCEDURE, RULE, WHERE_RULE: engiGetScriptText
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetDeclarationType")]
+		/// <summary>
+		///		engiGetDeclarationType                                  (http://rdf.bg/ifcdoc/CS64/engiGetDeclarationType.html)
+		///
+		///	This call returns a type of the EXPRESS schema declarations from its handle.
+		///
+		///	The following functions can be used to get further information
+		///		ENTITY: this SchemaDecl can be casted to SdaiEntity and used in engiGetEntityName and any other entity inquiry function
+		///		TYPE ENUM: engiGetEnumerationElement
+		///		TYPE SELECT: engiGetSelectElement
+		///		DEFINED_TYPE: engiGetDefinedType
+		///		FUNCTION, PROCEDURE, RULE, WHERE_RULE: engiGetScriptText
+		///
+		///	Use engiGetTypeDeclarationFromIterator or engiGetSchemaScriptDeclarationByIterator to obtain declaration handle
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetDeclarationType")]
 		public static extern enum_express_declaration engiGetDeclarationType(int_t declaration);
 
 		/// <summary>
 		///		engiGetEnumerationElement                               (http://rdf.bg/ifcdoc/CS64/engiGetEnumerationElement.html)
 		///
-		///	This call returns a name of the enumaration element with the given index (zero based)
-		///	It returns NULL if the index out of range
+		///	This call returns a name of the enumeration element with the given index (zero based).
+		///	It returns NULL if the index out of range.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEnumerationElement")]
 		public static extern IntPtr engiGetEnumerationElement(int_t enumeration, int_t index);
@@ -752,8 +755,8 @@ namespace RDF
 		/// <summary>
 		///		engiGetSelectElement                                    (http://rdf.bg/ifcdoc/CS64/engiGetSelectElement.html)
 		///
-		///	This call returns a declaration handle of the select element with the given index (zero based)
-		///	It returns 0 if the index out of range
+		///	This call returns a declaration handle of the select element with the given index (zero based).
+		///	It returns 0 if the index out of range.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetSelectElement")]
 		public static extern int_t engiGetSelectElement(int_t select, int_t index);
@@ -761,18 +764,18 @@ namespace RDF
 		/// <summary>
 		///		engiGetDefinedType                                      (http://rdf.bg/ifcdoc/CS64/engiGetDefinedType.html)
 		///
-		///	This call returns a simple type for defined type handle and can inquire referenced type, if any
+		///	This call returns a simple type for defined type handle and can inquire referenced type, if any.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetDefinedType")]
 		public static extern enum_express_attr_type engiGetDefinedType(int_t definedType, out int_t referencedDeclaration, out int_t aggregationDefinition);
 
-        /// <summary>
-        ///		engiGetScriptText                                   (http://rdf.bg/ifcdoc/CP64/engiGetScriptText.html)
-        ///
-        ///	This call returns name and body test for entity where rule, schema rule, function, procedure or
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetScriptText")]
-        public static extern void engiGetScriptText(int_t declaration, out IntPtr label, out IntPtr text);
+		/// <summary>
+		///		engiGetScriptText                                       (http://rdf.bg/ifcdoc/CS64/engiGetScriptText.html)
+		///
+		///	This call returns name and body test for entity where rule, schema rule, function, procedure or
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetScriptText")]
+		public static extern void engiGetScriptText(int_t declaration, out IntPtr label, out IntPtr text);
 
         public static void engiGetScriptText(int_t declaration, out string label, out string text)
 		{
@@ -785,47 +788,46 @@ namespace RDF
 			text = marshalPtrToString(sdaiEXPRESSSTRING, text_);
 		}
 
-        //
-        //		engiEvaluateScriptExpression                         (http://rdf.bg/ifcdoc/CP64/engiEvaluateScriptExpression.html)
-        //
-        //	This function can evaluate EXPRESS expression for entity where rule, derived attribute or global (schema) rule.
-        //  valueType, value and return type works similary to sdaiGetAttr
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
-        public static extern bool engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out bool value);
+		/// <summary>
+		///		engiEvaluateScriptExpression                            (http://rdf.bg/ifcdoc/CS64/engiEvaluateScriptExpression.html)
+		///
+		///	This function can evaluate EXPRESS expression for entity where rule or derived attribute.
+		///	valueType, value and return type work similary to sdaiGetAttr
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out bool value);
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
-        public static extern bool engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out int_t value);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out int_t value);
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
-        public static extern bool engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out double value);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out double value);
 
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
-        public static extern bool engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out IntPtr value);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateScriptExpression")]
+		public static extern int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out IntPtr value);
 
-        public static bool engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out string value)
-        {
-            value = null;
-            valueType = getStringType(valueType);
-            if (valueType != 0)
-            {
-                IntPtr ptr = IntPtr.Zero;
-                if (engiEvaluateScriptExpression(model, instance, expression, valueType, out ptr))
-                {
-                    value = marshalPtrToString(valueType, ptr);
-                    return value!=null;
-                }
-            }
-            return false;
-        }
+		public static int_t engiEvaluateScriptExpression(int_t model, int_t instance, int_t expression, int_t valueType, out string value)
+		{
+			value = null;
+			valueType = getStringType(valueType);
+			if (valueType != 0)
+			{
+				IntPtr ptr = IntPtr.Zero;
+				if (engiEvaluateScriptExpression(model, instance, expression, valueType, out ptr) != 0)
+				{
+					value = marshalPtrToString(valueType, ptr);
+					return (int_t)ptr;
+				}
+		    }
+		    return 0;
+		}
 
-
-        /// <summary>
-        ///		sdaiGetEntity                                           (http://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
-        ///
-        ///	This call retrieves a handle to an entity based on a given entity name.
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntity")]
+		/// <summary>
+		///		sdaiGetEntity                                           (http://rdf.bg/ifcdoc/CS64/sdaiGetEntity.html)
+		///
+		///	This call retrieves a handle to an entity based on a given entity name.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntity")]
 		public static extern int_t sdaiGetEntity(int_t model, string entityName);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetEntity")]
@@ -840,7 +842,18 @@ namespace RDF
 		public static extern int_t engiGetEntityModel(int_t entity);
 
 		/// <summary>
-		///		engiGetAttrIndexBN                             (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexBN.html)
+		///		engiGetEntityAttributeIndex                             (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndex.html)
+		///
+		///	DEPRECATED USE engiGetAttrIndexBN
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeIndex")]
+		public static extern int_t engiGetEntityAttributeIndex(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeIndex")]
+		public static extern int_t engiGetEntityAttributeIndex(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiGetAttrIndexBN                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexBN.html)
 		///
 		///	...
 		/// </summary>
@@ -851,7 +864,18 @@ namespace RDF
 		public static extern int_t engiGetAttrIndexBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrIndexExBN                           (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexExBN.html)
+		///		engiGetEntityAttributeIndexEx                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeIndexEx.html)
+		///
+		///	DEPRECATED USE engiGetAttrIndexExBN
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
+		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, string attributeName, bool countedWithParents, bool countedWithInverse);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeIndexEx")]
+		public static extern int_t engiGetEntityAttributeIndexEx(int_t entity, byte[] attributeName, bool countedWithParents, bool countedWithInverse);
+
+		/// <summary>
+		///		engiGetAttrIndexExBN                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrIndexExBN.html)
 		///
 		///	..
 		/// </summary>
@@ -862,12 +886,20 @@ namespace RDF
 		public static extern int_t engiGetAttrIndexExBN(int_t entity, byte[] attributeName, bool countedWithParents, bool countedWithInverse);
 
 		/// <summary>
-		///		engiGetAttrNameByIndex                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrNameByIndex.html)
+		///		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentName.html)
+		///
+		///	DEPRECATED USE engiGetAttrNameByIndex
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentName")]
+		public static extern IntPtr engiGetEntityArgumentName(int_t entity, int_t index, int_t valueType, out IntPtr attributeName);
+
+		/// <summary>
+		///		engiGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrNameByIndex.html)
 		///
 		///	This call can be used to retrieve the name of the n-th argument of the given entity. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrNameByIndex")]
-		public static extern IntPtr engiGetAttrNameByIndex(int_t entity, int_t index, int_t valueType, out IntPtr argumentName);
+		public static extern IntPtr engiGetAttrNameByIndex(int_t entity, int_t index, int_t valueType, out IntPtr attributeName);
 
 		public static string engiGetAttrNameByIndex(int_t entity, int_t index)
 		{
@@ -877,12 +909,20 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrTypeByIndex                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrTypeByIndex.html)
+		///		engiGetEntityArgumentType                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentType.html)
+		///
+		///	DEPRECATED USE engiGetAttrTypeByIndex
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentType")]
+		public static extern void engiGetEntityArgumentType(int_t entity, int_t index, out int_t attributeType);
+
+		/// <summary>
+		///		engiGetAttrTypeByIndex                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrTypeByIndex.html)
 		///
 		///	This call can be used to retrieve the type of the n-th argument of the given entity. In case of a select argument no relevant information is given by this call as it depends on the instance. Arguments of parent entities are included in the index. Both explicit and inverse attributes are included.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTypeByIndex")]
-		public static extern void engiGetAttrTypeByIndex(int_t entity, int_t index, out int_t argumentType);
+		public static extern void engiGetAttrTypeByIndex(int_t entity, int_t index, out int_t attributeType);
 
 		/// <summary>
 		///		engiGetEntityCount                                      (http://rdf.bg/ifcdoc/CS64/engiGetEntityCount.html)
@@ -959,7 +999,6 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityNoAttributesEx")]
 		public static extern int_t engiGetEntityNoAttributesEx(int_t entity, byte includeParent, byte includeInverse);
 
-
 		/// <summary>
 		///		engiGetEntityParent                                     (http://rdf.bg/ifcdoc/CS64/engiGetEntityParent.html)
 		///
@@ -983,33 +1022,6 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityParentEx")]
 		public static extern int_t engiGetEntityParentEx(int_t entity, int_t index);
-
-		/// <summary>
-		///		engiIsAttrOptional                                     (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
-		///
-		///	This call can be used to check if an attribute is optional
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptional")]
-		public static extern bool engiIsAttrOptional(int_t attribute);
-
-		/// <summary>
-		///		engiIsAttrOptionalBN                                   (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
-		///
-		///	This call can be used to check if an attribute is optional.
-		///
-		///	Technically engiIsAttrOptionalBN will transform into the following call
-		///		engiIsAttrOptional(
-		///				sdaiGetAttrDefinition(
-		///						entity,
-		///						attributeName
-		///					)
-		///			);
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
-
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
-		public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		engiGetAttrDerived                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrDerived.html)
@@ -1040,7 +1052,115 @@ namespace RDF
 		public static extern int_t engiGetAttrDerivedBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
-		///		engiGetAttrDomainName                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
+		///		engiGetAttrOptional                                     (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptional.html)
+		///
+		///	DEPRECATED USE engiIsAttrOptional
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptional")]
+		public static extern int_t engiGetAttrOptional(int_t attribute);
+
+		/// <summary>
+		///		engiGetAttrOptionalBN                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrOptionalBN.html)
+		///
+		///	DEPRECATED USE engiIsAttrOptionalBN
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+		public static extern int_t engiGetAttrOptionalBN(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrOptionalBN")]
+		public static extern int_t engiGetAttrOptionalBN(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiGetAttrInverse                                      (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverse.html)
+		///
+		///	DEPRECATED USE engiIsAttrInverse
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverse")]
+		public static extern int_t engiGetAttrInverse(int_t attribute);
+
+		/// <summary>
+		///		engiGetAttrInverseBN                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttrInverseBN.html)
+		///
+		///	DEPRECATED USE engiIsAttrInverseBN
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+		public static extern int_t engiGetAttrInverseBN(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrInverseBN")]
+		public static extern int_t engiGetAttrInverseBN(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiAttrIsInverse                                       (http://rdf.bg/ifcdoc/CS64/engiAttrIsInverse.html)
+		///
+		///	This call is deprecated, please use call engiIsAttrInverse instead.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiAttrIsInverse")]
+		public static extern int_t engiAttrIsInverse(int_t attribute);
+
+		/// <summary>
+		///		engiIsAttrInverse                                       (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverse.html)
+		///
+		///	This call can be used to check if an attribute is an inverse relation
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrInverse")]
+		public static extern bool engiIsAttrInverse(int_t attribute);
+
+		/// <summary>
+		///		engiIsAttrInverseBN                                     (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
+		///
+		///	This call can be used to check if an attribute is an inverse relation.
+		///
+		///	Technically engiIsAttrInverseBN will transform into the following call
+		///		engiIsAttrInverse(
+		///				sdaiGetAttrDefinition(
+		///						entity,
+		///						attributeName
+		///					)
+		///			);
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
+		public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
+		public static extern bool engiIsAttrInverseBN(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiIsAttrOptional                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptional.html)
+		///
+		///	This call can be used to check if an attribute is optional
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptional")]
+		public static extern bool engiIsAttrOptional(int_t attribute);
+
+		/// <summary>
+		///		engiIsAttrOptionalBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrOptionalBN.html)
+		///
+		///	This call can be used to check if an attribute is optional.
+		///
+		///	Technically engiIsAttrOptionalBN will transform into the following call
+		///		engiIsAttrOptional(
+		///				sdaiGetAttrDefinition(
+		///						entity,
+		///						attributeName
+		///					)
+		///			);
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
+		public static extern bool engiIsAttrOptionalBN(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrOptionalBN")]
+		public static extern bool engiIsAttrOptionalBN(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiGetAttrDomain                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomain.html)
+		///
+		///	DEPRECATED USE engiGetAttrDomainName
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrDomain")]
+		public static extern IntPtr engiGetAttrDomain(int_t attribute, out IntPtr domainName);
+
+		/// <summary>
+		///		engiGetAttrDomainName                                   (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainName.html)
 		///
 		///	This call can be used to get the domain of an attribute
 		/// </summary>
@@ -1057,7 +1177,18 @@ namespace RDF
 		}
 
 		/// <summary>
-		///		engiGetAttrDomainNameBN                                     (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainNameBN.html)
+		///		engiGetAttrDomainBN                                     (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainBN.html)
+		///
+		///	DEPRECATED USE engiGetAttrDomainNameBN
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrDomainBN")]
+		public static extern IntPtr engiGetAttrDomainBN(int_t entity, string attributeName, out IntPtr domainName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrDomainBN")]
+		public static extern IntPtr engiGetAttrDomainBN(int_t entity, byte[] attributeName, out IntPtr domainName);
+
+		/// <summary>
+		///		engiGetAttrDomainNameBN                                 (http://rdf.bg/ifcdoc/CS64/engiGetAttrDomainNameBN.html)
 		///
 		///	This call can be used to get the domain of an attribute.
 		///
@@ -1093,29 +1224,48 @@ namespace RDF
 		/// <summary>
 		///		engiGetEntityIsAbstract                                 (http://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstract.html)
 		///
-		///	This call can be used to check if an entity is abstract
+		///	DEPRECATED USE engiIsEntityAbstract
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityIsAbstract")]
 		public static extern int_t engiGetEntityIsAbstract(int_t entity);
 
 		/// <summary>
+		///		engiIsEntityAbstract                                    (http://rdf.bg/ifcdoc/CS64/engiIsEntityAbstract.html)
+		///
+		///	This call can be used to check if an entity is abstract
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsEntityAbstract")]
+		public static extern int_t engiIsEntityAbstract(int_t entity);
+
+		/// <summary>
 		///		engiGetEntityIsAbstractBN                               (http://rdf.bg/ifcdoc/CS64/engiGetEntityIsAbstractBN.html)
 		///
-		///	This call can be used to check if an entity is abstract.
-		///
-		///	Technically engiGetEntityIsAbstractBN will transform into the following call
-		///		engiGetEntityIsAbstract(
-		///				sdaiGetEntity(
-		///						model,
-		///						entityName
-		///					)
-		///			);
+		///	DEPRECATED USE engiIsEntityAbstractbn
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityIsAbstractBN")]
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, string entityName);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityIsAbstractBN")]
 		public static extern int_t engiGetEntityIsAbstractBN(int_t model, byte[] entityName);
+
+		/// <summary>
+		///		engiIsEntityAbstractBN                                  (http://rdf.bg/ifcdoc/CS64/engiIsEntityAbstractBN.html)
+		///
+		///	This call can be used to check if an entity is abstract.
+		///
+		///	Technically engiIsEntityAbstractBN will transform into the following call
+		///		engiIsEntityAbstract(
+		///				sdaiGetEntity(
+		///						model,
+		///						entityName
+		///					)
+		///			);
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsEntityAbstractBN")]
+		public static extern int_t engiIsEntityAbstractBN(int_t model, string entityName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsEntityAbstractBN")]
+		public static extern int_t engiIsEntityAbstractBN(int_t model, byte[] entityName);
 
 		/// <summary>
 		///		engiGetEnumerationValue                                 (http://rdf.bg/ifcdoc/CS64/engiGetEnumerationValue.html)
@@ -1132,39 +1282,92 @@ namespace RDF
 			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(enumerationValue);
 		}
 
-        /// <summary>
-        ///		engiGetEntityAttributeByIterator                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIterator.html)
-        ///
-        ///	Iterates attribute definition of the entity.
-        /// 	Includes explicit, inverse and derived attributes defined by this or parent entities.
-        /// 	If a explicit attribute is also known as derived it's reported onces as explicit.
-        ///  Returns first attribute if prev is NULL.
-        ///  Returns NULL when prev is the last attribute.
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeByIterator")]
-        public static extern int_t engiGetEntityAttributeByIterator(int_t entity, int_t prev);
+		/// <summary>
+		///		engiGetEntityAttributeByIterator                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIterator.html)
+		///
+		///	Iterates attribute definition of the entity.
+		///	Includes explicit, inverse and derived attributes defined by this or parent entities.
+		///	If a explicit attribute is also known as derived it's reported onces as explicit.
+		///	Returns first attribute if prev is NULL.
+		///	Returns NULL when prev is the last attribute.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeByIterator")]
+		public static extern int_t engiGetEntityAttributeByIterator(int_t entity, int_t prev);
 
-
-        /// <summary>
-        ///		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIndex.html)
-        ///
-        ///	Return attribute definition from attribute index
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeByIndex")]
+		/// <summary>
+		///		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CS64/engiGetEntityAttributeByIndex.html)
+		///
+		///	Return attribute definition from attribute index
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityAttributeByIndex")]
 		public static extern int_t engiGetEntityAttributeByIndex(int_t entity, int_t index, bool countedWithParents, bool countedWithInverse);
 
-        /// <summary>
-        ///		engiGetEntityWhereRuleByIterator                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityWhereRuleByIterator.html)
-        ///
-        ///	Iterates where rules of the entity or defined type.
-        ///  declaration can be ENTITY or DEFINED_TYPE.
-        /// 	Includes this but not parent entities or types.
-        ///  Returns first rule if prev is NULL.
-        ///  Returns NULL when prev is the last rule.
-        ///  Use engiGetScriptText to get further information
-        ///  </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityWhereRuleByIterator")]
-        public static extern int_t engiGetEntityWhereRuleByIterator(int_t entity, int_t prev, out IntPtr label);
+		/// <summary>
+		///		engiGetAggregationDefinition                            (http://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAggregationDefinition")]
+		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggregationType, out int_t cardinalityMin, out int_t cardinalityMax, out bool optional, out bool unique, out int_t nextAggregationLevel);
+
+		/// <summary>
+		///		engiGetEntityUniqueRuleByIterator                       (http://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleByIterator.html)
+		///
+		///	Iterates unique rules of the entity.
+		///	Includes this but not parent entities.
+		///	Returns first rule if prev is NULL.
+		///	Returns NULL when prev is the last rule.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityUniqueRuleByIterator")]
+		public static extern int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out IntPtr label);
+
+		public static int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out string label)
+		{
+		    label = null;
+		    IntPtr ptr = IntPtr.Zero;
+		    var next = engiGetEntityUniqueRuleByIterator(entity, prev, out ptr);
+		    if (next != 0)
+		        label = marshalPtrToString(sdaiEXPRESSSTRING, ptr);
+		    return next;
+		}
+
+		/// <summary>
+		///		engiGetEntityUniqueRuleAttributeByIterator              (http://rdf.bg/ifcdoc/CS64/engiGetEntityUniqueRuleAttributeByIterator.html)
+		///
+		///	Iterates attributes of unique rule.
+		///	Returns first attribute name if prev is NULL.
+		///	Returns NULL when prev is the name of the last attribute.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
+		public static extern IntPtr engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out IntPtr domain);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
+		public static extern IntPtr engiGetEntityUniqueRuleAttributeByIterator(int_t rule, byte[] prev, out IntPtr domain);
+
+		public static string engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out string domain)
+		{
+			domain = null;
+			IntPtr domain_ = IntPtr.Zero;
+			IntPtr ret = engiGetEntityUniqueRuleAttributeByIterator(rule, prev, out domain_);
+			if (ret != IntPtr.Zero)
+			{
+				domain = marshalPtrToString(sdaiEXPRESSSTRING, domain_);
+			}
+			return marshalPtrToString(sdaiEXPRESSSTRING, ret);
+		}
+
+		/// <summary>
+		///		engiGetEntityWhereRuleByIterator                        (http://rdf.bg/ifcdoc/CS64/engiGetEntityWhereRuleByIterator.html)
+		///
+		///	Iterates where rules of the entity or defined type.
+		///	Declaration can be ENTITY or DEFINED_TYPE.
+		///	Includes this but not parent entities or types.
+		///	Returns first rule if prev is NULL.
+		///	Returns NULL when prev is the last rule.
+		///	Use engiGetScriptText to get further information.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityWhereRuleByIterator")]
+		public static extern int_t engiGetEntityWhereRuleByIterator(int_t declaration, int_t prev, out IntPtr label);
 
 		public static int_t engiGetEntityWhereRuleByIterator(int_t entity, int_t prev, out string label)
 		{
@@ -1175,107 +1378,6 @@ namespace RDF
 				label = marshalPtrToString(sdaiEXPRESSSTRING, ptr);
 			return next;
 		}
-
-        /// <summary>
-        ///		engiGetEntityUniqueRuleByIterator                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
-        ///
-        ///	Iterates unique rules of the entity.
-        /// 	Includes this but not parent entities.
-        ///  Returns first rule if prev is NULL.
-        ///  Returns NULL when prev is the last rule.
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityUniqueRuleByIterator")]
-        public static extern int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out IntPtr label);
-
-        public static int_t engiGetEntityUniqueRuleByIterator(int_t entity, int_t prev, out string label)
-        {
-            label = null;
-            IntPtr ptr = IntPtr.Zero;
-            var next = engiGetEntityUniqueRuleByIterator(entity, prev, out ptr);
-            if (next != 0)
-                label = marshalPtrToString(sdaiEXPRESSSTRING, ptr);
-            return next;
-        }
-
-        /// <summary>
-        ///		engiGetEntityUniqueRuleAttributeByIterator                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
-        ///
-        ///	Iterates attributes of unique rule.
-        ///  Returns first attribute name if prev is NULL.
-        ///  Returns NULL when prev is the name of the last attribute.
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityUniqueRuleAttributeByIterator")]
-        public static extern IntPtr engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out IntPtr domain);
-
-        public static string engiGetEntityUniqueRuleAttributeByIterator(int_t rule, string prev, out string domain)
-		{
-			domain = null;
-			IntPtr domain_ = IntPtr.Zero;
-			IntPtr ret = engiGetEntityUniqueRuleAttributeByIterator(rule, prev, out domain_);
-			if (ret != IntPtr.Zero)
-			{
-				domain = marshalPtrToString(sdaiEXPRESSSTRING, domain_);
-			}
-			return marshalPtrToString(sdaiEXPRESSSTRING, ret);
-        }
-
-        /// <summary>
-        ///		engiGetAttrTraits                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttrTraits.html)
-        ///
-        ///	...
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTraits")]
-		public static extern void engiGetAttrTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional);
-
-        public static void engiGetAttrTraits(int_t attribute, out string name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional)
-		{
-			IntPtr name_ = IntPtr.Zero;
-			engiGetAttrTraits(attribute, out name_, out definingEntity, out isExplicit, out isInverse, out attrType, out domainEntity, out aggregationDefinition, out isOptional);
-			name = marshalPtrToString(sdaiEXPRESSSTRING, name_);
-		}
-
-        //
-        //		engiGetAttrName                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrName.html)
-        //
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrName")]
-        public static extern IntPtr engiGetAttrName_(int_t attribute);
-
-        public static string engiGetAttrName(int_t attribute)
-		{
-			IntPtr ptr = engiGetAttrName_(attribute);
-			return marshalPtrToString(sdaiEXPRESSSTRING, ptr);
-		}
-
-        //
-        //		engiGetAttrDefiningEntity                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrDefiningEntity.html)
-        //
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrDefiningEntity")]
-        public static extern int_t engiGetAttrDefiningEntity(int_t attribute);
-
-		//
-		//		engiIsAttrExplicit                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicit.html)
-		//
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicit")]
-		public static extern bool engiIsAttrExplicit(int_t attribute);
-
-        //
-        //		engiIsAttrExplicitBN                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicitBN.html)
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-        public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
-
-        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
-        public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
-
-        /// <summary>
-        ///		engiGetAggregationDefinition                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggregationDefinition.html)
-        ///
-        ///	...
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggregationDefinition")]
-		public static extern void engiGetAggregationDefinition(int_t aggregationDefinition, out enum_express_aggr aggrType, out int_t cardinalityMin, out int_t cardinalityMax, out bool optional, out bool unique, out int_t nextAggregationLevel);
 
         //
         //  Instance Reading API Calls
@@ -1296,21 +1398,6 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBTypePath")]
 		public static extern IntPtr sdaiGetADBTypePath(int_t ADB, int_t typeNameNumber);
-
-		/// <summary>
-		///		sdaiGetADBTypePathx                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePathx.html)
-		///
-		///	This call is the same as sdaiGetADBTypePath, however can be used by porting to languages that have issues with returned char arrays.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBTypePathx")]
-		public static extern IntPtr sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber, out IntPtr path);
-
-		public static string sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber)
-		{
-			IntPtr path = IntPtr.Zero;
-			sdaiGetADBTypePathx(ADB, typeNameNumber, out path);
-			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(path);
-		}
 
 		/// <summary>
 		///		sdaiGetADBValue                                         (http://rdf.bg/ifcdoc/CS64/sdaiGetADBValue.html)
@@ -2031,6 +2118,70 @@ namespace RDF
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetAttrDefinition")]
 		public static extern int_t sdaiGetAttrDefinition(int_t entity, byte[] attributeName);
+
+		/// <summary>
+		///		engiGetAttrTraits                                       (http://rdf.bg/ifcdoc/CS64/engiGetAttrTraits.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrTraits")]
+		public static extern void engiGetAttrTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional);
+
+        public static void engiGetAttrTraits(int_t attribute, out string name, out int_t definingEntity, out bool isExplicit, out bool isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out bool isOptional)
+		{
+			IntPtr name_ = IntPtr.Zero;
+			engiGetAttrTraits(attribute, out name_, out definingEntity, out isExplicit, out isInverse, out attrType, out domainEntity, out aggregationDefinition, out isOptional);
+			name = marshalPtrToString(sdaiEXPRESSSTRING, name_);
+		}
+
+		/// <summary>
+		///		engiGetAttributeTraits                                  (http://rdf.bg/ifcdoc/CS64/engiGetAttributeTraits.html)
+		///
+		///	DEPRECATED USE engiGetAttrTraits
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttributeTraits")]
+		public static extern void engiGetAttributeTraits(int_t attribute, out IntPtr name, out int_t definingEntity, out byte isExplicit, out byte isInverse, out enum_express_attr_type attrType, out int_t domainEntity, out int_t aggregationDefinition, out byte isOptional);
+
+		/// <summary>
+		///		engiGetAttrName                                         (http://rdf.bg/ifcdoc/CS64/engiGetAttrName.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrName")]
+        public static extern IntPtr engiGetAttrNamePtr(int_t attribute);
+
+        public static string engiGetAttrName(int_t attribute)
+        {
+            IntPtr ptr = engiGetAttrNamePtr(attribute);
+            return marshalPtrToString(sdaiEXPRESSSTRING, ptr);
+        }
+
+        /// <summary>
+        ///		engiGetAttrDefiningEntity                               (http://rdf.bg/ifcdoc/CS64/engiGetAttrDefiningEntity.html)
+        ///
+        ///	...
+        /// </summary>
+        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAttrDefiningEntity")]
+		public static extern int_t engiGetAttrDefiningEntity(int_t attribute);
+
+		/// <summary>
+		///		engiIsAttrExplicit                                      (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicit.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicit")]
+		public static extern bool engiIsAttrExplicit(int_t attribute);
+
+		/// <summary>
+		///		engiIsAttrExplicitBN                                    (http://rdf.bg/ifcdoc/CS64/engiIsAttrExplicitBN.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+		public static extern bool engiIsAttrExplicitBN(int_t entity, string attributeName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrExplicitBN")]
+		public static extern bool engiIsAttrExplicitBN(int_t entity, byte[] attributeName);
 
 		/// <summary>
 		///		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CS64/sdaiGetInstanceModel.html)
@@ -3287,7 +3438,7 @@ namespace RDF
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiTestArrayByIndex")]
-		public static extern int_t sdaiTestArrayByIndex(int_t aggregate, int_t index);
+		public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
 		///		sdaiTestArrayByItr                                      (http://rdf.bg/ifcdoc/CS64/sdaiTestArrayByItr.html)
@@ -3295,7 +3446,7 @@ namespace RDF
 		///	The function tests whether the member of the specified array referenced by the specified index position has a value.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiTestArrayByItr")]
-		public static extern int_t sdaiTestArrayByItr(int_t iterator);
+		public static extern bool sdaiTestArrayByItr(int_t iterator);
 
 		/// <summary>
 		///		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstance.html)
@@ -4214,6 +4365,7 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiPutAggrByIterator")]
 		public static extern void sdaiPutAggrByIterator(int_t iterator, int_t valueType, byte[] value);
 
+
 		public static void sdaiPutAggrByIterator(int_t iterator, int_t valueType, string value)
         {
             valueType = getStringType(valueType);
@@ -4278,6 +4430,23 @@ namespace RDF
 
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrUnknownElement")]
 		public static extern void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out IntPtr value);
+
+//		public static void engiGetAggrUnknownElement(int_t aggregate, int_t elementIndex, out int_t valueType, out string value)
+//		{
+//			value = null;
+//			valueType = getStringType(valueType);
+//			if (valueType != 0)
+//			{
+//				IntPtr ptr = IntPtr.Zero;
+//				var ret = engiGetAggrUnknownElement(aggregate, elementIndex, out valueType, out ptr);
+//				if (ret != 0 && ptr != IntPtr.Zero)
+//				{
+//					value = marshalPtrToString(valueType, ptr);
+//					return ret;
+//				}
+//			}
+//			return 0;
+//		}
 
 		/// <summary>
 		///		sdaiErrorQuery                                          (http://rdf.bg/ifcdoc/CS64/sdaiErrorQuery.html)
@@ -4440,12 +4609,12 @@ namespace RDF
         [DllImport(IFCEngineDLL, EntryPoint = "getGlobalPlacement")]
         public static extern int_t getGlobalPlacement(int_t model, [Out] double[] origin);
 
-        /// <summary>
-        ///		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
-        ///
-        ///	...
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "setGlobalPlacement")]
+		/// <summary>
+		///		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CS64/setGlobalPlacement.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "setGlobalPlacement")]
 		public static extern int_t setGlobalPlacement(int_t model, ref double origin, byte includeRotation);
 
 		/// <summary>
@@ -4509,25 +4678,38 @@ namespace RDF
 		public static extern int_t engiGetEntityNoArguments(int_t entity);
 
 		/// <summary>
-		///		engiIsAttrInverse                                       (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverse.html)
+		///		engiGetArgumentType                                     (http://rdf.bg/ifcdoc/CS64/engiGetArgumentType.html)
 		///
+		///	DEPR4ECATED use engiGetAttrType
 		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrInverse")]
-		public static extern bool engiIsAttrInverse(int_t attribute);
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetArgumentType")]
+		public static extern int_t engiGetArgumentType(int_t attribute);
 
-        /// <summary>
-        ///		engiIsAttrInverseBN                                       (http://rdf.bg/ifcdoc/CS64/engiIsAttrInverseBN.html)
-        ///
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiIsAttrInverseBN")]
-        public static extern bool engiIsAttrInverseBN(int_t entity, string attributeName);
+		/// <summary>
+		///		engiGetAttributeType                                    (http://rdf.bg/ifcdoc/CS64/engiGetAttributeType.html)
+		///
+		///	DEPRECATED use engiGetAttrType
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAttributeType")]
+		public static extern int_t engiGetAttributeType(int_t attribute);
 
-        /// <summary>
-        ///		engiGetAggrElement                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
-        ///
-        ///	This call is deprecated, please use call sdaiGetAggrByIndex instead.
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
+		/// <summary>
+		///		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CS64/engiGetEntityArgumentIndex.html)
+		///
+		///	DEPRECATED use engiGetEntityAttributeIndex
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		public static extern int_t engiGetEntityArgumentIndex(int_t entity, string argumentName);
+
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetEntityArgumentIndex")]
+		public static extern int_t engiGetEntityArgumentIndex(int_t entity, byte[] argumentName);
+
+		/// <summary>
+		///		engiGetAggrElement                                      (http://rdf.bg/ifcdoc/CS64/engiGetAggrElement.html)
+		///
+		///	This call is deprecated, please use call sdaiGetAggrByIndex instead.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
 		public static extern int_t engiGetAggrElement(int_t aggregate, int_t index, int_t valueType, out bool value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetAggrElement")]
@@ -4568,11 +4750,26 @@ namespace RDF
 		public static extern int_t engiGetEntityArgument(int_t entity, byte[] argumentName);
 
 		/// <summary>
-		///		xxxxOpenModelByStream                                   (http://rdf.bg/ifcdoc/CS64/xxxxOpenModelByStream.html)
+		///		sdaiGetADBTypePathx                                     (http://rdf.bg/ifcdoc/CS64/sdaiGetADBTypePathx.html)
 		///
-		///	This call is deprecated, please use call engiOpenModelByStream instead.
+		///	This call is deprecated, please use call sdaiGetADBTypePath instead.
 		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "xxxxOpenModelByStream")]
+		[DllImport(IFCEngineDLL, EntryPoint = "sdaiGetADBTypePathx")]
+		public static extern IntPtr sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber, out IntPtr path);
+
+        public static string sdaiGetADBTypePathx(int_t ADB, int_t typeNameNumber)
+        {
+            IntPtr path = IntPtr.Zero;
+            sdaiGetADBTypePathx(ADB, typeNameNumber, out path);
+            return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(path);
+        }
+
+        /// <summary>
+        ///		xxxxOpenModelByStream                                   (http://rdf.bg/ifcdoc/CS64/xxxxOpenModelByStream.html)
+        ///
+        ///	This call is deprecated, please use call engiOpenModelByStream instead.
+        /// </summary>
+        [DllImport(IFCEngineDLL, EntryPoint = "xxxxOpenModelByStream")]
 		public static extern int_t xxxxOpenModelByStream(int_t repository, [MarshalAs(UnmanagedType.FunctionPtr)] WriteCallBackFunction callback, string schemaName);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "xxxxOpenModelByStream")]
@@ -4608,7 +4805,7 @@ namespace RDF
 		///	This call is deprecated, please use calls sdaiGetMemberCount(..) and engiGetEntityElement(..) instead.
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiNext")]
-		public static extern int_t sdaiNext(int_t iterator);
+		public static extern bool sdaiNext(int_t iterator);
 
 		/// <summary>
 		///		sdaiPrevious                                            (http://rdf.bg/ifcdoc/CS64/sdaiPrevious.html)
@@ -4701,25 +4898,25 @@ namespace RDF
 		///	sdaiADB				Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			Yes			 .
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, ref bool value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref bool value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, ref int_t value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref int_t value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, int_t value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, int_t value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, ref double value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref double value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, ref IntPtr value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, ref IntPtr value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, byte[] value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, byte[] value);
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiIsMember")]
-		public static extern int_t sdaiIsMember(int_t aggregate, int_t valueType, string value);
+		public static extern bool sdaiIsMember(int_t aggregate, int_t valueType, string value);
 
 		/// <summary>
 		///		sdaiGetAggrElementBoundByItr                            (http://rdf.bg/ifcdoc/CS64/sdaiGetAggrElementBoundByItr.html)
@@ -4823,21 +5020,29 @@ namespace RDF
 		[DllImport(IFCEngineDLL, EntryPoint = "engiGetComplexInstanceNextPart")]
 		public static extern int_t engiGetComplexInstanceNextPart(int_t instance);
 
-        //
-        //		engiEnableDerivedAttributes                           (http://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
-        //
-        //	 The function enables calculation of derived attributes for sdaiGetAttr(BN) functions and dynamic aggregation indexes
-        //	 Returns success flag. 
-        //
-        [DllImport(IFCEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
-        public static extern bool engiEnableDerivedAttributes(int_t model, bool enable);
+		/// <summary>
+		///		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CS64/engiEnableDerivedAttributes.html)
+		///
+		///	The function enables calculation of derived attributes for sdaiGetAttr(BN) and other get value functions and dynamic aggregation indexes.
+		///	Returns success flag.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
+		public static extern bool engiEnableDerivedAttributes(int_t model, bool enable);
 
-        /// <summary>
-        ///		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrType.html)
-        ///
-        ///	...
-        /// </summary>
-        [DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrType")]
+		/// <summary>
+		///		engiEvaluateAllDerivedAttributes                        (http://rdf.bg/ifcdoc/CS64/engiEvaluateAllDerivedAttributes.html)
+		///
+		///	The function evaluates and replaces all * with values, optionally can handle $ values as derived attributes.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "engiEvaluateAllDerivedAttributes")]
+		public static extern void engiEvaluateAllDerivedAttributes(int_t model, bool includeNullValues);
+
+		/// <summary>
+		///		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CS64/xxxxGetAttrType.html)
+		///
+		///	...
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "xxxxGetAttrType")]
 		public static extern int_t xxxxGetAttrType(int_t instance, int_t attribute, out IntPtr attributeType);
 
 		/// <summary>
@@ -5079,10 +5284,10 @@ namespace RDF
 		public static extern IntPtr validateGetDescription(int_t issue);
 
 		public static string validateGetDescriptionString (int_t issue)
-			{
+		{
 			IntPtr descr = validateGetDescription(issue);
 			return System.Runtime.InteropServices.Marshal.PtrToStringAnsi(descr);
-			}
+		}
 
 
 		//
