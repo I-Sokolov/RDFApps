@@ -2302,25 +2302,30 @@ OwlClass		DECL STDC	GetClassesByIterator(
 //		SetClassParent                                          (http://rdf.bg/gkdoc/CP64/SetClassParent.html)
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
-//				int64_t					setting								IN
 //
-//				int64_t					returns								OUT
+//				OwlClass				returns								OUT
 //
-//	Defines (set/unset) the parent class of a given class. Multiple-inheritance is supported and behavior
+//	Defines a parent class relation of a given class. Multiple-inheritance is supported and behavior
 //	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 //	object properties (relations).
 //
-//	When set: it adds parentOwlClass as immediate parent of owlClass if and only if 
-//	parentOwlClass is not ancestor of owlClass and owlClass is not ancestor of parentOwlClass.
-//	Returns the same value as IsClassAncestor after the call.
+//	It adds parentOwlClass as immediate parent of owlClass if and only if parentOwlClass is not an
+//	ancestor of owlClass and owlClass is not an ancestor of parentOwlClass.
 //
-//	When unset: it removes parentOwlClass from immediate parents and returns 1, 
-//	or returns 0 if parentOwlClass is not immediate parent
+//	Returns owlClass if this call made any change to the parent class relation of owlClass.
 //
-int64_t			DECL STDC	SetClassParent(
+//	It will return 0 in case:
+//		owlClass and / or parentOwlClass are 0
+//		owlClass equals parentOwlClass
+//		parentOwlClass is already (indirectly) a parent of owlClass
+//		owlClass is (indirectly) a parent of parentOwlClass
+//
+//	It will return owlClass in case:
+//		parentOwlClass became a direct parent of owlClass and they were not related this manner before
+//
+OwlClass		DECL STDC	SetClassParent(
 									OwlClass				owlClass,
-									OwlClass				parentOwlClass,
-									int64_t					setting
+									OwlClass				parentOwlClass
 								);
 
 //
@@ -2328,29 +2333,91 @@ int64_t			DECL STDC	SetClassParent(
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
-//				int64_t					setting								IN
 //
-//				int64_t					returns								OUT
+//				OwlClass				returns								OUT
 //
-//	Defines (set/unset) the parent class of a given class. Multiple-inheritance is supported and behavior
+//	Defines a parent class relation of a given class. Multiple-inheritance is supported and behavior
 //	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
 //	object properties (relations).
 //
-//	When set: it adds parentOwlClass as immediate parent of owlClass if and only if 
-//	parentOwlClass is not ancestor of owlClass and owlClass is not ancestor of parentOwlClass.
-//	Returns the same value as IsClassAncestor after the call.
+//	It adds parentOwlClass as immediate parent of owlClass if and only if parentOwlClass is not an
+//	ancestor of owlClass and owlClass is not an ancestor of parentOwlClass.
 //
-//	When unset: it removes parentOwlClass from immediate parents and returns 1, 
-//	or returns 0 if parentOwlClass is not immediate parent
+//	Returns owlClass if this call made any change to the parent class relation of owlClass.
+//
+//	It will return 0 in case:
+//		owlClass and / or parentOwlClass are 0
+//		owlClass equals parentOwlClass
+//		parentOwlClass is already (indirectly) a parent of owlClass
+//		owlClass is (indirectly) a parent of parentOwlClass
+//
+//	It will return owlClass in case:
+//		parentOwlClass became a direct parent of owlClass and they were not related this manner before
 //
 //	This call has the same behavior as SetClassParent, however needs to be
 //	used in case classes are exchanged as a successive series of integers.
 //
-int64_t			DECL STDC	SetClassParentEx(
+OwlClass		DECL STDC	SetClassParentEx(
 									OwlModel				model,
 									OwlClass				owlClass,
-									OwlClass				parentOwlClass,
-									int64_t					setting
+									OwlClass				parentOwlClass
+								);
+
+//
+//		UnsetClassParent                                        (http://rdf.bg/gkdoc/CP64/UnsetClassParent.html)
+//				OwlClass				owlClass							IN
+//				OwlClass				parentOwlClass						IN
+//
+//				OwlClass				returns								OUT
+//
+//	Defines a parent class relation of a given class. Multiple-inheritance is supported and behavior
+//	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
+//	object properties (relations).
+//
+//	It removes parentOwlClass as immediate parents of owlClass if result is consistent.
+//
+//	It will return 0 in case:
+//		owlClass and / or parentOwlClass are 0
+//		owlClass equals parentOwlClass
+//		parentOwlClass was not a direct parent of owlClass (could be as another parent class of owlClass has parentOwlClass as parent)
+//
+//	It will return owlClass in case:
+//		parentOwlClass was a direct parent of owlClass and is now removed
+//
+OwlClass		DECL STDC	UnsetClassParent(
+									OwlClass				owlClass,
+									OwlClass				parentOwlClass
+								);
+
+//
+//		UnsetClassParentEx                                      (http://rdf.bg/gkdoc/CP64/UnsetClassParentEx.html)
+//				OwlModel				model								IN
+//				OwlClass				owlClass							IN
+//				OwlClass				parentOwlClass						IN
+//
+//				OwlClass				returns								OUT
+//
+//	Defines a parent class relation of a given class. Multiple-inheritance is supported and behavior
+//	of parent classes is also inherited as well as cardinality restrictions on datatype properties and
+//	object properties (relations).
+//
+//	It removes parentOwlClass as immediate parents of owlClass if result is consistent.
+//
+//	It will return 0 in case:
+//		owlClass and / or parentOwlClass are 0
+//		owlClass equals parentOwlClass
+//		parentOwlClass was not a direct parent of owlClass (could be as another parent class of owlClass has parentOwlClass as parent)
+//
+//	It will return owlClass in case:
+//		parentOwlClass was a direct parent of owlClass and is now removed
+//
+//	This call has the same behavior as SetClassParent, however needs to be
+//	used in case classes are exchanged as a successive series of integers.
+//
+OwlClass		DECL STDC	UnsetClassParentEx(
+									OwlModel				model,
+									OwlClass				owlClass,
+									OwlClass				parentOwlClass
 								);
 
 //
@@ -4343,9 +4410,86 @@ OwlClass		DECL STDC	GetInstanceGeometryClass(
 //	If one of the classes this instance is instantiated from or one of its parents is a geometry class,
 //	this class is returned. In all other cases the return value is 0.
 //
+//	This call has the same behavior as SetNameOfInstance, however needs to be
+//	used in case instance are exchanged as a successive series of integers.
+//
 OwlClass		DECL STDC	GetInstanceGeometryClassEx(
 									OwlModel				model,
 									OwlInstance				owlInstance
+								);
+
+//
+//		SetInstanceClass                                        (http://rdf.bg/gkdoc/CP64/SetInstanceClass.html)
+//				OwlInstance				owlInstance							IN
+//				OwlClass				owlClass							IN
+//
+//				OwlInstance				returns								OUT
+//
+//
+OwlInstance		DECL STDC	SetInstanceClass(
+									OwlInstance				owlInstance,
+									OwlClass				owlClass
+								);
+
+//
+//		SetInstanceClassEx                                      (http://rdf.bg/gkdoc/CP64/SetInstanceClassEx.html)
+//				OwlModel				model								IN
+//				OwlInstance				owlInstance							IN
+//				OwlClass				owlClass							IN
+//
+//				OwlInstance				returns								OUT
+//
+//	In case the instance is not yet (indirectly) defined as an instance of this class, the instance will
+//	be an instance of this class as well as the existing classes.
+//
+//	In case the instance dependency on classes has changed this function will return the instance given as input.
+//
+//	This call has the same behavior as SetInstanceClass, however needs to be
+//	used in case instance or class are exchanged as a successive series of integers.
+//
+OwlInstance		DECL STDC	SetInstanceClassEx(
+									OwlModel				model,
+									OwlInstance				owlInstance,
+									OwlClass				owlClass
+								);
+
+//
+//		UnsetInstanceClass                                      (http://rdf.bg/gkdoc/CP64/UnsetInstanceClass.html)
+//				OwlInstance				owlInstance							IN
+//				OwlClass				owlClass							IN
+//
+//				OwlInstance				returns								OUT
+//
+//	In case the instance is a direct instance of this class, the instance will not
+//	be an instance of this class anymore, if there are no classes left it automatically becomes an instance of Thing.
+//
+//	In case the instance dependency on classes has changed this function will return the instance given as input.
+//
+OwlInstance		DECL STDC	UnsetInstanceClass(
+									OwlInstance				owlInstance,
+									OwlClass				owlClass
+								);
+
+//
+//		UnsetInstanceClassEx                                    (http://rdf.bg/gkdoc/CP64/UnsetInstanceClassEx.html)
+//				OwlModel				model								IN
+//				OwlInstance				owlInstance							IN
+//				OwlClass				owlClass							IN
+//
+//				OwlInstance				returns								OUT
+//
+//	In case the instance is a direct instance of this class, the instance will not
+//	be an instance of this class anymore, if there are no classes left it automatically becomes an instance of Thing.
+//
+//	In case the instance dependency on classes has changed this function will return the instance given as input.
+//
+//	This call has the same behavior as UnsetInstanceClass, however needs to be
+//	used in case instance or class are exchanged as a successive series of integers.
+//
+OwlInstance		DECL STDC	UnsetInstanceClassEx(
+									OwlModel				model,
+									OwlInstance				owlInstance,
+									OwlClass				owlClass
 								);
 
 //
@@ -4387,7 +4531,7 @@ RdfProperty		DECL STDC	GetInstancePropertyByIteratorEx(
 //
 //				OwlInstance				returns								OUT
 //
-//	Returns a handle to the owlInstances refering this instance
+//	Returns a handle to the owlInstances referring this instance
 //
 OwlInstance		DECL STDC	GetInstanceInverseReferencesByIterator(
 									OwlInstance				owlInstance,
@@ -4401,7 +4545,7 @@ OwlInstance		DECL STDC	GetInstanceInverseReferencesByIterator(
 //
 //				OwlInstance				returns								OUT
 //
-//	Returns a handle to the owlInstance refered by this instance
+//	Returns a handle to the owlInstance referred by this instance
 //
 OwlInstance		DECL STDC	GetInstanceReferencesByIterator(
 									OwlInstance				owlInstance,
@@ -5439,10 +5583,20 @@ static	inline	bool	IsKindOfClass(
 //
 static	inline	bool	IsInstanceOfClass(
 								OwlInstance				owlInstance,
+								OwlClass				owlClass
+							)
+{
+	return	IsKindOfClass(GetInstanceClass(owlInstance), owlClass);
+}
+
+//
+//
+static	inline	bool	IsInstanceOfClass(
+								OwlInstance				owlInstance,
 								const char				* name
 							)
 {
-	return	IsKindOfClass(GetInstanceClass(owlInstance), GetClassByName(GetModel(owlInstance), name));
+	return	IsInstanceOfClass(owlInstance, GetClassByName(GetModel(owlInstance), name));
 }
 
 //
@@ -6161,7 +6315,7 @@ static	inline	uint64_t	GetFormat(
 								)
 {
 	return	GetFormat(
-					0,
+					0,									//	model
 					0									//	mask
 				);
 }
@@ -6931,6 +7085,19 @@ static	inline	bool	GetBoundingBox(
 					nullptr,							//	transformationMatrix
 					startVector,
 					endVector
+				);
+}
+
+//
+//
+static	inline	bool	GetBoundingBox(
+								OwlInstance				owlInstance
+							)
+{
+	return	GetBoundingBox(
+					owlInstance,
+					nullptr,							//	startVector
+					nullptr								//	endVector
 				);
 }
 

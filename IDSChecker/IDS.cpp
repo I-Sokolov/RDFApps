@@ -127,13 +127,13 @@ public:
     double Precision() { return 1e-6; }
 
 public:
-    Console& console;
+    Console&    console;
     MsgLevel    msgLevel;
     bool        stopAtFirstError;
 
     SdaiModel       model = 0;
     SdaiInstance    currentInstane = 0;
-    Specification* currentSpecification = nullptr;
+    Specification*  currentSpecification = nullptr;
 
 private:
     IfcVersion m_ifcVersion = IfcVersion::NotItitialized;
