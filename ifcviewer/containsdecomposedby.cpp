@@ -279,8 +279,6 @@ STRUCT_TREE_ITEM	* CreateTreeItem_ifcGroup(
 			delete[] ifcInstanceArray;
 			delete[] ifcInstanceEntityArray;
 		}
-	} else {
-		ASSERT(false);
 	}
 
 	return	treeItem;

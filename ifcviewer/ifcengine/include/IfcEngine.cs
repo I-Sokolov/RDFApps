@@ -4231,14 +4231,6 @@ namespace RDF
 		public static extern void sdaiResetArrayIndex(int_t array, int_t lower, int_t upper);
 
 		/// <summary>
-		///		engiGetComplexInstanceNextPart                          (http://rdf.bg/ifcdoc/CS64/engiGetComplexInstanceNextPart.html)
-		///
-		///	The function returns next part of complex instance or NULL.
-		/// </summary>
-		[DllImport(IFCEngineDLL, EntryPoint = "engiGetComplexInstanceNextPart")]
-		public static extern int_t engiGetComplexInstanceNextPart(int_t instance);
-
-		/// <summary>
 		///		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CS64/engiEnableDerivedAttributes.html)
 		///
 		///	The function enables calculation of derived attributes for sdaiGetAttr(BN) and other get value functions and dynamic aggregation indexes.

@@ -1753,7 +1753,7 @@ uint64_t		DECL STDC	GetOverrideFileIO(
 //	This function copies the instance tree towards a new model.
 //	In case model is empty a new model will be created (the handle to this new model can be retrieved through
 //	the call GetModel() based on the return value of this call).
-//	The model can be any opem model, it can be zero (a new model will be created on-the-fly) and it can be
+//	The model can be any open model, it can be zero (a new model will be created on-the-fly) and it can be
 //	the same model as the model owlInstance is defined within, in this case just a perfect copy of the
 //	original instance tree.
 //

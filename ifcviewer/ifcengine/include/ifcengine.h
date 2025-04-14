@@ -1704,7 +1704,6 @@ static	inline	SdaiEntity	sdaiGetEntity(
 	extern "C" {
 #endif
 
-
 //
 //		sdaiGetComplexEntity                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
 //				SdaiModel				model								IN
@@ -4297,35 +4296,57 @@ static	inline	int_t	engiGetInstanceMetaInfo(
 //
 //		sdaiFindInstanceUsers                                   (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsers.html)
 //				SdaiInstance			instance							IN
-//				int_t					domain								IN
-//				int_t					resultList							IN
+//				SdaiNPL					domain								IN
+//				SdaiNPL					resultList							IN
 //
-//				int_t					returns								OUT
+//				SdaiNPL					returns								OUT
 //
-//	...
+//	 The function returns the identifiers of all the entity instances in the defined domain 
+//   that reference the specified entity instance
 //
-int_t			DECL STDC	sdaiFindInstanceUsers(
+SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 									SdaiInstance			instance,
-									int_t					domain,
-									int_t					resultList
+									SdaiNPL					domain,
+									SdaiNPL					resultList
 								);
+
+
+//
+//		sdaiFindInstanceUsedIn                                (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
+//				SdaiInstance			instance							IN
+//				SdaiAttr				role								IN
+//				SdaiNPL					domain								IN
+//				SdaiNPL					resultList							IN
+//
+//				SdaiNPL					returns								OUT
+//
+//	The function returns the identifiers of all the entity instances in the defined domain 
+//  that reference the specified entity instance by the specified attribute
+//
+SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
+									SdaiInstance			instance,
+									SdaiAttr				role,
+									SdaiNPL					domain,
+									SdaiNPL					resultList
+								);
+
 
 //
 //		sdaiFindInstanceUsedInBN                                (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedInBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				roleName							IN
-//				int_t					domain								IN
-//				int_t					resultList							IN
+//				SdaiNPL					domain								IN
+//				SdaiNPL					resultList							IN
 //
-//				int_t					returns								OUT
+//				SdaiNPL					returns								OUT
 //
 //	...
 //
-int_t			DECL STDC	sdaiFindInstanceUsedInBN(
+SdaiNPL			DECL STDC	sdaiFindInstanceUsedInBN(
 									SdaiInstance			instance,
 									SdaiString				roleName,
-									int_t					domain,
-									int_t					resultList
+									SdaiNPL					domain,
+									SdaiNPL					resultList
 								);
 
 #ifdef __cplusplus
@@ -4334,11 +4355,11 @@ int_t			DECL STDC	sdaiFindInstanceUsedInBN(
 
 //
 //
-static	inline	int_t	sdaiFindInstanceUsedInBN(
+static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 								SdaiInstance			instance,
 								char					* roleName,
-								int_t					domain,
-								int_t					resultList
+								SdaiNPL					domain,
+								SdaiNPL					resultList
 							)
 {
 	return	sdaiFindInstanceUsedInBN(
@@ -6699,17 +6720,6 @@ void			DECL STDC	sdaiResetArrayIndex(
 									SdaiAggrIndex			upper
 								);
 
-//
-//		engiGetComplexInstanceNextPart                          (http://rdf.bg/ifcdoc/CP64/engiGetComplexInstanceNextPart.html)
-//				SdaiInstance			instance							IN
-//
-//				SdaiInstance			returns								OUT
-//
-//	The function returns next part of complex instance or NULL.
-//
-SdaiInstance	DECL STDC	engiGetComplexInstanceNextPart(
-									SdaiInstance			instance
-								);
 
 //
 //		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
