@@ -70,7 +70,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCBOOLEAN">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -78,8 +78,10 @@
                         <ids:simpleValue>IsCornerBuilding</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:boolean"/>
-                    </ids:value>
+						<xs:restriction base="xs:boolean">
+    						<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -92,7 +94,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCINTEGER">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -100,8 +102,10 @@
                         <ids:simpleValue>NumberofBuildingLevels</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:integer"/>
-                    </ids:value>
+						<xs:restriction base="xs:integer">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -114,7 +118,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="optional">
+                <ids:property cardinality="optional" dataType="IFCLABEL">
                     <ids:propertySet>
                         <ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
                     </ids:propertySet>
@@ -133,7 +137,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="optional">
+                <ids:property cardinality="optional" dataType="IFCLENGTHMEASURE">
                     <ids:propertySet>
                         <ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
                     </ids:propertySet>
@@ -141,16 +145,18 @@
                         <ids:simpleValue>MarketSubCategory</ids:simpleValue>
                     </ids:baseName>
                 </ids:property>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
                     <ids:baseName>
                         <ids:simpleValue>BuildingHeight</ids:simpleValue>
                     </ids:baseName>
-                    <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+					<ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -163,7 +169,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCPLANEANGLEMEASURE">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -171,8 +177,10 @@
                         <ids:simpleValue>RoofAngle</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -185,7 +193,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCAREAMEASURE">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -193,10 +201,12 @@
                         <ids:simpleValue>GrossFloorArea</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCAREAMEASURE">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -204,8 +214,10 @@
                         <ids:simpleValue>AccessoryFloorArea</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -219,7 +231,7 @@
 			</ids:applicability>
 		</ids:specification>
         <ids:specification name="Use of IFCSPACETYPE exclusively for relevant concepts within CHEK" description="Value of IFCSPACETYPE.LongName should be enumeration" instructions="" ifcVersion="IFC4">
-            <ids:applicability>
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
                 <ids:entity>
                     <ids:name>
                         <ids:simpleValue>IFCSPACETYPE</ids:simpleValue>

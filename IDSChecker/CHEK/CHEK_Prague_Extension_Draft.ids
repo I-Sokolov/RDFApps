@@ -1,0 +1,855 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<ids:ids xmlns:ids="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS http://standards.buildingsmart.org/IDS/1.0/ids.xsd">
+	<ids:info>
+        <ids:title>D2.2 CHEK IFC Specification for Prague (M18) - extension</ids:title>
+    </ids:info>
+    <ids:specifications>
+	 	<ids:specification name=".. IFCBUILDING .." ifcVersion="IFC4">
+    		<ids:applicability minOccurs="0" maxOccurs="unbounded">
+    			<ids:entity>
+    				<ids:name>
+    					<ids:simpleValue>IFCBUILDING</ids:simpleValue>
+                    </ids:name>
+                </ids:entity>
+            </ids:applicability>
+    		<ids:requirements>
+    			<ids:property cardinality="required" dataType="IFCBOOLEAN">
+    				<ids:propertySet>
+    					<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+    				<ids:baseName>
+    					<ids:simpleValue>Building_AccessibleStairs</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+    			<ids:property cardinality="required" dataType="IFCBOOLEAN">
+    				<ids:propertySet>
+    					<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+    				<ids:baseName>
+    					<ids:simpleValue>Building_VisuallyImpairedProtection</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+    			<ids:property cardinality="required" dataType="IFCLABEL">
+    				<ids:propertySet>
+    					<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+    				<ids:baseName>
+    					<ids:simpleValue>BuildingType</ids:simpleValue>
+					</ids:baseName>
+					<ids:value>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="Residential"/>
+							<xs:enumeration value="Public Transport Terminal"/>
+							<xs:enumeration value="Educational"/>
+							<xs:enumeration value="etc."/>
+						</xs:restriction>
+					</ids:value>
+				</ids:property>
+			</ids:requirements>
+        </ids:specification>
+	 	<ids:specification name=".. IFCSTAIR .." ifcVersion="IFC4">
+    		<ids:applicability minOccurs="0" maxOccurs="unbounded">
+    			<ids:entity>
+    				<ids:name>
+    					<ids:simpleValue>IFCSTAIR</ids:simpleValue>
+                    </ids:name>
+                </ids:entity>
+            </ids:applicability>
+    		<ids:requirements>
+    			<ids:property cardinality="required" dataType="IFCBOOLEAN">
+    				<ids:propertySet>
+    					<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+    				<ids:baseName>
+    					<ids:simpleValue>IsAccessible</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+        </ids:specification>
+		<ids:specification name=".. IFCSTAIRFLIGHT .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSTAIRFLIGHT</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>NumberOfRisers</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCPLANEANGLEMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Slope</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>RiserHeight</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>TreadRiserRelation</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>TreadOverhang</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCRAILING .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCRAILING</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Height</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Extension</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Offset</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>GripShape</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCANNOTATION .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCANNOTATION</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Annotation_Type</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Annotation_Color</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Annotation_Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Annotation_Placement</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSURFACEFEATURE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSURFACEFEATURE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>SurfaceFeature_Type</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>SurfaceFeature_Color</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>SurfaceFeature_Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSLAB .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSLAB</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>SurfaceFeature_Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSPACE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSPACE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Diameter</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Width_rectangle</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Length_rectangle</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCBUILDINGELEMENTPROXY .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCBUILDINGELEMENTPROXY</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Height</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Width_indoor</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Width_outdoor</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCCOVERING .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCCOVERING</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Directional_Guidance_Length</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Surface_Texture</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Surrounding_Surface</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Visual_Contrast_Marking_Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCCOMMUNICATIONSAPPLIANCE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCCOMMUNICATIONSAPPLIANCE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Type</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Chime_Type</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCRATIOMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Acoustic_Pressure_Ratio</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Placement</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCCONTROLLER .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCCONTROLLER</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Range</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCREAL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Frequency</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Delay</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCCOMMUNICATIONSAPPLIANCE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCCOMMUNICATIONSAPPLIANCE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Command_Function</ids:simpleValue>
+					</ids:baseName>
+					<ids:value>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="Building name info"/>
+							<xs:enumeration value="Chime, route info"/>
+							<xs:enumeration value="Transporter chime"/>
+							<xs:enumeration value="Self-service door"/>
+							<xs:enumeration value="Pedestrian signal"/>
+							<xs:enumeration value="Voice output"/>
+						</xs:restriction>
+					</ids:value>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSLAB .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSLAB</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>MaintainsGuidanceLine</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCFEATUREELEMENT .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCFEATUREELEMENT</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>NoObstacles</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCBUILDINGELEMENTPROXY .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCBUILDINGELEMENTPROXY</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>FixedBarrierHeight</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>FixedProtectionHeight</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>BarrierDisplacement</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCLIGHTFIXTURE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCLIGHTFIXTURE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Visual_Contrast</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCCURTAINWALL .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCCURTAINWALL</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>CurtainWall_MaterialType</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSTAIRFLIGHT .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSTAIRFLIGHT</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>StairFlight.HasBoardingMark</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCDOOR .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCDOOR</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>IsElevatorDoor</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>IsRoomDoor</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCRAILING .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCRAILING</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Handrail_HandleType</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCBUILDING .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCBUILDING</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Building_BuildingType</ids:simpleValue>
+					</ids:baseName>
+					<ids:value>
+						<xs:restriction base="xs:string">
+							<xs:enumeration value="Civic Building"/>
+							<xs:enumeration value="Educational Facility"/>
+							<xs:enumeration value="Preschool"/>
+							<xs:enumeration value="School"/>
+							<xs:enumeration value="Non-formal Education Building"/>
+						</xs:restriction>
+					</ids:value>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSPACE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSPACE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_TotalSeats</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Reserved</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCFURNITURE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCFURNITURE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCINTEGER">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Furniture_SeatCount</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Furniture_IsDesignated</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCBUILDING .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCBUILDING</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCBOOLEAN">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Building_IsAccessible</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSPACE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSPACE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Function</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Width</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Height</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Length</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCDOOR .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCDOOR</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLENGTHMEASURE">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Door_ClearWidth</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+		<ids:specification name=".. IFCSPACE .." ifcVersion="IFC4">
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
+					<ids:name>
+						<ids:simpleValue>IFCSPACE</ids:simpleValue>
+					</ids:name>
+				</ids:entity>
+			</ids:applicability>
+			<ids:requirements>
+				<ids:property cardinality="required" dataType="IFCLABEL">
+					<ids:propertySet>
+						<ids:simpleValue>CHEK_common</ids:simpleValue>
+					</ids:propertySet>
+					<ids:baseName>
+						<ids:simpleValue>Space_Type</ids:simpleValue>
+					</ids:baseName>
+				</ids:property>
+			</ids:requirements>
+		</ids:specification>
+	</ids:specifications>
+</ids:ids>

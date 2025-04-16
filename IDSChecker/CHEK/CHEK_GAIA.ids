@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <ids:ids xmlns:ids="http://standards.buildingsmart.org/IDS" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS http://standards.buildingsmart.org/IDS/1.0/ids.xsd">
 	<ids:info>
-        <ids:title>D2.2 CHEK IFC Specification for Lisbon (M18)</ids:title>
+        <ids:title>D2.2 CHEK IFC Specification for GAIA (M18)</ids:title>
     </ids:info>
     <ids:specifications>
         <ids:specification name="Each wall should have Pset_WallCommon.IsExternal property" ifcVersion="IFC4">
@@ -47,18 +47,7 @@
                     <ids:baseName>
                         <ids:simpleValue>BuildingFunction</ids:simpleValue>
                     </ids:baseName>
-                    <ids:value>
-                        <xs:restriction base="xs:string">
-                            <xs:enumeration value="housing"/>
-                            <xs:enumeration value="services"/>
-                            <xs:enumeration value="tourism"/>
-                            <xs:enumeration value="industry"/>
-                            <xs:enumeration value="logisticsF"/>
-                            <xs:enumeration value="Gprivate equipment"/>
-                            <xs:enumeration value="storage rooms"/>
-                        </xs:restriction>
-                    </ids:value>
-                </ids:property>
+               </ids:property>
             </ids:requirements>
         </ids:specification>
         <ids:specification name="Each building should have CHEK_common.Height property" ifcVersion="IFC4">
@@ -89,7 +78,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="optional">
+                <ids:property cardinality="optional" dataType="IFCBOOLEAN">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -97,8 +86,10 @@
                         <ids:simpleValue>IsCornerBuilding</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:boolean"/>
-                    </ids:value>
+						<xs:restriction base="xs:boolean">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -111,7 +102,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCINTEGER">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -119,8 +110,62 @@
                         <ids:simpleValue>NumberofBuildingLevels</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:integer"/>
-                    </ids:value>
+						<xs:restriction base="xs:integer">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
+                </ids:property>
+                <ids:property cardinality="optional" dataType="IFCBOOLEAN">
+                    <ids:propertySet>
+                        <ids:simpleValue>CHEK_common</ids:simpleValue>
+                    </ids:propertySet>
+                    <ids:baseName>
+                        <ids:simpleValue>IsSecundaryBuilding</ids:simpleValue>
+                    </ids:baseName>
+                    <ids:value>
+						<xs:restriction base="xs:boolean">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
+                </ids:property>
+                <ids:property cardinality="required" dataType="IFCREAL">
+                    <ids:propertySet>
+                        <ids:simpleValue>CHEK_common</ids:simpleValue>
+                    </ids:propertySet>
+                    <ids:baseName>
+                        <ids:simpleValue>GrossBuildabilityIndex</ids:simpleValue>
+                    </ids:baseName>
+                    <ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
+                </ids:property>
+                <ids:property cardinality="required" dataType="IFCREAL">
+                    <ids:propertySet>
+                        <ids:simpleValue>CHEK_common</ids:simpleValue>
+                    </ids:propertySet>
+                    <ids:baseName>
+                        <ids:simpleValue>GrossBuildingArea</ids:simpleValue>
+                    </ids:baseName>
+                    <ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
+                </ids:property>
+                <ids:property cardinality="required" dataType="IFCINTEGER">
+                    <ids:propertySet>
+                        <ids:simpleValue>CHEK_common</ids:simpleValue>
+                    </ids:propertySet>
+                    <ids:baseName>
+                        <ids:simpleValue>NumberOfParkingSpaces</ids:simpleValue>
+                    </ids:baseName>
+                    <ids:value>
+						<xs:restriction base="xs:integer">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -133,7 +178,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="optional">
+                <ids:property cardinality="optional" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
                     </ids:propertySet>
@@ -152,7 +197,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="optional">
+                <ids:property cardinality="optional" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
                     </ids:propertySet>
@@ -160,7 +205,7 @@
                         <ids:simpleValue>MarketSubCategory</ids:simpleValue>
                     </ids:baseName>
                 </ids:property>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -168,8 +213,10 @@
                         <ids:simpleValue>BuildingHeight</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
@@ -182,7 +229,7 @@
                 </ids:entity>
             </ids:applicability>
             <ids:requirements>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -190,10 +237,12 @@
                         <ids:simpleValue>GrossFloorArea</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -201,10 +250,12 @@
                         <ids:simpleValue>FloorHeight</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
-                <ids:property cardinality="required">
+                <ids:property cardinality="required" dataType="IFCREAL">
                     <ids:propertySet>
                         <ids:simpleValue>CHEK_common</ids:simpleValue>
                     </ids:propertySet>
@@ -212,8 +263,10 @@
                         <ids:simpleValue>AccessoryFloorArea</ids:simpleValue>
                     </ids:baseName>
                     <ids:value>
-                        <xs:restriction base="xs:double"/>
-                    </ids:value>
+						<xs:restriction base="xs:double">
+							<xs:annotation/>
+						</xs:restriction>
+					</ids:value>
                 </ids:property>
             </ids:requirements>
         </ids:specification>
