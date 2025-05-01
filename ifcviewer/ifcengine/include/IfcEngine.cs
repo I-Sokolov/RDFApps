@@ -3588,7 +3588,7 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiTestArrayByIndex")]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
+		public static extern bool sdaiTestArrayByIndex(int_t aggregate, int_t index);
 
 		/// <summary>
 		///		sdaiTestArrayByItr                                      (http://rdf.bg/ifcdoc/CS64/sdaiTestArrayByItr.html)
@@ -3597,7 +3597,7 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiTestArrayByItr")]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool sdaiTestArrayByItr(int_t iterator);
+		public static extern bool sdaiTestArrayByItr(int_t iterator);
 
 		/// <summary>
 		///		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiCreateInstance.html)
@@ -3626,6 +3626,24 @@ namespace RDF
 
 		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateInstanceBN")]
 		public static extern int_t sdaiCreateInstanceBN(int_t model, byte[] entityName);
+
+		/// <summary>
+		///		sdaiCreateComplexInstance                               (http://rdf.bg/ifcdoc/CS64/sdaiCreateComplexInstance.html)
+		///
+		///	This call creates a new application instance of the specified type, as determined by a constructed entity type
+		///	that is made up of the supplied simple entity types, in the specified SDAI model.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateComplexInstance")]
+		public static extern int_t sdaiCreateComplexInstance(int_t model, int_t entityList);
+
+		/// <summary>
+		///		sdaiCreateComplexInstanceBN                             (http://rdf.bg/ifcdoc/CS64/sdaiCreateComplexInstanceBN.html)
+		///
+		///	This call creates a new application instance of the specified type, as determined by a constructed entity type
+		///	that is made up of the supplied simple entity types, in the specified SDAI model.
+		/// </summary>
+		[DllImport(IFCEngineDLL, EntryPoint = "sdaiCreateComplexInstanceBN")]
+		public static extern int_t sdaiCreateComplexInstanceBN(int_t model, int_t nameNumber, out IntPtr nameVector);
 
 		/// <summary>
 		///		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CS64/sdaiDeleteInstance.html)
@@ -4238,7 +4256,7 @@ namespace RDF
 		/// </summary>
 		[DllImport(IFCEngineDLL, EntryPoint = "engiEnableDerivedAttributes")]
         [return: MarshalAs(UnmanagedType.U1)]
-        public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
+		public static extern bool engiEnableDerivedAttributes(int_t model, [param: MarshalAs(UnmanagedType.U1)] bool enable);
 
 		/// <summary>
 		///		engiEvaluateAllDerivedAttributes                        (http://rdf.bg/ifcdoc/CS64/engiEvaluateAllDerivedAttributes.html)

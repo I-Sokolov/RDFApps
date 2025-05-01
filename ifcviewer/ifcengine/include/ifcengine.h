@@ -96,14 +96,14 @@ typedef	const char		* SdaiString;
 typedef	void			* SdaiADB;
 typedef	int_t			* SdaiAggr;
 typedef	SdaiAggr		SdaiArray;
-typedef SdaiAggr		SdaiList;
+typedef	SdaiAggr		SdaiList;
 typedef	SdaiList		SdaiNPL;
 typedef	void			* SdaiIterator;
 typedef	int_t			SdaiAggrIndex;
 typedef	void			* SdaiAttr;
 typedef	void			* SchemaAggr;
 
-typedef	int64_t			ExpressID;
+typedef	uint64_t		ExpressID;
 
 typedef	void			* ValidationResults;
 typedef	void			* ValidationIssue;
@@ -1705,35 +1705,57 @@ static	inline	SdaiEntity	sdaiGetEntity(
 #endif
 
 //
-//		sdaiGetComplexEntity                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
+//		sdaiGetComplexEntity                                    (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
 //				SdaiModel				model								IN
-//				SdaiNPL				    entityList							IN 
+//				SdaiNPL					entityList							IN
 //
 //				SdaiEntity				returns								OUT
 //
-//	This call retrieves a handle to an entity composed of the supplied simple entity types..
+//	This call retrieves a handle to an entity composed of the supplied simple entity types.
 //
 SdaiEntity		DECL STDC	sdaiGetComplexEntity(
 									SdaiModel				model,
 									SdaiNPL					entityList
 								);
 
-
 //
-//		sdaiGetComplexEntityBN                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
+//		sdaiGetComplexEntityBN                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
 //				SdaiModel				model								IN
-//				SdaiInteger				nameNumber							IN 
+//				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
 //
 //				SdaiEntity				returns								OUT
 //
-//	This call retrieves a handle to an entity composed of the supplied simple entity types..
+//	This call retrieves a handle to an entity composed of the supplied simple entity types.
 //
 SdaiEntity		DECL STDC	sdaiGetComplexEntityBN(
 									SdaiModel				model,
-									SdaiInteger				nameNumber, 
+									SdaiInteger				nameNumber,
 									SdaiString				* nameVector
 								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	SdaiEntity	sdaiGetComplexEntityBN(
+									SdaiModel				model,
+									SdaiInteger				nameNumber,
+									char					** nameVector
+								)
+{
+	return	sdaiGetComplexEntityBN(
+					model,
+					nameNumber,
+					(SdaiString*) nameVector
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		engiGetEntityModel                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
@@ -1748,13 +1770,35 @@ SdaiModel		DECL STDC	engiGetEntityModel(
 								);
 
 //
+//		engiGetAttrIndex                                        (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndex.html)
+//				SdaiAttr				attribute							IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+int_t			DECL STDC	engiGetAttrIndex(
+									SdaiAttr				attribute
+								);
+
+//
 //		engiGetAttrIndexBN                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
 //				int_t					returns								OUT
 //
-//	...
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	Technically engiGetAttrIndexBN will transform into the following call
+//		engiGetAttrIndex(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					)
+//			);
 //
 int_t			DECL STDC	engiGetAttrIndexBN(
 									SdaiEntity				entity,
@@ -1783,6 +1827,23 @@ static	inline	int_t	engiGetAttrIndexBN(
 #endif
 
 //
+//		engiGetAttrIndexEx                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexEx.html)
+//				SdaiAttr				attribute							IN
+//				bool					countedWithParents					IN
+//				bool					countedWithInverse					IN
+//
+//				int_t					returns								OUT
+//
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+int_t			DECL STDC	engiGetAttrIndexEx(
+									SdaiAttr				attribute,
+									bool					countedWithParents,
+									bool					countedWithInverse
+								);
+
+//
 //		engiGetAttrIndexExBN                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexExBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
@@ -1791,7 +1852,18 @@ static	inline	int_t	engiGetAttrIndexBN(
 //
 //				int_t					returns								OUT
 //
-//	..
+//	This call works for non-complex entities and entities without multiple inheritance,
+//	it is advised not to use this call for other schemas.
+//
+//	Technically engiGetAttrIndexExBN will transform into the following call
+//		engiGetAttrIndexEx(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					),
+//				countedWithParents,
+//				countedWithInverse
+//			);
 //
 int_t			DECL STDC	engiGetAttrIndexExBN(
 									SdaiEntity				entity,
@@ -4301,8 +4373,8 @@ static	inline	int_t	engiGetInstanceMetaInfo(
 //
 //				SdaiNPL					returns								OUT
 //
-//	 The function returns the identifiers of all the entity instances in the defined domain 
-//   that reference the specified entity instance
+//	The function returns the identifiers of all the entity instances in the defined domain
+//	that reference the specified entity instance.
 //
 SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 									SdaiInstance			instance,
@@ -4310,9 +4382,8 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 									SdaiNPL					resultList
 								);
 
-
 //
-//		sdaiFindInstanceUsedIn                                (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
+//		sdaiFindInstanceUsedIn                                  (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
 //				SdaiInstance			instance							IN
 //				SdaiAttr				role								IN
 //				SdaiNPL					domain								IN
@@ -4320,8 +4391,8 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 //
 //				SdaiNPL					returns								OUT
 //
-//	The function returns the identifiers of all the entity instances in the defined domain 
-//  that reference the specified entity instance by the specified attribute
+//	The function returns the identifiers of all the entity instances in the defined domain
+//	that reference the specified entity instance by the specified attribute (role).
 //
 SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
 									SdaiInstance			instance,
@@ -4329,7 +4400,6 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
 									SdaiNPL					domain,
 									SdaiNPL					resultList
 								);
-
 
 //
 //		sdaiFindInstanceUsedInBN                                (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedInBN.html)
@@ -4340,7 +4410,21 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
 //
 //				SdaiNPL					returns								OUT
 //
-//	...
+//	The function returns the identifiers of all the entity instances in the defined domain
+//	that reference the specified entity instance by the specified attribute (with roleName).
+//
+//	Technically sdaiFindInstanceUsedInBN will transform into the following call
+//		sdaiFindInstanceUsedIn(
+//				instance,
+//				sdaiGetAttrDefinition(
+//						sdaiGetInstanceType(
+//								instance
+//							),
+//						roleName
+//					),
+//				domain,
+//				resultList
+//			);
 //
 SdaiNPL			DECL STDC	sdaiFindInstanceUsedInBN(
 									SdaiInstance			instance,
@@ -5761,37 +5845,59 @@ static	inline	SdaiInstance	sdaiCreateInstanceBN(
 #endif
 
 //
-//		sdaiCreateComplexInstance                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
+//		sdaiCreateComplexInstance                               (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
 //				SdaiModel				model								IN
-//				SdaiNPL				    entityList							IN 
+//				SdaiNPL					entityList							IN
 //
 //				SdaiInstance			returns								OUT
 //
-//		This call creates a new application instance of the specified type, as determined by a constructed entity type 
-//      that is made up of the supplied simple entity types, in the specified SDAI model.
+//	This call creates a new application instance of the specified type, as determined by a constructed entity type
+//	that is made up of the supplied simple entity types, in the specified SDAI model.
 //
 SdaiInstance	DECL STDC	sdaiCreateComplexInstance(
 									SdaiModel				model,
 									SdaiNPL					entityList
 								);
 
-
 //
-//		sdaiCreateComplexInstanceBN                              (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
+//		sdaiCreateComplexInstanceBN                             (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
 //				SdaiModel				model								IN
-//				SdaiInteger				nameNumber							IN 
+//				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
 //
 //				SdaiInstance			returns								OUT
 //
-//		This call creates a new application instance of the specified type, as determined by a constructed entity type 
-//      that is made up of the supplied simple entity types, in the specified SDAI model.
+//	This call creates a new application instance of the specified type, as determined by a constructed entity type
+//	that is made up of the supplied simple entity types, in the specified SDAI model.
 //
 SdaiInstance	DECL STDC	sdaiCreateComplexInstanceBN(
 									SdaiModel				model,
-									SdaiInteger				nameNumber, 
+									SdaiInteger				nameNumber,
 									SdaiString				* nameVector
 								);
+
+#ifdef __cplusplus
+	}
+//{{ Begin C++ polymorphic versions
+
+//
+//
+static	inline	SdaiInstance	sdaiCreateComplexInstanceBN(
+										SdaiModel				model,
+										SdaiInteger				nameNumber,
+										char					** nameVector
+									)
+{
+	return	sdaiCreateComplexInstanceBN(
+					model,
+					nameNumber,
+					(SdaiString*) nameVector
+				);
+}
+
+//}} End C++ polymorphic versions
+	extern "C" {
+#endif
 
 //
 //		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
@@ -6719,7 +6825,6 @@ void			DECL STDC	sdaiResetArrayIndex(
 									SdaiAggrIndex			lower,
 									SdaiAggrIndex			upper
 								);
-
 
 //
 //		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
@@ -8387,6 +8492,14 @@ int_t			DECL STDC	engiGetAttrOptional(
 //
 //	This call is deprecated, please use call engiIsAttrOptionalBN(..) instead.
 //
+//	Technically engiGetAttrOptionalBN will transform into the following call
+//		engiGetAttrOptional(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					)
+//			);
+//
 int_t			DECL STDC	engiGetAttrOptionalBN(
 									SdaiEntity				entity,
 									SdaiString				attributeName
@@ -8433,6 +8546,14 @@ int_t			DECL STDC	engiGetAttrInverse(
 //				int_t					returns								OUT
 //
 //	This call is deprecated, please use call engiIsAttrInverseBN(..) instead.
+//
+//	Technically engiGetAttrInverseBN will transform into the following call
+//		engiGetAttrInverse(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					)
+//			);
 //
 int_t			DECL STDC	engiGetAttrInverseBN(
 									SdaiEntity				entity,
@@ -8529,6 +8650,15 @@ static	inline	SdaiString	engiGetAttrDomain(
 //
 //	This call is deprecated, please use call engiGetAttrDomainNameBN(..) instead.
 //
+//	Technically engiGetAttrDomainBN will transform into the following call
+//		engiGetAttrDomain(
+//				sdaiGetAttrDefinition(
+//						entity,
+//						attributeName
+//					),
+//				domainName
+//			);
+//
 SdaiString		DECL STDC	engiGetAttrDomainBN(
 									SdaiEntity				entity,
 									SdaiString				attributeName,
@@ -8604,7 +8734,15 @@ int_t			DECL STDC	engiGetEntityIsAbstract(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, please use call engiIsEntityAbstractbn(..) instead.
+//	This call is deprecated, please use call engiIsEntityAbstractBN(..) instead.
+//
+//	Technically engiGetEntityIsAbstractBN will transform into the following call
+//		engiGetEntityIsAbstract(
+//				sdaiGetEntity(
+//						model,
+//						entityName
+//					)
+//			);
 //
 int_t			DECL STDC	engiGetEntityIsAbstractBN(
 									SdaiModel				model,
@@ -8933,7 +9071,7 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 //
 //				int_t					returns								OUT
 //
-//	...
+//	This call is deprecated, please use calls engiGetAttrType(..) instead.
 //
 int_t			DECL STDC	xxxxGetAttrType(
 									SdaiInstance			instance,
