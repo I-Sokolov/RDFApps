@@ -1,16 +1,255 @@
-<ids xmlns="http://standards.buildingsmart.org/IDS/0.9.7/ids.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS/ids_05.xsd">
+<ids xmlns="http://standards.buildingsmart.org/IDS/1.0/ids.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.buildingsmart.org/IDS/ids_05.xsd">
     <info>
-        <title>CHEK IFC => CityGML converstion limitations Specification</title>
+        <title>D2.2 CHEK IFC Specification for Ascoli Piceno (M18)</title>
     </info>
     <specifications>
-        <specification name="Curtain walls not supported" ifcVersion="IFC4" minOccurs="0" maxOccurs="0">
+        <specification name="Each wall should have Pset_WallCommon.IsExternal property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
             <applicability>
                 <entity>
                     <name>
-                        <simpleValue>IFCCURTAINWALL</simpleValue>
+                        <simpleValue>IFCWALL</simpleValue>
                     </name>
                 </entity>
             </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_WallCommon</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>IsExternal</simpleValue>
+                    </name>
+                </property>
+            </requirements>
         </specification>
-    </specifications>
+        <specification name="Each building should have CHEK_common.TypeOfConstruction property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>CHEK_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>TypeOfConstruction</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+		<specification name="Each building should have CHEK_common.LegalVolume property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCBUILDING</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+			<requirements>
+				<property minOccurs="1" maxOccurs="1">
+					<propertySet>
+						<simpleValue>CHEK_common</simpleValue>
+					</propertySet>
+					<name>
+						<simpleValue>LegalVolume</simpleValue>
+					</name>
+				</property>
+			</requirements>
+		</specification>
+		<specification name="Each building should have CHEK_common.Height property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>CHEK_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>Height</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have CHEK_common.IsCornerBuilding property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>CHEK_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>IsCornerBuilding</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have CHEK_common.NumberofBuildingLevels property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>CHEK_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>NumberofBuildingLevels</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Pset_BuildingUse.MarketCategory property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_BuildingUse</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>MarketCategory</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each building should have Pset_BuildingUse.MarketSubCategory property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCBUILDING</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>Pset_BuildingUse</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>MarketSubCategory</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+        <specification name="Each roof should have CHEK_common.RoofAngle property" ifcVersion="IFC4" minOccurs="0" maxOccurs="unbounded">
+            <applicability>
+                <entity>
+                    <name>
+                        <simpleValue>IFCROOF</simpleValue>
+                    </name>
+                </entity>
+            </applicability>
+            <requirements>
+                <property minOccurs="1" maxOccurs="1">
+                    <propertySet>
+                        <simpleValue>CHEK_common</simpleValue>
+                    </propertySet>
+                    <name>
+                        <simpleValue>RoofAngle</simpleValue>
+                    </name>
+                </property>
+            </requirements>
+        </specification>
+		<specification name="Roof Exists" description="There should be at least one instance of IFCROOF entity" instructions="Make sure that the Roofd is modelled as a roof, it might be modelled as a single roof object or as a decomposed structure where a roof is decomposed into individual slabs" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCROOF</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+		<specification name="Use of IFCSPACIALZONE exclusively for relevant concepts within CHEK" description="Value of IFCSPACIALZONE.LongName should be Balcony / Canopy / Terrace in case of balconies / canopies / terrasses" instructions="In case of terrasses an IFCSPACIALZONE should be created with PredefinedType = .OCCUPANCY. And LongName = Terrace" ifcVersion="IFC4">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCSPACIALZONE</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+			<requirements>
+				<attribute>
+				    <name>
+					    <simpleValue>LongName</simpleValue>
+				    </name>
+				    <value>
+					    <restriction base="xs:string">
+						    <enumeration value="Balcony"/>
+							<enumeration value="Canopy"/>
+							<enumeration value="Terrace"/>
+					    </restriction>
+				    </value>
+			    </attribute>
+		    </requirements>
+		</specification>
+		<specification name="Required properties for Building Story" description="Requirement to define GrossFloorArea and AccessoryFloorArea as properties for each individual IFCBUILDINGSTOREY instance" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCBUILDINGSTOREY</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+		<specification name="2nd level space boundaries required" description="The IFC file should contain 2nd level space boundary definitions" instructions="IFCRELSPACEBOUNDARY2NDLEVEL instances should be available within the IFC file" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCRELSPACEBOUNDARY2NDLEVEL</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+		<specification name="a Building exists exactly once" description="The IFC file contains exactly one instance of IFCBUILDING" instructions="The cardinality restrictions on IFCBUILDING are minCard = maxCard = 1" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCBUILDING</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+		<specification name="Door Exists" description="There should be at least one instance of IFCDOOR entity" instructions="Make sure that the Door is modelled as a IFCDOOR" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCDOOR</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+		<specification name="Window Exists" description="There should be at least one instance of IFCWINDOW entity" instructions="Make sure that the Window is modelled as a IFCWINDOW" ifcVersion="IFC4" minOccurs="1" maxOccurs="unbounded">
+			<applicability>
+				<entity>
+					<name>
+						<simpleValue>IFCWINDOW</simpleValue>
+					</name>
+				</entity>
+			</applicability>
+		</specification>
+	</specifications>
 </ids>

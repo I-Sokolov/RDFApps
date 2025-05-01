@@ -52,7 +52,7 @@
 			</ids:applicability>
 		</ids:specification>
     	<ids:specification name="Roof Type Restrictions" description="The IFCROOF.PredefinedType should be clear" instructions="IFCROOF.PredefinedType is FLAT_ROOF, SHED_ROOF, GABLE_ROOF, HIP_ROOF, HIPPED_GABLE_ROOF, GAMBREL_ROOF, MANSHARD_ROOF, BARREL_ROOF, RAINBOW_ROOF, BUTTERFLY_ROOF, PAVILION_ROOF or DOME_ROOF" ifcVersion="IFC4">
-    		<ids:applicability>
+			<ids:applicability minOccurs="1" maxOccurs="unbounded">
     			<ids:entity>
     				<ids:name>
     					<ids:simpleValue>IFCROOF</ids:simpleValue>
@@ -92,7 +92,7 @@
 				</ids:entity>
 			</ids:applicability>
     		<ids:requirements>
-    			<ids:property cardinality="required">
+    			<ids:property cardinality="required" dataType="IFCAREAMEASURE">
     				<ids:propertySet>
     					<ids:simpleValue>CHEK_common</ids:simpleValue>
 					</ids:propertySet>
@@ -103,8 +103,8 @@
 			</ids:requirements>
 		</ids:specification>
     	<ids:specification name="Use of IFCSPACETYPE exclusively for relevant concepts within CHEK" description="Value of IFCSPACETYPE.LongName should be enumeration" instructions="" ifcVersion="IFC4">
-    		<ids:applicability>
-    			<ids:entity>
+			<ids:applicability minOccurs="0" maxOccurs="unbounded">
+				<ids:entity>
     				<ids:name>
     					<ids:simpleValue>IFCSPACETYPE</ids:simpleValue>
     				</ids:name>
@@ -190,7 +190,7 @@
 				</ids:entity>
 			</ids:applicability>
     		<ids:requirements>
-    			<ids:property cardinality="optional">
+    			<ids:property cardinality="optional" dataType="IFCLABEL">
     				<ids:propertySet>
     					<ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
 					</ids:propertySet>
@@ -209,7 +209,7 @@
 				</ids:entity>
 			</ids:applicability>
     		<ids:requirements>
-    			<ids:property cardinality="optional">
+    			<ids:property cardinality="optional" dataType="IFCLABEL">
     				<ids:propertySet>
     					<ids:simpleValue>Pset_BuildingUse</ids:simpleValue>
 					</ids:propertySet>
