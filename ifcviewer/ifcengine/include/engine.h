@@ -4552,6 +4552,10 @@ OwlInstance		DECL STDC	GetInstanceReferencesByIterator(
 									OwlInstance				referencedOwlInstance
 								);
 
+OwlInstance		DECL STDC	ConsolidateInstanceTree(
+									OwlInstance				owlInstance
+								);
+
 //
 //		SetNameOfInstance                                       (http://rdf.bg/gkdoc/CP64/SetNameOfInstance.html)
 //				OwlInstance				owlInstance							IN
