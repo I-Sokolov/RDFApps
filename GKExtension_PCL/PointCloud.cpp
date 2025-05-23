@@ -27,25 +27,32 @@
 /// <summary>
 /// 
 /// </summary>
+static PointCloudGeometry s_Geometry;
+
+/// <summary>
+/// 
+/// </summary>
 bool PointCloud::CreateClass(OwlModel model)
 {
     REQUIRED(!GetClassByName(model, CLASS_NAME), "class already exists\n");
 
-    OwlClass clsMesh = ::CreateClass(model, CLASS_NAME);
-    REQUIRED(clsMesh, "Failed to create class\n");
+    OwlClass clsPointCloud = ::CreateClass(model, CLASS_NAME);
+    REQUIRED(clsPointCloud, "Failed to create class\n");
 
-    AddClassProperty(clsMesh, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING, 1);
-    AddClassProperty(clsMesh, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
-    AddClassProperty(clsMesh, PARAM_NEIGHBORS, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING, 1);
+    AddClassProperty(clsPointCloud, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
+    AddClassProperty(clsPointCloud, PARAM_NEIGHBORS, DATATYPEPROPERTY_TYPE_INTEGER);
 
-    AddClassProperty(clsMesh, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
-    AddClassProperty(clsMesh, PROP_CLOUD_WIDTH, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsMesh, PROP_CLOUD_HEIGHT, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsMesh, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
-    AddClassProperty(clsMesh, PROP_CLOUD_ISDENSE, DATATYPEPROPERTY_TYPE_BOOLEAN);
-    AddClassProperty(clsMesh, PROP_CLOUD_HDR_SEQ, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsMesh, PROP_CLOUD_HDR_STAMP, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsMesh, PROP_CLOUD_HDR_FRAME, DATATYPEPROPERTY_TYPE_STRING);
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
+    AddClassProperty(clsPointCloud, PROP_CLOUD_WIDTH, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HEIGHT, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_ISDENSE, DATATYPEPROPERTY_TYPE_BOOLEAN);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_SEQ, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_STAMP, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_FRAME, DATATYPEPROPERTY_TYPE_STRING);
+
+    engine_SetClassGeometryShellBasedSolid(clsPointCloud, &s_Geometry);
 
     return true;
 }
@@ -410,4 +417,66 @@ extern bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType typ
     }
 
     return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
+{
+    double* coords = NULL;
+    if (auto Ncoords = PointCloud::GetPointsCoords(inst, &coords)) {
+
+        startVector->x = startVector->y = startVector->z = DBL_MAX;
+        endVector->x = endVector->y = endVector->z = -DBL_MAX;
+
+        for (int_t i = 0; i < Ncoords / 3; i++) {
+            startVector->x = std::min(startVector->x, coords[3 * i + 0]);
+            startVector->y = std::min(startVector->y, coords[3 * i + 1]);
+            startVector->z = std::min(startVector->z, coords[3 * i + 2]);
+            endVector->x = std::max(endVector->x, coords[3 * i + 0]);
+            endVector->y = std::max(endVector->y, coords[3 * i + 1]);
+            endVector->z = std::max(endVector->z, coords[3 * i + 2]);
+        }
+
+        MatrixIdentity(transformationMatrix);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+
+}
+
+/// <summary>
+/// 
+/// </summary>
+void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IMemory* memory)
+{
+    double* coords = NULL;
+    int_t n_coords = PointCloud::GetPointsCoords(inst, &coords);
+    
+    if (n_coords < 3)
+        return;
+    
+    shell->noVertices = n_coords / 3;
+    shell->nonTransformedVertices = (VECTOR3*)memory->Allocate(shell->noVertices * sizeof(VECTOR3));
+
+    shell->conceptualFaces = memory->new__CONCEPTUAL_FACE();
+    VERTEX__LIST** ppPoints = &shell->conceptualFaces->points;
+
+    for (int_t npt = 0; npt < shell->noVertices; npt++) {
+        shell->nonTransformedVertices[npt].x = coords[npt * 3 + 0];
+        shell->nonTransformedVertices[npt].y = coords[npt * 3 + 1];
+        shell->nonTransformedVertices[npt].z = coords[npt * 3 + 2];
+
+        (*ppPoints) = (VERTEX__LIST*)memory->Allocate(sizeof(VERTEX__LIST));
+        if (npt < shell->noVertices - 1)
+            (*ppPoints)->point = npt;
+        else
+            (*ppPoints)->point = -(npt + 1);
+        ppPoints = &(*ppPoints)->next;
+
+    }
 }
