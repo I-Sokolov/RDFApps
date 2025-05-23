@@ -29,7 +29,7 @@ bool PoissonSurfaceReconstruction::CreateClass(OwlModel model)
 
     AddClassProperty(clsMesh, PARAM_POISSON_DEPTH, DATATYPEPROPERTY_TYPE_INTEGER);
 
-    engine_SetClassGeometryShellBasedSolid(clsMesh, &s_Geometry);
+    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
 
     return true;
 }

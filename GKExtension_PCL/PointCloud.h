@@ -3,11 +3,11 @@
 /// <summary>
 /// 
 /// </summary>
-class PointCloudGeometry : public IShellGeometry
+class PointCloudGeometry : public IEngineExtGeometry
 {
 public:
     virtual bool GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix) override;
-    virtual void CreateShell(OwlInstance inst, SHELL* shell, IMemory* memory) override;
+    virtual void CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory) override;
 };
 
 
@@ -22,8 +22,8 @@ public:
     static bool AddPointCloudProp(OwlClass cls);
     static OwlInstance GetPointCloudInstance(OwlInstance instHost);
 
-    static int_t GetPointsCoords(OwlInstance inst, double** coords);
-    static pcl::PointCloud<pcl::PointNormal>::Ptr GetPointCloud(OwlInstance inst);
+    static int_t GetPointsCoords(OwlInstance instWithPoints, double** coords);
+    static pcl::PointCloud<pcl::PointNormal>::Ptr GetPointCloud(OwlInstance instWithPoints);
 
 private:
     static std::string GetFilePathIfNeedToRead(OwlInstance instReleating);
@@ -95,3 +95,8 @@ static TVal GetDataProperyValue(OwlInstance inst, const char* name, TVal defval,
     GetDataProperyValue<TVal>(inst, name, &defval, 1, prop);
     return defval;
 }
+
+/// <summary>
+/// 
+/// </summary>
+extern OwlInstance GetObjectPropertyValue(OwlInstance inst, const char* propName);

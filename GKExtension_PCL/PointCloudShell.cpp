@@ -39,7 +39,7 @@ bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VEC
 /// <summary>
 /// 
 /// </summary>
-static void GetMeshVerticies(pcl::PolygonMesh& mesh, SHELL* shell, IMemory* memory)
+static void GetMeshVerticies(pcl::PolygonMesh& mesh, SHELL* shell, IEngineMemory* memory)
 {
     // Convert the mesh's cloud to PointCloud<PointXYZ>
     pcl::PointCloud<pcl::PointXYZ> cloud;
@@ -62,7 +62,7 @@ static void GetMeshVerticies(pcl::PolygonMesh& mesh, SHELL* shell, IMemory* memo
 /// <summary>
 /// 
 /// </summary>
-static STRUCT_EDGE** AddLoopEdge(int_t vertex, STRUCT_EDGE** ppNextEdge, IMemory* memory, bool lastPoint = false)
+static STRUCT_EDGE** AddLoopEdge(int_t vertex, STRUCT_EDGE** ppNextEdge, IEngineMemory* memory, bool lastPoint = false)
 {
     assert(ppNextEdge && !*ppNextEdge);
     if (!ppNextEdge)
@@ -85,7 +85,7 @@ static STRUCT_EDGE** AddLoopEdge(int_t vertex, STRUCT_EDGE** ppNextEdge, IMemory
 /// <summary>
 /// 
 /// </summary>
-static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IMemory* memory)
+static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IEngineMemory* memory)
 {
     for (auto& polygon : mesh.polygons) {
 
@@ -119,7 +119,7 @@ static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IMemory* 
 /// <summary>
 /// 
 /// </summary>
-void PointCloudShell::CreateShell(OwlInstance inst, SHELL* shell, IMemory* memory)
+void PointCloudShell::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
 {
     OwlInstance instCloud = PointCloud::GetPointCloudInstance(inst);
     auto cloud = PointCloud::GetPointCloud(instCloud);

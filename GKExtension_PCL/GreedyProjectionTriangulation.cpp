@@ -41,7 +41,7 @@ bool GreedyProjectionTriangulation::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_GP3_MAX_ANGLE, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_GP3_N_CONSIST, DATATYPEPROPERTY_TYPE_BOOLEAN);
 
-    engine_SetClassGeometryShellBasedSolid(clsMesh, &s_Geometry);
+    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
 
     return true;
 }

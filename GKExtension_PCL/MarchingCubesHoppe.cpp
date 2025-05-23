@@ -32,7 +32,7 @@ bool MarchingCubesHoppe::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_MCH_ISO_LEVEL, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_MCH_EXTENT_GRID, DATATYPEPROPERTY_TYPE_DOUBLE);
 
-    engine_SetClassGeometryShellBasedSolid(clsMesh, &s_Geometry);
+    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
 
     return true;
 }
