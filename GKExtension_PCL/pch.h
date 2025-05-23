@@ -34,7 +34,7 @@
 #ifdef _DEBUG
 #define LOG_ERROR printf
 #else
-#define LOG_ERROR /*noop*/
+#define LOG_ERROR printf
 #endif
 
 #define REQUIRED(condition, message) if (!(condition)){ LOG_ERROR(message); return false;}

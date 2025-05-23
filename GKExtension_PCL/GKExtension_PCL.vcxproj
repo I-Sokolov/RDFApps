@@ -95,16 +95,29 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:/VCPKG/installed/x64-windows/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)3dParty\include\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;W:\VCPKG\installed\x64-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>setlocal
+echo C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:\VCPKG\installed\x64-windows\debug\bin -OutVariable out 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:\VCPKG\installed\x64-windows\debug\bin -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -116,7 +129,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:/VCPKG/installed/x64-windows/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)3dParty\include\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -125,9 +138,22 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;W:\VCPKG\installed\x64-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>setlocal
+echo C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir $(ProjectDir)3dParty/bin/$(Platform)/$(Configuration) -OutVariable out 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir $(ProjectDir)3dParty/bin/$(Platform)/$(Configuration) -OutVariable out
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -137,26 +163,28 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:/VCPKG/installed/x64-windows/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)3dParty\include\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;W:\VCPKG\installed\x64-windows\debug\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);pcl_commond.lib;pcl_featuresd.lib;pcl_filtersd.lib;pcl_iod.lib;pcl_io_plyd.lib;pcl_kdtreed.lib;pcl_keypointsd.lib;pcl_mld.lib;pcl_octreed.lib;pcl_recognitiond.lib;pcl_registrationd.lib;pcl_sample_consensusd.lib;pcl_searchd.lib;pcl_segmentationd.lib;pcl_stereod.lib;pcl_surfaced.lib;pcl_trackingd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>setlocal
-C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file W:/VCPKG/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:/VCPKG/installed/x64-windows/debug/bin -OutVariable out
+echo C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:\VCPKG\installed\x64-windows\debug\bin -OutVariable out 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:\VCPKG\installed\x64-windows\debug\bin -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 :cmErrorLevel
 exit /b %1
 :cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
+if %errorlevel% neq 0 goto :VCEnd
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,7 +197,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:/VCPKG/installed/x64-windows/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)3dParty\include\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <Optimization>Disabled</Optimization>
     </ClCompile>
@@ -179,19 +207,21 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;W:\VCPKG\installed\x64-windows\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
       <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);pcl_common.lib;pcl_features.lib;pcl_filters.lib;pcl_io.lib;pcl_io_ply.lib;pcl_kdtree.lib;pcl_keypoints.lib;pcl_ml.lib;pcl_octree.lib;pcl_recognition.lib;pcl_registration.lib;pcl_sample_consensus.lib;pcl_search.lib;pcl_segmentation.lib;pcl_stereo.lib;pcl_surface.lib;pcl_tracking.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>setlocal
-C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file W:/VCPKG/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir W:/VCPKG/installed/x64-windows/bin -OutVariable out
+echo C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir $(ProjectDir)3dParty/bin/$(Platform)/$(Configuration) -OutVariable out 
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file $(ProjectDir)3dParty/msbuild/applocal.ps1 -targetBinary $(TargetPath) -installedDir $(ProjectDir)3dParty/bin/$(Platform)/$(Configuration) -OutVariable out
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 :cmErrorLevel
 exit /b %1
 :cmDone
-if %errorlevel% neq 0 goto :VCEnd</Command>
+if %errorlevel% neq 0 goto :VCEnd
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
