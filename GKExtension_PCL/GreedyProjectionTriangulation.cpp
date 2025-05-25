@@ -28,7 +28,6 @@ bool GreedyProjectionTriangulation::CreateClass(OwlModel model)
 
     OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
     REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
-
     REQUIRED(SetClassParent(clsMesh, clsGeometricItem), "Fail to set parent");
 
     PointCloud::AddPointCloudProp(clsMesh);

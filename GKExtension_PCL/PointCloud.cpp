@@ -40,7 +40,11 @@ bool PointCloud::CreateClass(OwlModel model)
     OwlClass clsPointCloud = ::CreateClass(model, CLASS_NAME);
     REQUIRED(clsPointCloud, "Failed to create class\n");
 
-    AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING, 1);
+    OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
+    REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
+    REQUIRED(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
+
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING);
     AddClassProperty(clsPointCloud, PROP_INPUT_OBJECT, OBJECTPROPERTY_TYPE);
     AddClassProperty(clsPointCloud, PROP_INPUT_OBJECTS, OBJECTPROPERTY_TYPE, 0, NULL, -1);
     AddClassProperty(clsPointCloud, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
@@ -74,7 +78,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
         ReadCloudFileAndSaveOnInstance(inst, filePath, cloud);
     }
     else {
-        GetSavedOnInstance(inst, cloud);
+        GetPointsSavedOnInstance(inst, cloud);
     }
 
     //add from nested objects
@@ -87,7 +91,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
         }
     }
 
-    CompleteCloudAttributes(cloud);
+    SetCloudAttributes(inst, cloud);
 
     return cloud;
 }
@@ -121,22 +125,29 @@ void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointClo
 /// <summary>
 /// 
 /// </summary>
-void PointCloud::CompleteCloudAttributes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+void PointCloud::SetCloudAttributes(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     assert(cloud); if (!cloud) return;
 
-    if (cloud->size()) {
-        if (!cloud->height) {
-            cloud->height = 1;
-        }
+    cloud->width = GetDataProperyValue<int_t>(inst, PROP_CLOUD_WIDTH, cloud->size());
+    cloud->height = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HEIGHT, 1);
 
-        if (!cloud->width || cloud->width > cloud->size() / cloud->height) {
-            cloud->width = cloud->size()/cloud->height;
+    cloud->is_dense = GetDataProperyValue(inst, PROP_CLOUD_ISDENSE, false);
+    cloud->header.seq = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_SEQ, 0);
+    cloud->header.stamp = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_STAMP, 0);
+    cloud->header.frame_id = GetDataProperyValue(inst, PROP_CLOUD_HDR_FRAME, "");
+
+    if (cloud->width * cloud->height != cloud->size()){
+        assert(!"not tested");
+        //it can happen when points from nested objects are addded after PCD file
+        if (cloud->height == 1) {
+            cloud->width = cloud->size();
         }
-    }
-    else {
-        cloud->height = 0;
-        cloud->width = 0;
+        else {
+            //igor.sokolov: not sure how to handle it
+            cloud->height = 1;
+            cloud->width = cloud->size();
+        }
     }
 }
 
@@ -268,17 +279,9 @@ void PointCloud::SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ
 /// <summary>
 /// 
 /// </summary>
-void PointCloud::GetSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+void PointCloud::GetPointsSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     assert(cloud); if (!cloud) return;
-
-    cloud->width = GetDataProperyValue<int_t>(inst, PROP_CLOUD_WIDTH, 0);
-    cloud->height = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HEIGHT, 0);
-
-    cloud->is_dense = GetDataProperyValue(inst, PROP_CLOUD_ISDENSE, false);
-    cloud->header.seq = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_SEQ, 0);
-    cloud->header.stamp = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_STAMP, 0);
-    cloud->header.frame_id = GetDataProperyValue(inst, PROP_CLOUD_HDR_FRAME, "");
 
     //load points
     double* coords = NULL;

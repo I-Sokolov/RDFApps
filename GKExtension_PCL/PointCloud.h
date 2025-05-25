@@ -30,7 +30,7 @@ private:
     static std::string GetFilePathIfNeedToRead(OwlInstance instReleating);
     static void ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud);
     static void SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud);
-    static void GetSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static void GetPointsSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     
     static pcl::PointCloud<pcl::PointNormal>::Ptr EstimateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr SmoothMLS(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
@@ -38,7 +38,8 @@ private:
     static void Dump(pcl::PointCloud<pcl::PointNormal>::Ptr cloud);
 
     static void AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
-    static void CompleteCloudAttributes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+
+    static void SetCloudAttributes(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
 };
 
