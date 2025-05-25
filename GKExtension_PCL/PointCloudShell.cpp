@@ -10,29 +10,7 @@
 bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
 {
     auto instCloud = PointCloud::GetPointCloudInstance(inst);
-
-    double* coords = NULL;
-    if (auto Ncoords = PointCloud::GetPointsCoords(instCloud, &coords)) {
-
-        startVector->x = startVector->y = startVector->z = DBL_MAX;
-        endVector->x = endVector->y = endVector->z = -DBL_MAX;
-
-        for (int_t i = 0; i < Ncoords/3; i++) {
-            startVector->x = std::min(startVector->x, coords[3 * i + 0]);
-            startVector->y = std::min(startVector->y, coords[3 * i + 1]);
-            startVector->z = std::min(startVector->z, coords[3 * i + 2]);
-            endVector->x = std::max(endVector->x, coords[3 * i + 0]);
-            endVector->y = std::max(endVector->y, coords[3 * i + 1]);
-            endVector->z = std::max(endVector->z, coords[3 * i + 2]);
-        }
-
-        MatrixIdentity(transformationMatrix);
-
-        return true;
-    }
-    else {
-        return false;
-    }
+    return PointCloud::GetBoundingBox(instCloud, startVector, endVector, transformationMatrix);
 }
 
 
@@ -122,8 +100,9 @@ static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IEngineMe
 void PointCloudShell::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
 {
     OwlInstance instCloud = PointCloud::GetPointCloudInstance(inst);
-    auto cloud = PointCloud::GetPointCloud(instCloud);
-    if (!cloud) {
+    auto cloud0 = PointCloud::GetPointCloud(instCloud);
+    auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
+    if (!cloud || !cloud->size()) {
         return;
     }
 

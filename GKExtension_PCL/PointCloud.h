@@ -22,21 +22,24 @@ public:
     static bool AddPointCloudProp(OwlClass cls);
     static OwlInstance GetPointCloudInstance(OwlInstance instHost);
 
-    static int_t GetPointsCoords(OwlInstance instWithPoints, double** coords);
-    static pcl::PointCloud<pcl::PointNormal>::Ptr GetPointCloud(OwlInstance instWithPoints);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr GetPointCloud(OwlInstance instWithPoints);
+    static pcl::PointCloud<pcl::PointNormal>::Ptr GetCloudWithNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
+    static bool GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix);
 private:
     static std::string GetFilePathIfNeedToRead(OwlInstance instReleating);
-    static pcl::PointCloud <pcl::PointXYZ>::Ptr ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath);
+    static void ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud);
+    static void SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud);
+    static void GetSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     
-    static void SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ>::Ptr cloudWithNormal);
-    static pcl::PointCloud<pcl::PointXYZ>::Ptr GetFromInstance(OwlInstance inst);
-    
-    static pcl::PointCloud<pcl::PointNormal>::Ptr GetCloudWithNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr EstimateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr SmoothMLS(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
     static void Dump(pcl::PointCloud<pcl::PointNormal>::Ptr cloud);
+
+    static void AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static void CompleteCloudAttributes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+
 };
 
 /// <summary>
@@ -49,6 +52,10 @@ extern bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType typ
 /// </summary>
 static int_t GetDataProperyValue(OwlInstance inst, const char* name, void** arrValues, RdfProperty* pprop = NULL)
 {
+    if (!inst) {
+        return 0;
+    }
+
     auto model = GetModel(inst);
     assert(model); if (!model) return 0;
 
@@ -99,4 +106,4 @@ static TVal GetDataProperyValue(OwlInstance inst, const char* name, TVal defval,
 /// <summary>
 /// 
 /// </summary>
-extern OwlInstance GetObjectPropertyValue(OwlInstance inst, const char* propName);
+extern int_t GetObjectPropertyValue(OwlInstance inst, const char* name, OwlInstance** objects, RdfProperty* pprop = NULL);

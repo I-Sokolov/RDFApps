@@ -53,7 +53,7 @@ pcl::PolygonMesh::Ptr GreedyProjectionTriangulation::ReconstructMesh(OwlInstance
     pcl::PolygonMesh::Ptr triangles(new pcl::PolygonMesh());
 
     // search tree
-    pcl::search::KdTree<pcl::PointNormal>::Ptr tree2(new pcl::search::KdTree<pcl::PointNormal>);
+    pcl::search::KdTree<pcl::PointNormal>::Ptr tree2(new pcl::search::KdTree<pcl::PointNormal>());
     tree2->setInputCloud(cloud_with_normals);
 
     // Setup Greedy Triangulation

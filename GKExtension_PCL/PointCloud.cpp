@@ -8,6 +8,7 @@
 
 #define PROP_INPUT_FILE             "Point Cloud Data File"
 #define PROP_INPUT_OBJECT           "object"
+#define PROP_INPUT_OBJECTS          "objects"
 
 #define PROP_CLOUD_WIDTH            "Cloud Width"
 #define PROP_CLOUD_HEIGHT           "Cloud Height"
@@ -41,76 +42,116 @@ bool PointCloud::CreateClass(OwlModel model)
 
     AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING, 1);
     AddClassProperty(clsPointCloud, PROP_INPUT_OBJECT, OBJECTPROPERTY_TYPE);
+    AddClassProperty(clsPointCloud, PROP_INPUT_OBJECTS, OBJECTPROPERTY_TYPE, 0, NULL, -1);
     AddClassProperty(clsPointCloud, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
     AddClassProperty(clsPointCloud, PARAM_NEIGHBORS, DATATYPEPROPERTY_TYPE_INTEGER);
-
-    AddClassProperty(clsPointCloud, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
     AddClassProperty(clsPointCloud, PROP_CLOUD_WIDTH, DATATYPEPROPERTY_TYPE_INTEGER);
     AddClassProperty(clsPointCloud, PROP_CLOUD_HEIGHT, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
     AddClassProperty(clsPointCloud, PROP_CLOUD_ISDENSE, DATATYPEPROPERTY_TYPE_BOOLEAN);
     AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_SEQ, DATATYPEPROPERTY_TYPE_INTEGER);
     AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_STAMP, DATATYPEPROPERTY_TYPE_INTEGER);
     AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_FRAME, DATATYPEPROPERTY_TYPE_STRING);
+
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
+    AddClassProperty(clsPointCloud, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
 
     engine_SetClassGeometryHandler(clsPointCloud, &s_Geometry);
 
     return true;
 }
 
-/// <summary>
-/// 
-/// </summary>
-int_t PointCloud::GetPointsCoords(OwlInstance inst, double** coords)
-{
-    if (OwlInstance instSource = GetObjectPropertyValue(inst, PROP_INPUT_OBJECT)) {
-        SHELL* shell = engine_GetInstanceGeometryShell(inst);
-        if (shell && shell->nonTransformedVertices && shell->noVertices > 0) {
-            *coords = (double*)shell->nonTransformedVertices;
-            return shell->noVertices * 3;
-        }
-    }
-    else {
-        auto filePath = GetFilePathIfNeedToRead(inst);
-        if (!filePath.empty()) {
-            ReadCloudFileAndSaveOnInstance(inst, filePath);
-        }
-
-        return GetDataProperyValue(inst, PROP_CLOUD_POINTS, (void**)coords);
-    }
-
-    return NULL;
-}
 
 /// <summary>
 /// 
 /// </summary>
-pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
+pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud <pcl::PointXYZ>());
 
+    //load from point cloud data file
     auto filePath = GetFilePathIfNeedToRead(inst);
     if (!filePath.empty()) {
-        cloud = ReadCloudFileAndSaveOnInstance(inst, filePath);
+        ReadCloudFileAndSaveOnInstance(inst, filePath, cloud);
     }
     else {
-        cloud = GetFromInstance(inst);
+        GetSavedOnInstance(inst, cloud);
     }
 
-    return GetCloudWithNormals(inst, cloud);
+    //add from nested objects
+    const char* propNames[] = { PROP_INPUT_OBJECT, PROP_INPUT_OBJECTS };
+    for (auto name : propNames) {
+        OwlInstance* nested = NULL;
+        int_t card = GetObjectPropertyValue(inst, name, &nested);
+        for (int_t i = 0; i < card; i++) {
+            AddPointsFromNestedObject(nested[i], cloud);
+        }
+    }
+
+    CompleteCloudAttributes(cloud);
+
+    return cloud;
 }
+
+/// <summary>
+/// 
+/// </summary>
+void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    assert(cloud); if (!cloud) return;
+
+    SHELL* shell = engine_GetInstanceGeometryShell(instNested);
+    if (shell && shell->nonTransformedVertices && shell->noVertices > 0) {
+
+        auto oldSize = cloud->size();
+        cloud->resize(oldSize + shell->noVertices);
+
+        for (int_t i = 0; i < shell->noVertices; i++) {
+
+            auto& pt = shell->nonTransformedVertices[i];
+
+            //TODO transform
+
+            cloud->at(oldSize + i).x = pt.x;
+            cloud->at(oldSize + i).y = pt.y;
+            cloud->at(oldSize + i).z = pt.z;
+        }
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void PointCloud::CompleteCloudAttributes(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    assert(cloud); if (!cloud) return;
+
+    if (cloud->size()) {
+        if (!cloud->height) {
+            cloud->height = 1;
+        }
+
+        if (!cloud->width || cloud->width > cloud->size() / cloud->height) {
+            cloud->width = cloud->size()/cloud->height;
+        }
+    }
+    else {
+        cloud->height = 0;
+        cloud->width = 0;
+    }
+}
+
 
 
 /// <summary>
 /// 
 /// </summary>
-pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath)
+void PointCloud::ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
+    assert(cloud); if (!cloud) return;
+
     std::string ext;
     if (filePath.length() > 3)
         ext = filePath.substr(filePath.length() - 4);
-
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
 
     if (0 == _stricmp(ext.c_str(), ".pcd")){
         pcl::io::loadPCDFile<pcl::PointXYZ>(filePath, *cloud);
@@ -127,8 +168,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::ReadCloudFileAndSaveOnInstance(O
     }
 
     SaveOnInstance(inst, cloud);
-
-    return cloud;
 }
 
 /// <summary>
@@ -189,46 +228,33 @@ void PointCloud::Dump(pcl::PointCloud<pcl::PointNormal>::Ptr cloud)
 /// </summary>
 void PointCloud::SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud)
 {
+    int_t height = cloud->height;
+    int_t width = cloud->width;
+    bool is_dense = cloud->is_dense;
+    int_t hdrSeq = cloud->header.seq;
+    int_t hdrStm = cloud->header.stamp;
+    const char* hdrFrm = cloud->header.frame_id.c_str();
+
     std::vector<double> coords;
-    int_t height = 0;
-    int_t width = 0;
-    bool is_dense = false;
-    int_t hdrSeq = 0;
-    int_t hdrStm = 0;
-    const char* hdrFrm = "";
-
-    if (cloud) {
-        height = cloud->height;
-        width = cloud->width;
-        assert(height * width == cloud->size());
-        is_dense = cloud->is_dense;
-        hdrSeq = cloud->header.seq;
-        hdrStm = cloud->header.stamp;
-        hdrFrm = cloud->header.frame_id.c_str();
-
+    if (cloud->size()) {
         coords.resize(cloud->size() * 3);
+        for (int_t i = 0; i < cloud->size(); i++) {
+            auto& pt = cloud->at(i);
 
-        for (int_t h = 0; h < height; h++) {
-            for (int_t w = 0; w < width; w++) {
-                int_t i = h * width + w;
-
-                auto& pt = cloud->at(i);
-
-                coords[i * 3 + 0] = pt.x;
-                coords[i * 3 + 1] = pt.y;
-                coords[i * 3 + 2] = pt.z;
-            }
+            coords[i * 3 + 0] = pt.x;
+            coords[i * 3 + 1] = pt.y;
+            coords[i * 3 + 2] = pt.z;
         }
     }
 
     auto model = GetModel(inst);
     auto propPoints = GetPropertyByName(model, PROP_CLOUD_POINTS);
-    auto propWidth = GetPropertyByName (model, PROP_CLOUD_WIDTH);
-    auto propHeight = GetPropertyByName (model, PROP_CLOUD_HEIGHT);
-    auto propIsDens = GetPropertyByName (model, PROP_CLOUD_ISDENSE);
-    auto propHdrSeq = GetPropertyByName (model, PROP_CLOUD_HDR_SEQ);
-    auto propHdrStm = GetPropertyByName (model, PROP_CLOUD_HDR_STAMP);
-    auto propHdrFrm = GetPropertyByName (model, PROP_CLOUD_HDR_FRAME);
+    auto propWidth = GetPropertyByName(model, PROP_CLOUD_WIDTH);
+    auto propHeight = GetPropertyByName(model, PROP_CLOUD_HEIGHT);
+    auto propIsDens = GetPropertyByName(model, PROP_CLOUD_ISDENSE);
+    auto propHdrSeq = GetPropertyByName(model, PROP_CLOUD_HDR_SEQ);
+    auto propHdrStm = GetPropertyByName(model, PROP_CLOUD_HDR_STAMP);
+    auto propHdrFrm = GetPropertyByName(model, PROP_CLOUD_HDR_FRAME);
 
     SetDataTypeProperty(inst, propPoints, coords.data(), coords.size());
     SetDataTypeProperty(inst, propWidth, &width, 1);
@@ -242,44 +268,34 @@ void PointCloud::SaveOnInstance(OwlInstance inst, pcl::PointCloud <pcl::PointXYZ
 /// <summary>
 /// 
 /// </summary>
-pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetFromInstance(OwlInstance inst)
+void PointCloud::GetSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
-    auto width = GetDataProperyValue<int_t>(inst, PROP_CLOUD_WIDTH, 0);
-    auto height = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HEIGHT, 0);
-    if (width * height <= 0) {
-        return NULL;
-    }
+    assert(cloud); if (!cloud) return;
 
-    double* coords = NULL;
-    int_t ncoords = GetDataProperyValue(inst, PROP_CLOUD_POINTS, (void**)&coords);
-    if (ncoords != 3 * width * height) {
-        printf("ncoords != 3 * width * height\n");
-        return NULL;
-    }
-
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+    cloud->width = GetDataProperyValue<int_t>(inst, PROP_CLOUD_WIDTH, 0);
+    cloud->height = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HEIGHT, 0);
 
     cloud->is_dense = GetDataProperyValue(inst, PROP_CLOUD_ISDENSE, false);
     cloud->header.seq = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_SEQ, 0);
     cloud->header.stamp = GetDataProperyValue<int_t>(inst, PROP_CLOUD_HDR_STAMP, 0);
     cloud->header.frame_id = GetDataProperyValue(inst, PROP_CLOUD_HDR_FRAME, "");
 
-    // load cloud
-    cloud->resize(width * height);
+    //load points
+    double* coords = NULL;
+    int_t ncoords = GetDataProperyValue(inst, PROP_CLOUD_POINTS, (void**)&coords);
+    if (ncoords) {
+        auto oldSize = cloud->size();
+        cloud->resize(oldSize + ncoords / 3);
 
-    for (int_t h = 0; h < height; h++) {
-        for (int_t w = 0; w < width; w++) {
-            int_t i = h * width + w;
+        for (int_t i = 0; i < ncoords / 3; i++) {
 
-            auto& pt = cloud->at(i);
+            auto& pt = cloud->at(oldSize + i);
 
             pt.x = coords[i * 3 + 0];
             pt.y = coords[i * 3 + 1];
             pt.z = coords[i * 3 + 2];
         }
     }
-
-    return cloud;
 }
 
 
@@ -296,7 +312,8 @@ std::string PointCloud::GetFilePathIfNeedToRead(OwlInstance inst)
     // get file path
     //
     const char* filePath = GetDataProperyValue<const char*>(inst, PROP_INPUT_FILE, "");
-    if (!filePath) filePath = "";
+    if (!filePath || !*filePath) 
+        return "";
 
     if (*filePath == '"')
         filePath++;
@@ -341,7 +358,7 @@ std::string PointCloud::GetFilePathIfNeedToRead(OwlInstance inst)
 /// </summary>
 pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::SmoothMLS(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_smoothed(new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_smoothed(new pcl::PointCloud<pcl::PointNormal>());
 
     pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal> mls;
     mls.setInputCloud(cloud);
@@ -350,7 +367,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::SmoothMLS(OwlInstance inst, p
     mls.setComputeNormals(true);
     mls.setUpsamplingMethod(pcl::MovingLeastSquares<pcl::PointXYZ, pcl::PointNormal>::NONE);
 
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
     mls.setSearchMethod(tree);
 
     mls.process(*cloud_smoothed);
@@ -365,8 +382,8 @@ pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::EstimateNormals(OwlInstance i
 {
     // Normals
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-    pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
+    pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>());
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
     tree->setInputCloud(cloud);
     n.setInputCloud(cloud);
     n.setSearchMethod(tree);
@@ -374,7 +391,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::EstimateNormals(OwlInstance i
     n.compute(*normals);
 
     // join points with normals
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>);
+    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals(new pcl::PointCloud<pcl::PointNormal>());
 
     pcl::concatenateFields(*cloud, *normals, *cloud_with_normals);
 
@@ -392,16 +409,26 @@ bool PointCloud::AddPointCloudProp(OwlClass cls)
     return true;
 }
 
-extern OwlInstance GetObjectPropertyValue(OwlInstance inst, const char* propName)
+extern int_t GetObjectPropertyValue(OwlInstance inst, const char* name, OwlInstance** objects, RdfProperty* pprop)
 {
+    if (!inst) {
+        return 0;
+    }
+
     auto model = GetModel(inst);
-    assert(model); if (!model) return NULL;
+    assert(model); if (!model) return 0;
 
-    auto prop = GetPropertyByName(model, propName);
-    assert(prop); if (!prop) return NULL;
+    auto prop = GetPropertyByName(model, name);
+    assert(prop); if (!prop) return 0;
 
-    return GetObjectProperty(inst, prop);
+    if (pprop) {
+        *pprop = prop;
+    }
 
+    int_t card = 0;
+    GetObjectProperty(inst, prop, objects, &card);
+
+    return card;
 }
 
 /// <summary>
@@ -409,7 +436,13 @@ extern OwlInstance GetObjectPropertyValue(OwlInstance inst, const char* propName
 /// </summary>
 OwlInstance PointCloud::GetPointCloudInstance(OwlInstance instHost)
 {
-    return GetObjectPropertyValue(instHost, PROP_POINT_CLOUD);
+    OwlInstance* inst = NULL;
+    if (GetObjectPropertyValue(instHost, PROP_POINT_CLOUD, &inst)) {
+        return inst[0];
+    }
+    else {
+        return NULL;
+    }
 }
 
 
@@ -441,31 +474,33 @@ extern bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType typ
 /// <summary>
 /// 
 /// </summary>
+bool PointCloud::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
+{
+    MatrixIdentity(transformationMatrix);
+
+    startVector->x = startVector->y = startVector->z = DBL_MAX;
+    endVector->x = endVector->y = endVector->z = -DBL_MAX;
+
+    auto cloud = GetPointCloud(inst);
+    for (auto& pt : *cloud) {
+        startVector->x = std::min(startVector->x, (double)pt.x);
+        startVector->y = std::min(startVector->y, (double)pt.y);
+        startVector->z = std::min(startVector->z, (double)pt.z);
+        endVector->x = std::max(endVector->x, (double)pt.x);
+        endVector->y = std::max(endVector->y, (double)pt.y);
+        endVector->z = std::max(endVector->z, (double)pt.z);
+    }
+
+
+    return startVector->x <= endVector->x;
+}
+
+/// <summary>
+/// 
+/// </summary>
 bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
 {
-    double* coords = NULL;
-    if (auto Ncoords = PointCloud::GetPointsCoords(inst, &coords)) {
-
-        startVector->x = startVector->y = startVector->z = DBL_MAX;
-        endVector->x = endVector->y = endVector->z = -DBL_MAX;
-
-        for (int_t i = 0; i < Ncoords / 3; i++) {
-            startVector->x = std::min(startVector->x, coords[3 * i + 0]);
-            startVector->y = std::min(startVector->y, coords[3 * i + 1]);
-            startVector->z = std::min(startVector->z, coords[3 * i + 2]);
-            endVector->x = std::max(endVector->x, coords[3 * i + 0]);
-            endVector->y = std::max(endVector->y, coords[3 * i + 1]);
-            endVector->z = std::max(endVector->z, coords[3 * i + 2]);
-        }
-
-        MatrixIdentity(transformationMatrix);
-
-        return true;
-    }
-    else {
-        return false;
-    }
-
+    return PointCloud::GetBoundingBox(inst, startVector, endVector, transformationMatrix);
 }
 
 /// <summary>
@@ -473,22 +508,25 @@ bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, 
 /// </summary>
 void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
 {
-    double* coords = NULL;
-    int_t n_coords = PointCloud::GetPointsCoords(inst, &coords);
+    auto cloud = PointCloud::GetPointCloud(inst);
+
+    shell->noVertices = cloud->size();
     
-    if (n_coords < 3)
+    if (0==shell->noVertices) {
         return;
-    
-    shell->noVertices = n_coords / 3;
+    }
+
     shell->nonTransformedVertices = (VECTOR3*)memory->Allocate(shell->noVertices * sizeof(VECTOR3));
 
     shell->conceptualFaces = memory->new__CONCEPTUAL_FACE();
     VERTEX__LIST** ppPoints = &shell->conceptualFaces->points;
 
-    for (int_t npt = 0; npt < shell->noVertices; npt++) {
-        shell->nonTransformedVertices[npt].x = coords[npt * 3 + 0];
-        shell->nonTransformedVertices[npt].y = coords[npt * 3 + 1];
-        shell->nonTransformedVertices[npt].z = coords[npt * 3 + 2];
+    for (int_t npt = 0; npt< shell->noVertices; npt++) {
+        auto& pt = cloud->at(npt);
+
+        shell->nonTransformedVertices[npt].x = pt.x;
+        shell->nonTransformedVertices[npt].y = pt.y;
+        shell->nonTransformedVertices[npt].z = pt.z;
 
         (*ppPoints) = (VERTEX__LIST*)memory->Allocate(sizeof(VERTEX__LIST));
         if (npt < shell->noVertices - 1)
@@ -497,5 +535,6 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemo
             (*ppPoints)->point = -(npt + 1);
         ppPoints = &(*ppPoints)->next;
 
+        npt++;
     }
 }

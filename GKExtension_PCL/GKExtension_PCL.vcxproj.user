@@ -3,7 +3,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommand>"W:\DevArea\RDF\3deditor\x64\$(Configuration)\3DEditor.exe"</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>"W:\DevArea\RDF\RDFSmokeTests\TestData\PCL.bin"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommand>"W:\DevArea\RDF\3deditor\x64\$(Configuration)\3DEditor.exe"</LocalDebuggerCommand>
@@ -13,7 +14,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerCommand>"W:\DevArea\RDF\3deditor\x64\$(Configuration)\3DEditor.exe"</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>"W:\DevArea\RDF\RDFSmokeTests\TestData\PCL.bin"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>
+    </LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommand>"W:\DevArea\RDF\3deditor\x64\$(Configuration)\3DEditor.exe"</LocalDebuggerCommand>
