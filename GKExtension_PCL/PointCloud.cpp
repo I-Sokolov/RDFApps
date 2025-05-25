@@ -23,7 +23,7 @@
 
 #define PARAM_NEIGHBORS             "Param: Noraml-Neighbors (20)"
 
-#define PROP_POINT_CLOUD            "Point Cloud"
+#define PROP_POINT_CLOUD            "object"
 
 /// <summary>
 /// 
@@ -632,7 +632,7 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemo
     shell->conceptualFaces = memory->new__CONCEPTUAL_FACE();
     VERTEX__LIST** ppPoints = &shell->conceptualFaces->points;
 
-    for (int_t npt = 0; npt< shell->noVertices; npt++) {
+    for (int_t npt = 0; npt < shell->noVertices; npt++) {
         auto& pt = cloud->at(npt);
 
         shell->nonTransformedVertices[npt].x = pt.x;
@@ -645,7 +645,5 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemo
         else
             (*ppPoints)->point = -(npt + 1);
         ppPoints = &(*ppPoints)->next;
-
-        npt++;
     }
 }
