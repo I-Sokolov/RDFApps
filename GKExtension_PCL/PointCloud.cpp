@@ -103,21 +103,129 @@ void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointClo
 {
     assert(cloud); if (!cloud) return;
 
-    SHELL* shell = engine_GetInstanceGeometryShell(instNested);
-    if (shell && shell->nonTransformedVertices && shell->noVertices > 0) {
+    SHELL* shell = engine_GetInstanceGeometry(instNested);
+    if (shell) {
+        AddPointsFromCFaces(shell->conceptualFaces, cloud, NULL);
+    }
+}
 
-        auto oldSize = cloud->size();
-        cloud->resize(oldSize + shell->noVertices);
+/// <summary>
+/// 
+/// </summary>
+static void TransformPoint(
+    VECTOR3& out,
+    const VECTOR3& in,
+    const MATRIX& M
+)
+{
+    out.x = in.x * M._11 + in.y * M._21 + in.z * M._31 + M._41;
+    out.y = in.x * M._12 + in.y * M._22 + in.z * M._32 + M._42;
+    out.z = in.x * M._13 + in.y * M._23 + in.z * M._33 + M._43;
+}
 
-        for (int_t i = 0; i < shell->noVertices; i++) {
+/// <summary>
+/// 
+/// </summary>
+void	TransformTransform(
+    MATRIX* pOut,
+    const MATRIX* pM1,
+    const MATRIX* pM2
+)
+{
+    assert(pOut && pM1 && pM2);
 
-            auto& pt = shell->nonTransformedVertices[i];
+    MATRIX pTmp;
 
-            //TODO transform
+    if (pOut) {
+        pTmp._11 = pM1->_11 * pM2->_11 + pM1->_12 * pM2->_21 + pM1->_13 * pM2->_31;
+        pTmp._12 = pM1->_11 * pM2->_12 + pM1->_12 * pM2->_22 + pM1->_13 * pM2->_32;
+        pTmp._13 = pM1->_11 * pM2->_13 + pM1->_12 * pM2->_23 + pM1->_13 * pM2->_33;
 
-            cloud->at(oldSize + i).x = pt.x;
-            cloud->at(oldSize + i).y = pt.y;
-            cloud->at(oldSize + i).z = pt.z;
+        pTmp._21 = pM1->_21 * pM2->_11 + pM1->_22 * pM2->_21 + pM1->_23 * pM2->_31;
+        pTmp._22 = pM1->_21 * pM2->_12 + pM1->_22 * pM2->_22 + pM1->_23 * pM2->_32;
+        pTmp._23 = pM1->_21 * pM2->_13 + pM1->_22 * pM2->_23 + pM1->_23 * pM2->_33;
+
+        pTmp._31 = pM1->_31 * pM2->_11 + pM1->_32 * pM2->_21 + pM1->_33 * pM2->_31;
+        pTmp._32 = pM1->_31 * pM2->_12 + pM1->_32 * pM2->_22 + pM1->_33 * pM2->_32;
+        pTmp._33 = pM1->_31 * pM2->_13 + pM1->_32 * pM2->_23 + pM1->_33 * pM2->_33;
+
+        pTmp._41 = pM1->_41 * pM2->_11 + pM1->_42 * pM2->_21 + pM1->_43 * pM2->_31 + pM2->_41;
+        pTmp._42 = pM1->_41 * pM2->_12 + pM1->_42 * pM2->_22 + pM1->_43 * pM2->_32 + pM2->_42;
+        pTmp._43 = pM1->_41 * pM2->_13 + pM1->_42 * pM2->_23 + pM1->_43 * pM2->_33 + pM2->_43;
+
+        pOut->_11 = pTmp._11;
+        pOut->_12 = pTmp._12;
+        pOut->_13 = pTmp._13;
+
+        pOut->_21 = pTmp._21;
+        pOut->_22 = pTmp._22;
+        pOut->_23 = pTmp._23;
+
+        pOut->_31 = pTmp._31;
+        pOut->_32 = pTmp._32;
+        pOut->_33 = pTmp._33;
+
+        pOut->_41 = pTmp._41;
+        pOut->_42 = pTmp._42;
+        pOut->_43 = pTmp._43;
+    }
+    else {
+        assert(false);
+    }
+}
+
+/// <summary>
+/// 
+/// </summary>
+void PointCloud::AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, MATRIX* parentTransform)
+{
+    if (!cface) {
+        return;
+    }
+
+    AddPointsFromCFaces(cface->next, cloud, parentTransform);
+
+    MATRIX* transform = parentTransform;
+    MATRIX buff;
+    if (cface->localTransformation) {
+        if (transform) {
+            assert(!"not tested");
+            TransformTransform(&buff, transform, cface->localTransformation); //or maybe other way
+            transform = &buff;
+        }
+        else {
+            transform = cface->localTransformation;
+        }
+    }
+
+    AddPointsFromCFaces(cface->child, cloud, transform);
+
+    if (OwlInstance faceOwnerInst = engine_GetConceptualFaceInstance(cface)) {
+
+        if (SHELL* faceOwnerShell = engine_GetInstanceGeometry(faceOwnerInst)) {
+            if (faceOwnerShell->nonTransformedVertices) {
+                VECTOR3 transformed;
+                for (auto point = cface->points; point; point = point->next) {
+
+                    auto ptind = point->point;
+                    if (ptind < 0) {
+                        ptind = -ptind - 1;
+                    }
+
+                    if (ptind >= faceOwnerShell->noVertices) {
+                        assert(false);
+                        continue;
+                    }
+
+                    auto pt = faceOwnerShell->nonTransformedVertices + ptind;
+                    if (transform) {
+                        TransformPoint(transformed, *pt, *transform);
+                        pt = &transformed;
+                    }
+
+                    cloud->push_back(pcl::PointXYZ(pt->x, pt->y, pt->z));
+                }
+            }
         }
     }
 }

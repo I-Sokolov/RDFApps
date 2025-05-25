@@ -38,6 +38,7 @@ private:
     static void Dump(pcl::PointCloud<pcl::PointNormal>::Ptr cloud);
 
     static void AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static void AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, MATRIX* parentTransform);
 
     static void SetCloudAttributes(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
