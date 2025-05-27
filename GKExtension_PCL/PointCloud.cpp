@@ -619,8 +619,9 @@ bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, 
 /// </summary>
 void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
 {
-    auto cloud = PointCloud::GetPointCloud(inst);
-
+    auto cloud0 = PointCloud::GetPointCloud(inst);
+    auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
+    //TODO - meshes should use SHELL
     shell->noVertices = cloud->size();
     
     if (0==shell->noVertices) {
