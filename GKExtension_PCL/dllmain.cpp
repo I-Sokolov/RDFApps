@@ -21,7 +21,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
     return TRUE;
 }
 
-extern "C" __declspec(dllexport) void LoadOWLExtension(OwlModel model)
+extern "C" __declspec(dllexport) void LoadExtension(OwlModel model)
 {
     PointCloud::CreateClass(model);
     GreedyProjectionTriangulation::CreateClass(model);

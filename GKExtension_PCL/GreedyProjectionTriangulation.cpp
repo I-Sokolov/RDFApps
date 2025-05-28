@@ -21,14 +21,15 @@ static GreedyProjectionTriangulation s_Geometry;
 /// </summary>
 bool GreedyProjectionTriangulation::CreateClass(OwlModel model)
 {
-    REQUIRED(!GetClassByName(model, CLASS_NAME), "class already exists\n");
-
-    OwlClass clsMesh = ::CreateClass(model, CLASS_NAME);
+    OwlClass clsMesh = GetClassByName(model, CLASS_NAME);
+    if (!clsMesh)
+        clsMesh = ::CreateClass(model, CLASS_NAME);
     REQUIRED(clsMesh, "Failed to create class\n");
 
     OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
     REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
-    REQUIRED(SetClassParent(clsMesh, clsGeometricItem), "Fail to set parent");
+    if (!IsClassAncestor(clsMesh, clsGeometricItem))
+        REQUIRED(SetClassParent(clsMesh, clsGeometricItem), "Fail to set parent");
 
     PointCloud::AddPointCloudProp(clsMesh);
 

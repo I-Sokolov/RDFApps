@@ -35,14 +35,15 @@ static PointCloudGeometry s_Geometry;
 /// </summary>
 bool PointCloud::CreateClass(OwlModel model)
 {
-    REQUIRED(!GetClassByName(model, CLASS_NAME), "class already exists\n");
-
-    OwlClass clsPointCloud = ::CreateClass(model, CLASS_NAME);
+    OwlClass clsPointCloud = GetClassByName(model, CLASS_NAME);
+    if (!clsPointCloud)
+        clsPointCloud = ::CreateClass(model, CLASS_NAME);
     REQUIRED(clsPointCloud, "Failed to create class\n");
 
     OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
     REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
-    REQUIRED(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
+    if (!IsClassAncestor(clsPointCloud, clsGeometricItem))
+        REQUIRED(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
 
     AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING);
     AddClassProperty(clsPointCloud, PROP_INPUT_OBJECT, OBJECTPROPERTY_TYPE);
