@@ -3,11 +3,11 @@
 /// <summary>
 /// 
 /// </summary>
-class PointCloudGeometry : public IEngineExtGeometry
+class PointCloudGeometry
 {
 public:
-    virtual bool GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix) override;
-    virtual void CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory) override;
+    static bool GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void*);
+    static void CreateShell(OwlInstance inst, void*);
 };
 
 

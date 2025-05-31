@@ -8,7 +8,7 @@
 #define PARAM_POISSON_DEPTH      "Param: Poisson Depth (8)"
 
 
-static PoissonSurfaceReconstruction s_Geometry;
+static PoissonSurfaceReconstruction s_Algorithm;
 
 /// <summary>
 /// 
@@ -29,7 +29,7 @@ bool PoissonSurfaceReconstruction::CreateClass(OwlModel model)
 
     AddClassProperty(clsMesh, PARAM_POISSON_DEPTH, DATATYPEPROPERTY_TYPE_INTEGER);
 
-    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
 
     return true;
 }

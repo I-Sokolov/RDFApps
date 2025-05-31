@@ -9,7 +9,7 @@
 #define PARAM_MCH_EXTENT_GRID   "Param: M.C.H. Extent Grid (0.0%)"
 
 
-static MarchingCubesHoppe s_Geometry;
+static MarchingCubesHoppe s_Algorithm;
 
 /// <summary>
 /// 
@@ -32,7 +32,7 @@ bool MarchingCubesHoppe::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_MCH_ISO_LEVEL, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_MCH_EXTENT_GRID, DATATYPEPROPERTY_TYPE_DOUBLE);
 
-    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
 
     return true;
 }

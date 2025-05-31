@@ -7,7 +7,7 @@
 /// <summary>
 /// 
 /// </summary>
-bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
+bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void* /*pvAlgorithm*/)
 {
     auto instCloud = PointCloud::GetPointCloudInstance(inst);
     return PointCloud::GetBoundingBox(instCloud, startVector, endVector, transformationMatrix);
@@ -17,20 +17,23 @@ bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VEC
 /// <summary>
 /// 
 /// </summary>
-static void GetMeshVerticies(pcl::PolygonMesh& mesh, SHELL* shell, IEngineMemory* memory)
+static void SetupMeshVerticies(pcl::PolygonMesh& mesh, OwlInstance inst)
 {
+    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    assert(shell); if (!shell) return;
+
     // Convert the mesh's cloud to PointCloud<PointXYZ>
     pcl::PointCloud<pcl::PointXYZ> cloud;
     pcl::fromPCLPointCloud2(mesh.cloud, cloud);
 
-    shell->noVertices = cloud.size();
-    shell->nonTransformedVertices = (VECTOR3*)memory->Allocate(shell->noVertices * sizeof(VECTOR3));
+    rdfgeom_AllocatePoints(inst, shell, cloud.size(), false, false);
+    auto nonTransformedVertices = rdfgeom_GetPoints(shell);
 
     size_t i = 0;
     for (auto& pt : cloud) {
-        shell->nonTransformedVertices[i].x = pt.x;
-        shell->nonTransformedVertices[i].y = pt.y;
-        shell->nonTransformedVertices[i].z = pt.z;
+        nonTransformedVertices[i].x = pt.x;
+        nonTransformedVertices[i].y = pt.y;
+        nonTransformedVertices[i].z = pt.z;
         i++;
     }
 }
@@ -40,52 +43,44 @@ static void GetMeshVerticies(pcl::PolygonMesh& mesh, SHELL* shell, IEngineMemory
 /// <summary>
 /// 
 /// </summary>
-static STRUCT_EDGE** AddLoopEdge(int_t vertex, STRUCT_EDGE** ppNextEdge, IEngineMemory* memory, bool lastPoint = false)
+static STRUCT_VERTEX** AddLoopEdge(int_t indPoint, STRUCT_VERTEX** ppNextEdge, OwlInstance inst, bool lastPoint = false)
 {
     assert(ppNextEdge && !*ppNextEdge);
     if (!ppNextEdge)
         return NULL;
 
-    STRUCT_EDGE* edge = (STRUCT_EDGE*)memory->Allocate(sizeof(STRUCT_EDGE));
-    if (lastPoint) {
-        edge->localPointIndex = -(vertex + 1);
-    }
-    else {
-        edge->localPointIndex = vertex;
-    }
-    edge->next = nullptr;
+    rdfgeom_vertex_Create(inst, ppNextEdge, indPoint, lastPoint);
 
-    *ppNextEdge = edge;
-
-    return &(edge->next);
+    return rdfgeom_vertex_GetNext(*ppNextEdge);
 }
 
 /// <summary>
 /// 
 /// </summary>
-static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IEngineMemory* memory)
+static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, OwlInstance inst)
 {
     for (auto& polygon : mesh.polygons) {
 
-        STRUCT_EDGE** loop = NULL;
+        STRUCT_VERTEX** loop = NULL;
         pcl::index_t first = -1;
         for (auto& vertex : polygon.vertices) {
 
             if (!loop) {
-                auto face = (STRUCT_FACE*)memory->Allocate(sizeof(STRUCT_FACE));
-                loop = &(face->edge);
 
-                *ppFace = face;
-                ppFace = &(face->next);
+                rdfgeom_face_Create(inst, ppFace);
+
+                loop = rdfgeom_face_GetBoundary(*ppFace);
+
+                ppFace = rdfgeom_face_GetNext(*ppFace);
 
                 first = vertex;
             }
 
-            loop = AddLoopEdge(vertex, loop, memory);
+            loop = AddLoopEdge(vertex, loop, inst);
         }
 
         if (loop && first >= 0) {
-            AddLoopEdge(first, loop, memory, true);
+            AddLoopEdge(first, loop, inst, true);
         }
 
         //face->normal.x = 0.;
@@ -97,8 +92,14 @@ static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, IEngineMe
 /// <summary>
 /// 
 /// </summary>
-void PointCloudShell::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
+void PointCloudShell::CreateShell(OwlInstance inst, void *pvAlgorithm)
 {
+    if (!pvAlgorithm) {
+        assert(false);
+        return;
+    }
+    auto algorithm = (IAlgorithm*)pvAlgorithm;
+
     OwlInstance instCloud = PointCloud::GetPointCloudInstance(inst);
     auto cloud0 = PointCloud::GetPointCloud(instCloud);
     auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
@@ -106,22 +107,24 @@ void PointCloudShell::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory*
         return;
     }
 
-    auto triangles = ReconstructMesh(inst, cloud);
+    auto triangles = algorithm->ReconstructMesh(inst, cloud);
     if (!triangles) {
         return;
     }
 
     //
-    GetMeshVerticies(*triangles, shell, memory);
+    SetupMeshVerticies(*triangles, inst);
 
     //
-    CONCEPTUAL_FACE* conceptualFace = memory->new__CONCEPTUAL_FACE();
-    shell->conceptualFaces = conceptualFace;
+    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    assert(shell); if (!shell) return;
 
-    GetMeshFaces(*triangles, &conceptualFace->faces, memory);
+    CONCEPTUAL_FACE** ppFace = rdfgeom_GetConceptualFaces(shell);
+    rdfgeom_cface_Create(inst, ppFace);
 
-    TEXTURE_GEOMETRY_PART* textureGeometryPart = memory->new__TEXTURE_GEOMETRY_PART(enum_texture_part::part_I);
-    conceptualFace->textureGeometryPart = textureGeometryPart;
+    auto conceptualFace = *ppFace;
+
+    GetMeshFaces(*triangles, rdfgeom_cface_GetFaces(conceptualFace), inst);
 
     //VECTOR3					referenceVector;
     //referenceVector.x = 1.;

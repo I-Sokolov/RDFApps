@@ -29,7 +29,7 @@
 #include <algorithm>
 
 #include "engine.h"
-#include "Extension.h"
+#include "rdfgeom.h"
 
 #ifdef _DEBUG
 #define LOG_ERROR printf

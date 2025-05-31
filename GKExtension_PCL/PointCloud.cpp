@@ -28,91 +28,6 @@
 /// <summary>
 /// 
 /// </summary>
-static PointCloudGeometry s_Geometry;
-
-/// <summary>
-/// 
-/// </summary>
-bool PointCloud::CreateClass(OwlModel model)
-{
-    OwlClass clsPointCloud = GetClassByName(model, CLASS_NAME);
-    if (!clsPointCloud)
-        clsPointCloud = ::CreateClass(model, CLASS_NAME);
-    REQUIRED(clsPointCloud, "Failed to create class\n");
-
-    OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
-    REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
-    if (!IsClassAncestor(clsPointCloud, clsGeometricItem))
-        REQUIRED(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
-
-    AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING);
-    AddClassProperty(clsPointCloud, PROP_INPUT_OBJECT, OBJECTPROPERTY_TYPE);
-    AddClassProperty(clsPointCloud, PROP_INPUT_OBJECTS, OBJECTPROPERTY_TYPE, 0, NULL, -1);
-    AddClassProperty(clsPointCloud, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
-    AddClassProperty(clsPointCloud, PARAM_NEIGHBORS, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_WIDTH, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_HEIGHT, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_ISDENSE, DATATYPEPROPERTY_TYPE_BOOLEAN);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_SEQ, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_STAMP, DATATYPEPROPERTY_TYPE_INTEGER);
-    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_FRAME, DATATYPEPROPERTY_TYPE_STRING);
-
-    AddClassProperty(clsPointCloud, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
-    AddClassProperty(clsPointCloud, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
-
-    engine_SetClassGeometryHandler(clsPointCloud, &s_Geometry);
-
-    return true;
-}
-
-
-/// <summary>
-/// 
-/// </summary>
-pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
-{
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud <pcl::PointXYZ>());
-
-    //load from point cloud data file
-    auto filePath = GetFilePathIfNeedToRead(inst);
-    if (!filePath.empty()) {
-        ReadCloudFileAndSaveOnInstance(inst, filePath, cloud);
-    }
-    else {
-        GetPointsSavedOnInstance(inst, cloud);
-    }
-
-    //add from nested objects
-    const char* propNames[] = { PROP_INPUT_OBJECT, PROP_INPUT_OBJECTS };
-    for (auto name : propNames) {
-        OwlInstance* nested = NULL;
-        int_t card = GetObjectPropertyValue(inst, name, &nested);
-        for (int_t i = 0; i < card; i++) {
-            AddPointsFromNestedObject(nested[i], cloud);
-        }
-    }
-
-    SetCloudAttributes(inst, cloud);
-
-    return cloud;
-}
-
-/// <summary>
-/// 
-/// </summary>
-void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
-{
-    assert(cloud); if (!cloud) return;
-
-    SHELL* shell = engine_GetInstanceGeometry(instNested);
-    if (shell) {
-        AddPointsFromCFaces(shell->conceptualFaces, cloud, NULL);
-    }
-}
-
-/// <summary>
-/// 
-/// </summary>
 static void TransformPoint(
     VECTOR3& out,
     const VECTOR3& in,
@@ -122,6 +37,21 @@ static void TransformPoint(
     out.x = in.x * M._11 + in.y * M._21 + in.z * M._31 + M._41;
     out.y = in.x * M._12 + in.y * M._22 + in.z * M._32 + M._42;
     out.z = in.x * M._13 + in.y * M._23 + in.z * M._33 + M._43;
+}
+
+/// <summary>
+/// 
+/// </summary>
+static	void	MatrixIdentity(
+    MATRIX* pOut
+)
+{
+    pOut->_12 = pOut->_13 =
+        pOut->_21 = pOut->_23 =
+        pOut->_31 = pOut->_32 =
+        pOut->_41 = pOut->_42 = pOut->_43 = 0.;
+
+    pOut->_11 = pOut->_22 = pOut->_33 = 1.;
 }
 
 /// <summary>
@@ -175,6 +105,91 @@ void	TransformTransform(
     }
 }
 
+
+/// <summary>
+/// 
+/// </summary>
+bool PointCloud::CreateClass(OwlModel model)
+{
+    OwlClass clsPointCloud = GetClassByName(model, CLASS_NAME);
+    if (!clsPointCloud)
+        clsPointCloud = ::CreateClass(model, CLASS_NAME);
+    REQUIRED(clsPointCloud, "Failed to create class\n");
+
+    OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
+    REQUIRED(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
+    if (!IsClassAncestor(clsPointCloud, clsGeometricItem))
+        REQUIRED(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
+
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE, DATATYPEPROPERTY_TYPE_STRING);
+    AddClassProperty(clsPointCloud, PROP_INPUT_OBJECT, OBJECTPROPERTY_TYPE);
+    AddClassProperty(clsPointCloud, PROP_INPUT_OBJECTS, OBJECTPROPERTY_TYPE, 0, NULL, -1);
+    AddClassProperty(clsPointCloud, PROP_ENABLE_MLS, DATATYPEPROPERTY_TYPE_BOOLEAN, 1);
+    AddClassProperty(clsPointCloud, PARAM_NEIGHBORS, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_WIDTH, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HEIGHT, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_ISDENSE, DATATYPEPROPERTY_TYPE_BOOLEAN);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_SEQ, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_STAMP, DATATYPEPROPERTY_TYPE_INTEGER);
+    AddClassProperty(clsPointCloud, PROP_CLOUD_HDR_FRAME, DATATYPEPROPERTY_TYPE_STRING);
+
+    AddClassProperty(clsPointCloud, PROP_INPUT_FILE_LOADED, DATATYPEPROPERTY_TYPE_STRING); 
+    AddClassProperty(clsPointCloud, PROP_CLOUD_POINTS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
+
+    rdfgeom_SetClassGeometry(clsPointCloud, PointCloudGeometry::CreateShell,  PointCloudGeometry::GetBoundingBox, NULL);
+
+    return true;
+}
+
+
+/// <summary>
+/// 
+/// </summary>
+pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
+{
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud <pcl::PointXYZ>());
+
+    //load from point cloud data file
+    auto filePath = GetFilePathIfNeedToRead(inst);
+    if (!filePath.empty()) {
+        ReadCloudFileAndSaveOnInstance(inst, filePath, cloud);
+    }
+    else {
+        GetPointsSavedOnInstance(inst, cloud);
+    }
+
+    //add from nested objects
+    const char* propNames[] = { PROP_INPUT_OBJECT, PROP_INPUT_OBJECTS };
+    for (auto name : propNames) {
+        OwlInstance* nested = NULL;
+        int_t card = GetObjectPropertyValue(inst, name, &nested);
+        for (int_t i = 0; i < card; i++) {
+            AddPointsFromNestedObject(nested[i], cloud);
+        }
+    }
+
+    SetCloudAttributes(inst, cloud);
+
+    return cloud;
+}
+
+/// <summary>
+/// 
+/// </summary>
+void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+{
+    assert(cloud); if (!cloud) return;
+
+    SHELL* shell = rdfgeom_GetInstanceRepresentation(instNested);
+    if (shell) {
+        auto cfaceP = rdfgeom_GetConceptualFaces(shell);
+        if (cfaceP) {
+            AddPointsFromCFaces(*cfaceP, cloud, NULL);
+        }
+    }
+}
+
+
 /// <summary>
 /// 
 /// </summary>
@@ -184,41 +199,41 @@ void PointCloud::AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl
         return;
     }
 
-    AddPointsFromCFaces(cface->next, cloud, parentTransform);
+    AddPointsFromCFaces(*rdfgeom_cface_GetNext(cface), cloud, parentTransform);
 
     MATRIX* transform = parentTransform;
     MATRIX buff;
-    if (cface->localTransformation) {
+    if (auto localT = rdfgeom_cface_GetLocalTranformation(cface)) {
         if (transform) {
             assert(!"not tested");
-            TransformTransform(&buff, transform, cface->localTransformation); //or maybe other way
+            TransformTransform(&buff, transform, localT); //or maybe other way
             transform = &buff;
         }
         else {
-            transform = cface->localTransformation;
+            transform = localT;
         }
     }
 
-    AddPointsFromCFaces(cface->child, cloud, transform);
+    AddPointsFromCFaces(*rdfgeom_cface_GetChild(cface), cloud, transform);
 
-    if (OwlInstance faceOwnerInst = engine_GetConceptualFaceInstance(cface)) {
+    if (OwlInstance faceOwnerInst = rdfgeom_cface_GetInstance(cface)) {
 
-        if (SHELL* faceOwnerShell = engine_GetInstanceGeometry(faceOwnerInst)) {
-            if (faceOwnerShell->nonTransformedVertices) {
+        if (SHELL* faceOwnerShell = rdfgeom_GetInstanceRepresentation(faceOwnerInst)) {
+            if (auto nonTransformedVertices = rdfgeom_GetPoints(faceOwnerShell)) {
                 VECTOR3 transformed;
-                for (auto point = cface->points; point; point = point->next) {
+                for (auto vertexP = rdfgeom_cface_GetVerticies(cface); *vertexP; vertexP = rdfgeom_vertex_GetNext(*vertexP)) {
 
-                    auto ptind = point->point;
+                    auto ptind = rdfgeom_vertex_GetPointIndex (*vertexP);
                     if (ptind < 0) {
                         ptind = -ptind - 1;
                     }
 
-                    if (ptind >= faceOwnerShell->noVertices) {
+                    if (ptind >= rdfgeom_GetNumOfPoints(faceOwnerShell)) {
                         assert(false);
                         continue;
                     }
 
-                    auto pt = faceOwnerShell->nonTransformedVertices + ptind;
+                    auto pt = rdfgeom_GetPoints (faceOwnerShell) + ptind;
                     if (transform) {
                         TransformPoint(transformed, *pt, *transform);
                         pt = &transformed;
@@ -610,7 +625,7 @@ bool PointCloud::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3*
 /// <summary>
 /// 
 /// </summary>
-bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
+bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void*)
 {
     return PointCloud::GetBoundingBox(inst, startVector, endVector, transformationMatrix);
 }
@@ -618,34 +633,33 @@ bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, 
 /// <summary>
 /// 
 /// </summary>
-void PointCloudGeometry::CreateShell(OwlInstance inst, SHELL* shell, IEngineMemory* memory)
+void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
 {
+    auto shell = rdfgeom_GetInstanceRepresentation(inst);
+    if (!shell)
+        return;
+
     auto cloud0 = PointCloud::GetPointCloud(inst);
     auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
+
     //TODO - meshes should use SHELL
-    shell->noVertices = cloud->size();
-    
-    if (0==shell->noVertices) {
-        return;
-    }
+    rdfgeom_AllocatePoints(inst, shell, cloud->size(), false, false);
+    auto nonTransformedVertices = rdfgeom_GetPoints(shell);
 
-    shell->nonTransformedVertices = (VECTOR3*)memory->Allocate(shell->noVertices * sizeof(VECTOR3));
+    auto cfaceP = rdfgeom_GetConceptualFaces(shell);
+    rdfgeom_cface_Create(inst, cfaceP);
 
-    shell->conceptualFaces = memory->new__CONCEPTUAL_FACE();
-    VERTEX__LIST** ppPoints = &shell->conceptualFaces->points;
+    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVerticies(*cfaceP);
 
-    for (int_t npt = 0; npt < shell->noVertices; npt++) {
+    for (size_t npt = 0; npt < cloud->size(); npt++) {
         auto& pt = cloud->at(npt);
 
-        shell->nonTransformedVertices[npt].x = pt.x;
-        shell->nonTransformedVertices[npt].y = pt.y;
-        shell->nonTransformedVertices[npt].z = pt.z;
+        nonTransformedVertices[npt].x = pt.x;
+        nonTransformedVertices[npt].y = pt.y;
+        nonTransformedVertices[npt].z = pt.z;
 
-        (*ppPoints) = (VERTEX__LIST*)memory->Allocate(sizeof(VERTEX__LIST));
-        if (npt < shell->noVertices - 1)
-            (*ppPoints)->point = npt;
-        else
-            (*ppPoints)->point = -(npt + 1);
-        ppPoints = &(*ppPoints)->next;
+        rdfgeom_vertex_Create(inst, vertexP, npt, npt == cloud->size() - 1);
+
+        vertexP = rdfgeom_vertex_GetNext(*vertexP);
     }
 }

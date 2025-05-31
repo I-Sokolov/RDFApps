@@ -5,7 +5,7 @@
 /// <summary>
 /// 
 /// </summary>
-class MarchingCubesHoppe : public PointCloudShell
+class MarchingCubesHoppe : public IAlgorithm
 {
 public:
     static bool CreateClass(OwlModel model);

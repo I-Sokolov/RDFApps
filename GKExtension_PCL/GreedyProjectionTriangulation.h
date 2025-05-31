@@ -5,7 +5,7 @@
 /// <summary>
 /// 
 /// </summary>
-class GreedyProjectionTriangulation : public PointCloudShell
+class GreedyProjectionTriangulation : public IAlgorithm
 {
 public:
     static bool CreateClass(OwlModel model);

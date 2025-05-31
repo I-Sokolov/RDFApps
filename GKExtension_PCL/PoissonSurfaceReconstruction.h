@@ -5,7 +5,7 @@
 /// <summary>
 /// 
 /// </summary>
-class PoissonSurfaceReconstruction : public PointCloudShell
+class PoissonSurfaceReconstruction : public IAlgorithm
 {
 public:
     static bool CreateClass(OwlModel model);

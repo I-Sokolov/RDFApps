@@ -14,7 +14,7 @@
 #define PARAM_GP3_N_CONSIST         "Param: GP3 NormalConsistency(F)"
 
 
-static GreedyProjectionTriangulation s_Geometry;
+static GreedyProjectionTriangulation s_Algorithm;
 
 /// <summary>
 /// 
@@ -41,7 +41,7 @@ bool GreedyProjectionTriangulation::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_GP3_MAX_ANGLE, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_GP3_N_CONSIST, DATATYPEPROPERTY_TYPE_BOOLEAN);
 
-    engine_SetClassGeometryHandler(clsMesh, &s_Geometry);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
 
     return true;
 }
