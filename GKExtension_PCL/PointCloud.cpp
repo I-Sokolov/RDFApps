@@ -224,9 +224,6 @@ void PointCloud::AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl
                 for (auto vertexP = rdfgeom_cface_GetVerticies(cface); *vertexP; vertexP = rdfgeom_vertex_GetNext(*vertexP)) {
 
                     auto ptind = rdfgeom_vertex_GetPointIndex (*vertexP);
-                    if (ptind < 0) {
-                        ptind = -ptind - 1;
-                    }
 
                     if (ptind >= rdfgeom_GetNumOfPoints(faceOwnerShell)) {
                         assert(false);
@@ -642,7 +639,12 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
     auto cloud0 = PointCloud::GetPointCloud(inst);
     auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
 
+    if (!cloud || !cloud->size()) {
+        return;
+    }
+
     //TODO - meshes should use SHELL
+    //TODO - save points with normals
     rdfgeom_AllocatePoints(inst, shell, cloud->size(), false, false);
     auto nonTransformedVertices = rdfgeom_GetPoints(shell);
 
