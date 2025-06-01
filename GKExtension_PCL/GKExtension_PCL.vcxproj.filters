@@ -21,7 +21,7 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PointCloudShell.h">
+    <ClInclude Include="PointCloudMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PointCloud.h">
@@ -50,7 +50,7 @@
     <ClCompile Include="GreedyProjectionTriangulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PointCloudShell.cpp">
+    <ClCompile Include="PointCloudMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PoissonSurfaceReconstruction.cpp">

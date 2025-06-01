@@ -1,16 +1,16 @@
 
 #include "pch.h"
 #include "PointCloud.h"
-#include "PointCloudShell.h"
+#include "PointCloudMesh.h"
 
 
 /// <summary>
 /// 
 /// </summary>
-bool PointCloudShell::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void* /*pvAlgorithm*/)
+bool PointCloudMesh::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void* /*pvAlgorithm*/)
 {
     auto instCloud = PointCloud::GetPointCloudInstance(inst);
-    return PointCloud::GetBoundingBox(instCloud, startVector, endVector, transformationMatrix);
+    return ::GetBoundingBox(instCloud, (double*)transformationMatrix, (double*)startVector, (double*)endVector);
 }
 
 
@@ -92,7 +92,7 @@ static void GetMeshFaces(pcl::PolygonMesh& mesh, STRUCT_FACE** ppFace, OwlInstan
 /// <summary>
 /// 
 /// </summary>
-void PointCloudShell::CreateShell(OwlInstance inst, void *pvAlgorithm)
+void PointCloudMesh::CreateShell(OwlInstance inst, void *pvAlgorithm)
 {
     if (!pvAlgorithm) {
         assert(false);
@@ -101,8 +101,7 @@ void PointCloudShell::CreateShell(OwlInstance inst, void *pvAlgorithm)
     auto algorithm = (IAlgorithm*)pvAlgorithm;
 
     OwlInstance instCloud = PointCloud::GetPointCloudInstance(inst);
-    auto cloud0 = PointCloud::GetPointCloud(instCloud);
-    auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
+    auto cloud = PointCloud::GetPointsWithNormals(instCloud);
     if (!cloud || !cloud->size()) {
         return;
     }

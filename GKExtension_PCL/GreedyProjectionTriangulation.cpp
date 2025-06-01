@@ -41,7 +41,7 @@ bool GreedyProjectionTriangulation::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_GP3_MAX_ANGLE, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_GP3_N_CONSIST, DATATYPEPROPERTY_TYPE_BOOLEAN);
 
-    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudMesh::CreateShell, PointCloudMesh::GetBoundingBox, &s_Algorithm);
 
     return true;
 }

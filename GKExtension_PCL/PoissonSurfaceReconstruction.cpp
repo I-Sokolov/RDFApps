@@ -29,7 +29,7 @@ bool PoissonSurfaceReconstruction::CreateClass(OwlModel model)
 
     AddClassProperty(clsMesh, PARAM_POISSON_DEPTH, DATATYPEPROPERTY_TYPE_INTEGER);
 
-    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudMesh::CreateShell, PointCloudMesh::GetBoundingBox, &s_Algorithm);
 
     return true;
 }

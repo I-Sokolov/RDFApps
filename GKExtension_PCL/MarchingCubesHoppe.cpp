@@ -32,7 +32,7 @@ bool MarchingCubesHoppe::CreateClass(OwlModel model)
     AddClassProperty(clsMesh, PARAM_MCH_ISO_LEVEL, DATATYPEPROPERTY_TYPE_DOUBLE);
     AddClassProperty(clsMesh, PARAM_MCH_EXTENT_GRID, DATATYPEPROPERTY_TYPE_DOUBLE);
 
-    rdfgeom_SetClassGeometry(clsMesh, PointCloudShell::CreateShell, PointCloudShell::GetBoundingBox, &s_Algorithm);
+    rdfgeom_SetClassGeometry(clsMesh, PointCloudMesh::CreateShell, PointCloudMesh::GetBoundingBox, &s_Algorithm);
 
     return true;
 }

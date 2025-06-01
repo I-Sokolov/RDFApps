@@ -5,7 +5,7 @@
 /// <summary>
 /// 
 /// </summary>
-class BallPivoting : public PointCloudShell
+class BallPivoting : public PointCloudMesh
 {
 public:
     static bool CreateClass(OwlModel model);

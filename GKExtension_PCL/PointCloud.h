@@ -22,10 +22,11 @@ public:
     static bool AddPointCloudProp(OwlClass cls);
     static OwlInstance GetPointCloudInstance(OwlInstance instHost);
 
-    static pcl::PointCloud<pcl::PointXYZ>::Ptr GetPointCloud(OwlInstance instWithPoints);
-    static pcl::PointCloud<pcl::PointNormal>::Ptr GetCloudWithNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr GetDataFilePointCloud(OwlInstance instPointCloud);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr CombinePointCloud(OwlInstance instPointCloud);
+    static pcl::PointCloud<pcl::PointNormal>::Ptr CalculateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointNormal>::Ptr GetPointsWithNormals(OwlInstance instWithPoints);
 
-    static bool GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix);
 private:
     static std::string GetFilePathIfNeedToRead(OwlInstance instReleating);
     static void ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::string& filePath, pcl::PointCloud <pcl::PointXYZ>::Ptr cloud);
@@ -40,7 +41,7 @@ private:
     static void AddPointsFromNestedObject(OwlInstance instNested, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static void AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, MATRIX* parentTransform);
 
-    static void SetCloudAttributes(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    template<class TCloudPtr> static void SetCloudAttributesFromInstance(OwlInstance inst, TCloudPtr cloud);
 
 };
 

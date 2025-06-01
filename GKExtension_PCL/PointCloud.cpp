@@ -145,30 +145,40 @@ bool PointCloud::CreateClass(OwlModel model)
 /// <summary>
 /// 
 /// </summary>
-pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetPointCloud(OwlInstance inst)
+pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::GetDataFilePointCloud(OwlInstance instPointCloud)
 {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud <pcl::PointXYZ>());
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud <pcl::PointXYZ>());
 
     //load from point cloud data file
-    auto filePath = GetFilePathIfNeedToRead(inst);
+    auto filePath = GetFilePathIfNeedToRead(instPointCloud);
     if (!filePath.empty()) {
-        ReadCloudFileAndSaveOnInstance(inst, filePath, cloud);
+        ReadCloudFileAndSaveOnInstance(instPointCloud, filePath, cloud);
     }
     else {
-        GetPointsSavedOnInstance(inst, cloud);
+        GetPointsSavedOnInstance(instPointCloud, cloud);
     }
+
+    return cloud;
+}
+
+/// <summary>
+/// 
+/// </summary>
+pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::CombinePointCloud(OwlInstance instPointCloud)
+{
+    auto cloud = GetDataFilePointCloud(instPointCloud);
 
     //add from nested objects
     const char* propNames[] = { PROP_INPUT_OBJECT, PROP_INPUT_OBJECTS };
     for (auto name : propNames) {
         OwlInstance* nested = NULL;
-        int_t card = GetObjectPropertyValue(inst, name, &nested);
+        int_t card = GetObjectPropertyValue(instPointCloud, name, &nested);
         for (int_t i = 0; i < card; i++) {
             AddPointsFromNestedObject(nested[i], cloud);
         }
     }
 
-    SetCloudAttributes(inst, cloud);
+    SetCloudAttributesFromInstance(instPointCloud, cloud);
 
     return cloud;
 }
@@ -246,7 +256,8 @@ void PointCloud::AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl
 /// <summary>
 /// 
 /// </summary>
-void PointCloud::SetCloudAttributes(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+template<class TCloudPtr>
+void PointCloud::SetCloudAttributesFromInstance(OwlInstance inst, TCloudPtr cloud)
 {
     assert(cloud); if (!cloud) return;
 
@@ -305,7 +316,7 @@ void PointCloud::ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::str
 /// <summary>
 /// 
 /// </summary>
-pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::GetCloudWithNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
+pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::CalculateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     pcl::PointCloud<pcl::PointNormal>::Ptr cloudWithNormal = NULL;
     if (cloud && cloud->size() > 0) {
@@ -598,25 +609,15 @@ extern bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType typ
 /// <summary>
 /// 
 /// </summary>
-bool PointCloud::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix)
+template<class TPoint>
+static void ExpandRange(VECTOR3* startVector, VECTOR3* endVector, const TPoint& pt)
 {
-    MatrixIdentity(transformationMatrix);
-
-    startVector->x = startVector->y = startVector->z = DBL_MAX;
-    endVector->x = endVector->y = endVector->z = -DBL_MAX;
-
-    auto cloud = GetPointCloud(inst);
-    for (auto& pt : *cloud) {
-        startVector->x = std::min(startVector->x, (double)pt.x);
-        startVector->y = std::min(startVector->y, (double)pt.y);
-        startVector->z = std::min(startVector->z, (double)pt.z);
-        endVector->x = std::max(endVector->x, (double)pt.x);
-        endVector->y = std::max(endVector->y, (double)pt.y);
-        endVector->z = std::max(endVector->z, (double)pt.z);
-    }
-
-
-    return startVector->x <= endVector->x;
+    startVector->x = std::min(startVector->x, (double)pt.x);
+    startVector->y = std::min(startVector->y, (double)pt.y);
+    startVector->z = std::min(startVector->z, (double)pt.z);
+    endVector->x = std::max(endVector->x, (double)pt.x);
+    endVector->y = std::max(endVector->y, (double)pt.y);
+    endVector->z = std::max(endVector->z, (double)pt.z);
 }
 
 /// <summary>
@@ -624,7 +625,48 @@ bool PointCloud::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3*
 /// </summary>
 bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void*)
 {
-    return PointCloud::GetBoundingBox(inst, startVector, endVector, transformationMatrix);
+    if (transformationMatrix)
+        MatrixIdentity(transformationMatrix);
+
+    startVector->x = startVector->y = startVector->z = DBL_MAX;
+    endVector->x = endVector->y = endVector->z = -DBL_MAX;
+
+    auto geom = rdfgeom_GetInstanceRepresentation(inst);
+    if (geom) {
+        auto npt = rdfgeom_GetNumOfPoints(geom);
+        auto rpt = rdfgeom_GetPoints(geom);
+
+        for (int_t i = 0; i < npt && rpt; i++) {
+            ExpandRange(startVector, endVector, rpt[i]);
+        }
+    }
+    else {
+        auto cloud = PointCloud::GetDataFilePointCloud(inst);
+        if (cloud) {
+            for (auto& pt : *cloud) {
+                ExpandRange(startVector, endVector, pt);
+            }
+        }
+
+        const char* propNames[] = { PROP_INPUT_OBJECT, PROP_INPUT_OBJECTS };
+        for (auto name : propNames) {
+            OwlInstance* nested = NULL;
+            int_t card = GetObjectPropertyValue(inst, name, &nested);
+            for (int_t i = 0; i < card; i++) {
+                VECTOR3 box[2];
+                MATRIX T;
+                if (::GetBoundingBox(nested[i], (double*)&T, (double*)box, (double*)(box + 1))) {
+                    VECTOR3 pt;
+                    for (int j = 0; j < 1; j++) {
+                        TransformPoint(pt, box[j], T);
+                        ExpandRange(startVector, endVector, pt);
+                    }
+                }
+            }
+        }
+    }
+
+    return startVector->x <= endVector->x;
 }
 
 /// <summary>
@@ -636,17 +678,16 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
     if (!shell)
         return;
 
-    auto cloud0 = PointCloud::GetPointCloud(inst);
-    auto cloud = PointCloud::GetCloudWithNormals(inst, cloud0);
+    auto cloud0 = PointCloud::CombinePointCloud(inst);
+    auto cloud = PointCloud::CalculateNormals(inst, cloud0);
 
     if (!cloud || !cloud->size()) {
         return;
     }
 
-    //TODO - meshes should use SHELL
-    //TODO - save points with normals
-    rdfgeom_AllocatePoints(inst, shell, cloud->size(), false, false);
-    auto nonTransformedVertices = rdfgeom_GetPoints(shell);
+    rdfgeom_AllocatePoints(inst, shell, cloud->size(), true, false);
+    auto points = rdfgeom_GetPoints(shell);
+    auto normals = rdfgeom_GetNormals(shell);
 
     auto cfaceP = rdfgeom_GetConceptualFaces(shell);
     rdfgeom_cface_Create(inst, cfaceP);
@@ -656,12 +697,58 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
     for (size_t npt = 0; npt < cloud->size(); npt++) {
         auto& pt = cloud->at(npt);
 
-        nonTransformedVertices[npt].x = pt.x;
-        nonTransformedVertices[npt].y = pt.y;
-        nonTransformedVertices[npt].z = pt.z;
+        points[npt].x = pt.x;
+        points[npt].y = pt.y;
+        points[npt].z = pt.z;
+
+        normals[npt].x = pt.normal_x;
+        normals[npt].y = pt.normal_y;
+        normals[npt].z = pt.normal_z;
 
         rdfgeom_vertex_Create(inst, vertexP, npt, npt == cloud->size() - 1);
 
         vertexP = rdfgeom_vertex_GetNext(*vertexP);
     }
+}
+
+pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::GetPointsWithNormals(OwlInstance instWithPoints)
+{
+    auto geom = rdfgeom_GetInstanceRepresentation(instWithPoints);
+    if (!geom) {
+        assert(false);
+        return NULL;
+    }
+
+    auto npt = rdfgeom_GetNumOfPoints(geom);
+    if (!npt) {
+        assert(false);
+        return NULL;
+    }
+
+    auto points = rdfgeom_GetPoints(geom);
+    auto normals = rdfgeom_GetNormals(geom);
+    if (!points || !normals) {
+        assert(false);
+        return NULL;
+    }
+
+    pcl::PointCloud<pcl::PointNormal>::Ptr cloud(new pcl::PointCloud <pcl::PointNormal>());
+
+    cloud->resize(npt);
+    for (int_t i = 0; i < npt; i++) {
+
+        auto& pt = cloud->at(i);
+
+        pt.x = points[i].x;
+        pt.y = points[i].y;
+        pt.z = points[i].z;
+
+        pt.normal_x = normals[i].x;
+        pt.normal_y = normals[i].y;
+        pt.normal_z = normals[i].z;
+    }
+
+    SetCloudAttributesFromInstance(instWithPoints, cloud);
+
+    return cloud;
 }
