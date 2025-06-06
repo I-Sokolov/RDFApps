@@ -24,7 +24,7 @@ public:
 
     static pcl::PointCloud<pcl::PointXYZ>::Ptr GetDataFilePointCloud(OwlInstance instPointCloud);
     static pcl::PointCloud<pcl::PointXYZ>::Ptr CombinePointCloud(OwlInstance instPointCloud);
-    static pcl::PointCloud<pcl::PointNormal>::Ptr CalculateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointNormal>::Ptr PrepateCloudToBuildMesh(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr GetPointsWithNormals(OwlInstance instWithPoints);
 
 private:
@@ -35,6 +35,8 @@ private:
     
     static pcl::PointCloud<pcl::PointXYZ>::Ptr StatisticalOutlierRemoval(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointXYZ>::Ptr VoxelGridDowmsampling(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr PathThrough(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr PathThrough(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, const char* param, const char* fileter);
 
     static pcl::PointCloud<pcl::PointNormal>::Ptr EstimateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr SmoothMLS(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
