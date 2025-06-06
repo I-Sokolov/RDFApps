@@ -20,6 +20,7 @@
 //#include <pcl/surface/rbf.h> 
 #include <pcl/surface/mls.h>
 #include <pcl/filters/statistical_outlier_removal.h>
+#include <pcl/filters/voxel_grid.h>
 
 // add headers that you want to pre-compile here
 #include "framework.h"

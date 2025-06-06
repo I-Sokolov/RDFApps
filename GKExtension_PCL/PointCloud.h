@@ -34,6 +34,7 @@ private:
     static void GetPointsSavedOnInstance(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     
     static pcl::PointCloud<pcl::PointXYZ>::Ptr StatisticalOutlierRemoval(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
+    static pcl::PointCloud<pcl::PointXYZ>::Ptr VoxelGridDowmsampling(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
 
     static pcl::PointCloud<pcl::PointNormal>::Ptr EstimateNormals(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
     static pcl::PointCloud<pcl::PointNormal>::Ptr SmoothMLS(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud);
