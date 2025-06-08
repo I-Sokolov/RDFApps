@@ -822,8 +822,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::VoxelGridDowmsampling(OwlInstanc
 pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::PathThrough(OwlInstance inst, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud)
 {
     cloud = PathThrough(inst, cloud, PARAM_RANGE_X, "x");
-    cloud = PathThrough(inst, cloud, PARAM_RANGE_X, "y");
-    cloud = PathThrough(inst, cloud, PARAM_RANGE_X, "z");
+    cloud = PathThrough(inst, cloud, PARAM_RANGE_Y, "y");
+    cloud = PathThrough(inst, cloud, PARAM_RANGE_Z, "z");
     return cloud;
 }
 
@@ -832,7 +832,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::PathThrough(OwlInstance inst, pc
     if (cloud && cloud->size()) {
         double range[2];
         auto has = GetDataProperyValue(inst, param, range, 2);
-        if (has == 2) {
+        if (has == 2 && range[1] > range[0]) {
             pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZ>);
 
             // Create the filtering object
@@ -845,7 +845,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr PointCloud::PathThrough(OwlInstance inst, pc
 
             pass.filter(*cloud_filtered);
 
-            if (cloud_filtered && cloud_filtered->size())
+            //if (cloud_filtered && cloud_filtered->size())
                 return cloud_filtered;
         }
     }
