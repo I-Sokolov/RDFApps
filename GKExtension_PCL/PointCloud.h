@@ -115,3 +115,9 @@ static TVal GetDataProperyValue(OwlInstance inst, const char* name, TVal defval,
 /// 
 /// </summary>
 extern int_t GetObjectPropertyValue(OwlInstance inst, const char* name, OwlInstance** objects, RdfProperty* pprop = NULL);
+
+
+/// <summary>
+/// 
+/// </summary>
+extern	void MatrixIdentity(MATRIX* pOut);

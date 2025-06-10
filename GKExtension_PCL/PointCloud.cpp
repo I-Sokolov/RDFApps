@@ -49,7 +49,7 @@ static void TransformPoint(
 /// <summary>
 /// 
 /// </summary>
-static	void	MatrixIdentity(
+extern	void	MatrixIdentity(
     MATRIX* pOut
 )
 {

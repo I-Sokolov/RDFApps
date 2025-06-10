@@ -22,6 +22,9 @@
 #include <pcl/filters/statistical_outlier_removal.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/passthrough.h>
+#include <pcl/TextureMesh.h>
+#include <pcl/PolygonMesh.h>
+
 
 
 // add headers that you want to pre-compile here

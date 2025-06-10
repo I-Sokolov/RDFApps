@@ -233,6 +233,7 @@ if %errorlevel% neq 0 goto :VCEnd
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PoissonSurfaceReconstruction.h" />
+    <ClInclude Include="TextureMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BallPivoting.cpp">
@@ -253,6 +254,7 @@ if %errorlevel% neq 0 goto :VCEnd
     </ClCompile>
     <ClCompile Include="GreedyProjectionTriangulation.cpp" />
     <ClCompile Include="PoissonSurfaceReconstruction.cpp" />
+    <ClCompile Include="TextureMesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
