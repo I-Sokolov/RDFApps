@@ -72,20 +72,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\GKExtension_PCL\</OutDir>
-    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH)\GKExtension_PCL\</OutDir>
+    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH)\GKExtension_PCL\</OutDir>
-    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\GKExtension_PCL\</OutDir>
-    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH)\GKExtension_PCL\</OutDir>
+    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(RDF_ENGINE_EXTENSIONS_PATH)\GKExtension_PCL\</OutDir>
-    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH_DEBUG)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(RDF_ENGINE_EXTENSIONS_PATH)\obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
