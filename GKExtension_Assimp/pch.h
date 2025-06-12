@@ -7,7 +7,19 @@
 #ifndef PCH_H
 #define PCH_H
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 // add headers that you want to pre-compile here
 #include "framework.h"
+
+#include <stdio.h>
+
+#include <string>
+#include <algorithm>
+
+#include "engine.h"
+#include "rdfgeom.h"
 
 #endif //PCH_H
