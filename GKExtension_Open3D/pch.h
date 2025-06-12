@@ -7,6 +7,8 @@
 #ifndef PCH_H
 #define PCH_H
 
+#include <open3d/Open3D.h>
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 

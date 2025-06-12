@@ -94,12 +94,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:\DevArea\github\Open3D\cpp;W:\DevArea\github\Open3D\build\eigen\src\ext_eigen;W:\DevArea\github\Open3D\build\fmt\include;W:\DevArea\github\Open3D\build\glfw\include;W:\DevArea\github\Open3D\3rdparty\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>W:\DevArea\github\Open3D\build\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Open3D.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -112,7 +114,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:\DevArea\github\Open3D\cpp;W:\DevArea\github\Open3D\build\eigen\src\ext_eigen;W:\DevArea\github\Open3D\build\fmt\include;W:\DevArea\github\Open3D\build\glfw\include;W:\DevArea\github\Open3D\3rdparty\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,6 +122,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>W:\DevArea\github\Open3D\build\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Open3D.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,12 +134,14 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:\DevArea\github\Open3D\cpp;W:\DevArea\github\Open3D\build\eigen\src\ext_eigen;W:\DevArea\github\Open3D\build\fmt\include;W:\DevArea\github\Open3D\build\glfw\include;W:\DevArea\github\Open3D\3rdparty\glew\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>W:\DevArea\github\Open3D\build\lib\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Open3D.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,7 +154,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);W:\DevArea\github\Open3D\cpp;W:\DevArea\github\Open3D\build\eigen\src\ext_eigen;W:\DevArea\github\Open3D\build\fmt\include;W:\DevArea\github\Open3D\build\glfw\include;W:\DevArea\github\Open3D\3rdparty\glew\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -156,6 +163,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>W:\DevArea\github\Open3D\build\lib\Release;W:\DevArea\github\Open3D\build\msvc_19.42_cxx17_64_mt_release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Open3D.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -170,6 +179,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TextureMesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
