@@ -104,6 +104,22 @@ bool TextureMesh::LoadPLYFile(const char* filePath, OwlInstance inst, SHELL* she
     SetVerticies(mesh, inst, shell);
     SetFaces(mesh, inst, shell);
 
+    // Texture file
+#if 1
+    if (scene->HasMaterials()) {
+        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiString texPath;
+        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
+            printf("Texture: %s\n", texPath.C_Str());
+        }
+        else {
+            printf("No texture.\n");
+        }
+    }
+    else {
+        printf("No material.\n");
+    }
+#endif
     return true;
 }
 
@@ -112,7 +128,7 @@ bool TextureMesh::LoadPLYFile(const char* filePath, OwlInstance inst, SHELL* she
 /// </summary>
 bool TextureMesh::SetVerticies(const aiMesh* mesh, OwlInstance inst, SHELL* shell)
 {
-    rdfgeom_AllocatePoints(inst, shell, mesh->mNumVertices, false /*mesh->HasNormals()*/, false);// mesh->HasTextureCoords(0));
+    rdfgeom_AllocatePoints(inst, shell, mesh->mNumVertices, mesh->HasNormals(), mesh->HasTextureCoords(0));
 
     auto points = rdfgeom_GetPoints(shell);
     if (points) {
@@ -134,12 +150,14 @@ bool TextureMesh::SetVerticies(const aiMesh* mesh, OwlInstance inst, SHELL* shel
         }
     }
 
-#if 0
-    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-        const aiVector3D& uv = mesh->mTextureCoords[0][i];
-        std::cout << "UV[" << i << "] u=" << uv.x << ", v=" << uv.y << std::endl;
+    auto texs = rdfgeom_GetTextureCoordinates(shell);
+    if (texs) {
+        for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
+            const aiVector3D& uv = mesh->mTextureCoords[0][i];
+            texs[i].u = uv.x;
+            texs[i].v = uv.y;
+        }
     }
-#endif
 
     return true;
 }
