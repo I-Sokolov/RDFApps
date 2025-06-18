@@ -3,5 +3,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommand>"W:\DevArea\RDF\3deditor\x64\Release\3DEditor.exe"</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>W:\DevArea\RDF\3deditor\x64\Release</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

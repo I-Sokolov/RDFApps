@@ -9,9 +9,15 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <stdarg.h>
+
 // add headers that you want to pre-compile here
 #include "framework.h"
 
 #include "engine.h"
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #endif //PCH_H

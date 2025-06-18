@@ -24,6 +24,9 @@
     <ClInclude Include="RDFImportPLY.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImportPLY.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RDFImportPLY.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImportPLY.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

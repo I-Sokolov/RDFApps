@@ -1,6 +1,7 @@
 
 #include "pch.h"
 #include "RDFImportPLY.h"
+#include "ImportPLY.h"
 
 extern "C" OwlInstance RDFImportPLY(
     const char* filePathPLY,
@@ -10,9 +11,7 @@ extern "C" OwlInstance RDFImportPLY(
     char*       errorBuff //[512]
 )
 {
-    if (errorBuff) {
-        strcpy(errorBuff, "Not implemented");
-    }
-    return NULL;
+    ImportPLY importer(model, textureFolder, textureBasePath, errorBuff);
+    return importer.Import(filePathPLY);
 }
 

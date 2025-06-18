@@ -115,7 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)..\GKExtension_Assimp\3dParty\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -123,8 +123,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)..\GKExtension_Assimp\3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>engine.lib;assimp-vc143-mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ImportPLY.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
@@ -157,7 +157,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)..\GKExtension_Assimp\3dParty\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -165,18 +165,20 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>engine.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(RDF_ENGINE_LIB)$(Configuration)\;$(ProjectDir)..\GKExtension_Assimp\3dParty\lib\$(Platform)\$(Configuration)\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>engine.lib;assimp-vc143-mt.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>ImportPLY.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ImportPLY.h" />
     <ClInclude Include="RDFImportPLY.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ImportPLY.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
