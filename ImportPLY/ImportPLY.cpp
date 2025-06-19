@@ -5,11 +5,36 @@
 
 #define CLS_BREP        "BoundaryRepresentation"
 #define CLS_COLLECTION  "Collection"
+#define CLS_MATERIAL    "Material"
+#define CLS_TEXTURE     "Texture"
 
 #define PROP_POINTS     "vertices"
 #define PROP_TEX_COORD  "textureCoordinates"
 #define PROP_IDXS       "indices"
 #define PROP_OBJECTS    "objects"
+#define PROP_MATERIAL   "material"
+#define PROP_TEXTURES   "textures"
+#define PROP_NAME       "name"
+
+#define GET_PROPERTY(prop, name)    auto prop = GetPropertyByName(m_model, name); if (!prop) { LogError("Missed property %s", name); return 0;}
+#define GET_CLASS(cls, name)        auto cls = GetClassByName(m_model, name); if (!cls) { LogError("Missed class %s", name); return 0;}
+
+#define CREATE_INSTANCE(instance, cls, retOnFail)                               \
+            auto instance = CreateInstance(cls);                                \
+            if (!instance) {                                                    \
+                LogError("Failed to create instance %s", GetNameOfClass(cls));  \
+                return retOnFail;                                               \
+            }                                                                   \
+
+#define SET_PROPERTY_VALUE(inst, prop, kind, val, card, retOnFail)                          \
+            {                                                                               \
+                auto res = Set##kind##Property(inst, prop, val, card);                      \
+                if (res) {                                                                  \
+                    LogError("Failed to set property %s for %s",                            \
+                        GetNameOfProperty(prop), GetNameOfClass(GetInstanceClass(inst)));   \
+                    return retOnFail;                                                       \
+                }                                                                           \
+            }                                                                               \
 
 /// <summary>
 /// 
@@ -69,11 +94,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
         return NULL;
     }
 
-    auto clsBrep = GetClassByName(m_model, CLS_BREP);
-    if (!clsBrep) {
-        LogError("Missed class " CLS_BREP);
-        return NULL;
-    }
+    GET_CLASS(clsBrep, CLS_BREP);
 
     std::vector<OwlInstance> breps;
 
@@ -83,9 +104,13 @@ OwlInstance ImportPLY::Import(const char* filePath)
             if (auto brep = CreateInstance(clsBrep)) {
                 if (SetVerticies(mesh, brep)) {
                     if (SetFaces(mesh, brep)) {
-                        SetMaterial(mesh, brep);
+                        SetMaterial(scene, mesh, brep);
                         breps.push_back(brep);
+                        brep = 0;
                     }
+                }
+                if (brep) {
+                    RemoveInstance(brep);
                 }
             }
             else {
@@ -104,29 +129,12 @@ OwlInstance ImportPLY::Import(const char* filePath)
         return breps[0];
     }
     else {
-        auto prop = GetPropertyByName(m_model, PROP_OBJECTS);
-        if (!prop) {
-            LogError("Missed property " PROP_OBJECTS);
-            return breps[0];
-        }
+        GET_CLASS(clsCollection, CLS_COLLECTION);
+        GET_PROPERTY(prop, PROP_OBJECTS);
 
-        auto clsCollection = GetClassByName(m_model, CLS_COLLECTION);
-        if (!clsCollection) {
-            LogError("Missed class " CLS_COLLECTION);
-            return breps[0];
-        }
+        CREATE_INSTANCE(collection, clsCollection, breps[0]);
 
-        auto collection = CreateInstance(clsCollection);
-        if (!collection) {
-            LogError("Failed to create instance " CLS_COLLECTION);
-            return breps[0];
-        }
-
-        auto res = SetObjectProperty(collection, prop, breps.data(), breps.size());
-        if (res) {
-            LogError("Failed to set property %s for %s", PROP_OBJECTS, CLS_COLLECTION);
-            return breps[0];
-        }
+        SET_PROPERTY_VALUE(collection, prop, Object, breps.data(), breps.size(), breps[0]);
 
         return collection;
     }
@@ -137,11 +145,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
 /// </summary>
 bool ImportPLY::SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, short dim, OwlInstance brep)
 {
-    auto prop = GetPropertyByName(m_model, propName);
-    if (!prop) {
-        LogError("Missed property %s", propName);
-        return false;
-    }
+    GET_PROPERTY(prop, propName);
 
     double* coords = new double[npt * dim];
     if (!coords) {
@@ -193,11 +197,7 @@ bool ImportPLY::SetVerticies(const aiMesh* mesh, OwlInstance brep)
 /// </summary>
 bool ImportPLY::SetFaces(const aiMesh* mesh, OwlInstance brep)
 {
-    auto prop = GetPropertyByName(m_model, PROP_IDXS);
-    if (!prop) {
-        LogError("Missed property %s", PROP_IDXS);
-        return false;
-    }
+    GET_PROPERTY(prop, PROP_IDXS);
 
     size_t N_ind = 0;
     for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
@@ -240,25 +240,32 @@ bool ImportPLY::SetFaces(const aiMesh* mesh, OwlInstance brep)
 /// <summary>
 /// 
 /// </summary>
-bool ImportPLY::SetMaterial(const aiMesh* mesh, OwlInstance brep)
+bool ImportPLY::SetMaterial(const aiScene* scene, const aiMesh* mesh, OwlInstance brep)
 {
-    return true;
-#if 0
-    // Texture file
-#if 1
     if (scene->HasMaterials()) {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         aiString texPath;
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
-            printf("Texture: %s\n", texPath.C_Str());
-        }
-        else {
-            printf("No texture.\n");
+
+            auto texPath_ = texPath.C_Str();
+
+            GET_CLASS(clsTexture, CLS_TEXTURE);
+            CREATE_INSTANCE(texture, clsTexture, false);
+
+            GET_PROPERTY(propName, PROP_NAME);
+            SET_PROPERTY_VALUE(texture, propName, Datatype, &texPath_, 1, false);
+
+            GET_CLASS(clsMaterial, CLS_MATERIAL);
+            CREATE_INSTANCE(material, clsMaterial, false);
+
+            GET_PROPERTY(propTextures, PROP_TEXTURES);
+            SET_PROPERTY_VALUE(material, propTextures, Object, &texture, 1, false);
+
+            GET_PROPERTY(propMaterial, PROP_MATERIAL);
+
+            SET_PROPERTY_VALUE(brep, propMaterial, Object, &material, 1, false);
         }
     }
-    else {
-        printf("No material.\n");
-    }
-#endif
-#endif
+
+    return true;
 }
