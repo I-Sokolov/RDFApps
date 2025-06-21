@@ -1,6 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "TextureMesh.h"
+#include "PointSet.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -21,4 +22,5 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 extern "C" __declspec(dllexport) void LoadExtension(OwlModel model)
 {
     TextureMesh::CreateClass(model);
+    PointSet::CreateClass(model);
 }
