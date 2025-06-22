@@ -3,13 +3,24 @@
 
 #define ERR_BUFF_SIZE 512
 
+#define CLS_POINTSET    "PointSet"
+
+#define PROP_DIM        "dim"
+#define PROP_COORD      "coordinates"
+#define PROP_NORMALS    "normalsCoordinates"
+#define PROP_TANGENTS   "tangentCoordinates"
+
+#define PROP_TEX_DIM    "textureDim"
+#define PROP_TEX_COORD  "textureCoordinates"
+
+
+
 #define CLS_BREP        "BoundaryRepresentation"
 #define CLS_COLLECTION  "Collection"
 #define CLS_MATERIAL    "Material"
 #define CLS_TEXTURE     "Texture"
 
 #define PROP_POINTS     "vertices"
-#define PROP_TEX_COORD  "textureCoordinates"
 #define PROP_IDXS       "indices"
 #define PROP_OBJECTS    "objects"
 #define PROP_MATERIAL   "material"
@@ -88,12 +99,14 @@ OwlInstance ImportPLY::Import(const char* filePath)
         return NULL;
     }
     Assimp::Importer reader;
-    const aiScene* scene = reader.ReadFile(filePath, /*aiProcess_Triangulate | */ aiProcess_JoinIdenticalVertices);
+    const aiScene* scene = reader.ReadFile(filePath, /*aiProcess_Triangulate |
+    aiProcess_GenNormals | */ aiProcess_JoinIdenticalVertices);
     if (!scene || !scene->HasMeshes()) {
         LogError("Failed to read or no meshes");
         return NULL;
     }
 
+    //GET_CLASS(clsPointSet, CLS_POINTSET);
     GET_CLASS(clsBrep, CLS_BREP);
 
     std::vector<OwlInstance> breps;
@@ -101,6 +114,11 @@ OwlInstance ImportPLY::Import(const char* filePath)
     for (unsigned int iMesh = 0; iMesh < scene->mNumMeshes; iMesh++) {
         const aiMesh* mesh = scene->mMeshes[iMesh];
         if (mesh) {
+#if 0
+            if (auto pointSet = CreateInstance(clsPointSet)) {
+                SetPointSet(mesh, pointSet);
+            }
+#endif
             if (auto brep = CreateInstance(clsBrep)) {
                 if (SetVerticies(mesh, brep)) {
                     if (SetFaces(mesh, brep)) {
@@ -143,7 +161,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
 /// <summary>
 /// 
 /// </summary>
-bool ImportPLY::SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, short dim, OwlInstance brep)
+bool ImportPLY::SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, int_t dim, OwlInstance brep)
 {
     GET_PROPERTY(prop, propName);
 
@@ -187,9 +205,41 @@ bool ImportPLY::SetVerticies(const aiMesh* mesh, OwlInstance brep)
         return false;
     }
 
-    SetCoordinates(PROP_TEX_COORD, mesh->mVertices, mesh->mNumVertices, 2, brep);
+    SetCoordinates(PROP_TEX_COORD, mesh->mTextureCoords[0], mesh->mNumVertices, 2, brep);
 
     return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool ImportPLY::SetPointSet(const aiMesh* mesh, OwlInstance pointSet)
+{
+    if (!mesh->mNumVertices) {
+        LogError("Empty mesh (no verticies)");
+        return false;
+    }
+
+    int_t dim = 3;
+    GET_PROPERTY(propDim, "dim");
+    SET_PROPERTY_VALUE(pointSet, propDim, Datatype, &dim, 1, false);
+
+    if (!SetCoordinates(PROP_COORD, mesh->mVertices, mesh->mNumVertices, dim, pointSet)) {
+        return false;
+    }
+    
+    SetCoordinates(PROP_NORMALS, mesh->mNormals, mesh->mNumVertices, dim, pointSet);
+
+    SetCoordinates(PROP_TANGENTS, mesh->mTangents, mesh->mNumVertices, dim, pointSet);
+
+    int_t tdim = 2; //mesh->mNumUVComponents?
+    GET_PROPERTY(propTexDim, PROP_TEX_DIM);
+    SET_PROPERTY_VALUE(pointSet, propTexDim, Datatype, &tdim, 1, false);
+
+    SetCoordinates(PROP_TEX_COORD, mesh->mTextureCoords[0], mesh->mNumVertices, tdim, pointSet);
+
+    return true;
+
 }
 
 /// <summary>

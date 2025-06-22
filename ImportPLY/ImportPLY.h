@@ -11,10 +11,14 @@ private:
     void LogError(const char* msg, ...);
 
 private:
+    bool SetPointSet(const aiMesh* mesh, OwlInstance pointSet);
+
+
+private:
     bool SetVerticies(const aiMesh* mesh, OwlInstance brep);
     bool SetFaces(const aiMesh* mesh, OwlInstance brep);
     bool SetMaterial(const aiScene* scene, const aiMesh* mesh, OwlInstance brep);
-    bool SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, short dim, OwlInstance brep);
+    bool SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, int_t dim, OwlInstance brep);
 
 private:
     OwlModel    m_model;
