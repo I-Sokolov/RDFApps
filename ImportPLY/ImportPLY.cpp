@@ -50,10 +50,8 @@
 /// <summary>
 /// 
 /// </summary>
-ImportPLY::ImportPLY(OwlModel model, const char* textureFolder, const char* textureBasePath, char* errorBuff)
+ImportPLY::ImportPLY(OwlModel model, char* errorBuff)
     : m_model(model)
-    , m_textureFolder(textureFolder)
-    , m_textureBasePath(textureBasePath)
     , m_errorBuff(errorBuff)
 {
     *m_errorBuff = 0;
@@ -98,6 +96,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
         LogError("model is NULL");
         return NULL;
     }
+
     Assimp::Importer reader;
     const aiScene* scene = reader.ReadFile(filePath, /*aiProcess_Triangulate |
     aiProcess_GenNormals | */ aiProcess_JoinIdenticalVertices);
@@ -105,6 +104,8 @@ OwlInstance ImportPLY::Import(const char* filePath)
         LogError("Failed to read or no meshes");
         return NULL;
     }
+
+    std::filesystem::path _filePath(filePath);
 
     //GET_CLASS(clsPointSet, CLS_POINTSET);
     GET_CLASS(clsBrep, CLS_BREP);
@@ -122,7 +123,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
             if (auto brep = CreateInstance(clsBrep)) {
                 if (SetVerticies(mesh, brep)) {
                     if (SetFaces(mesh, brep)) {
-                        SetMaterial(scene, mesh, brep);
+                        SetMaterial(_filePath.parent_path(), scene, mesh, brep);
                         breps.push_back(brep);
                         brep = 0;
                     }
@@ -290,14 +291,17 @@ bool ImportPLY::SetFaces(const aiMesh* mesh, OwlInstance brep)
 /// <summary>
 /// 
 /// </summary>
-bool ImportPLY::SetMaterial(const aiScene* scene, const aiMesh* mesh, OwlInstance brep)
+bool ImportPLY::SetMaterial(const std::filesystem::path& texturePath, const aiScene* scene, const aiMesh* mesh, OwlInstance brep)
 {
     if (scene->HasMaterials()) {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-        aiString texPath;
-        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
+        aiString texName;
+        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texName) == AI_SUCCESS) {
 
-            auto texPath_ = texPath.C_Str();
+            std::filesystem::path texFullPath(texturePath);
+            texFullPath /= texName.C_Str();
+            
+            const char* texPath_ = texFullPath.string().c_str();
 
             GET_CLASS(clsTexture, CLS_TEXTURE);
             CREATE_INSTANCE(texture, clsTexture, false);

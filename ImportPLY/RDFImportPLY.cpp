@@ -6,12 +6,10 @@
 extern "C" OwlInstance RDFImportPLY(
     const char* filePathPLY,
     OwlModel     model,
-    const char* textureFolder,
-    const char* textureBasePath,
     char*       errorBuff //[512]
 )
 {
-    ImportPLY importer(model, textureFolder, textureBasePath, errorBuff);
+    ImportPLY importer(model, errorBuff);
     return importer.Import(filePathPLY);
 }
 

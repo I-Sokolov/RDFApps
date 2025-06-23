@@ -116,6 +116,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)..\GKExtension_Assimp\3dParty\include\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +161,7 @@
       <AdditionalIncludeDirectories>$(RDF_ENGINE_INCLUDE);$(ProjectDir)..\GKExtension_Assimp\3dParty\include\</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
