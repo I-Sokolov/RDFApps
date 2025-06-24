@@ -9,6 +9,13 @@
 
 #define ON_ERROR(condition, message) if (!(condition)){ LOG_ERROR(message); return false;}
 
+#define CLS_GEOMETRICITEM "GeometricItem"
+
+#define GET_CLASS(cls, name)                                            \
+    OwlClass cls = GetClassByName(model, name);                         \
+    ON_ERROR(clsGeometricItem, "Failed GetClassByName (" name ")\n");   \
+
+
 struct Helper
 {
     static bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType type, int_t minCard = 0, OwlClass relatedClass = NULL, int_t maxCard = 1);

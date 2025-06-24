@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "TextureMesh.h"
 #include "conceptPointSet.h"
+#include "conceptFacetSurface.h"
 
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
@@ -23,4 +24,5 @@ extern "C" __declspec(dllexport) void LoadExtension(OwlModel model)
 {
     TextureMesh::CreateClass(model);
     PointSet::CreateClass(model);
+    FacetSurface::CreateClass(model);
 }

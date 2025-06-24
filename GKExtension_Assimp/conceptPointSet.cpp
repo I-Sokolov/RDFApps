@@ -20,10 +20,9 @@ bool PointSet::CreateClass(OwlModel model)
     OwlClass clsPointCloud = GetClassByName(model, CLS_POINTSET);
     if (!clsPointCloud)
         clsPointCloud = ::CreateClass(model, CLS_POINTSET);
-    ON_ERROR(clsPointCloud, "Failed to create class\n");
+    ON_ERROR(clsPointCloud, "Failed to create class " CLS_POINTSET "\n");
 
-    OwlClass clsGeometricItem = GetClassByName(model, "GeometricItem");
-    ON_ERROR(clsGeometricItem, "Failed GetClassByName (GeometricItem)\n");
+    GET_CLASS(clsGeometricItem, CLS_GEOMETRICITEM);
     if (!IsClassAncestor(clsPointCloud, clsGeometricItem))
         ON_ERROR(SetClassParent(clsPointCloud, clsGeometricItem), "Fail to set parent");
 
