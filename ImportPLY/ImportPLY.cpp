@@ -107,7 +107,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
 
     std::filesystem::path _filePath(filePath);
 
-    //GET_CLASS(clsPointSet, CLS_POINTSET);
+    GET_CLASS(clsPointSet, CLS_POINTSET);
     GET_CLASS(clsBrep, CLS_BREP);
 
     std::vector<OwlInstance> breps;
@@ -115,11 +115,14 @@ OwlInstance ImportPLY::Import(const char* filePath)
     for (unsigned int iMesh = 0; iMesh < scene->mNumMeshes; iMesh++) {
         const aiMesh* mesh = scene->mMeshes[iMesh];
         if (mesh) {
-#if 0
+#if 1
             if (auto pointSet = CreateInstance(clsPointSet)) {
-                SetPointSet(mesh, pointSet);
+                if (SetPointSet(mesh, pointSet)) {
+
+                    breps.push_back(pointSet);
+                }
             }
-#endif
+#else
             if (auto brep = CreateInstance(clsBrep)) {
                 if (SetVerticies(mesh, brep)) {
                     if (SetFaces(mesh, brep)) {
@@ -132,6 +135,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
                     RemoveInstance(brep);
                 }
             }
+#endif
             else {
                 LogError("Failed create instance " CLS_BREP);
             }
@@ -164,6 +168,10 @@ OwlInstance ImportPLY::Import(const char* filePath)
 /// </summary>
 bool ImportPLY::SetCoordinates(const char* propName, aiVector3D* rpt, size_t npt, int_t dim, OwlInstance brep)
 {
+    if (!rpt) {
+        return true;
+    }
+
     GET_PROPERTY(prop, propName);
 
     double* coords = new double[npt * dim];
@@ -233,14 +241,23 @@ bool ImportPLY::SetPointSet(const aiMesh* mesh, OwlInstance pointSet)
 
     SetCoordinates(PROP_TANGENTS, mesh->mTangents, mesh->mNumVertices, dim, pointSet);
 
-    int_t tdim = 2; //mesh->mNumUVComponents?
-    GET_PROPERTY(propTexDim, PROP_TEX_DIM);
-    SET_PROPERTY_VALUE(pointSet, propTexDim, Datatype, &tdim, 1, false);
+    for (int channel = 0; channel < AI_MAX_NUMBER_OF_TEXTURECOORDS; channel++) {
+        if (mesh->mTextureCoords[channel]) {
+            
+            int_t texDim = mesh->mNumUVComponents[channel];
+            if (texDim < 1 || texDim > 3)
+                texDim = 2;
 
-    SetCoordinates(PROP_TEX_COORD, mesh->mTextureCoords[0], mesh->mNumVertices, tdim, pointSet);
+            GET_PROPERTY(propTexDim, PROP_TEX_DIM);
+            SET_PROPERTY_VALUE(pointSet, propTexDim, Datatype, &texDim, 1, false);
+
+            SetCoordinates(PROP_TEX_COORD, mesh->mTextureCoords[channel], mesh->mNumVertices, texDim, pointSet);
+
+            break; //use first found channel
+        }
+    }
 
     return true;
-
 }
 
 /// <summary>
