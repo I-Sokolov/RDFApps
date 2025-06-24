@@ -27,7 +27,7 @@
     <ClInclude Include="Helper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PointSet.h">
+    <ClInclude Include="conceptPointSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -44,7 +44,7 @@
     <ClCompile Include="Helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PointSet.cpp">
+    <ClCompile Include="conceptPointSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
