@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "ImportPLY.h"
 
-#define ERR_BUFF_SIZE 512
+#define LEGACY_BREP
 
-#define CLS_POINTSET    "PointSet"
+#define ERR_BUFF_SIZE 512
 
 #define PROP_DIM        "dim"
 #define PROP_COORD      "coordinates"
@@ -16,6 +16,8 @@
 
 
 #define CLS_BREP        "BoundaryRepresentation"
+#define CLS_POINTSET    "PointSet"
+#define CLS_FACETSURFACE "FacetSurface"
 #define CLS_COLLECTION  "Collection"
 #define CLS_MATERIAL    "Material"
 #define CLS_TEXTURE     "Texture"
@@ -105,37 +107,37 @@ OwlInstance ImportPLY::Import(const char* filePath)
         return NULL;
     }
 
-    std::filesystem::path _filePath(filePath);
 
-    GET_CLASS(clsPointSet, CLS_POINTSET);
+#ifdef    LEGACY_BREP
     GET_CLASS(clsBrep, CLS_BREP);
+#else
+    GET_CLASS(clsBrep, CLS_FACETSURFACE)
+        GET_CLASS(clsPointSet, CLS_POINTSET);
+#endif
 
     std::vector<OwlInstance> breps;
 
     for (unsigned int iMesh = 0; iMesh < scene->mNumMeshes; iMesh++) {
         const aiMesh* mesh = scene->mMeshes[iMesh];
         if (mesh) {
-#if 1
-            if (auto pointSet = CreateInstance(clsPointSet)) {
-                if (SetPointSet(mesh, pointSet)) {
-
-                    breps.push_back(pointSet);
-                }
-            }
-#else
             if (auto brep = CreateInstance(clsBrep)) {
+#ifdef LEGACY_BREP
                 if (SetVerticies(mesh, brep)) {
                     if (SetFaces(mesh, brep)) {
-                        SetMaterial(_filePath.parent_path(), scene, mesh, brep);
+#else
+                if (auto pointSet = CreateInstance(clsPointSet)) {
+                    if (SetPointSet(mesh, pointSet)) {
+#endif
+                        SetMaterial(filePath, scene, mesh, brep);
                         breps.push_back(brep);
                         brep = 0;
                     }
                 }
+
                 if (brep) {
                     RemoveInstance(brep);
                 }
             }
-#endif
             else {
                 LogError("Failed create instance " CLS_BREP);
             }
@@ -308,14 +310,16 @@ bool ImportPLY::SetFaces(const aiMesh* mesh, OwlInstance brep)
 /// <summary>
 /// 
 /// </summary>
-bool ImportPLY::SetMaterial(const std::filesystem::path& texturePath, const aiScene* scene, const aiMesh* mesh, OwlInstance brep)
+bool ImportPLY::SetMaterial(const char* plyFilePath, const aiScene* scene, const aiMesh* mesh, OwlInstance brep)
 {
     if (scene->HasMaterials()) {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         aiString texName;
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texName) == AI_SUCCESS) {
 
-            std::filesystem::path texFullPath(texturePath);
+            std::filesystem::path _plyFilePath(plyFilePath);
+
+            std::filesystem::path texFullPath(_plyFilePath.parent_path());
             texFullPath /= texName.C_Str();
             
             const char* texPath_ = texFullPath.string().c_str();
