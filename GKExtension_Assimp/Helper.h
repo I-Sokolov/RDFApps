@@ -10,6 +10,7 @@
 #define ON_ERROR(condition, message) if (!(condition)){ LOG_ERROR(message); return false;}
 
 #define CLS_GEOMETRICITEM "GeometricItem"
+#define CLS_POINTSET      "PointSet"
 
 #define GET_CLASS(cls, name)                                            \
     OwlClass cls = GetClassByName(model, name);                         \
@@ -27,6 +28,10 @@ struct Helper
     static int_t GetDataProperyValue(OwlInstance inst, const char* name, TVal* arrValues, int_t arrSize, RdfProperty* pprop = NULL);
 
     static int_t GetDataProperyValue(OwlInstance inst, const char* name, void** arrValues, RdfProperty* pprop = NULL);
+
+    static int_t GetObjectPropertyValue(OwlInstance inst, const char* name, OwlInstance** objects, RdfProperty* pprop = NULL);
+
+    static OwlInstance GetObjectPropertyValue(OwlInstance inst, const char* name);
 
     template<class TPoint>
     static void ExpandRange(VECTOR3* startVector, VECTOR3* endVector, const TPoint& pt);

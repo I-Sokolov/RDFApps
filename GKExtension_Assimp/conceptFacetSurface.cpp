@@ -21,10 +21,10 @@ bool FacetSurface::CreateClass(OwlModel model)
     if (!IsClassAncestor(clsFacetSurface, clsGeometricItem))
         ON_ERROR(SetClassParent(clsFacetSurface, clsGeometricItem), "Fail to set parent");
 
-    OwlClass clsPointSet = GetClassByName(model, "PointSet");
+    OwlClass clsPointSet = GetClassByName(model, CLS_POINTSET);
 
     Helper::AddClassProperty(clsFacetSurface, PROP_OBJECT, OBJECTPROPERTY_TYPE, 1, clsPointSet, 1);
-    Helper::AddClassProperty(clsFacetSurface, PROP_IDXS, DATATYPEPROPERTY_TYPE_DOUBLE, 0, NULL, -1);
+    Helper::AddClassProperty(clsFacetSurface, PROP_IDXS, DATATYPEPROPERTY_TYPE_INTEGER, 0, NULL, -1);
 
     rdfgeom_SetClassGeometry(clsFacetSurface, CreateShell, GetBoundingBox, NULL);
 
@@ -37,6 +37,11 @@ bool FacetSurface::CreateClass(OwlModel model)
 /// </summary>
 bool FacetSurface::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* endVector, MATRIX* transformationMatrix, void*)
 {
+    OwlInstance pointSet = Helper::GetObjectPropertyValue(inst, PROP_OBJECT);
+    if (pointSet){
+        return ::GetBoundingBox(pointSet, (double*)transformationMatrix, (double*)startVector, (double*)endVector);
+    }
+    return false;
 }
 
 
@@ -46,57 +51,74 @@ bool FacetSurface::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR
 /// </summary>
 void FacetSurface::CreateShell(OwlInstance inst, void*)
 {
-    auto shell = rdfgeom_GetInstanceRepresentation(inst);
-    if (!shell)
-        return;
-
-    // get properties
+    // Collect data
+    
     //
-    int_t dim = Helper::GetDataProperyValue<int_t>(inst, PROP_DIM, 3);
-
-    double* coords = NULL;
-    int_t ncoords = Helper::GetDataProperyValue(inst, PROP_COORD, (void**)&coords);
-
-    if (ncoords < dim) {
+    OwlInstance pointSet = Helper::GetObjectPropertyValue(inst, PROP_OBJECT);
+    if (!IsInstanceOfClass(pointSet, CLS_POINTSET)) {
         return;
     }
 
-    double* normalCoords = NULL;
-    int_t nnormCoords = Helper::GetDataProperyValue(inst, PROP_NORMALS, (void**)&normalCoords);
-
-    //TODO
-    //double* tangentCoords = NULL;
-    //int_t ntangetCoords = Helper::GetDataProperyValue(inst, PROP_TANGENTS, (void**)&tangentCoords);
-
-    int_t textureDim = Helper::GetDataProperyValue(inst, PROP_TEX_DIM, 2);
-    double* texCoord = NULL;
-    int_t ntexCoord = Helper::GetDataProperyValue(inst, PROP_TEX_COORD, (void**)&texCoord);
-
-    int_t Npt = ncoords / dim;
-
-    // set verticies
     //
-    rdfgeom_AllocatePoints(inst, shell, ncoords/dim, nnormCoords >= dim, ntexCoord >= textureDim);
+    SHELL* pointShell = rdfgeom_GetInstanceRepresentation(pointSet);
+    int_t numPoints = rdfgeom_GetNumOfPoints(pointShell);
+    if (numPoints <= 0) {
+        return;
+    }
+
+    //
+    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    if (!shell) {
+        return;
+    }
+
+    //
+    int_t* indecies = NULL;
+    int_t numInd = Helper::GetDataProperyValue(inst, PROP_IDXS, (void**) &indecies);
+
+    // Fill the shell
+
+    //TODO - Can we avoid data copy?
+    VECTOR3* srcPoints = rdfgeom_GetPoints(pointShell);
+    VECTOR2* srcUV = rdfgeom_GetTextureCoordinates(pointShell);
     
-    VECTOR3* points = rdfgeom_GetPoints(shell);
-    CopyPoints(points, Npt, 3, coords, ncoords, dim);
+    rdfgeom_AllocatePoints(inst, shell, numPoints, false, srcUV != NULL);
+    VECTOR3* dstPoints = rdfgeom_GetPoints(shell);
+    if (dstPoints && srcPoints) {
+        memcpy(dstPoints, srcPoints, numPoints * sizeof(VECTOR3));
+    }
 
-    VECTOR3* normals = rdfgeom_GetNormals(shell);
-    CopyPoints(normals, Npt, 3, normalCoords, nnormCoords, dim);
+    VECTOR2* dstUV = rdfgeom_GetTextureCoordinates(shell);
+    if (dstUV && srcUV) {
+        memcpy(dstUV, srcUV, numPoints * sizeof(VECTOR2));
+    }
 
-    VECTOR2* texUV = rdfgeom_GetTextureCoordinates(shell);
-    CopyPoints(texUV, Npt, 2, texCoord, ntexCoord, textureDim);
-
-    //set to show
     //
     auto cfaceP = rdfgeom_GetConceptualFaces(shell);
     rdfgeom_cface_Create(inst, cfaceP);
 
-    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVerticies(*cfaceP);
+    STRUCT_FACE** faces = rdfgeom_cface_GetFaces(*cfaceP);
+    STRUCT_VERTEX** boundary = NULL;
 
-    for (int_t i = 0; i < Npt; i++) {
-        rdfgeom_vertex_Create(inst, vertexP, i, i == Npt - 1);
-        vertexP = rdfgeom_vertex_GetNext(*vertexP);
+    for (int_t i = 0; i < numInd; i++) {
+
+        int_t ind = indecies[i];
+        if (ind < 0 || ind > numPoints - 1)
+            continue;
+
+        if (!boundary) {
+            rdfgeom_face_Create(inst, faces);
+            boundary = rdfgeom_face_GetBoundary(*faces);
+            faces = rdfgeom_face_GetNext(*faces);
+        }
+
+        bool isLast = (i > numInd - 2) || indecies[i + 1] < 0 || indecies[i + 1] > numPoints - 1;
+    
+
+        rdfgeom_vertex_Create(inst, boundary, ind, isLast);
+
+        boundary = rdfgeom_vertex_GetNext(*boundary);
     }
+
 }
 

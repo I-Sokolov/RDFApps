@@ -67,3 +67,44 @@ void	Helper::MatrixIdentity(MATRIX* pOut)
 
     pOut->_11 = pOut->_22 = pOut->_33 = 1.;
 }
+
+/// <summary>
+/// 
+/// </summary>
+int_t Helper::GetObjectPropertyValue(OwlInstance inst, const char* name, OwlInstance** objects, RdfProperty* pprop /*= NULL*/)
+{
+    if (!inst) {
+        return 0;
+    }
+
+    auto model = GetModel(inst);
+    assert(model); if (!model) return 0;
+
+    auto prop = GetPropertyByName(model, name);
+
+    if (pprop) {
+        *pprop = prop;
+    }
+
+    assert(prop); if (!prop) return 0;
+
+    int_t card = 0;
+    auto err = GetObjectProperty(inst, prop, objects, &card);
+    if (err)
+        card = 0;
+
+    return card;
+}
+
+/// <summary>
+/// 
+/// </summary>
+OwlInstance Helper::GetObjectPropertyValue(OwlInstance inst, const char* name)
+{
+    OwlInstance* objects = NULL;
+    auto card = GetObjectPropertyValue(inst, name, &objects);
+    if (card > 0) {
+        return objects[0];
+    }
+    return NULL;
+}
