@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "ImportPLY.h"
 
-#define LEGACY_BREP
+//#define LEGACY_BREP
 
 #define ERR_BUFF_SIZE 512
 
@@ -24,6 +24,7 @@
 
 #define PROP_POINTS     "vertices"
 #define PROP_IDXS       "indices"
+#define PROP_OBJECT     "object"
 #define PROP_OBJECTS    "objects"
 #define PROP_MATERIAL   "material"
 #define PROP_TEXTURES   "textures"
@@ -112,7 +113,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
     GET_CLASS(clsBrep, CLS_BREP);
 #else
     GET_CLASS(clsBrep, CLS_FACETSURFACE)
-        GET_CLASS(clsPointSet, CLS_POINTSET);
+    GET_CLASS(clsPointSet, CLS_POINTSET);
 #endif
 
     std::vector<OwlInstance> breps;
@@ -126,7 +127,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
                     if (SetFaces(mesh, brep)) {
 #else
                 if (auto pointSet = CreateInstance(clsPointSet)) {
-                    if (SetPointSet(mesh, pointSet)) {
+                    if (SetPointSet(mesh, pointSet) && SetFacetSurface(mesh, pointSet, brep)) {
 #endif
                         SetMaterial(filePath, scene, mesh, brep);
                         breps.push_back(brep);
@@ -260,6 +261,57 @@ bool ImportPLY::SetPointSet(const aiMesh* mesh, OwlInstance pointSet)
     }
 
     return true;
+}
+
+/// <summary>
+/// 
+/// </summary>
+bool ImportPLY::SetFacetSurface(const aiMesh* mesh, OwlInstance pointSet, OwlInstance facetSurface)
+{
+    GET_PROPERTY(propIdxs, PROP_IDXS);
+    GET_PROPERTY(propObject, PROP_OBJECT);
+
+    //((aiMesh*)mesh)->mNumFaces = 1;
+
+    size_t N_ind = 0;
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+        const aiFace& face = mesh->mFaces[i];
+        N_ind += face.mNumIndices + 1;
+    }
+
+    if (N_ind == 0) {
+        LogError("No faces in mesh");
+        return false;
+    }
+
+    int_t* idxs = new int_t[N_ind];
+    if (!idxs) {
+        LogError("Low memory");
+        return false;
+    }
+
+    int k = 0;
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+        const aiFace& face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            idxs[k++] = face.mIndices[j];
+        }
+        idxs[k++] = -1;
+    }
+
+    auto err = SetDatatypeProperty(facetSurface, propIdxs, idxs, N_ind);
+
+    delete[]idxs;
+
+    if (err) {
+        LogError("Failed to set property value for %s", PROP_IDXS);
+        return false;
+    }
+
+    err = SetObjectProperty(facetSurface, propObject, pointSet);
+
+    return true;
+
 }
 
 /// <summary>

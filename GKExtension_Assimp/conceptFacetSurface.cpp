@@ -98,27 +98,33 @@ void FacetSurface::CreateShell(OwlInstance inst, void*)
     rdfgeom_cface_Create(inst, cfaceP);
 
     STRUCT_FACE** faces = rdfgeom_cface_GetFaces(*cfaceP);
-    STRUCT_VERTEX** boundary = NULL;
+    
+    int_t firstIndex = -1;
+    STRUCT_VERTEX** vertex = NULL;
 
     for (int_t i = 0; i < numInd; i++) {
 
         int_t ind = indecies[i];
-        if (ind < 0 || ind > numPoints - 1)
+        if (ind < 0 || ind > numPoints - 1) {
+            //close boundary
+            if (firstIndex >= 0 && vertex) {
+                rdfgeom_vertex_Create(inst, vertex, firstIndex, true);
+                vertex = NULL;
+                firstIndex = -1;
+            }
             continue;
-
-        if (!boundary) {
-            rdfgeom_face_Create(inst, faces);
-            boundary = rdfgeom_face_GetBoundary(*faces);
-            faces = rdfgeom_face_GetNext(*faces);
         }
 
-        bool isLast = (i > numInd - 2) || indecies[i + 1] < 0 || indecies[i + 1] > numPoints - 1;
-    
+        if (!vertex) {
+            //start boundary
+            rdfgeom_face_Create(inst, faces);
+            vertex = rdfgeom_face_GetBoundary(*faces);
+            faces = rdfgeom_face_GetNext(*faces);
+            firstIndex = ind;
+        }
 
-        rdfgeom_vertex_Create(inst, boundary, ind, isLast);
-
-        boundary = rdfgeom_vertex_GetNext(*boundary);
+        rdfgeom_vertex_Create(inst, vertex, ind, false);
+        vertex = rdfgeom_vertex_GetNext(*vertex);
     }
-
 }
 

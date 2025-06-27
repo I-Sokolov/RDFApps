@@ -64,7 +64,7 @@ bool PointSet::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3* e
     for (int_t i = 0; i < ncoords / dim; i++) {
         for (int_t j = 0; j < min(dim, 3); j++) {
             xyzStart[j] = min(xyzStart[j], coords[i * dim + j]);
-            xyzEnd[j] = max(xyzStart[j], coords[i * dim + j]);
+            xyzEnd[j] = max(xyzEnd[j], coords[i * dim + j]);
         }
     }
 

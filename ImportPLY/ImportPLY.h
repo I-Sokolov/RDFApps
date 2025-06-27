@@ -18,6 +18,7 @@ private:
 
 private:
     bool SetPointSet(const aiMesh* mesh, OwlInstance pointSet);
+    bool SetFacetSurface(const aiMesh* mesh, OwlInstance pointSet, OwlInstance facetSurface);
 
 private:
     bool SetMaterial(const char* plyFilePath, const aiScene* scene, const aiMesh* mesh, OwlInstance brep);
