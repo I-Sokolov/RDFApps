@@ -108,7 +108,6 @@ OwlInstance ImportPLY::Import(const char* filePath)
         return NULL;
     }
 
-
 #ifdef    LEGACY_BREP
     GET_CLASS(clsBrep, CLS_BREP);
 #else
@@ -120,6 +119,9 @@ OwlInstance ImportPLY::Import(const char* filePath)
 
     for (unsigned int iMesh = 0; iMesh < scene->mNumMeshes; iMesh++) {
         const aiMesh* mesh = scene->mMeshes[iMesh];
+
+        DumpStatistic(mesh);
+
         if (mesh) {
             if (auto brep = CreateInstance(clsBrep)) {
 #ifdef LEGACY_BREP
@@ -396,3 +398,63 @@ bool ImportPLY::SetMaterial(const char* plyFilePath, const aiScene* scene, const
 
     return true;
 }
+
+/// <summary>
+/// 
+/// </summary>
+static double EPS = 1e-7;
+
+struct PointComparer
+{
+    bool operator()(aiVector3D const& v1, aiVector3D const& v2) const
+    {
+        for (int i = 0; i < m_dim; i++) {
+            if (v1[i] > v2[i] + EPS)
+                return true;
+        }
+        return false;
+    }
+
+    int m_dim = 3;
+};
+
+/// <summary>
+/// 
+/// </summary>
+void ImportPLY::DumpStatistic(const aiMesh* mesh)
+{
+    printf("Number of verticied %d\n", mesh->mNumVertices);
+    printf("Number of faces %d\n", mesh->mNumFaces);
+
+    size_t N_ind = 0;
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+        const aiFace& face = mesh->mFaces[i];
+        N_ind += face.mNumIndices + 1;
+    }
+    printf("Number of indecies %d\n", (int)N_ind);
+
+    auto minEdge = DBL_MAX;
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
+        const aiFace& face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++) {
+            int ind1 = face.mIndices[j];
+            int ind2 = face.mIndices[(j + 1) % face.mNumIndices];
+            
+            aiVector3D& pt1 = mesh->mVertices[ind1];
+            aiVector3D& pt2 = mesh->mVertices[ind2];
+
+            aiVector3D v = pt1 - pt2;
+            auto edge = v.Length();
+
+            if (minEdge>edge) minEdge = edge;
+        }
+    }
+    printf("Min edge length %g\n", minEdge);
+
+    std::set<aiVector3d, PointComparer> diffPoints;
+    for (size_t i = 0; i < mesh->mNumVertices; i++) {
+        diffPoints.insert(mesh->mVertices[i]);
+    }
+    printf("Number of different points %d (EPS %g)\n", (int)diffPoints.size(), EPS);
+}
+

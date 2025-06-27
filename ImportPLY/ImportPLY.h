@@ -24,6 +24,9 @@ private:
     bool SetMaterial(const char* plyFilePath, const aiScene* scene, const aiMesh* mesh, OwlInstance brep);
 
 private:
+    void DumpStatistic(const aiMesh* mesh);
+
+private:
     OwlModel    m_model;
     char*       m_errorBuff;
 };

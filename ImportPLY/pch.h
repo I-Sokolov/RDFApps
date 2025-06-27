@@ -22,4 +22,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <set>
+
 #endif //PCH_H
