@@ -120,7 +120,7 @@ OwlInstance ImportPLY::Import(const char* filePath)
     for (unsigned int iMesh = 0; iMesh < scene->mNumMeshes; iMesh++) {
         const aiMesh* mesh = scene->mMeshes[iMesh];
 
-        DumpStatistic(mesh);
+        //DumpStatistic(mesh);
 
         if (mesh) {
             if (auto brep = CreateInstance(clsBrep)) {

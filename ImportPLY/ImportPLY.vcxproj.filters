@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="assimp">
+      <UniqueIdentifier>{4a36377c-b71a-4d4a-86bb-586cf1ce711c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\CApi">
+      <UniqueIdentifier>{0d913f24-e674-426f-b6d4-5d05f92cfdf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\Common">
+      <UniqueIdentifier>{90e26525-7879-4b05-b49a-9badc60bcd3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\PostProcessing">
+      <UniqueIdentifier>{d165f5ef-4bf8-481d-90e5-05127f1bfb0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\AssetLib">
+      <UniqueIdentifier>{461dc0ab-5dc4-49d1-9f89-beef469251b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\AssetLib\PLY">
+      <UniqueIdentifier>{e0be3c8f-179f-4bf5-b6c8-60f778c09051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\Material">
+      <UniqueIdentifier>{00f7a7ae-ac4d-44f8-acfa-4e4e7171c395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assimp\Geometry">
+      <UniqueIdentifier>{434387e8-4f2a-47c4-bb2c-ace472cb37f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -40,6 +64,201 @@
     </ClCompile>
     <ClCompile Include="ImportPLY.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\CApi\CInterfaceIOWrapper.cpp">
+      <Filter>assimp\CApi</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\AssertHandler.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Assimp.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Base64.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\BaseImporter.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\BaseProcess.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Bitmap.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\CreateAnimMesh.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\DefaultIOStream.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\DefaultIOSystem.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\DefaultLogger.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Exceptional.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Exporter.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Importer.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\ImporterRegistry.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\IOSystem.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\material.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\PostStepRegistry.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\RemoveComments.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\scene.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\SceneCombiner.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\ScenePreprocessor.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\SGSpatialSort.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\simd.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\SkeletonMeshBuilder.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\SpatialSort.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\StandardShapes.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Subdivision.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\TargetAnimation.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\Version.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Common\VertexTriangleAdjacency.cpp">
+      <Filter>assimp\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ArmaturePopulate.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\CalcTangentsProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ComputeUVMappingProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ConvertToLHProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\DeboneProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\DropFaceNormalsProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\EmbedTexturesProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\FindDegenerates.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\FindInstancesProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\FindInvalidDataProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\FixNormalsStep.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\GenBoundingBoxesProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\GenFaceNormalsProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\GenVertexNormalsProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ImproveCacheLocality.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\JoinVerticesProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\LimitBoneWeightsProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\MakeVerboseFormat.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\OptimizeGraph.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\OptimizeMeshes.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\PretransformVertices.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ProcessHelper.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\RemoveRedundantMaterials.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\RemoveVCProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ScaleProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\SortByPTypeProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\SplitByBoneCountProcess.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\SplitLargeMeshes.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\TextureTransform.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\PostProcessing\ValidateDataStructure.cpp">
+      <Filter>assimp\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\AssetLib\Ply\PlyLoader.cpp">
+      <Filter>assimp\AssetLib\PLY</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\AssetLib\Ply\PlyParser.cpp">
+      <Filter>assimp\AssetLib\PLY</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Material\MaterialSystem.cpp">
+      <Filter>assimp\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="assimp\code\Geometry\GeometryUtils.cpp">
+      <Filter>assimp\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

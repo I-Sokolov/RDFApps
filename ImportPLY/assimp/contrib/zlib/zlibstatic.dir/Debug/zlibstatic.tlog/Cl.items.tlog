@@ -1,0 +1,15 @@
+W:\DevArea\github\assimp\contrib\zlib\adler32.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\adler32.obj
+W:\DevArea\github\assimp\contrib\zlib\compress.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\compress.obj
+W:\DevArea\github\assimp\contrib\zlib\crc32.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\crc32.obj
+W:\DevArea\github\assimp\contrib\zlib\deflate.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\deflate.obj
+W:\DevArea\github\assimp\contrib\zlib\gzclose.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\gzclose.obj
+W:\DevArea\github\assimp\contrib\zlib\gzlib.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\gzlib.obj
+W:\DevArea\github\assimp\contrib\zlib\gzread.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\gzread.obj
+W:\DevArea\github\assimp\contrib\zlib\gzwrite.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\gzwrite.obj
+W:\DevArea\github\assimp\contrib\zlib\inflate.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\inflate.obj
+W:\DevArea\github\assimp\contrib\zlib\infback.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\infback.obj
+W:\DevArea\github\assimp\contrib\zlib\inftrees.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\inftrees.obj
+W:\DevArea\github\assimp\contrib\zlib\inffast.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\inffast.obj
+W:\DevArea\github\assimp\contrib\zlib\trees.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\trees.obj
+W:\DevArea\github\assimp\contrib\zlib\uncompr.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\uncompr.obj
+W:\DevArea\github\assimp\contrib\zlib\zutil.c;W:\DevArea\github\assimp\contrib\zlib\zlibstatic.dir\Debug\zutil.obj
