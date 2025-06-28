@@ -559,7 +559,7 @@ pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::EstimateNormals(OwlInstance i
 bool PointCloud::AddPointCloudProp(OwlClass cls)
 {
     auto model = GetModel(cls);
-    auto relcls = GetClassByName(model, CLASS_NAME);
+    auto relcls = NULL; //range restriction will affect all concepts! GetClassByName(model, CLASS_NAME);
     AddClassProperty(cls, PROP_POINT_CLOUD, OBJECTPROPERTY_TYPE, true, relcls);
     return true;
 }

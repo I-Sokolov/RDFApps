@@ -21,7 +21,7 @@ bool FacetSurface::CreateClass(OwlModel model)
     if (!IsClassAncestor(clsFacetSurface, clsGeometricItem))
         ON_ERROR(SetClassParent(clsFacetSurface, clsGeometricItem), "Fail to set parent");
 
-    OwlClass clsPointSet = GetClassByName(model, CLS_POINTSET);
+    OwlClass clsPointSet = NULL; //range restriction will affect all concepts! GetClassByName(model, CLS_POINTSET);
 
     Helper::AddClassProperty(clsFacetSurface, PROP_OBJECT, OBJECTPROPERTY_TYPE, 1, clsPointSet, 1);
     Helper::AddClassProperty(clsFacetSurface, PROP_IDXS, DATATYPEPROPERTY_TYPE_INTEGER, 0, NULL, -1);
