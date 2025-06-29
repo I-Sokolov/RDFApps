@@ -125,7 +125,7 @@ template<typename TPoint> void PointSet::CopyPoints(TPoint* dstPoints, int_t num
 /// </summary>
 void PointSet::CreateShell(OwlInstance inst, void*)
 {
-    auto shell = rdfgeom_GetInstanceRepresentation(inst);
+    auto shell = rdfgeom_GetBRep(inst);
     if (!shell)
         return;
 
@@ -153,7 +153,7 @@ void PointSet::CreateShell(OwlInstance inst, void*)
 
     int_t Npt = ncoords / dim;
 
-    // set verticies
+    // set vertices
     //
     rdfgeom_AllocatePoints(inst, shell, ncoords/dim, nnormCoords >= dim, ntexCoord >= textureDim);
     
@@ -171,7 +171,7 @@ void PointSet::CreateShell(OwlInstance inst, void*)
     auto cfaceP = rdfgeom_GetConceptualFaces(shell);
     rdfgeom_cface_Create(inst, cfaceP);
 
-    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVerticies(*cfaceP);
+    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVertices(*cfaceP);
 
     for (int_t i = 0; i < Npt; i++) {
         rdfgeom_vertex_Create(inst, vertexP, i, i == Npt - 1);

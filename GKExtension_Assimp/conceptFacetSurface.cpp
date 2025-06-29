@@ -60,14 +60,14 @@ void FacetSurface::CreateShell(OwlInstance inst, void*)
     }
 
     //
-    SHELL* pointShell = rdfgeom_GetInstanceRepresentation(pointSet);
+    SHELL* pointShell = rdfgeom_GetBRep(pointSet);
     int_t numPoints = rdfgeom_GetNumOfPoints(pointShell);
     if (numPoints <= 0) {
         return;
     }
 
     //
-    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    SHELL* shell = rdfgeom_GetBRep(inst);
     if (!shell) {
         return;
     }

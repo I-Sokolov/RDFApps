@@ -40,7 +40,7 @@ bool TextureMesh::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3
     startVector->x = startVector->y = startVector->z = DBL_MAX;
     endVector->x = endVector->y = endVector->z = -DBL_MAX;
 
-    auto geom = rdfgeom_GetInstanceRepresentation(inst);
+    auto geom = rdfgeom_GetBRep(inst);
     if (geom) {
         auto npt = rdfgeom_GetNumOfPoints(geom);
         auto rpt = rdfgeom_GetPoints(geom);
@@ -58,7 +58,7 @@ bool TextureMesh::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECTOR3
 /// </summary>
 void TextureMesh::CreateShell(OwlInstance inst, void*)
 {
-    auto shell = rdfgeom_GetInstanceRepresentation(inst);
+    auto shell = rdfgeom_GetBRep(inst);
     if (!shell)
         return;
 

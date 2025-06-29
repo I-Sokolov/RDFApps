@@ -19,7 +19,7 @@ bool PointCloudMesh::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, VECT
 /// </summary>
 static void SetupMeshVerticies(pcl::PolygonMesh& mesh, OwlInstance inst)
 {
-    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    SHELL* shell = rdfgeom_GetBRep(inst);
     assert(shell); if (!shell) return;
 
     // Convert the mesh's cloud to PointCloud<PointXYZ>
@@ -115,7 +115,7 @@ void PointCloudMesh::CreateShell(OwlInstance inst, void *pvAlgorithm)
     SetupMeshVerticies(*triangles, inst);
 
     //
-    SHELL* shell = rdfgeom_GetInstanceRepresentation(inst);
+    SHELL* shell = rdfgeom_GetBRep(inst);
     assert(shell); if (!shell) return;
 
     CONCEPTUAL_FACE** ppFace = rdfgeom_GetConceptualFaces(shell);

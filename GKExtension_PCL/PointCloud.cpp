@@ -204,7 +204,7 @@ void PointCloud::AddPointsFromNestedObject(OwlInstance instNested, pcl::PointClo
 {
     assert(cloud); if (!cloud) return;
 
-    SHELL* shell = rdfgeom_GetInstanceRepresentation(instNested);
+    SHELL* shell = rdfgeom_GetBRep(instNested);
     if (shell) {
         auto cfaceP = rdfgeom_GetConceptualFaces(shell);
         if (cfaceP) {
@@ -238,14 +238,14 @@ void PointCloud::AddPointsFromCFaces(CONCEPTUAL_FACE* cface, pcl::PointCloud<pcl
         }
     }
 
-    AddPointsFromCFaces(*rdfgeom_cface_GetChild(cface), cloud, transform);
+    AddPointsFromCFaces(*rdfgeom_cface_GetChildren(cface), cloud, transform);
 
     if (OwlInstance faceOwnerInst = rdfgeom_cface_GetInstance(cface)) {
 
-        if (SHELL* faceOwnerShell = rdfgeom_GetInstanceRepresentation(faceOwnerInst)) {
+        if (SHELL* faceOwnerShell = rdfgeom_GetBRep(faceOwnerInst)) {
             if (auto nonTransformedVertices = rdfgeom_GetPoints(faceOwnerShell)) {
                 VECTOR3 transformed;
-                for (auto vertexP = rdfgeom_cface_GetVerticies(cface); *vertexP; vertexP = rdfgeom_vertex_GetNext(*vertexP)) {
+                for (auto vertexP = rdfgeom_cface_GetVertices(cface); *vertexP; vertexP = rdfgeom_vertex_GetNext(*vertexP)) {
 
                     auto ptind = rdfgeom_vertex_GetPointIndex (*vertexP);
 
@@ -284,7 +284,7 @@ void PointCloud::SetCloudAttributesFromInstance(OwlInstance inst, TCloudPtr clou
     cloud->header.frame_id = GetDataProperyValue(inst, PROP_CLOUD_HDR_FRAME, "");
 
     if (cloud->width * cloud->height != cloud->size()){
-        //it can happen when points from nested objects are addded after PCD file or when cloud is filtered
+        //it can happen when points from nested objects are added after PCD file or when cloud is filtered
         if (cloud->height == 1) {
             cloud->width = cloud->size();
         }
@@ -320,7 +320,7 @@ void PointCloud::ReadCloudFileAndSaveOnInstance(OwlInstance inst, const std::str
     }
 
     if (!cloud->size()) {
-        printf("Can'r read %s \n", filePath.c_str());
+        printf("Can't read %s \n", filePath.c_str());
     }
 
     SaveOnInstance(inst, cloud);
@@ -614,7 +614,7 @@ extern bool AddClassProperty(OwlClass cls, const char* name, RdfPropertyType typ
     }
     else {
         prop = CreateProperty(model, type, name);
-        REQUIRED(prop, "Faile to create of property");
+        REQUIRED(prop, "Failed to create of property");
     }
 
     SetClassPropertyCardinalityRestriction(cls, prop, minCard, maxCard);
@@ -651,7 +651,7 @@ bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, 
     startVector->x = startVector->y = startVector->z = DBL_MAX;
     endVector->x = endVector->y = endVector->z = -DBL_MAX;
 
-    auto geom = rdfgeom_GetInstanceRepresentation(inst);
+    auto geom = rdfgeom_GetBRep(inst);
     if (geom) {
         auto npt = rdfgeom_GetNumOfPoints(geom);
         auto rpt = rdfgeom_GetPoints(geom);
@@ -694,7 +694,7 @@ bool PointCloudGeometry::GetBoundingBox(OwlInstance inst, VECTOR3* startVector, 
 /// </summary>
 void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
 {
-    auto shell = rdfgeom_GetInstanceRepresentation(inst);
+    auto shell = rdfgeom_GetBRep(inst);
     if (!shell)
         return;
 
@@ -712,7 +712,7 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
     auto cfaceP = rdfgeom_GetConceptualFaces(shell);
     rdfgeom_cface_Create(inst, cfaceP);
 
-    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVerticies(*cfaceP);
+    STRUCT_VERTEX** vertexP = rdfgeom_cface_GetVertices(*cfaceP);
 
     for (size_t npt = 0; npt < cloud->size(); npt++) {
         auto& pt = cloud->at(npt);
@@ -733,7 +733,7 @@ void PointCloudGeometry::CreateShell(OwlInstance inst, void*)
 
 pcl::PointCloud<pcl::PointNormal>::Ptr PointCloud::GetPointsWithNormals(OwlInstance instWithPoints)
 {
-    auto geom = rdfgeom_GetInstanceRepresentation(instWithPoints);
+    auto geom = rdfgeom_GetBRep(instWithPoints);
     if (!geom) {
         assert(false);
         return NULL;
