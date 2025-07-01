@@ -23,6 +23,6 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 extern "C" __declspec(dllexport) void LoadExtension(OwlModel model)
 {
     TextureMesh::CreateClass(model);
-    PointSet::CreateClass(model);
-    FacetSurface::CreateClass(model);
+   // PointSet::CreateClass(model);
+   // FacetSurface::CreateClass(model);
 }
