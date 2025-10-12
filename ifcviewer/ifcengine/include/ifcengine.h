@@ -87,7 +87,7 @@ typedef void			* UniqueRule;
 typedef	int_t			SdaiPrimitiveType;
 typedef	int_t			SdaiInteger;
 typedef	double			SdaiReal;
-typedef	unsigned char	SdaiBoolean;		//	In deviation to ISO 10303-11 we use the 8 bit sized bool / byte / (unsigned) char as base type for SdaiBoolean (this seems more logical and reduces C# wrapper complexity)
+typedef	unsigned char	SdaiBoolean;		//	In deviation to ISO 10303-11 we use the 8 bit sized bool/byte/(unsigned) char as base type for SdaiBoolean (this seems more logical and reduces C# wrapper complexity)
 typedef	SchemaTypeDecl	SdaiEntity;
 typedef	int_t			SdaiInstance;
 typedef	int_t			SdaiModel;
@@ -142,8 +142,8 @@ enum class enum_string_encoding : unsigned char
 	ISO8859_15					= (1 + 0 * 2 + 0 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   0   1   1   1
 	ISO8859_16					= (1 + 0 * 2 + 1 * 4 + 1 * 8 + 1 * 16 + 1 * 32),	//		 1   0   1   1   1   1
 	MACINTOSH_CENTRAL_EUROPEAN	= (0 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 0   1   0   0   0   0
-	SHIFT_JIS_X_213				= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),    //		 1   1   0   0   0   0
-	UTF8						= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32)     //		 1   1   0   0   0   1
+	SHIFT_JIS_X_213				= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 0 * 32),	//		 1   1   0   0   0   0
+	UTF8						= (1 + 1 * 2 + 0 * 4 + 0 * 8 + 0 * 16 + 1 * 32)		//		 1   1   0   0   0   1
 };
 
 enum class enum_express_declaration : unsigned char
@@ -203,7 +203,7 @@ enum class enum_validation_type : uint64_t
 	__WHERE_RULE				= 1 << 12,  			//	where-rule check
 	__UNIQUE_RULE				= 1 << 13,				//	unique-rule check
 	__STAR_USAGE				= 1 << 14,  			//	* is used only for derived arguments
-	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel / validateInstance function argument should be model / instance
+	__CALL_ARGUMENT				= 1 << 15,  			//	validateModel/validateInstance function argument should be model/instance
 	__INVALID_TEXT_LITERAL		= 1 << 16,				//	invalid text literal string
 	__INTERNAL_ERROR			= UINT64_C(1) << 63   	//	unspecified error
 };
@@ -236,7 +236,7 @@ enum class enum_validation_status : unsigned char
 #endif
 
 //
-//		SetSPFFHeader                                           (http://rdf.bg/ifcdoc/CP64/SetSPFFHeader.html)
+//		SetSPFFHeader                                           (https://rdf.bg/ifcdoc/CP64/SetSPFFHeader.html)
 //				SdaiModel				model								IN
 //				const char				* description						IN
 //				const char				* implementationLevel				IN
@@ -307,7 +307,7 @@ static	inline	void	SetSPFFHeader(
 #endif
 
 //
-//		SetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CP64/SetSPFFHeaderItem.html)
+//		SetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CP64/SetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -411,7 +411,7 @@ static	inline	int_t	SetSPFFHeaderItem(
 #endif
 
 //
-//		GetSPFFHeaderItem                                       (http://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItem.html)
+//		GetSPFFHeaderItem                                       (https://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItem.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -515,7 +515,7 @@ static	inline	int_t	GetSPFFHeaderItem(
 #endif
 
 //
-//		GetDateTime                                             (http://rdf.bg/ifcdoc/CP64/GetDateTime.html)
+//		GetDateTime                                             (https://rdf.bg/ifcdoc/CP64/GetDateTime.html)
 //				SdaiModel				model								IN
 //				const char				** dateTimeStamp					IN / OUT
 //
@@ -562,7 +562,7 @@ static	inline	const char	* GetDateTime(
 #endif
 
 //
-//		GetLibraryIdentifier                                    (http://rdf.bg/ifcdoc/CP64/GetLibraryIdentifier.html)
+//		GetLibraryIdentifier                                    (https://rdf.bg/ifcdoc/CP64/GetLibraryIdentifier.html)
 //				const char				** libraryIdentifier				IN / OUT
 //
 //				const char				* returns							OUT
@@ -603,7 +603,7 @@ static	inline	const char	* GetLibraryIdentifier(
 #endif
 
 //
-//		GetSchemaName                                           (http://rdf.bg/ifcdoc/CP64/GetSchemaName.html)
+//		GetSchemaName                                           (https://rdf.bg/ifcdoc/CP64/GetSchemaName.html)
 //				SdaiModel				model								IN
 //				SdaiString				* schemaName						IN / OUT
 //
@@ -650,7 +650,7 @@ static	inline	SdaiString	GetSchemaName(
 #endif
 
 //
-//		engiSetMappingSupport                                   (http://rdf.bg/ifcdoc/CP64/engiSetMappingSupport.html)
+//		engiSetMappingSupport                                   (https://rdf.bg/ifcdoc/CP64/engiSetMappingSupport.html)
 //				SdaiEntity				entity								IN
 //				bool					enable								IN
 //
@@ -664,7 +664,7 @@ bool			DECL STDC	engiSetMappingSupport(
 								);
 
 //
-//		engiGetMappingSupport                                   (http://rdf.bg/ifcdoc/CP64/engiGetMappingSupport.html)
+//		engiGetMappingSupport                                   (https://rdf.bg/ifcdoc/CP64/engiGetMappingSupport.html)
 //				SdaiEntity				entity								IN
 //
 //				bool					returns								OUT
@@ -680,7 +680,7 @@ bool			DECL STDC	engiGetMappingSupport(
 //
 
 //
-//		sdaiCreateModelBN                                       (http://rdf.bg/ifcdoc/CP64/sdaiCreateModelBN.html)
+//		sdaiCreateModelBN                                       (https://rdf.bg/ifcdoc/CP64/sdaiCreateModelBN.html)
 //				SdaiRep					repository							IN
 //				SdaiString				fileName							IN
 //				SdaiString				schemaName							IN
@@ -784,7 +784,7 @@ static	inline	SdaiModel	sdaiCreateModelBN(
 #endif
 
 //
-//		sdaiCreateModelBNUnicode                                (http://rdf.bg/ifcdoc/CP64/sdaiCreateModelBNUnicode.html)
+//		sdaiCreateModelBNUnicode                                (https://rdf.bg/ifcdoc/CP64/sdaiCreateModelBNUnicode.html)
 //				SdaiRep					repository							IN
 //				const wchar_t			* fileName							IN
 //				const wchar_t			* schemaName						IN
@@ -888,7 +888,7 @@ static	inline	SdaiModel	sdaiCreateModelBNUnicode(
 #endif
 
 //
-//		sdaiOpenModelBN                                         (http://rdf.bg/ifcdoc/CP64/sdaiOpenModelBN.html)
+//		sdaiOpenModelBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiOpenModelBN.html)
 //				SdaiRep					repository							IN
 //				SdaiString				fileName							IN
 //				SdaiString				schemaName							IN
@@ -929,7 +929,7 @@ static	inline	SdaiModel	sdaiOpenModelBN(
 #endif
 
 //
-//		sdaiOpenModelBNUnicode                                  (http://rdf.bg/ifcdoc/CP64/sdaiOpenModelBNUnicode.html)
+//		sdaiOpenModelBNUnicode                                  (https://rdf.bg/ifcdoc/CP64/sdaiOpenModelBNUnicode.html)
 //				SdaiRep					repository							IN
 //				const wchar_t			* fileName							IN
 //				const wchar_t			* schemaName						IN
@@ -970,7 +970,7 @@ static	inline	SdaiModel	sdaiOpenModelBNUnicode(
 #endif
 
 //
-//		engiOpenModelByStream                                   (http://rdf.bg/ifcdoc/CP64/engiOpenModelByStream.html)
+//		engiOpenModelByStream                                   (https://rdf.bg/ifcdoc/CP64/engiOpenModelByStream.html)
 //				SdaiRep					repository							IN
 //				const void				* callback							IN
 //				SdaiString				schemaName							IN
@@ -1011,7 +1011,7 @@ static	inline	SdaiModel	engiOpenModelByStream(
 #endif
 
 //
-//		engiOpenModelByArray                                    (http://rdf.bg/ifcdoc/CP64/engiOpenModelByArray.html)
+//		engiOpenModelByArray                                    (https://rdf.bg/ifcdoc/CP64/engiOpenModelByArray.html)
 //				SdaiRep					repository							IN
 //				const unsigned char		* content							IN
 //				int_t					size								IN
@@ -1072,7 +1072,7 @@ static	inline	SdaiModel	engiOpenModelByArray(
 #endif
 
 //
-//		sdaiSaveModelBN                                         (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelBN.html)
+//		sdaiSaveModelBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1107,7 +1107,7 @@ static	inline	void	sdaiSaveModelBN(
 #endif
 
 //
-//		sdaiSaveModelBNUnicode                                  (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelBNUnicode.html)
+//		sdaiSaveModelBNUnicode                                  (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1142,7 +1142,7 @@ static	inline	void	sdaiSaveModelBNUnicode(
 #endif
 
 //
-//		engiSaveModelByStream                                   (http://rdf.bg/ifcdoc/CP64/engiSaveModelByStream.html)
+//		engiSaveModelByStream                                   (https://rdf.bg/ifcdoc/CP64/engiSaveModelByStream.html)
 //				SdaiModel				model								IN
 //				const void				* callback							IN
 //				int_t					size								IN
@@ -1158,7 +1158,7 @@ void			DECL STDC	engiSaveModelByStream(
 								);
 
 //
-//		engiSaveModelByArray                                    (http://rdf.bg/ifcdoc/CP64/engiSaveModelByArray.html)
+//		engiSaveModelByArray                                    (https://rdf.bg/ifcdoc/CP64/engiSaveModelByArray.html)
 //				SdaiModel				model								IN
 //				unsigned char			* content							IN / OUT
 //				int_t					* size								IN / OUT
@@ -1174,7 +1174,7 @@ void			DECL STDC	engiSaveModelByArray(
 								);
 
 //
-//		sdaiSaveModelAsXmlBN                                    (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBN.html)
+//		sdaiSaveModelAsXmlBN                                    (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1209,7 +1209,7 @@ static	inline	void	sdaiSaveModelAsXmlBN(
 #endif
 
 //
-//		sdaiSaveModelAsXmlBNUnicode                             (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBNUnicode.html)
+//		sdaiSaveModelAsXmlBNUnicode                             (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsXmlBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1244,7 +1244,7 @@ static	inline	void	sdaiSaveModelAsXmlBNUnicode(
 #endif
 
 //
-//		sdaiSaveModelAsSimpleXmlBN                              (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBN.html)
+//		sdaiSaveModelAsSimpleXmlBN                              (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1279,7 +1279,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBN(
 #endif
 
 //
-//		sdaiSaveModelAsSimpleXmlBNUnicode                       (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
+//		sdaiSaveModelAsSimpleXmlBNUnicode                       (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsSimpleXmlBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1314,7 +1314,7 @@ static	inline	void	sdaiSaveModelAsSimpleXmlBNUnicode(
 #endif
 
 //
-//		sdaiSaveModelAsJsonBN                                   (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBN.html)
+//		sdaiSaveModelAsJsonBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //
@@ -1349,7 +1349,7 @@ static	inline	void	sdaiSaveModelAsJsonBN(
 #endif
 
 //
-//		sdaiSaveModelAsJsonBNUnicode                            (http://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBNUnicode.html)
+//		sdaiSaveModelAsJsonBNUnicode                            (https://rdf.bg/ifcdoc/CP64/sdaiSaveModelAsJsonBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1384,7 +1384,7 @@ static	inline	void	sdaiSaveModelAsJsonBNUnicode(
 #endif
 
 //
-//		engiSaveSchemaBN                                        (http://rdf.bg/ifcdoc/CP64/engiSaveSchemaBN.html)
+//		engiSaveSchemaBN                                        (https://rdf.bg/ifcdoc/CP64/engiSaveSchemaBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				filePath							IN
 //
@@ -1419,7 +1419,7 @@ static	inline	bool	engiSaveSchemaBN(
 #endif
 
 //
-//		engiSaveSchemaBNUnicode                                 (http://rdf.bg/ifcdoc/CP64/engiSaveSchemaBNUnicode.html)
+//		engiSaveSchemaBNUnicode                                 (https://rdf.bg/ifcdoc/CP64/engiSaveSchemaBNUnicode.html)
 //				SdaiModel				model								IN
 //				const wchar_t			* filePath							IN
 //
@@ -1454,7 +1454,7 @@ static	inline	bool	engiSaveSchemaBNUnicode(
 #endif
 
 //
-//		sdaiCloseModel                                          (http://rdf.bg/ifcdoc/CP64/sdaiCloseModel.html)
+//		sdaiCloseModel                                          (https://rdf.bg/ifcdoc/CP64/sdaiCloseModel.html)
 //				SdaiModel				model								IN
 //
 //				void					returns
@@ -1469,7 +1469,7 @@ void			DECL STDC	sdaiCloseModel(
 								);
 
 //
-//		setPrecisionDoubleExport                                (http://rdf.bg/ifcdoc/CP64/setPrecisionDoubleExport.html)
+//		setPrecisionDoubleExport                                (https://rdf.bg/ifcdoc/CP64/setPrecisionDoubleExport.html)
 //				SdaiModel				model								IN
 //				int_t					precisionCap						IN
 //				int_t					precisionRound						IN
@@ -1491,7 +1491,7 @@ void			DECL STDC	setPrecisionDoubleExport(
 //
 
 //
-//		engiGetNextTypeDeclarationIterator                      (http://rdf.bg/ifcdoc/CP64/engiGetNextTypeDeclarationIterator.html)
+//		engiGetNextTypeDeclarationIterator                      (https://rdf.bg/ifcdoc/CP64/engiGetNextTypeDeclarationIterator.html)
 //				SdaiModel				model								IN
 //				SchemaTypeIterator		iterator							IN
 //
@@ -1509,7 +1509,7 @@ SchemaTypeIterator	DECL STDC	engiGetNextTypeDeclarationIterator(
 								);
 
 //
-//		engiGetTypeDeclarationFromIterator                      (http://rdf.bg/ifcdoc/CP64/engiGetTypeDeclarationFromIterator.html)
+//		engiGetTypeDeclarationFromIterator                      (https://rdf.bg/ifcdoc/CP64/engiGetTypeDeclarationFromIterator.html)
 //				SdaiModel				model								IN
 //				SchemaTypeIterator		iterator							IN
 //
@@ -1526,7 +1526,7 @@ SchemaTypeDecl	DECL STDC	engiGetTypeDeclarationFromIterator(
 								);
 
 //
-//		engiGetSchemaScriptDeclarationByIterator                (http://rdf.bg/ifcdoc/CP64/engiGetSchemaScriptDeclarationByIterator.html)
+//		engiGetSchemaScriptDeclarationByIterator                (https://rdf.bg/ifcdoc/CP64/engiGetSchemaScriptDeclarationByIterator.html)
 //				SdaiModel				model								IN
 //				ExpressScript			prev								IN
 //
@@ -1543,7 +1543,7 @@ ExpressScript	DECL STDC	engiGetSchemaScriptDeclarationByIterator(
 								);
 
 //
-//		engiGetDeclarationType                                  (http://rdf.bg/ifcdoc/CP64/engiGetDeclarationType.html)
+//		engiGetDeclarationType                                  (https://rdf.bg/ifcdoc/CP64/engiGetDeclarationType.html)
 //				SchemaDecl				declaration							IN
 //
 //				enum_express_declaration	returns								OUT
@@ -1564,7 +1564,7 @@ enum_express_declaration	DECL STDC	engiGetDeclarationType(
 								);
 
 //
-//		engiGetEnumerationElement                               (http://rdf.bg/ifcdoc/CP64/engiGetEnumerationElement.html)
+//		engiGetEnumerationElement                               (https://rdf.bg/ifcdoc/CP64/engiGetEnumerationElement.html)
 //				SchemaDecl				enumeration							IN
 //				SdaiInteger				index								IN
 //
@@ -1579,7 +1579,7 @@ SdaiString		DECL STDC	engiGetEnumerationElement(
 								);
 
 //
-//		engiGetSelectElement                                    (http://rdf.bg/ifcdoc/CP64/engiGetSelectElement.html)
+//		engiGetSelectElement                                    (https://rdf.bg/ifcdoc/CP64/engiGetSelectElement.html)
 //				SchemaDecl				select								IN
 //				SdaiInteger				index								IN
 //
@@ -1594,7 +1594,7 @@ SchemaDecl		DECL STDC	engiGetSelectElement(
 								);
 
 //
-//		engiGetDefinedType                                      (http://rdf.bg/ifcdoc/CP64/engiGetDefinedType.html)
+//		engiGetDefinedType                                      (https://rdf.bg/ifcdoc/CP64/engiGetDefinedType.html)
 //				SchemaDecl				definedType							IN
 //				SchemaDecl				* referencedDeclaration				IN / OUT
 //				SchemaAggr				* aggregationDefinition				IN / OUT
@@ -1610,7 +1610,7 @@ enum_express_attr_type	DECL STDC	engiGetDefinedType(
 								);
 
 //
-//		engiGetScriptText                                       (http://rdf.bg/ifcdoc/CP64/engiGetScriptText.html)
+//		engiGetScriptText                                       (https://rdf.bg/ifcdoc/CP64/engiGetScriptText.html)
 //				ExpressScript			declaration							IN
 //				SdaiString				* label								IN / OUT
 //				SdaiString				* text								IN / OUT
@@ -1649,7 +1649,7 @@ static	inline	void	engiGetScriptText(
 #endif
 
 //
-//		engiEvaluateScriptExpression                            (http://rdf.bg/ifcdoc/CP64/engiEvaluateScriptExpression.html)
+//		engiEvaluateScriptExpression                            (https://rdf.bg/ifcdoc/CP64/engiEvaluateScriptExpression.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				ExpressScript			expression							IN
@@ -1670,7 +1670,7 @@ void			DECL * STDC	engiEvaluateScriptExpression(
 								);
 
 //
-//		sdaiGetEntity                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetEntity.html)
+//		sdaiGetEntity                                           (https://rdf.bg/ifcdoc/CP64/sdaiGetEntity.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -1705,7 +1705,7 @@ static	inline	SdaiEntity	sdaiGetEntity(
 #endif
 
 //
-//		sdaiGetComplexEntity                                    (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
+//		sdaiGetComplexEntity                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntity.html)
 //				SdaiModel				model								IN
 //				SdaiNPL					entityList							IN
 //
@@ -1719,7 +1719,7 @@ SdaiEntity		DECL STDC	sdaiGetComplexEntity(
 								);
 
 //
-//		sdaiGetComplexEntityBN                                  (http://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
+//		sdaiGetComplexEntityBN                                  (https://rdf.bg/ifcdoc/CP64/sdaiGetComplexEntityBN.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
@@ -1758,7 +1758,7 @@ static	inline	SdaiEntity	sdaiGetComplexEntityBN(
 #endif
 
 //
-//		engiGetEntityModel                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
+//		engiGetEntityModel                                      (https://rdf.bg/ifcdoc/CP64/engiGetEntityModel.html)
 //				SdaiEntity				entity								IN
 //
 //				SdaiModel				returns								OUT
@@ -1770,7 +1770,7 @@ SdaiModel		DECL STDC	engiGetEntityModel(
 								);
 
 //
-//		engiGetAttrIndex                                        (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndex.html)
+//		engiGetAttrIndex                                        (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndex.html)
 //				SdaiAttr				attribute							IN
 //
 //				int_t					returns								OUT
@@ -1783,7 +1783,7 @@ int_t			DECL STDC	engiGetAttrIndex(
 								);
 
 //
-//		engiGetAttrIndexBN                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexBN.html)
+//		engiGetAttrIndexBN                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -1827,7 +1827,7 @@ static	inline	int_t	engiGetAttrIndexBN(
 #endif
 
 //
-//		engiGetAttrIndexEx                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexEx.html)
+//		engiGetAttrIndexEx                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexEx.html)
 //				SdaiAttr				attribute							IN
 //				bool					countedWithParents					IN
 //				bool					countedWithInverse					IN
@@ -1844,7 +1844,7 @@ int_t			DECL STDC	engiGetAttrIndexEx(
 								);
 
 //
-//		engiGetAttrIndexExBN                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttrIndexExBN.html)
+//		engiGetAttrIndexExBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrIndexExBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				bool					countedWithParents					IN
@@ -1898,7 +1898,7 @@ static	inline	int_t	engiGetAttrIndexExBN(
 #endif
 
 //
-//		engiGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CP64/engiGetAttrNameByIndex.html)
+//		engiGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttrNameByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -1957,7 +1957,7 @@ static	inline	SdaiString	engiGetAttrNameByIndex(
 #endif
 
 //
-//		engiGetAttrTypeByIndex                                  (http://rdf.bg/ifcdoc/CP64/engiGetAttrTypeByIndex.html)
+//		engiGetAttrTypeByIndex                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttrTypeByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		* attributeType						IN / OUT
@@ -1974,7 +1974,7 @@ void			DECL STDC	engiGetAttrTypeByIndex(
 								);
 
 //
-//		engiGetEntityCount                                      (http://rdf.bg/ifcdoc/CP64/engiGetEntityCount.html)
+//		engiGetEntityCount                                      (https://rdf.bg/ifcdoc/CP64/engiGetEntityCount.html)
 //				SdaiModel				model								IN
 //
 //				SdaiInteger				returns								OUT
@@ -1986,7 +1986,7 @@ SdaiInteger		DECL STDC	engiGetEntityCount(
 								);
 
 //
-//		engiGetEntityElement                                    (http://rdf.bg/ifcdoc/CP64/engiGetEntityElement.html)
+//		engiGetEntityElement                                    (https://rdf.bg/ifcdoc/CP64/engiGetEntityElement.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				index								IN
 //
@@ -2000,7 +2000,7 @@ SdaiEntity		DECL STDC	engiGetEntityElement(
 								);
 
 //
-//		sdaiGetEntityExtent                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtent.html)
+//		sdaiGetEntityExtent                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtent.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -2014,7 +2014,7 @@ SdaiAggr		DECL STDC	sdaiGetEntityExtent(
 								);
 
 //
-//		sdaiGetEntityExtentBN                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtentBN.html)
+//		sdaiGetEntityExtentBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetEntityExtentBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -2058,7 +2058,7 @@ static	inline	SdaiAggr	sdaiGetEntityExtentBN(
 #endif
 
 //
-//		engiGetEntityName                                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityName.html)
+//		engiGetEntityName                                       (https://rdf.bg/ifcdoc/CP64/engiGetEntityName.html)
 //				SdaiEntity				entity								IN
 //				SdaiPrimitiveType		valueType							IN
 //				SdaiString				* entityName						IN / OUT
@@ -2111,7 +2111,7 @@ static	inline	SdaiString	engiGetEntityName(
 #endif
 
 //
-//		engiGetEntityNoAttributes                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributes.html)
+//		engiGetEntityNoAttributes                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributes.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2123,7 +2123,7 @@ int_t			DECL STDC	engiGetEntityNoAttributes(
 								);
 
 //
-//		engiGetEntityNoAttributesEx                             (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributesEx.html)
+//		engiGetEntityNoAttributesEx                             (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoAttributesEx.html)
 //				SdaiEntity				entity								IN
 //				bool					includeParent						IN
 //				bool					includeInverse						IN
@@ -2139,7 +2139,7 @@ int_t			DECL STDC	engiGetEntityNoAttributesEx(
 								);
 
 //
-//		engiGetEntityParent                                     (http://rdf.bg/ifcdoc/CP64/engiGetEntityParent.html)
+//		engiGetEntityParent                                     (https://rdf.bg/ifcdoc/CP64/engiGetEntityParent.html)
 //				SdaiEntity				entity								IN
 //
 //				SdaiEntity				returns								OUT
@@ -2151,7 +2151,7 @@ SdaiEntity		DECL STDC	engiGetEntityParent(
 								);
 
 //
-//		engiGetEntityNoParents                                  (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoParents.html)
+//		engiGetEntityNoParents                                  (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoParents.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2163,7 +2163,7 @@ int_t			DECL STDC	engiGetEntityNoParents(
 								);
 
 //
-//		engiGetEntityParentEx                                   (http://rdf.bg/ifcdoc/CP64/engiGetEntityParentEx.html)
+//		engiGetEntityParentEx                                   (https://rdf.bg/ifcdoc/CP64/engiGetEntityParentEx.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //
@@ -2177,7 +2177,7 @@ SdaiEntity		DECL STDC	engiGetEntityParentEx(
 								);
 
 //
-//		engiGetAttrDerived                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrDerived.html)
+//		engiGetAttrDerived                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrDerived.html)
 //				SdaiEntity				entity								IN
 //				const SdaiAttr			attribute							IN
 //
@@ -2191,7 +2191,7 @@ ExpressScript	DECL STDC	engiGetAttrDerived(
 								);
 
 //
-//		engiGetAttrDerivedBN                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttrDerivedBN.html)
+//		engiGetAttrDerivedBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrDerivedBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2235,7 +2235,7 @@ static	inline	ExpressScript	engiGetAttrDerivedBN(
 #endif
 
 //
-//		engiIsAttrInverse                                       (http://rdf.bg/ifcdoc/CP64/engiIsAttrInverse.html)
+//		engiIsAttrInverse                                       (https://rdf.bg/ifcdoc/CP64/engiIsAttrInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -2247,7 +2247,7 @@ SdaiBoolean		DECL STDC	engiIsAttrInverse(
 								);
 
 //
-//		engiIsAttrInverseBN                                     (http://rdf.bg/ifcdoc/CP64/engiIsAttrInverseBN.html)
+//		engiIsAttrInverseBN                                     (https://rdf.bg/ifcdoc/CP64/engiIsAttrInverseBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2290,7 +2290,7 @@ static	inline	SdaiBoolean	engiIsAttrInverseBN(
 #endif
 
 //
-//		engiIsAttrOptional                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrOptional.html)
+//		engiIsAttrOptional                                      (https://rdf.bg/ifcdoc/CP64/engiIsAttrOptional.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -2302,7 +2302,7 @@ SdaiBoolean		DECL STDC	engiIsAttrOptional(
 								);
 
 //
-//		engiIsAttrOptionalBN                                    (http://rdf.bg/ifcdoc/CP64/engiIsAttrOptionalBN.html)
+//		engiIsAttrOptionalBN                                    (https://rdf.bg/ifcdoc/CP64/engiIsAttrOptionalBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -2345,7 +2345,7 @@ static	inline	SdaiBoolean	engiIsAttrOptionalBN(
 #endif
 
 //
-//		engiGetAttrDomainName                                   (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomainName.html)
+//		engiGetAttrDomainName                                   (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainName.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* domainName						IN / OUT
 //
@@ -2392,7 +2392,7 @@ static	inline	SdaiString	engiGetAttrDomainName(
 #endif
 
 //
-//		engiGetAttrDomainNameBN                                 (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomainNameBN.html)
+//		engiGetAttrDomainNameBN                                 (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainNameBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* domainName						IN / OUT
@@ -2467,7 +2467,7 @@ static	inline	SdaiString	engiGetAttrDomainNameBN(
 #endif
 
 //
-//		engiIsEntityAbstract                                    (http://rdf.bg/ifcdoc/CP64/engiIsEntityAbstract.html)
+//		engiIsEntityAbstract                                    (https://rdf.bg/ifcdoc/CP64/engiIsEntityAbstract.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -2479,7 +2479,7 @@ int_t			DECL STDC	engiIsEntityAbstract(
 								);
 
 //
-//		engiIsEntityAbstractBN                                  (http://rdf.bg/ifcdoc/CP64/engiIsEntityAbstractBN.html)
+//		engiIsEntityAbstractBN                                  (https://rdf.bg/ifcdoc/CP64/engiIsEntityAbstractBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -2522,7 +2522,7 @@ static	inline	int_t	engiIsEntityAbstractBN(
 #endif
 
 //
-//		engiGetEnumerationValue                                 (http://rdf.bg/ifcdoc/CP64/engiGetEnumerationValue.html)
+//		engiGetEnumerationValue                                 (https://rdf.bg/ifcdoc/CP64/engiGetEnumerationValue.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -2581,7 +2581,7 @@ static	inline	SdaiString	engiGetEnumerationValue(
 #endif
 
 //
-//		engiGetEntityAttributeByIterator                        (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIterator.html)
+//		engiGetEntityAttributeByIterator                        (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIterator.html)
 //				SdaiEntity				entity								IN
 //				SdaiAttr				prev								IN
 //
@@ -2599,7 +2599,7 @@ SdaiAttr		DECL STDC	engiGetEntityAttributeByIterator(
 								);
 
 //
-//		engiGetEntityAttributeByIndex                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
+//		engiGetEntityAttributeByIndex                           (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeByIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiAggrIndex			index								IN
 //				bool					countedWithParents					IN
@@ -2617,7 +2617,7 @@ SdaiAttr		DECL STDC	engiGetEntityAttributeByIndex(
 								);
 
 //
-//		engiGetAggregationDefinition                            (http://rdf.bg/ifcdoc/CP64/engiGetAggregationDefinition.html)
+//		engiGetAggregationDefinition                            (https://rdf.bg/ifcdoc/CP64/engiGetAggregationDefinition.html)
 //				SchemaAggr				aggregationDefinition				IN
 //				enum_express_aggr		* aggregationType					IN / OUT
 //				int_t					* cardinalityMin					IN / OUT
@@ -2641,7 +2641,7 @@ void			DECL STDC	engiGetAggregationDefinition(
 								);
 
 //
-//		engiGetEntityUniqueRuleByIterator                       (http://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
+//		engiGetEntityUniqueRuleByIterator                       (https://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleByIterator.html)
 //				SdaiEntity				entity								IN
 //				UniqueRule				prev								IN
 //				SdaiString				* label								IN / OUT
@@ -2697,7 +2697,7 @@ static	inline	UniqueRule	engiGetEntityUniqueRuleByIterator(
 #endif
 
 //
-//		engiGetEntityUniqueRuleAttributeByIterator              (http://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleAttributeByIterator.html)
+//		engiGetEntityUniqueRuleAttributeByIterator              (https://rdf.bg/ifcdoc/CP64/engiGetEntityUniqueRuleAttributeByIterator.html)
 //				UniqueRule				rule								IN
 //				SdaiString				prev								IN
 //				SdaiString				* domain							IN / OUT
@@ -2738,7 +2738,7 @@ static	inline	SdaiString	engiGetEntityUniqueRuleAttributeByIterator(
 #endif
 
 //
-//		engiGetEntityWhereRuleByIterator                        (http://rdf.bg/ifcdoc/CP64/engiGetEntityWhereRuleByIterator.html)
+//		engiGetEntityWhereRuleByIterator                        (https://rdf.bg/ifcdoc/CP64/engiGetEntityWhereRuleByIterator.html)
 //				SchemaDecl				declaration							IN
 //				ExpressScript			prev								IN
 //				SdaiString				* label								IN / OUT
@@ -2800,7 +2800,7 @@ static	inline	ExpressScript	engiGetEntityWhereRuleByIterator(
 #endif
 
 //
-//		sdaiGetADBType                                          (http://rdf.bg/ifcdoc/CP64/sdaiGetADBType.html)
+//		sdaiGetADBType                                          (https://rdf.bg/ifcdoc/CP64/sdaiGetADBType.html)
 //				const SdaiADB			ADB									IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -2812,7 +2812,7 @@ SdaiPrimitiveType	DECL STDC	sdaiGetADBType(
 								);
 
 //
-//		sdaiGetADBTypePath                                      (http://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePath.html)
+//		sdaiGetADBTypePath                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePath.html)
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
 //
@@ -2826,7 +2826,7 @@ SdaiString		DECL STDC	sdaiGetADBTypePath(
 								);
 
 //
-//		sdaiGetADBValue                                         (http://rdf.bg/ifcdoc/CP64/sdaiGetADBValue.html)
+//		sdaiGetADBValue                                         (https://rdf.bg/ifcdoc/CP64/sdaiGetADBValue.html)
 //				const SdaiADB			ADB									IN
 //				SdaiPrimitiveType		valueType							IN
 //				void					* value								IN / OUT
@@ -2923,7 +2923,7 @@ void			DECL * STDC	sdaiGetADBValue(
 								);
 
 //
-//		sdaiCreateEmptyADB                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateEmptyADB.html)
+//		sdaiCreateEmptyADB                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateEmptyADB.html)
 //				SdaiADB					returns								OUT
 //
 //	Creates an empty ADB (Attribute Data Block).
@@ -2932,7 +2932,7 @@ SdaiADB			DECL STDC	sdaiCreateEmptyADB(
 								);
 
 //
-//		sdaiDeleteADB                                           (http://rdf.bg/ifcdoc/CP64/sdaiDeleteADB.html)
+//		sdaiDeleteADB                                           (https://rdf.bg/ifcdoc/CP64/sdaiDeleteADB.html)
 //				const SdaiADB			ADB									IN
 //
 //				void					returns
@@ -2944,7 +2944,7 @@ void			DECL STDC	sdaiDeleteADB(
 								);
 
 //
-//		sdaiGetAggrByIndex                                      (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIndex.html)
+//		sdaiGetAggrByIndex                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIndex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3082,7 +3082,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIndex(
 #endif
 
 //
-//		sdaiPutAggrByIndex                                      (http://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIndex.html)
+//		sdaiPutAggrByIndex                                      (https://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3213,7 +3213,7 @@ static	inline	void	sdaiPutAggrByIndex(
 #endif
 
 //
-//		engiGetAggrType                                         (http://rdf.bg/ifcdoc/CP64/engiGetAggrType.html)
+//		engiGetAggrType                                         (https://rdf.bg/ifcdoc/CP64/engiGetAggrType.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		* aggregateType						IN / OUT
 //
@@ -3227,7 +3227,7 @@ void			DECL STDC	engiGetAggrType(
 								);
 
 //
-//		engiGetAggrTypex                                        (http://rdf.bg/ifcdoc/CP64/engiGetAggrTypex.html)
+//		engiGetAggrTypex                                        (https://rdf.bg/ifcdoc/CP64/engiGetAggrTypex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		* aggregateType						IN / OUT
 //
@@ -3241,7 +3241,7 @@ void			DECL STDC	engiGetAggrTypex(
 								);
 
 //
-//		sdaiGetAttr                                             (http://rdf.bg/ifcdoc/CP64/sdaiGetAttr.html)
+//		sdaiGetAttr                                             (https://rdf.bg/ifcdoc/CP64/sdaiGetAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3379,7 +3379,7 @@ static	inline	SdaiInstance	sdaiGetAttr(
 #endif
 
 //
-//		sdaiGetAttrBN                                           (http://rdf.bg/ifcdoc/CP64/sdaiGetAttrBN.html)
+//		sdaiGetAttrBN                                           (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiPrimitiveType		valueType							IN
@@ -3575,7 +3575,7 @@ static	inline	SdaiInstance	sdaiGetAttrBN(
 #endif
 
 //
-//		sdaiGetAttrBNUnicode                                    (http://rdf.bg/ifcdoc/CP64/sdaiGetAttrBNUnicode.html)
+//		sdaiGetAttrBNUnicode                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrBNUnicode.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				unsigned char			* buffer							IN / OUT
@@ -3618,7 +3618,7 @@ static	inline	int_t	sdaiGetAttrBNUnicode(
 #endif
 
 //
-//		sdaiGetStringAttrBN                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetStringAttrBN.html)
+//		sdaiGetStringAttrBN                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetStringAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3670,7 +3670,7 @@ static	inline	char	* sdaiGetStringAttrBN(
 #endif
 
 //
-//		sdaiGetInstanceAttrBN                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetInstanceAttrBN.html)
+//		sdaiGetInstanceAttrBN                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3722,7 +3722,7 @@ static	inline	SdaiInstance	sdaiGetInstanceAttrBN(
 #endif
 
 //
-//		sdaiGetAggregationAttrBN                                (http://rdf.bg/ifcdoc/CP64/sdaiGetAggregationAttrBN.html)
+//		sdaiGetAggregationAttrBN                                (https://rdf.bg/ifcdoc/CP64/sdaiGetAggregationAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -3774,7 +3774,7 @@ static	inline	SdaiAggr	sdaiGetAggregationAttrBN(
 #endif
 
 //
-//		sdaiGetAttrDefinition                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetAttrDefinition.html)
+//		sdaiGetAttrDefinition                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetAttrDefinition.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -3809,7 +3809,7 @@ static	inline	SdaiAttr	sdaiGetAttrDefinition(
 #endif
 
 //
-//		engiGetAttrTraits                                       (http://rdf.bg/ifcdoc/CP64/engiGetAttrTraits.html)
+//		engiGetAttrTraits                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrTraits.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* name								IN / OUT
 //				SdaiEntity				* definingEntity					IN / OUT
@@ -3872,7 +3872,7 @@ static	inline	void	engiGetAttrTraits(
 #endif
 
 //
-//		engiGetAttrName                                         (http://rdf.bg/ifcdoc/CP64/engiGetAttrName.html)
+//		engiGetAttrName                                         (https://rdf.bg/ifcdoc/CP64/engiGetAttrName.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiString				returns								OUT
@@ -3884,7 +3884,7 @@ SdaiString		DECL STDC	engiGetAttrName(
 								);
 
 //
-//		engiGetAttrDefiningEntity                               (http://rdf.bg/ifcdoc/CP64/engiGetAttrDefiningEntity.html)
+//		engiGetAttrDefiningEntity                               (https://rdf.bg/ifcdoc/CP64/engiGetAttrDefiningEntity.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiEntity				returns								OUT
@@ -3896,7 +3896,7 @@ SdaiEntity		DECL STDC	engiGetAttrDefiningEntity(
 								);
 
 //
-//		engiIsAttrExplicit                                      (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicit.html)
+//		engiIsAttrExplicit                                      (https://rdf.bg/ifcdoc/CP64/engiIsAttrExplicit.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -3908,7 +3908,7 @@ SdaiBoolean		DECL STDC	engiIsAttrExplicit(
 								);
 
 //
-//		engiIsAttrExplicitBN                                    (http://rdf.bg/ifcdoc/CP64/engiIsAttrExplicitBN.html)
+//		engiIsAttrExplicitBN                                    (https://rdf.bg/ifcdoc/CP64/engiIsAttrExplicitBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -3943,7 +3943,7 @@ static	inline	SdaiBoolean	engiIsAttrExplicitBN(
 #endif
 
 //
-//		sdaiGetInstanceModel                                    (http://rdf.bg/ifcdoc/CP64/sdaiGetInstanceModel.html)
+//		sdaiGetInstanceModel                                    (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceModel.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiModel				returns								OUT
@@ -3955,7 +3955,7 @@ SdaiModel		DECL STDC	sdaiGetInstanceModel(
 								);
 
 //
-//		sdaiGetInstanceType                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetInstanceType.html)
+//		sdaiGetInstanceType                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetInstanceType.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiEntity				returns								OUT
@@ -3967,7 +3967,7 @@ SdaiEntity		DECL STDC	sdaiGetInstanceType(
 								);
 
 //
-//		sdaiGetMemberCount                                      (http://rdf.bg/ifcdoc/CP64/sdaiGetMemberCount.html)
+//		sdaiGetMemberCount                                      (https://rdf.bg/ifcdoc/CP64/sdaiGetMemberCount.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -3979,7 +3979,7 @@ SdaiInteger		DECL STDC	sdaiGetMemberCount(
 								);
 
 //
-//		sdaiIsKindOf                                            (http://rdf.bg/ifcdoc/CP64/sdaiIsKindOf.html)
+//		sdaiIsKindOf                                            (https://rdf.bg/ifcdoc/CP64/sdaiIsKindOf.html)
 //				SdaiInstance			instance							IN
 //				SdaiEntity				entity								IN
 //
@@ -3993,7 +3993,7 @@ int_t			DECL STDC	sdaiIsKindOf(
 								);
 
 //
-//		sdaiIsKindOfBN                                          (http://rdf.bg/ifcdoc/CP64/sdaiIsKindOfBN.html)
+//		sdaiIsKindOfBN                                          (https://rdf.bg/ifcdoc/CP64/sdaiIsKindOfBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				entityName							IN
 //
@@ -4040,7 +4040,7 @@ static	inline	int_t	sdaiIsKindOfBN(
 #endif
 
 //
-//		engiGetAttrType                                         (http://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
+//		engiGetAttrType                                         (https://rdf.bg/ifcdoc/CP64/engiGetAttrType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -4060,7 +4060,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttrType(
 								);
 
 //
-//		engiGetAttrTypeBN                                       (http://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
+//		engiGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrTypeBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -4103,7 +4103,7 @@ static	inline	SdaiPrimitiveType	engiGetAttrTypeBN(
 #endif
 
 //
-//		engiGetInstanceAttrType                                 (http://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrType.html)
+//		engiGetInstanceAttrType                                 (https://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -4119,7 +4119,7 @@ SdaiPrimitiveType	DECL STDC	engiGetInstanceAttrType(
 								);
 
 //
-//		engiGetInstanceAttrTypeBN                               (http://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrTypeBN.html)
+//		engiGetInstanceAttrTypeBN                               (https://rdf.bg/ifcdoc/CP64/engiGetInstanceAttrTypeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -4165,7 +4165,7 @@ static	inline	SdaiPrimitiveType	engiGetInstanceAttrTypeBN(
 #endif
 
 //
-//		sdaiIsInstanceOf                                        (http://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOf.html)
+//		sdaiIsInstanceOf                                        (https://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOf.html)
 //				SdaiInstance			instance							IN
 //				SdaiEntity				entity								IN
 //
@@ -4179,7 +4179,7 @@ int_t			DECL STDC	sdaiIsInstanceOf(
 								);
 
 //
-//		sdaiIsInstanceOfBN                                      (http://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOfBN.html)
+//		sdaiIsInstanceOfBN                                      (https://rdf.bg/ifcdoc/CP64/sdaiIsInstanceOfBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				entityName							IN
 //
@@ -4227,7 +4227,7 @@ static	inline	int_t	sdaiIsInstanceOfBN(
 #endif
 
 //
-//		sdaiIsEqual                                             (http://rdf.bg/ifcdoc/CP64/sdaiIsEqual.html)
+//		sdaiIsEqual                                             (https://rdf.bg/ifcdoc/CP64/sdaiIsEqual.html)
 //				SdaiInstance			instanceI							IN
 //				SdaiInstance			instanceII							IN
 //
@@ -4241,7 +4241,7 @@ bool			DECL STDC	sdaiIsEqual(
 								);
 
 //
-//		sdaiValidateAttribute                                   (http://rdf.bg/ifcdoc/CP64/sdaiValidateAttribute.html)
+//		sdaiValidateAttribute                                   (https://rdf.bg/ifcdoc/CP64/sdaiValidateAttribute.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -4255,7 +4255,7 @@ int_t			DECL STDC	sdaiValidateAttribute(
 								);
 
 //
-//		sdaiValidateAttributeBN                                 (http://rdf.bg/ifcdoc/CP64/sdaiValidateAttributeBN.html)
+//		sdaiValidateAttributeBN                                 (https://rdf.bg/ifcdoc/CP64/sdaiValidateAttributeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -4299,7 +4299,7 @@ static	inline	int_t	sdaiValidateAttributeBN(
 #endif
 
 //
-//		engiGetInstanceClassInfo                                (http://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfo.html)
+//		engiGetInstanceClassInfo                                (https://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfo.html)
 //				SdaiInstance			instance							IN
 //
 //				char					* returns							OUT
@@ -4311,7 +4311,7 @@ char			DECL * STDC	engiGetInstanceClassInfo(
 								);
 
 //
-//		engiGetInstanceClassInfoUC                              (http://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfoUC.html)
+//		engiGetInstanceClassInfoUC                              (https://rdf.bg/ifcdoc/CP64/engiGetInstanceClassInfoUC.html)
 //				SdaiInstance			instance							IN
 //
 //				char					* returns							OUT
@@ -4323,7 +4323,7 @@ char			DECL * STDC	engiGetInstanceClassInfoUC(
 								);
 
 //
-//		engiGetInstanceMetaInfo                                 (http://rdf.bg/ifcdoc/CP64/engiGetInstanceMetaInfo.html)
+//		engiGetInstanceMetaInfo                                 (https://rdf.bg/ifcdoc/CP64/engiGetInstanceMetaInfo.html)
 //				SdaiInstance			instance							IN
 //				int_t					* localId							IN / OUT
 //				SdaiString				* entityName						IN / OUT
@@ -4366,7 +4366,7 @@ static	inline	int_t	engiGetInstanceMetaInfo(
 #endif
 
 //
-//		sdaiFindInstanceUsers                                   (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsers.html)
+//		sdaiFindInstanceUsers                                   (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsers.html)
 //				SdaiInstance			instance							IN
 //				SdaiNPL					domain								IN
 //				SdaiNPL					resultList							IN
@@ -4383,7 +4383,7 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsers(
 								);
 
 //
-//		sdaiFindInstanceUsedIn                                  (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
+//		sdaiFindInstanceUsedIn                                  (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedIn.html)
 //				SdaiInstance			instance							IN
 //				SdaiAttr				role								IN
 //				SdaiNPL					domain								IN
@@ -4402,7 +4402,7 @@ SdaiNPL			DECL STDC	sdaiFindInstanceUsedIn(
 								);
 
 //
-//		sdaiFindInstanceUsedInBN                                (http://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedInBN.html)
+//		sdaiFindInstanceUsedInBN                                (https://rdf.bg/ifcdoc/CP64/sdaiFindInstanceUsedInBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				roleName							IN
 //				SdaiNPL					domain								IN
@@ -4463,7 +4463,7 @@ static	inline	SdaiNPL	sdaiFindInstanceUsedInBN(
 #endif
 
 //
-//		sdaiPrepend                                             (http://rdf.bg/ifcdoc/CP64/sdaiPrepend.html)
+//		sdaiPrepend                                             (https://rdf.bg/ifcdoc/CP64/sdaiPrepend.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4588,7 +4588,7 @@ static	inline	void	sdaiPrepend(
 #endif
 
 //
-//		sdaiAppend                                              (http://rdf.bg/ifcdoc/CP64/sdaiAppend.html)
+//		sdaiAppend                                              (https://rdf.bg/ifcdoc/CP64/sdaiAppend.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4713,7 +4713,7 @@ static	inline	void	sdaiAppend(
 #endif
 
 //
-//		sdaiAdd                                                 (http://rdf.bg/ifcdoc/CP64/sdaiAdd.html)
+//		sdaiAdd                                                 (https://rdf.bg/ifcdoc/CP64/sdaiAdd.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -4838,7 +4838,7 @@ static	inline	void	sdaiAdd(
 #endif
 
 //
-//		sdaiInsertByIndex                                       (http://rdf.bg/ifcdoc/CP64/sdaiInsertByIndex.html)
+//		sdaiInsertByIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiInsertByIndex.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -4969,7 +4969,7 @@ static	inline	void	sdaiInsertByIndex(
 #endif
 
 //
-//		sdaiInsertBefore                                        (http://rdf.bg/ifcdoc/CP64/sdaiInsertBefore.html)
+//		sdaiInsertBefore                                        (https://rdf.bg/ifcdoc/CP64/sdaiInsertBefore.html)
 //				const SdaiIterator		iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5094,7 +5094,7 @@ static	inline	void	sdaiInsertBefore(
 #endif
 
 //
-//		sdaiInsertAfter                                         (http://rdf.bg/ifcdoc/CP64/sdaiInsertAfter.html)
+//		sdaiInsertAfter                                         (https://rdf.bg/ifcdoc/CP64/sdaiInsertAfter.html)
 //				const SdaiIterator		iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5219,7 +5219,7 @@ static	inline	void	sdaiInsertAfter(
 #endif
 
 //
-//		sdaiCreateADB                                           (http://rdf.bg/ifcdoc/CP64/sdaiCreateADB.html)
+//		sdaiCreateADB                                           (https://rdf.bg/ifcdoc/CP64/sdaiCreateADB.html)
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
 //
@@ -5333,7 +5333,7 @@ static	inline	SdaiADB	sdaiCreateADB(
 #endif
 
 //
-//		sdaiCreateAggr                                          (http://rdf.bg/ifcdoc/CP64/sdaiCreateAggr.html)
+//		sdaiCreateAggr                                          (https://rdf.bg/ifcdoc/CP64/sdaiCreateAggr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -5350,7 +5350,7 @@ SdaiAggr		DECL STDC	sdaiCreateAggr(
 								);
 
 //
-//		sdaiCreateAggrBN                                        (http://rdf.bg/ifcdoc/CP64/sdaiCreateAggrBN.html)
+//		sdaiCreateAggrBN                                        (https://rdf.bg/ifcdoc/CP64/sdaiCreateAggrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -5404,7 +5404,7 @@ static	inline	SdaiAggr	sdaiCreateAggrBN(
 #endif
 
 //
-//		sdaiCreateNPL                                           (http://rdf.bg/ifcdoc/CP64/sdaiCreateNPL.html)
+//		sdaiCreateNPL                                           (https://rdf.bg/ifcdoc/CP64/sdaiCreateNPL.html)
 //				SdaiNPL					returns								OUT
 //
 //	...
@@ -5413,7 +5413,7 @@ SdaiNPL			DECL STDC	sdaiCreateNPL(
 								);
 
 //
-//		sdaiDeleteNPL                                           (http://rdf.bg/ifcdoc/CP64/sdaiDeleteNPL.html)
+//		sdaiDeleteNPL                                           (https://rdf.bg/ifcdoc/CP64/sdaiDeleteNPL.html)
 //				SdaiNPL					list								IN
 //
 //				void					returns
@@ -5425,7 +5425,7 @@ void			DECL STDC	sdaiDeleteNPL(
 								);
 
 //
-//		sdaiCreateNestedAggr                                    (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggr.html)
+//		sdaiCreateNestedAggr                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggr.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5437,7 +5437,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggr(
 								);
 
 //
-//		sdaiCreateNestedAggrByIndex                             (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndex.html)
+//		sdaiCreateNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5452,7 +5452,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndex(
 								);
 
 //
-//		sdaiInsertNestedAggrByIndex                             (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndex.html)
+//		sdaiInsertNestedAggrByIndex                             (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5467,7 +5467,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndex(
 								);
 
 //
-//		sdaiCreateNestedAggrByItr                               (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItr.html)
+//		sdaiCreateNestedAggrByItr                               (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5480,7 +5480,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItr(
 								);
 
 //
-//		sdaiInsertNestedAggrBefore                              (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBefore.html)
+//		sdaiInsertNestedAggrBefore                              (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBefore.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5493,7 +5493,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrBefore(
 								);
 
 //
-//		sdaiInsertNestedAggrAfter                               (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfter.html)
+//		sdaiInsertNestedAggrAfter                               (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfter.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiAggr				returns								OUT
@@ -5506,7 +5506,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfter(
 								);
 
 //
-//		sdaiCreateNestedAggrADB                                 (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrADB.html)
+//		sdaiCreateNestedAggrADB                                 (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5524,7 +5524,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrADB(
 								);
 
 //
-//		sdaiCreateNestedAggrByIndexADB                          (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndexADB.html)
+//		sdaiCreateNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByIndexADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiADB					selaggrInstance						IN
@@ -5543,7 +5543,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByIndexADB(
 								);
 
 //
-//		sdaiInsertNestedAggrByIndexADB                          (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndexADB.html)
+//		sdaiInsertNestedAggrByIndexADB                          (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrByIndexADB.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //				SdaiADB					selaggrInstance						IN
@@ -5562,7 +5562,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrByIndexADB(
 								);
 
 //
-//		sdaiCreateNestedAggrByItrADB                            (http://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItrADB.html)
+//		sdaiCreateNestedAggrByItrADB                            (https://rdf.bg/ifcdoc/CP64/sdaiCreateNestedAggrByItrADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5579,7 +5579,7 @@ SdaiAggr		DECL STDC	sdaiCreateNestedAggrByItrADB(
 								);
 
 //
-//		sdaiInsertNestedAggrBeforeADB                           (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBeforeADB.html)
+//		sdaiInsertNestedAggrBeforeADB                           (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrBeforeADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5596,7 +5596,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrBeforeADB(
 								);
 
 //
-//		sdaiInsertNestedAggrAfterADB                            (http://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfterADB.html)
+//		sdaiInsertNestedAggrAfterADB                            (https://rdf.bg/ifcdoc/CP64/sdaiInsertNestedAggrAfterADB.html)
 //				SdaiIterator			iterator							IN
 //				SdaiADB					selaggrInstance						IN
 //
@@ -5613,7 +5613,7 @@ SdaiAggr		DECL STDC	sdaiInsertNestedAggrAfterADB(
 								);
 
 //
-//		sdaiRemoveByIndex                                       (http://rdf.bg/ifcdoc/CP64/sdaiRemoveByIndex.html)
+//		sdaiRemoveByIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiRemoveByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5627,7 +5627,7 @@ void			DECL STDC	sdaiRemoveByIndex(
 								);
 
 //
-//		sdaiRemoveByIterator                                    (http://rdf.bg/ifcdoc/CP64/sdaiRemoveByIterator.html)
+//		sdaiRemoveByIterator                                    (https://rdf.bg/ifcdoc/CP64/sdaiRemoveByIterator.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -5640,7 +5640,7 @@ void			DECL STDC	sdaiRemoveByIterator(
 								);
 
 //
-//		sdaiRemove                                              (http://rdf.bg/ifcdoc/CP64/sdaiRemove.html)
+//		sdaiRemove                                              (https://rdf.bg/ifcdoc/CP64/sdaiRemove.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -5761,7 +5761,7 @@ static	inline	void	sdaiRemove(
 #endif
 
 //
-//		sdaiTestArrayByIndex                                    (http://rdf.bg/ifcdoc/CP64/sdaiTestArrayByIndex.html)
+//		sdaiTestArrayByIndex                                    (https://rdf.bg/ifcdoc/CP64/sdaiTestArrayByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -5775,7 +5775,7 @@ SdaiBoolean		DECL STDC	sdaiTestArrayByIndex(
 								);
 
 //
-//		sdaiTestArrayByItr                                      (http://rdf.bg/ifcdoc/CP64/sdaiTestArrayByItr.html)
+//		sdaiTestArrayByItr                                      (https://rdf.bg/ifcdoc/CP64/sdaiTestArrayByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -5787,7 +5787,7 @@ SdaiBoolean		DECL STDC	sdaiTestArrayByItr(
 								);
 
 //
-//		sdaiCreateInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstance.html)
+//		sdaiCreateInstance                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstance.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -5801,7 +5801,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstance(
 								);
 
 //
-//		sdaiCreateInstanceBN                                    (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBN.html)
+//		sdaiCreateInstanceBN                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -5845,7 +5845,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBN(
 #endif
 
 //
-//		sdaiCreateComplexInstance                               (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
+//		sdaiCreateComplexInstance                               (https://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstance.html)
 //				SdaiModel				model								IN
 //				SdaiNPL					entityList							IN
 //
@@ -5860,7 +5860,7 @@ SdaiInstance	DECL STDC	sdaiCreateComplexInstance(
 								);
 
 //
-//		sdaiCreateComplexInstanceBN                             (http://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
+//		sdaiCreateComplexInstanceBN                             (https://rdf.bg/ifcdoc/CP64/sdaiCreateComplexInstanceBN.html)
 //				SdaiModel				model								IN
 //				SdaiInteger				nameNumber							IN
 //				SdaiString				* nameVector						IN
@@ -5900,7 +5900,7 @@ static	inline	SdaiInstance	sdaiCreateComplexInstanceBN(
 #endif
 
 //
-//		sdaiDeleteInstance                                      (http://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
+//		sdaiDeleteInstance                                      (https://rdf.bg/ifcdoc/CP64/sdaiDeleteInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				void					returns
@@ -5912,7 +5912,7 @@ void			DECL STDC	sdaiDeleteInstance(
 								);
 
 //
-//		sdaiPutADBTypePath                                      (http://rdf.bg/ifcdoc/CP64/sdaiPutADBTypePath.html)
+//		sdaiPutADBTypePath                                      (https://rdf.bg/ifcdoc/CP64/sdaiPutADBTypePath.html)
 //				const SdaiADB			ADB									IN
 //				int_t					pathCount							IN
 //				SdaiString				path								IN
@@ -5951,7 +5951,7 @@ static	inline	void	sdaiPutADBTypePath(
 #endif
 
 //
-//		sdaiPutAttr                                             (http://rdf.bg/ifcdoc/CP64/sdaiPutAttr.html)
+//		sdaiPutAttr                                             (https://rdf.bg/ifcdoc/CP64/sdaiPutAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiPrimitiveType		valueType							IN
@@ -6082,7 +6082,7 @@ static	inline	void	sdaiPutAttr(
 #endif
 
 //
-//		sdaiPutAttrBN                                           (http://rdf.bg/ifcdoc/CP64/sdaiPutAttrBN.html)
+//		sdaiPutAttrBN                                           (https://rdf.bg/ifcdoc/CP64/sdaiPutAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiPrimitiveType		valueType							IN
@@ -6275,7 +6275,7 @@ static	inline	void	sdaiPutAttrBN(
 #endif
 
 //
-//		sdaiUnsetAttr                                           (http://rdf.bg/ifcdoc/CP64/sdaiUnsetAttr.html)
+//		sdaiUnsetAttr                                           (https://rdf.bg/ifcdoc/CP64/sdaiUnsetAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -6289,7 +6289,7 @@ void			DECL STDC	sdaiUnsetAttr(
 								);
 
 //
-//		sdaiUnsetAttrBN                                         (http://rdf.bg/ifcdoc/CP64/sdaiUnsetAttrBN.html)
+//		sdaiUnsetAttrBN                                         (https://rdf.bg/ifcdoc/CP64/sdaiUnsetAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -6335,7 +6335,7 @@ static	inline	void	sdaiUnsetAttrBN(
 #endif
 
 //
-//		engiSetComment                                          (http://rdf.bg/ifcdoc/CP64/engiSetComment.html)
+//		engiSetComment                                          (https://rdf.bg/ifcdoc/CP64/engiSetComment.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				comment								IN
 //
@@ -6370,7 +6370,7 @@ static	inline	void	engiSetComment(
 #endif
 
 //
-//		engiGetInstanceLocalId                                  (http://rdf.bg/ifcdoc/CP64/engiGetInstanceLocalId.html)
+//		engiGetInstanceLocalId                                  (https://rdf.bg/ifcdoc/CP64/engiGetInstanceLocalId.html)
 //				SdaiInstance			instance							IN
 //
 //				ExpressID				returns								OUT
@@ -6382,7 +6382,7 @@ ExpressID		DECL STDC	engiGetInstanceLocalId(
 								);
 
 //
-//		sdaiTestAttr                                            (http://rdf.bg/ifcdoc/CP64/sdaiTestAttr.html)
+//		sdaiTestAttr                                            (https://rdf.bg/ifcdoc/CP64/sdaiTestAttr.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //
@@ -6396,7 +6396,7 @@ int_t			DECL STDC	sdaiTestAttr(
 								);
 
 //
-//		sdaiTestAttrBN                                          (http://rdf.bg/ifcdoc/CP64/sdaiTestAttrBN.html)
+//		sdaiTestAttrBN                                          (https://rdf.bg/ifcdoc/CP64/sdaiTestAttrBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //
@@ -6437,7 +6437,7 @@ static	inline	int_t	sdaiTestAttrBN(
 #endif
 
 //
-//		sdaiCreateInstanceEI                                    (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceEI.html)
+//		sdaiCreateInstanceEI                                    (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceEI.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //				ExpressID				expressID							IN
@@ -6453,7 +6453,7 @@ SdaiInstance	DECL STDC	sdaiCreateInstanceEI(
 								);
 
 //
-//		sdaiCreateInstanceBNEI                                  (http://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBNEI.html)
+//		sdaiCreateInstanceBNEI                                  (https://rdf.bg/ifcdoc/CP64/sdaiCreateInstanceBNEI.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //				ExpressID				expressID							IN
@@ -6492,7 +6492,7 @@ static	inline	SdaiInstance	sdaiCreateInstanceBNEI(
 #endif
 
 //
-//		sdaiCreateIterator                                      (http://rdf.bg/ifcdoc/CP64/sdaiCreateIterator.html)
+//		sdaiCreateIterator                                      (https://rdf.bg/ifcdoc/CP64/sdaiCreateIterator.html)
 //				const SdaiAggr			aggregate							IN
 //
 //				SdaiIterator			returns								OUT
@@ -6506,7 +6506,7 @@ SdaiIterator	DECL STDC	sdaiCreateIterator(
 								);
 
 //
-//		sdaiDeleteIterator                                      (http://rdf.bg/ifcdoc/CP64/sdaiDeleteIterator.html)
+//		sdaiDeleteIterator                                      (https://rdf.bg/ifcdoc/CP64/sdaiDeleteIterator.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6518,7 +6518,7 @@ void			DECL STDC	sdaiDeleteIterator(
 								);
 
 //
-//		sdaiBeginning                                           (http://rdf.bg/ifcdoc/CP64/sdaiBeginning.html)
+//		sdaiBeginning                                           (https://rdf.bg/ifcdoc/CP64/sdaiBeginning.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6530,7 +6530,7 @@ void			DECL STDC	sdaiBeginning(
 								);
 
 //
-//		sdaiNext                                                (http://rdf.bg/ifcdoc/CP64/sdaiNext.html)
+//		sdaiNext                                                (https://rdf.bg/ifcdoc/CP64/sdaiNext.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiBoolean				returns								OUT
@@ -6542,7 +6542,7 @@ SdaiBoolean		DECL STDC	sdaiNext(
 								);
 
 //
-//		sdaiPrevious                                            (http://rdf.bg/ifcdoc/CP64/sdaiPrevious.html)
+//		sdaiPrevious                                            (https://rdf.bg/ifcdoc/CP64/sdaiPrevious.html)
 //				SdaiIterator			iterator							IN
 //
 //				int_t					returns								OUT
@@ -6558,7 +6558,7 @@ int_t			DECL STDC	sdaiPrevious(
 								);
 
 //
-//		sdaiEnd                                                 (http://rdf.bg/ifcdoc/CP64/sdaiEnd.html)
+//		sdaiEnd                                                 (https://rdf.bg/ifcdoc/CP64/sdaiEnd.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6570,7 +6570,7 @@ void			DECL STDC	sdaiEnd(
 								);
 
 //
-//		sdaiIsMember                                            (http://rdf.bg/ifcdoc/CP64/sdaiIsMember.html)
+//		sdaiIsMember                                            (https://rdf.bg/ifcdoc/CP64/sdaiIsMember.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -6693,7 +6693,7 @@ static	inline	SdaiBoolean	sdaiIsMember(
 #endif
 
 //
-//		sdaiGetAggrElementBoundByItr                            (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByItr.html)
+//		sdaiGetAggrElementBoundByItr                            (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6706,7 +6706,7 @@ SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByItr(
 								);
 
 //
-//		sdaiGetAggrElementBoundByIndex                          (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByIndex.html)
+//		sdaiGetAggrElementBoundByIndex                          (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrElementBoundByIndex.html)
 //				SdaiAggr				aggregate							IN
 //				SdaiAggrIndex			index								IN
 //
@@ -6721,7 +6721,7 @@ SdaiInteger		DECL STDC	sdaiGetAggrElementBoundByIndex(
 								);
 
 //
-//		sdaiGetLowerBound                                       (http://rdf.bg/ifcdoc/CP64/sdaiGetLowerBound.html)
+//		sdaiGetLowerBound                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetLowerBound.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6733,7 +6733,7 @@ SdaiInteger		DECL STDC	sdaiGetLowerBound(
 								);
 
 //
-//		sdaiGetUpperBound                                       (http://rdf.bg/ifcdoc/CP64/sdaiGetUpperBound.html)
+//		sdaiGetUpperBound                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetUpperBound.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6745,7 +6745,7 @@ SdaiInteger		DECL STDC	sdaiGetUpperBound(
 								);
 
 //
-//		sdaiGetLowerIndex                                       (http://rdf.bg/ifcdoc/CP64/sdaiGetLowerIndex.html)
+//		sdaiGetLowerIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetLowerIndex.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6757,7 +6757,7 @@ SdaiInteger		DECL STDC	sdaiGetLowerIndex(
 								);
 
 //
-//		sdaiGetUpperIndex                                       (http://rdf.bg/ifcdoc/CP64/sdaiGetUpperIndex.html)
+//		sdaiGetUpperIndex                                       (https://rdf.bg/ifcdoc/CP64/sdaiGetUpperIndex.html)
 //				SdaiAggr				aggregate							IN
 //
 //				SdaiInteger				returns								OUT
@@ -6769,7 +6769,7 @@ SdaiInteger		DECL STDC	sdaiGetUpperIndex(
 								);
 
 //
-//		sdaiUnsetArrayByIndex                                   (http://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByIndex.html)
+//		sdaiUnsetArrayByIndex                                   (https://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByIndex.html)
 //				SdaiArray				array								IN
 //				SdaiAggrIndex			index								IN
 //
@@ -6784,7 +6784,7 @@ void			DECL STDC	sdaiUnsetArrayByIndex(
 								);
 
 //
-//		sdaiUnsetArrayByItr                                     (http://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByItr.html)
+//		sdaiUnsetArrayByItr                                     (https://rdf.bg/ifcdoc/CP64/sdaiUnsetArrayByItr.html)
 //				SdaiIterator			iterator							IN
 //
 //				void					returns
@@ -6797,7 +6797,7 @@ void			DECL STDC	sdaiUnsetArrayByItr(
 								);
 
 //
-//		sdaiReindexArray                                        (http://rdf.bg/ifcdoc/CP64/sdaiReindexArray.html)
+//		sdaiReindexArray                                        (https://rdf.bg/ifcdoc/CP64/sdaiReindexArray.html)
 //				SdaiArray				array								IN
 //
 //				void					returns
@@ -6810,7 +6810,7 @@ void			DECL STDC	sdaiReindexArray(
 								);
 
 //
-//		sdaiResetArrayIndex                                     (http://rdf.bg/ifcdoc/CP64/sdaiResetArrayIndex.html)
+//		sdaiResetArrayIndex                                     (https://rdf.bg/ifcdoc/CP64/sdaiResetArrayIndex.html)
 //				SdaiArray				array								IN
 //				SdaiAggrIndex			lower								IN
 //				SdaiAggrIndex			upper								IN
@@ -6827,7 +6827,7 @@ void			DECL STDC	sdaiResetArrayIndex(
 								);
 
 //
-//		engiEnableDerivedAttributes                             (http://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
+//		engiEnableDerivedAttributes                             (https://rdf.bg/ifcdoc/CP64/engiEnableDerivedAttributes.html)
 //				SdaiModel				model								IN
 //				SdaiBoolean				enable								IN
 //
@@ -6842,7 +6842,7 @@ SdaiBoolean		DECL STDC	engiEnableDerivedAttributes(
 								);
 
 //
-//		engiEvaluateAllDerivedAttributes                        (http://rdf.bg/ifcdoc/CP64/engiEvaluateAllDerivedAttributes.html)
+//		engiEvaluateAllDerivedAttributes                        (https://rdf.bg/ifcdoc/CP64/engiEvaluateAllDerivedAttributes.html)
 //				SdaiModel				model								IN
 //				SdaiBoolean				includeNullValues					IN
 //
@@ -6856,7 +6856,7 @@ void			DECL STDC	engiEvaluateAllDerivedAttributes(
 								);
 
 //
-//		setSegmentation                                         (http://rdf.bg/ifcdoc/CP64/setSegmentation.html)
+//		setSegmentation                                         (https://rdf.bg/ifcdoc/CP64/setSegmentation.html)
 //				SdaiModel				model								IN
 //				int_t					segmentationParts					IN
 //				double					segmentationLength					IN
@@ -6879,7 +6879,7 @@ void			DECL STDC	setSegmentation(
 								);
 
 //
-//		getSegmentation                                         (http://rdf.bg/ifcdoc/CP64/getSegmentation.html)
+//		getSegmentation                                         (https://rdf.bg/ifcdoc/CP64/getSegmentation.html)
 //				SdaiModel				model								IN
 //				int_t					* segmentationParts					IN / OUT
 //				double					* segmentationLength				IN / OUT
@@ -6899,7 +6899,7 @@ void			DECL STDC	getSegmentation(
 								);
 
 //
-//		setEpsilon                                              (http://rdf.bg/ifcdoc/CP64/setEpsilon.html)
+//		setEpsilon                                              (https://rdf.bg/ifcdoc/CP64/setEpsilon.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //				double					absoluteEpsilon						IN
@@ -6917,7 +6917,7 @@ void			DECL STDC	setEpsilon(
 								);
 
 //
-//		getEpsilon                                              (http://rdf.bg/ifcdoc/CP64/getEpsilon.html)
+//		getEpsilon                                              (https://rdf.bg/ifcdoc/CP64/getEpsilon.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //				double					* absoluteEpsilon					IN / OUT
@@ -6939,7 +6939,7 @@ int_t			DECL STDC	getEpsilon(
 //
 
 //
-//		circleSegments                                          (http://rdf.bg/ifcdoc/CP64/circleSegments.html)
+//		circleSegments                                          (https://rdf.bg/ifcdoc/CP64/circleSegments.html)
 //				int_t					circles								IN
 //				int_t					smallCircles						IN
 //
@@ -6958,7 +6958,7 @@ void			DECL STDC	circleSegments(
 								);
 
 //
-//		setMaximumSegmentationLength                            (http://rdf.bg/ifcdoc/CP64/setMaximumSegmentationLength.html)
+//		setMaximumSegmentationLength                            (https://rdf.bg/ifcdoc/CP64/setMaximumSegmentationLength.html)
 //				SdaiModel				model								IN
 //				double					length								IN
 //
@@ -6977,7 +6977,7 @@ void			DECL STDC	setMaximumSegmentationLength(
 								);
 
 //
-//		getProjectUnitConversionFactor                          (http://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
+//		getProjectUnitConversionFactor                          (https://rdf.bg/ifcdoc/CP64/getProjectUnitConversionFactor.html)
 //				SdaiModel				model								IN
 //				SdaiString				unitType							IN
 //				SdaiString				* unitPrefix						IN / OUT
@@ -7024,7 +7024,7 @@ static	inline	double	getProjectUnitConversionFactor(
 #endif
 
 //
-//		getUnitInstanceConversionFactor                         (http://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
+//		getUnitInstanceConversionFactor                         (https://rdf.bg/ifcdoc/CP64/getUnitInstanceConversionFactor.html)
 //				SdaiInstance			unitInstance						IN
 //				SdaiString				* unitPrefix						IN / OUT
 //				SdaiString				* unitName							IN / OUT
@@ -7067,7 +7067,7 @@ static	inline	double	getUnitInstanceConversionFactor(
 #endif
 
 //
-//		setBRepProperties                                       (http://rdf.bg/ifcdoc/CP64/setBRepProperties.html)
+//		setBRepProperties                                       (https://rdf.bg/ifcdoc/CP64/setBRepProperties.html)
 //				SdaiModel				model								IN
 //				int64_t					consistencyCheck					IN
 //				double					fraction							IN
@@ -7086,7 +7086,7 @@ static	inline	double	getUnitInstanceConversionFactor(
 //			bit4  (16)		check if faces are wrongly turned opposite from each other
 //			bit5  (32)		check if faces are inside-out
 //			bit6  (64)		check if faces result in solid, if not generate both sided faces
-//			bit7  (128)		invert direction of the face / normal information
+//			bit7  (128)		invert direction of the face/normal information
 //			bit8  (256)		export all faces as one conceptual face
 //			bit9  (512)		remove irrelevant intermediate points on lines
 //			bit10 (1024)	check and repair faces that are not defined in a perfect plane
@@ -7112,7 +7112,7 @@ void			DECL STDC	setBRepProperties(
 								);
 
 //
-//		cleanMemory                                             (http://rdf.bg/ifcdoc/CP64/cleanMemory.html)
+//		cleanMemory                                             (https://rdf.bg/ifcdoc/CP64/cleanMemory.html)
 //				SdaiModel				model								IN
 //				int_t					mode								IN
 //
@@ -7131,25 +7131,25 @@ void			DECL STDC	cleanMemory(
 								);
 
 //
-//		internalGetP21Line                                      (http://rdf.bg/ifcdoc/CP64/internalGetP21Line.html)
+//		internalGetP21Line                                      (https://rdf.bg/ifcdoc/CP64/internalGetP21Line.html)
 //				SdaiInstance			instance							IN
 //
 //				ExpressID				returns								OUT
 //
-//	Returns the line STEP / Express ID of an instance
+//	Returns the line STEP/Express ID of an instance
 //
 ExpressID		DECL STDC	internalGetP21Line(
 									SdaiInstance			instance
 								);
 
 //
-//		internalForceInstanceFromP21Line                        (http://rdf.bg/ifcdoc/CP64/internalForceInstanceFromP21Line.html)
+//		internalForceInstanceFromP21Line                        (https://rdf.bg/ifcdoc/CP64/internalForceInstanceFromP21Line.html)
 //				SdaiModel				model								IN
 //				ExpressID				P21Line								IN
 //
 //				SdaiInstance			returns								OUT
 //
-//	Returns an instance based on the model and STEP / Express ID (even when the instance itself might be non-existant).
+//	Returns an instance based on the model and STEP/Express ID (even when the instance itself might be non-existant).
 //
 SdaiInstance	DECL STDC	internalForceInstanceFromP21Line(
 									SdaiModel				model,
@@ -7157,13 +7157,13 @@ SdaiInstance	DECL STDC	internalForceInstanceFromP21Line(
 								);
 
 //
-//		internalGetInstanceFromP21Line                          (http://rdf.bg/ifcdoc/CP64/internalGetInstanceFromP21Line.html)
+//		internalGetInstanceFromP21Line                          (https://rdf.bg/ifcdoc/CP64/internalGetInstanceFromP21Line.html)
 //				SdaiModel				model								IN
 //				ExpressID				P21Line								IN
 //
 //				SdaiInstance			returns								OUT
 //
-//	Returns an instance based on the model and STEP / Express ID
+//	Returns an instance based on the model and STEP/Express ID
 //
 SdaiInstance	DECL STDC	internalGetInstanceFromP21Line(
 									SdaiModel				model,
@@ -7171,7 +7171,7 @@ SdaiInstance	DECL STDC	internalGetInstanceFromP21Line(
 								);
 
 //
-//		internalGetXMLID                                        (http://rdf.bg/ifcdoc/CP64/internalGetXMLID.html)
+//		internalGetXMLID                                        (https://rdf.bg/ifcdoc/CP64/internalGetXMLID.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				* XMLID								IN / OUT
 //
@@ -7218,7 +7218,7 @@ static	inline	SdaiString	internalGetXMLID(
 #endif
 
 //
-//		setStringUnicode                                        (http://rdf.bg/ifcdoc/CP64/setStringUnicode.html)
+//		setStringUnicode                                        (https://rdf.bg/ifcdoc/CP64/setStringUnicode.html)
 //				int_t					unicode								IN
 //
 //				int_t					returns								OUT
@@ -7234,7 +7234,7 @@ int_t			DECL STDC	setStringUnicode(
 								);
 
 //
-//		getStringUnicode                                        (http://rdf.bg/ifcdoc/CP64/getStringUnicode.html)
+//		getStringUnicode                                        (https://rdf.bg/ifcdoc/CP64/getStringUnicode.html)
 //				int_t					returns								OUT
 //
 //	...
@@ -7243,7 +7243,7 @@ int_t			DECL STDC	getStringUnicode(
 								);
 
 //
-//		engiSetStringEncoding                                   (http://rdf.bg/ifcdoc/CP64/engiSetStringEncoding.html)
+//		engiSetStringEncoding                                   (https://rdf.bg/ifcdoc/CP64/engiSetStringEncoding.html)
 //				SdaiModel				model								IN
 //				enum_string_encoding	encoding							IN
 //
@@ -7259,7 +7259,7 @@ int_t			DECL STDC	engiSetStringEncoding(
 								);
 
 //
-//		setFilter                                               (http://rdf.bg/ifcdoc/CP64/setFilter.html)
+//		setFilter                                               (https://rdf.bg/ifcdoc/CP64/setFilter.html)
 //				SdaiModel				model								IN
 //				int_t					setting								IN
 //				int_t					mask								IN
@@ -7275,7 +7275,7 @@ void			DECL STDC	setFilter(
 								);
 
 //
-//		getFilter                                               (http://rdf.bg/ifcdoc/CP64/getFilter.html)
+//		getFilter                                               (https://rdf.bg/ifcdoc/CP64/getFilter.html)
 //				SdaiModel				model								IN
 //				int_t					mask								IN
 //
@@ -7293,7 +7293,7 @@ int_t			DECL STDC	getFilter(
 //
 
 //
-//		xxxxGetEntityAndSubTypesExtent                          (http://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtent.html)
+//		xxxxGetEntityAndSubTypesExtent                          (https://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtent.html)
 //				SdaiModel				model								IN
 //				SdaiEntity				entity								IN
 //
@@ -7307,7 +7307,7 @@ SdaiAggr		DECL STDC	xxxxGetEntityAndSubTypesExtent(
 								);
 
 //
-//		xxxxGetEntityAndSubTypesExtentBN                        (http://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtentBN.html)
+//		xxxxGetEntityAndSubTypesExtentBN                        (https://rdf.bg/ifcdoc/CP64/xxxxGetEntityAndSubTypesExtentBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -7349,7 +7349,7 @@ static	inline	SdaiAggr	xxxxGetEntityAndSubTypesExtentBN(
 #endif
 
 //
-//		xxxxGetAllInstances                                     (http://rdf.bg/ifcdoc/CP64/xxxxGetAllInstances.html)
+//		xxxxGetAllInstances                                     (https://rdf.bg/ifcdoc/CP64/xxxxGetAllInstances.html)
 //				SdaiModel				model								IN
 //
 //				SdaiAggr				returns								OUT
@@ -7361,7 +7361,7 @@ SdaiAggr		DECL STDC	xxxxGetAllInstances(
 								);
 
 //
-//		xxxxGetInstancesUsing                                   (http://rdf.bg/ifcdoc/CP64/xxxxGetInstancesUsing.html)
+//		xxxxGetInstancesUsing                                   (https://rdf.bg/ifcdoc/CP64/xxxxGetInstancesUsing.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiAggr				returns								OUT
@@ -7375,7 +7375,7 @@ SdaiAggr		DECL STDC	xxxxGetInstancesUsing(
 								);
 
 //
-//		xxxxDeleteFromAggregation                               (http://rdf.bg/ifcdoc/CP64/xxxxDeleteFromAggregation.html)
+//		xxxxDeleteFromAggregation                               (https://rdf.bg/ifcdoc/CP64/xxxxDeleteFromAggregation.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAggr			aggregate							IN
 //				int_t					elementIndex						IN
@@ -7391,7 +7391,7 @@ int_t			DECL STDC	xxxxDeleteFromAggregation(
 								);
 
 //
-//		xxxxGetAttrDefinitionByValue                            (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrDefinitionByValue.html)
+//		xxxxGetAttrDefinitionByValue                            (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrDefinitionByValue.html)
 //				SdaiInstance			instance							IN
 //				const void				* value								IN
 //
@@ -7405,7 +7405,7 @@ SdaiAttr		DECL STDC	xxxxGetAttrDefinitionByValue(
 								);
 
 //
-//		xxxxGetAttrNameByIndex                                  (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrNameByIndex.html)
+//		xxxxGetAttrNameByIndex                                  (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrNameByIndex.html)
 //				SdaiInstance			instance							IN
 //				SdaiInteger				index								IN
 //				SdaiString				* name								IN / OUT
@@ -7458,7 +7458,7 @@ static	inline	SdaiString	xxxxGetAttrNameByIndex(
 #endif
 
 //
-//		iterateOverInstances                                    (http://rdf.bg/ifcdoc/CP64/iterateOverInstances.html)
+//		iterateOverInstances                                    (https://rdf.bg/ifcdoc/CP64/iterateOverInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				SdaiEntity				* entity							IN / OUT
@@ -7502,7 +7502,7 @@ static	inline	SdaiInstance	iterateOverInstances(
 #endif
 
 //
-//		iterateOverProperties                                   (http://rdf.bg/ifcdoc/CP64/iterateOverProperties.html)
+//		iterateOverProperties                                   (https://rdf.bg/ifcdoc/CP64/iterateOverProperties.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //
@@ -7517,7 +7517,7 @@ int_t			DECL STDC	iterateOverProperties(
 								);
 
 //
-//		sdaiGetAggrByIterator                                   (http://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIterator.html)
+//		sdaiGetAggrByIterator                                   (https://rdf.bg/ifcdoc/CP64/sdaiGetAggrByIterator.html)
 //				SdaiIterator			iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				void					* value								IN / OUT
@@ -7649,7 +7649,7 @@ static	inline	SdaiInstance	sdaiGetAggrByIterator(
 #endif
 
 //
-//		sdaiPutAggrByIterator                                   (http://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIterator.html)
+//		sdaiPutAggrByIterator                                   (https://rdf.bg/ifcdoc/CP64/sdaiPutAggrByIterator.html)
 //				SdaiIterator			iterator							IN
 //				SdaiPrimitiveType		valueType							IN
 //				const void				* value								IN
@@ -7774,7 +7774,7 @@ static	inline	void	sdaiPutAggrByIterator(
 #endif
 
 //
-//		internalSetLink                                         (http://rdf.bg/ifcdoc/CP64/internalSetLink.html)
+//		internalSetLink                                         (https://rdf.bg/ifcdoc/CP64/internalSetLink.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				int_t					linked_id							IN
@@ -7813,7 +7813,7 @@ static	inline	void	internalSetLink(
 #endif
 
 //
-//		internalAddAggrLink                                     (http://rdf.bg/ifcdoc/CP64/internalAddAggrLink.html)
+//		internalAddAggrLink                                     (https://rdf.bg/ifcdoc/CP64/internalAddAggrLink.html)
 //				const SdaiAggr			aggregate							IN
 //				int_t					linked_id							IN
 //
@@ -7827,7 +7827,7 @@ void			DECL STDC	internalAddAggrLink(
 								);
 
 //
-//		engiGetNotReferedAggr                                   (http://rdf.bg/ifcdoc/CP64/engiGetNotReferedAggr.html)
+//		engiGetNotReferedAggr                                   (https://rdf.bg/ifcdoc/CP64/engiGetNotReferedAggr.html)
 //				SdaiModel				model								IN
 //				int_t					* value								IN / OUT
 //
@@ -7841,7 +7841,7 @@ void			DECL STDC	engiGetNotReferedAggr(
 								);
 
 //
-//		engiGetAttributeAggr                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttributeAggr.html)
+//		engiGetAttributeAggr                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttributeAggr.html)
 //				SdaiInstance			instance							IN
 //				int_t					* value								IN / OUT
 //
@@ -7855,7 +7855,7 @@ void			DECL STDC	engiGetAttributeAggr(
 								);
 
 //
-//		engiGetAggrUnknownElement                               (http://rdf.bg/ifcdoc/CP64/engiGetAggrUnknownElement.html)
+//		engiGetAggrUnknownElement                               (https://rdf.bg/ifcdoc/CP64/engiGetAggrUnknownElement.html)
 //				const SdaiAggr			aggregate							IN
 //				int_t					elementIndex						IN
 //				SdaiPrimitiveType		* valueType							IN / OUT
@@ -7873,7 +7873,7 @@ void			DECL STDC	engiGetAggrUnknownElement(
 								);
 
 //
-//		sdaiErrorQuery                                          (http://rdf.bg/ifcdoc/CP64/sdaiErrorQuery.html)
+//		sdaiErrorQuery                                          (https://rdf.bg/ifcdoc/CP64/sdaiErrorQuery.html)
 //				int_t					returns								OUT
 //
 //	...
@@ -7886,7 +7886,7 @@ int_t			DECL STDC	sdaiErrorQuery(
 //
 
 //
-//		owlGetModel                                             (http://rdf.bg/ifcdoc/CP64/owlGetModel.html)
+//		owlGetModel                                             (https://rdf.bg/ifcdoc/CP64/owlGetModel.html)
 //				SdaiModel				model								IN
 //				int64_t					* owlModel							IN / OUT
 //
@@ -7904,7 +7904,7 @@ void			DECL STDC	owlGetModel(
 								);
 
 //
-//		owlGetInstance                                          (http://rdf.bg/ifcdoc/CP64/owlGetInstance.html)
+//		owlGetInstance                                          (https://rdf.bg/ifcdoc/CP64/owlGetInstance.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -7924,7 +7924,7 @@ void			DECL STDC	owlGetInstance(
 								);
 
 //
-//		owlMaterialInstance                                     (http://rdf.bg/ifcdoc/CP64/owlMaterialInstance.html)
+//		owlMaterialInstance                                     (https://rdf.bg/ifcdoc/CP64/owlMaterialInstance.html)
 //				SdaiInstance			instanceBase						IN
 //				SdaiInstance			instanceContext						IN
 //				int64_t					* owlInstance						IN / OUT
@@ -7940,7 +7940,7 @@ void			DECL STDC	owlMaterialInstance(
 								);
 
 //
-//		owlBuildInstance                                        (http://rdf.bg/ifcdoc/CP64/owlBuildInstance.html)
+//		owlBuildInstance                                        (https://rdf.bg/ifcdoc/CP64/owlBuildInstance.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -7961,7 +7961,7 @@ void			DECL STDC	owlBuildInstance(
 								);
 
 //
-//		owlBuildInstanceInContext                               (http://rdf.bg/ifcdoc/CP64/owlBuildInstanceInContext.html)
+//		owlBuildInstanceInContext                               (https://rdf.bg/ifcdoc/CP64/owlBuildInstanceInContext.html)
 //				SdaiInstance			instanceBase						IN
 //				SdaiInstance			instanceContext						IN
 //				int64_t					* owlInstance						IN / OUT
@@ -7982,7 +7982,7 @@ void			DECL STDC	owlBuildInstanceInContext(
 								);
 
 //
-//		engiInstanceUsesSegmentation                            (http://rdf.bg/ifcdoc/CP64/engiInstanceUsesSegmentation.html)
+//		engiInstanceUsesSegmentation                            (https://rdf.bg/ifcdoc/CP64/engiInstanceUsesSegmentation.html)
 //				SdaiInstance			instance							IN
 //
 //				bool					returns								OUT
@@ -7994,7 +7994,7 @@ bool			DECL STDC	engiInstanceUsesSegmentation(
 								);
 
 //
-//		owlBuildInstances                                       (http://rdf.bg/ifcdoc/CP64/owlBuildInstances.html)
+//		owlBuildInstances                                       (https://rdf.bg/ifcdoc/CP64/owlBuildInstances.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstanceComplete				IN / OUT
@@ -8014,7 +8014,7 @@ void			DECL STDC	owlBuildInstances(
 								);
 
 //
-//		owlGetMappedItem                                        (http://rdf.bg/ifcdoc/CP64/owlGetMappedItem.html)
+//		owlGetMappedItem                                        (https://rdf.bg/ifcdoc/CP64/owlGetMappedItem.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
@@ -8032,7 +8032,7 @@ void			DECL STDC	owlGetMappedItem(
 								);
 
 //
-//		getInstanceDerivedPropertiesInModelling                 (http://rdf.bg/ifcdoc/CP64/getInstanceDerivedPropertiesInModelling.html)
+//		getInstanceDerivedPropertiesInModelling                 (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedPropertiesInModelling.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* height							IN / OUT
@@ -8052,7 +8052,7 @@ int_t			DECL STDC	getInstanceDerivedPropertiesInModelling(
 								);
 
 //
-//		getInstanceDerivedBoundingBox                           (http://rdf.bg/ifcdoc/CP64/getInstanceDerivedBoundingBox.html)
+//		getInstanceDerivedBoundingBox                           (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedBoundingBox.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* Ox								IN / OUT
@@ -8078,7 +8078,7 @@ int_t			DECL STDC	getInstanceDerivedBoundingBox(
 								);
 
 //
-//		getInstanceTransformationMatrix                         (http://rdf.bg/ifcdoc/CP64/getInstanceTransformationMatrix.html)
+//		getInstanceTransformationMatrix                         (https://rdf.bg/ifcdoc/CP64/getInstanceTransformationMatrix.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* _11								IN / OUT
@@ -8124,7 +8124,7 @@ int_t			DECL STDC	getInstanceTransformationMatrix(
 								);
 
 //
-//		getInstanceDerivedTransformationMatrix                  (http://rdf.bg/ifcdoc/CP64/getInstanceDerivedTransformationMatrix.html)
+//		getInstanceDerivedTransformationMatrix                  (https://rdf.bg/ifcdoc/CP64/getInstanceDerivedTransformationMatrix.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				double					* _11								IN / OUT
@@ -8170,7 +8170,7 @@ int_t			DECL STDC	getInstanceDerivedTransformationMatrix(
 								);
 
 //
-//		internalGetBoundingBox                                  (http://rdf.bg/ifcdoc/CP64/internalGetBoundingBox.html)
+//		internalGetBoundingBox                                  (https://rdf.bg/ifcdoc/CP64/internalGetBoundingBox.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //
@@ -8184,7 +8184,7 @@ void			DECL * STDC	internalGetBoundingBox(
 								);
 
 //
-//		internalGetCenter                                       (http://rdf.bg/ifcdoc/CP64/internalGetCenter.html)
+//		internalGetCenter                                       (https://rdf.bg/ifcdoc/CP64/internalGetCenter.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //
@@ -8198,7 +8198,7 @@ void			DECL * STDC	internalGetCenter(
 								);
 
 //
-//		getRootAxis2Placement                                   (http://rdf.bg/ifcdoc/CP64/getRootAxis2Placement.html)
+//		getRootAxis2Placement                                   (https://rdf.bg/ifcdoc/CP64/getRootAxis2Placement.html)
 //				SdaiModel				model								IN
 //				bool					exclusiveIfHasGeometry				IN
 //
@@ -8212,7 +8212,7 @@ int_t			DECL STDC	getRootAxis2Placement(
 								);
 
 //
-//		getGlobalPlacement                                      (http://rdf.bg/ifcdoc/CP64/getGlobalPlacement.html)
+//		getGlobalPlacement                                      (https://rdf.bg/ifcdoc/CP64/getGlobalPlacement.html)
 //				SdaiModel				model								IN
 //				double					* origin							IN / OUT
 //
@@ -8228,7 +8228,7 @@ SdaiInstance	DECL STDC	getGlobalPlacement(
 								);
 
 //
-//		setGlobalPlacement                                      (http://rdf.bg/ifcdoc/CP64/setGlobalPlacement.html)
+//		setGlobalPlacement                                      (https://rdf.bg/ifcdoc/CP64/setGlobalPlacement.html)
 //				SdaiModel				model								IN
 //				const double			* origin							IN
 //				bool					includeRotation						IN
@@ -8245,7 +8245,7 @@ SdaiInstance	DECL STDC	setGlobalPlacement(
 								);
 
 //
-//		getTimeStamp                                            (http://rdf.bg/ifcdoc/CP64/getTimeStamp.html)
+//		getTimeStamp                                            (https://rdf.bg/ifcdoc/CP64/getTimeStamp.html)
 //				SdaiModel				model								IN
 //
 //				int_t					returns								OUT
@@ -8257,7 +8257,7 @@ int_t			DECL STDC	getTimeStamp(
 								);
 
 //
-//		setInstanceReference                                    (http://rdf.bg/ifcdoc/CP64/setInstanceReference.html)
+//		setInstanceReference                                    (https://rdf.bg/ifcdoc/CP64/setInstanceReference.html)
 //				SdaiInstance			instance							IN
 //				int_t					value								IN
 //
@@ -8271,7 +8271,7 @@ int_t			DECL STDC	setInstanceReference(
 								);
 
 //
-//		getInstanceReference                                    (http://rdf.bg/ifcdoc/CP64/getInstanceReference.html)
+//		getInstanceReference                                    (https://rdf.bg/ifcdoc/CP64/getInstanceReference.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -8283,7 +8283,7 @@ int_t			DECL STDC	getInstanceReference(
 								);
 
 //
-//		inferenceInstance                                       (http://rdf.bg/ifcdoc/CP64/inferenceInstance.html)
+//		inferenceInstance                                       (https://rdf.bg/ifcdoc/CP64/inferenceInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				SdaiInstance			returns								OUT
@@ -8303,7 +8303,7 @@ SdaiInstance	DECL STDC	inferenceInstance(
 								);
 
 //
-//		sdaiValidateSchemaInstance                              (http://rdf.bg/ifcdoc/CP64/sdaiValidateSchemaInstance.html)
+//		sdaiValidateSchemaInstance                              (https://rdf.bg/ifcdoc/CP64/sdaiValidateSchemaInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -8319,7 +8319,7 @@ int_t			DECL STDC	sdaiValidateSchemaInstance(
 //
 
 //
-//		engiGetEntityAttributeIndex                             (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndex.html)
+//		engiGetEntityAttributeIndex                             (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8354,7 +8354,7 @@ static	inline	int_t	engiGetEntityAttributeIndex(
 #endif
 
 //
-//		engiGetEntityAttributeIndexEx                           (http://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndexEx.html)
+//		engiGetEntityAttributeIndexEx                           (https://rdf.bg/ifcdoc/CP64/engiGetEntityAttributeIndexEx.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				bool					countedWithParents					IN
@@ -8397,7 +8397,7 @@ static	inline	int_t	engiGetEntityAttributeIndexEx(
 #endif
 
 //
-//		engiGetEntityArgumentName                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentName.html)
+//		engiGetEntityArgumentName                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentName.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -8456,7 +8456,7 @@ static	inline	SdaiString	engiGetEntityArgumentName(
 #endif
 
 //
-//		engiGetEntityArgumentType                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentType.html)
+//		engiGetEntityArgumentType                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentType.html)
 //				SdaiEntity				entity								IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		* attributeType						IN / OUT
@@ -8472,7 +8472,7 @@ void			DECL STDC	engiGetEntityArgumentType(
 								);
 
 //
-//		engiGetAttrOptional                                     (http://rdf.bg/ifcdoc/CP64/engiGetAttrOptional.html)
+//		engiGetAttrOptional                                     (https://rdf.bg/ifcdoc/CP64/engiGetAttrOptional.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8484,7 +8484,7 @@ int_t			DECL STDC	engiGetAttrOptional(
 								);
 
 //
-//		engiGetAttrOptionalBN                                   (http://rdf.bg/ifcdoc/CP64/engiGetAttrOptionalBN.html)
+//		engiGetAttrOptionalBN                                   (https://rdf.bg/ifcdoc/CP64/engiGetAttrOptionalBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8527,7 +8527,7 @@ static	inline	int_t	engiGetAttrOptionalBN(
 #endif
 
 //
-//		engiGetAttrInverse                                      (http://rdf.bg/ifcdoc/CP64/engiGetAttrInverse.html)
+//		engiGetAttrInverse                                      (https://rdf.bg/ifcdoc/CP64/engiGetAttrInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8539,7 +8539,7 @@ int_t			DECL STDC	engiGetAttrInverse(
 								);
 
 //
-//		engiGetAttrInverseBN                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttrInverseBN.html)
+//		engiGetAttrInverseBN                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttrInverseBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //
@@ -8582,7 +8582,7 @@ static	inline	int_t	engiGetAttrInverseBN(
 #endif
 
 //
-//		engiAttrIsInverse                                       (http://rdf.bg/ifcdoc/CP64/engiAttrIsInverse.html)
+//		engiAttrIsInverse                                       (https://rdf.bg/ifcdoc/CP64/engiAttrIsInverse.html)
 //				const SdaiAttr			attribute							IN
 //
 //				int_t					returns								OUT
@@ -8594,7 +8594,7 @@ int_t			DECL STDC	engiAttrIsInverse(
 								);
 
 //
-//		engiGetAttrDomain                                       (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomain.html)
+//		engiGetAttrDomain                                       (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomain.html)
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* domainName						IN / OUT
 //
@@ -8641,7 +8641,7 @@ static	inline	SdaiString	engiGetAttrDomain(
 #endif
 
 //
-//		engiGetAttrDomainBN                                     (http://rdf.bg/ifcdoc/CP64/engiGetAttrDomainBN.html)
+//		engiGetAttrDomainBN                                     (https://rdf.bg/ifcdoc/CP64/engiGetAttrDomainBN.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* domainName						IN / OUT
@@ -8716,7 +8716,7 @@ static	inline	SdaiString	engiGetAttrDomainBN(
 #endif
 
 //
-//		engiGetEntityIsAbstract                                 (http://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstract.html)
+//		engiGetEntityIsAbstract                                 (https://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstract.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -8728,7 +8728,7 @@ int_t			DECL STDC	engiGetEntityIsAbstract(
 								);
 
 //
-//		engiGetEntityIsAbstractBN                               (http://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstractBN.html)
+//		engiGetEntityIsAbstractBN                               (https://rdf.bg/ifcdoc/CP64/engiGetEntityIsAbstractBN.html)
 //				SdaiModel				model								IN
 //				SdaiString				entityName							IN
 //
@@ -8771,7 +8771,7 @@ static	inline	int_t	engiGetEntityIsAbstractBN(
 #endif
 
 //
-//		engiGetAttributeTraits                                  (http://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
+//		engiGetAttributeTraits                                  (https://rdf.bg/ifcdoc/CP64/engiGetAttributeTraits.html)
 //				const SdaiAttr			attribute							IN
 //				const char				** name								IN / OUT
 //				SdaiEntity				* definingEntity					IN / OUT
@@ -8834,7 +8834,7 @@ static	inline	void	engiGetAttributeTraits(
 #endif
 
 //
-//		engiGetEntityNoArguments                                (http://rdf.bg/ifcdoc/CP64/engiGetEntityNoArguments.html)
+//		engiGetEntityNoArguments                                (https://rdf.bg/ifcdoc/CP64/engiGetEntityNoArguments.html)
 //				SdaiEntity				entity								IN
 //
 //				int_t					returns								OUT
@@ -8846,7 +8846,7 @@ int_t			DECL STDC	engiGetEntityNoArguments(
 								);
 
 //
-//		engiGetArgumentType                                     (http://rdf.bg/ifcdoc/CP64/engiGetArgumentType.html)
+//		engiGetArgumentType                                     (https://rdf.bg/ifcdoc/CP64/engiGetArgumentType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -8858,7 +8858,7 @@ SdaiPrimitiveType	DECL STDC	engiGetArgumentType(
 								);
 
 //
-//		engiGetAttributeType                                    (http://rdf.bg/ifcdoc/CP64/engiGetAttributeType.html)
+//		engiGetAttributeType                                    (https://rdf.bg/ifcdoc/CP64/engiGetAttributeType.html)
 //				const SdaiAttr			attribute							IN
 //
 //				SdaiPrimitiveType		returns								OUT
@@ -8870,7 +8870,7 @@ SdaiPrimitiveType	DECL STDC	engiGetAttributeType(
 								);
 
 //
-//		engiGetEntityArgumentIndex                              (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
+//		engiGetEntityArgumentIndex                              (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgumentIndex.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				argumentName						IN
 //
@@ -8905,7 +8905,7 @@ static	inline	int_t	engiGetEntityArgumentIndex(
 #endif
 
 //
-//		engiGetAggrElement                                      (http://rdf.bg/ifcdoc/CP64/engiGetAggrElement.html)
+//		engiGetAggrElement                                      (https://rdf.bg/ifcdoc/CP64/engiGetAggrElement.html)
 //				const SdaiAggr			aggregate							IN
 //				SdaiInteger				index								IN
 //				SdaiPrimitiveType		valueType							IN
@@ -8923,7 +8923,7 @@ void			DECL * STDC	engiGetAggrElement(
 								);
 
 //
-//		engiGetEntityArgument                                   (http://rdf.bg/ifcdoc/CP64/engiGetEntityArgument.html)
+//		engiGetEntityArgument                                   (https://rdf.bg/ifcdoc/CP64/engiGetEntityArgument.html)
 //				SdaiEntity				entity								IN
 //				SdaiString				argumentName						IN
 //
@@ -8958,7 +8958,7 @@ static	inline	SdaiAttr	engiGetEntityArgument(
 #endif
 
 //
-//		sdaiGetADBTypePathx                                     (http://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePathx.html)
+//		sdaiGetADBTypePathx                                     (https://rdf.bg/ifcdoc/CP64/sdaiGetADBTypePathx.html)
 //				const SdaiADB			ADB									IN
 //				int_t					typeNameNumber						IN
 //				SdaiString				* path								IN / OUT
@@ -9011,7 +9011,7 @@ static	inline	SdaiString	sdaiGetADBTypePathx(
 #endif
 
 //
-//		xxxxOpenModelByStream                                   (http://rdf.bg/ifcdoc/CP64/xxxxOpenModelByStream.html)
+//		xxxxOpenModelByStream                                   (https://rdf.bg/ifcdoc/CP64/xxxxOpenModelByStream.html)
 //				int_t					repository							IN
 //				const void				* callback							IN
 //				SdaiString				schemaName							IN
@@ -9050,7 +9050,7 @@ static	inline	int_t	xxxxOpenModelByStream(
 #endif
 
 //
-//		sdaiplusGetAggregationType                              (http://rdf.bg/ifcdoc/CP64/sdaiplusGetAggregationType.html)
+//		sdaiplusGetAggregationType                              (https://rdf.bg/ifcdoc/CP64/sdaiplusGetAggregationType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAggr			aggregate							IN
 //
@@ -9064,7 +9064,7 @@ int_t			DECL STDC	sdaiplusGetAggregationType(
 								);
 
 //
-//		xxxxGetAttrType                                         (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrType.html)
+//		xxxxGetAttrType                                         (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrType.html)
 //				SdaiInstance			instance							IN
 //				const SdaiAttr			attribute							IN
 //				SdaiString				* attributeType						IN / OUT
@@ -9103,7 +9103,7 @@ static	inline	int_t	xxxxGetAttrType(
 #endif
 
 //
-//		xxxxGetAttrTypeBN                                       (http://rdf.bg/ifcdoc/CP64/xxxxGetAttrTypeBN.html)
+//		xxxxGetAttrTypeBN                                       (https://rdf.bg/ifcdoc/CP64/xxxxGetAttrTypeBN.html)
 //				SdaiInstance			instance							IN
 //				SdaiString				attributeName						IN
 //				SdaiString				* attributeType						IN / OUT
@@ -9154,7 +9154,7 @@ static	inline	int_t	xxxxGetAttrTypeBN(
 #endif
 
 //
-//		GetSPFFHeaderItemUnicode                                (http://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItemUnicode.html)
+//		GetSPFFHeaderItemUnicode                                (https://rdf.bg/ifcdoc/CP64/GetSPFFHeaderItemUnicode.html)
 //				SdaiModel				model								IN
 //				int_t					itemIndex							IN
 //				int_t					itemSubIndex						IN
@@ -9178,7 +9178,7 @@ int_t			DECL STDC	GetSPFFHeaderItemUnicode(
 //
 
 //
-//		validateSetOptions                                      (http://rdf.bg/ifcdoc/CP64/validateSetOptions.html)
+//		validateSetOptions                                      (https://rdf.bg/ifcdoc/CP64/validateSetOptions.html)
 //				int_t					timeLimitSeconds					IN
 //				int_t					issueCntLimit						IN
 //				bool					showEachIssueOnce					IN
@@ -9206,7 +9206,7 @@ int_t			DECL STDC	GetSPFFHeaderItemUnicode(
 //		bit 12:	(__WHERE_RULE)						where-rule check
 //		bit 13:	(__UNIQUE_RULE)						unique-rule check
 //		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-//		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+//		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
 //		bit 63:	(__INTERNAL_ERROR)					unspecified error
 //
 void			DECL STDC	validateSetOptions(
@@ -9218,7 +9218,7 @@ void			DECL STDC	validateSetOptions(
 								);
 
 //
-//		validateGetOptions                                      (http://rdf.bg/ifcdoc/CP64/validateGetOptions.html)
+//		validateGetOptions                                      (https://rdf.bg/ifcdoc/CP64/validateGetOptions.html)
 //				int_t					* timeLimitSeconds					IN / OUT
 //				int_t					* issueCntLimit						IN / OUT
 //				bool					* showEachIssueOnce					IN / OUT
@@ -9246,7 +9246,7 @@ void			DECL STDC	validateSetOptions(
 //		bit 12:	(__WHERE_RULE)						where-rule check
 //		bit 13:	(__UNIQUE_RULE)						unique-rule check
 //		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-//		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+//		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
 //		bit 63:	(__INTERNAL_ERROR)					unspecified error
 //
 uint64_t		DECL STDC	validateGetOptions(
@@ -9257,7 +9257,7 @@ uint64_t		DECL STDC	validateGetOptions(
 								);
 
 //
-//		validateModel                                           (http://rdf.bg/ifcdoc/CP64/validateModel.html)
+//		validateModel                                           (https://rdf.bg/ifcdoc/CP64/validateModel.html)
 //				SdaiModel				model								IN
 //
 //				ValidationResults		returns								OUT
@@ -9269,7 +9269,7 @@ ValidationResults	DECL STDC	validateModel(
 								);
 
 //
-//		validateInstance                                        (http://rdf.bg/ifcdoc/CP64/validateInstance.html)
+//		validateInstance                                        (https://rdf.bg/ifcdoc/CP64/validateInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				ValidationResults		returns								OUT
@@ -9281,7 +9281,7 @@ ValidationResults	DECL STDC	validateInstance(
 								);
 
 //
-//		validateFreeResults                                     (http://rdf.bg/ifcdoc/CP64/validateFreeResults.html)
+//		validateFreeResults                                     (https://rdf.bg/ifcdoc/CP64/validateFreeResults.html)
 //				ValidationResults		results								IN
 //
 //				void					returns
@@ -9293,7 +9293,7 @@ void			DECL STDC	validateFreeResults(
 								);
 
 //
-//		validateGetFirstIssue                                   (http://rdf.bg/ifcdoc/CP64/validateGetFirstIssue.html)
+//		validateGetFirstIssue                                   (https://rdf.bg/ifcdoc/CP64/validateGetFirstIssue.html)
 //				ValidationResults		results								IN
 //
 //				ValidationIssue			returns								OUT
@@ -9306,7 +9306,7 @@ ValidationIssue	DECL STDC	validateGetFirstIssue(
 								);
 
 //
-//		validateGetNextIssue                                    (http://rdf.bg/ifcdoc/CP64/validateGetNextIssue.html)
+//		validateGetNextIssue                                    (https://rdf.bg/ifcdoc/CP64/validateGetNextIssue.html)
 //				ValidationIssue			issue								IN
 //
 //				ValidationIssue			returns								OUT
@@ -9319,7 +9319,7 @@ ValidationIssue	DECL STDC	validateGetNextIssue(
 								);
 
 //
-//		validateGetStatus                                       (http://rdf.bg/ifcdoc/CP64/validateGetStatus.html)
+//		validateGetStatus                                       (https://rdf.bg/ifcdoc/CP64/validateGetStatus.html)
 //				ValidationResults		results								IN
 //
 //				enum_validation_status	returns								OUT
@@ -9337,7 +9337,7 @@ enum_validation_status	DECL STDC	validateGetStatus(
 								);
 
 //
-//		validateGetIssueType                                    (http://rdf.bg/ifcdoc/CP64/validateGetIssueType.html)
+//		validateGetIssueType                                    (https://rdf.bg/ifcdoc/CP64/validateGetIssueType.html)
 //				ValidationIssue			issue								IN
 //
 //				enum_validation_type	returns								OUT
@@ -9359,7 +9359,7 @@ enum_validation_status	DECL STDC	validateGetStatus(
 //		bit 12:	(__WHERE_RULE)						where-rule check
 //		bit 13:	(__UNIQUE_RULE)						unique-rule check
 //		bit 14:	(__STAR_USAGE)						* is used only for derived arguments
-//		bit 15:	(__CALL_ARGUMENT)					validateModel / validateInstance function argument should be model / instance
+//		bit 15:	(__CALL_ARGUMENT)					validateModel/validateInstance function argument should be model/instance
 //		bit 63:	(__INTERNAL_ERROR)					unspecified error
 //
 enum_validation_type	DECL STDC	validateGetIssueType(
@@ -9367,7 +9367,7 @@ enum_validation_type	DECL STDC	validateGetIssueType(
 								);
 
 //
-//		validateGetInstance                                     (http://rdf.bg/ifcdoc/CP64/validateGetInstance.html)
+//		validateGetInstance                                     (https://rdf.bg/ifcdoc/CP64/validateGetInstance.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiInstance			returns								OUT
@@ -9379,7 +9379,7 @@ SdaiInstance	DECL STDC	validateGetInstance(
 								);
 
 //
-//		validateGetInstanceRelated                              (http://rdf.bg/ifcdoc/CP64/validateGetInstanceRelated.html)
+//		validateGetInstanceRelated                              (https://rdf.bg/ifcdoc/CP64/validateGetInstanceRelated.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiInstance			returns								OUT
@@ -9391,7 +9391,7 @@ SdaiInstance	DECL STDC	validateGetInstanceRelated(
 								);
 
 //
-//		validateGetEntity                                       (http://rdf.bg/ifcdoc/CP64/validateGetEntity.html)
+//		validateGetEntity                                       (https://rdf.bg/ifcdoc/CP64/validateGetEntity.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiEntity				returns								OUT
@@ -9403,7 +9403,7 @@ SdaiEntity		DECL STDC	validateGetEntity(
 								);
 
 //
-//		validateGetAttr                                         (http://rdf.bg/ifcdoc/CP64/validateGetAttr.html)
+//		validateGetAttr                                         (https://rdf.bg/ifcdoc/CP64/validateGetAttr.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiAttr				returns								OUT
@@ -9415,7 +9415,7 @@ SdaiAttr		DECL STDC	validateGetAttr(
 								);
 
 //
-//		validateGetAggrLevel                                    (http://rdf.bg/ifcdoc/CP64/validateGetAggrLevel.html)
+//		validateGetAggrLevel                                    (https://rdf.bg/ifcdoc/CP64/validateGetAggrLevel.html)
 //				ValidationIssue			issue								IN
 //
 //				ValidationIssueLevel	returns								OUT
@@ -9427,7 +9427,7 @@ ValidationIssueLevel	DECL STDC	validateGetAggrLevel(
 								);
 
 //
-//		validateGetAggrIndArray                                 (http://rdf.bg/ifcdoc/CP64/validateGetAggrIndArray.html)
+//		validateGetAggrIndArray                                 (https://rdf.bg/ifcdoc/CP64/validateGetAggrIndArray.html)
 //				ValidationIssue			issue								IN
 //
 //				const int_t				* returns							OUT
@@ -9439,7 +9439,7 @@ const int_t		DECL * STDC	validateGetAggrIndArray(
 								);
 
 //
-//		validateGetIssueLevel                                   (http://rdf.bg/ifcdoc/CP64/validateGetIssueLevel.html)
+//		validateGetIssueLevel                                   (https://rdf.bg/ifcdoc/CP64/validateGetIssueLevel.html)
 //				ValidationIssue			issue								IN
 //
 //				int_t					returns								OUT
@@ -9451,7 +9451,7 @@ int_t			DECL STDC	validateGetIssueLevel(
 								);
 
 //
-//		validateGetDescription                                  (http://rdf.bg/ifcdoc/CP64/validateGetDescription.html)
+//		validateGetDescription                                  (https://rdf.bg/ifcdoc/CP64/validateGetDescription.html)
 //				ValidationIssue			issue								IN
 //
 //				SdaiString				returns								OUT
@@ -9467,7 +9467,7 @@ SdaiString		DECL STDC	validateGetDescription(
 //
 
 //
-//		initializeModellingInstance                             (http://rdf.bg/ifcdoc/CP64/initializeModellingInstance.html)
+//		initializeModellingInstance                             (https://rdf.bg/ifcdoc/CP64/initializeModellingInstance.html)
 //				SdaiModel				model								IN
 //				int_t					* noVertices						IN / OUT
 //				int_t					* noIndices							IN / OUT
@@ -9487,7 +9487,7 @@ int_t			DECL STDC	initializeModellingInstance(
 								);
 
 //
-//		finalizeModelling                                       (http://rdf.bg/ifcdoc/CP64/finalizeModelling.html)
+//		finalizeModelling                                       (https://rdf.bg/ifcdoc/CP64/finalizeModelling.html)
 //				SdaiModel				model								IN
 //				float					* vertices							IN / OUT
 //				int_t					* indices							IN / OUT
@@ -9505,7 +9505,7 @@ int_t			DECL STDC	finalizeModelling(
 								);
 
 //
-//		getInstanceInModelling                                  (http://rdf.bg/ifcdoc/CP64/getInstanceInModelling.html)
+//		getInstanceInModelling                                  (https://rdf.bg/ifcdoc/CP64/getInstanceInModelling.html)
 //				SdaiModel				model								IN
 //				SdaiInstance			instance							IN
 //				int_t					mode								IN
@@ -9515,7 +9515,7 @@ int_t			DECL STDC	finalizeModelling(
 //
 //				int_t					returns								OUT
 //
-//	This call is deprecated, there is no direct / easy replacement although the functionality is present. If you still use this call please contact RDF to find a solution together.
+//	This call is deprecated, there is no direct/easy replacement although the functionality is present. If you still use this call please contact RDF to find a solution together.
 //
 int_t			DECL STDC	getInstanceInModelling(
 									SdaiModel				model,
@@ -9527,7 +9527,7 @@ int_t			DECL STDC	getInstanceInModelling(
 								);
 
 //
-//		setVertexOffset                                         (http://rdf.bg/ifcdoc/CP64/setVertexOffset.html)
+//		setVertexOffset                                         (https://rdf.bg/ifcdoc/CP64/setVertexOffset.html)
 //				SdaiModel				model								IN
 //				double					x									IN
 //				double					y									IN
@@ -9545,7 +9545,7 @@ void			DECL STDC	setVertexOffset(
 								);
 
 //
-//		setFormat                                               (http://rdf.bg/ifcdoc/CP64/setFormat.html)
+//		setFormat                                               (https://rdf.bg/ifcdoc/CP64/setFormat.html)
 //				SdaiModel				model								IN
 //				int_t					setting								IN
 //				int_t					mask								IN
@@ -9561,7 +9561,7 @@ void			DECL STDC	setFormat(
 								);
 
 //
-//		getConceptualFaceCnt                                    (http://rdf.bg/ifcdoc/CP64/getConceptualFaceCnt.html)
+//		getConceptualFaceCnt                                    (https://rdf.bg/ifcdoc/CP64/getConceptualFaceCnt.html)
 //				SdaiInstance			instance							IN
 //
 //				int_t					returns								OUT
@@ -9573,7 +9573,7 @@ int_t			DECL STDC	getConceptualFaceCnt(
 								);
 
 //
-//		getConceptualFaceEx                                     (http://rdf.bg/ifcdoc/CP64/getConceptualFaceEx.html)
+//		getConceptualFaceEx                                     (https://rdf.bg/ifcdoc/CP64/getConceptualFaceEx.html)
 //				SdaiInstance			instance							IN
 //				int_t					index								IN
 //				int_t					* startIndexTriangles				IN / OUT
@@ -9607,7 +9607,7 @@ int_t			DECL STDC	getConceptualFaceEx(
 								);
 
 //
-//		createGeometryConversion                                (http://rdf.bg/ifcdoc/CP64/createGeometryConversion.html)
+//		createGeometryConversion                                (https://rdf.bg/ifcdoc/CP64/createGeometryConversion.html)
 //				SdaiInstance			instance							IN
 //				int64_t					* owlInstance						IN / OUT
 //
@@ -9621,7 +9621,7 @@ void			DECL STDC	createGeometryConversion(
 								);
 
 //
-//		convertInstance                                         (http://rdf.bg/ifcdoc/CP64/convertInstance.html)
+//		convertInstance                                         (https://rdf.bg/ifcdoc/CP64/convertInstance.html)
 //				SdaiInstance			instance							IN
 //
 //				void					returns
@@ -9633,7 +9633,7 @@ void			DECL STDC	convertInstance(
 								);
 
 //
-//		initializeModellingInstanceEx                           (http://rdf.bg/ifcdoc/CP64/initializeModellingInstanceEx.html)
+//		initializeModellingInstanceEx                           (https://rdf.bg/ifcdoc/CP64/initializeModellingInstanceEx.html)
 //				SdaiModel				model								IN
 //				int_t					* noVertices						IN / OUT
 //				int_t					* noIndices							IN / OUT
@@ -9655,7 +9655,7 @@ int_t			DECL STDC	initializeModellingInstanceEx(
 								);
 
 //
-//		exportModellingAsOWL                                    (http://rdf.bg/ifcdoc/CP64/exportModellingAsOWL.html)
+//		exportModellingAsOWL                                    (https://rdf.bg/ifcdoc/CP64/exportModellingAsOWL.html)
 //				SdaiModel				model								IN
 //				SdaiString				fileName							IN
 //

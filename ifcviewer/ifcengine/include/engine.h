@@ -52,7 +52,7 @@ typedef		int64_t										ConceptualFace;
 #define		OBJECTPROPERTY_TYPE							1
 #define		OBJECTTYPEPROPERTY_TYPE						1
 #define		DATATYPEPROPERTY_TYPE_BOOLEAN				2
-#define		DATATYPEPROPERTY_TYPE_STRING				3		//	DATATYPEPROPERTY_TYPE_CHAR
+#define		DATATYPEPROPERTY_TYPE_STRING				3				//	DATATYPEPROPERTY_TYPE_CHAR
 #define		DATATYPEPROPERTY_TYPE_INTEGER				4
 #define		DATATYPEPROPERTY_TYPE_DOUBLE				5
 #define		DATATYPEPROPERTY_TYPE_BYTE					6
@@ -90,7 +90,7 @@ typedef		int64_t										ConceptualFace;
 #define		FORMAT_EXPORT_FACE_POLYGONS					FLAGBIT(12)		//	Object face polygon lines (dense wireframe) are exported (requires FORMAT_FLAG_CONTAINS_TRIANGLES)
 #define		FORMAT_EXPORT_CONCEPTUAL_FACE_POLYGONS		FLAGBIT(13)		//	Object conceptual face polygon lines (wireframe) are exported 
 #define		FORMAT_EXPORT_POLYGONS_AS_TUPLES			FLAGBIT(14)		//	Polygon lines (wireframe) exported as tuples (edges) - else as list (loop)
-#define		FORMAT_EXPORT_ADVANCED_NORMALS				FLAGBIT(15)		//	Normal's are exported to be in line with the original semantic form description (orthogonal to conceptual face, could be non orthogonal to the planar face or triangle) - else all normals of triangles are transformed orthogonal to the palnar face or triangle they belong to
+#define		FORMAT_EXPORT_ADVANCED_NORMALS				FLAGBIT(15)		//	Normal vectors are exported to be in line with the original semantic form description (orthogonal to conceptual face, could be non orthogonal to the planar face or triangle) - else all normal vectors of triangles are transformed orthogonal to the planar face or triangle they belong to
 #define		FORMAT_EXPORT_DIRECTX						FLAGBIT(16)		//	Where possible DirectX compatibility is given to exported data. Unsets FORMAT_FLAG_OPENGL, FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010
 #define		FORMAT_EXPORT_OPENGL						FLAGBIT(17)		//	Where possible OpenGL compatibility is given to exported data. Unsets FORMAT_FLAG_DIRECTX. Sets FORMAT_FLAG_VERSION_0001, FORMAT_FLAG_VERSION_0010
 #define		FORMAT_EXPORT_DOUBLE_SIDED					FLAGBIT(18)		//	Every face has exactly one opposite face (normally both index and vertex array are doubled in size)
@@ -144,7 +144,7 @@ typedef		int64_t										ConceptualFace;
 #endif
 
 //
-//		GetRevision                                             (http://rdf.bg/gkdoc/CP64/GetRevision.html)
+//		GetRevision                                             (https://rdf.bg/gkdoc/CP64/GetRevision.html)
 //				const char				** timeStamp						IN / OUT
 //
 //				int64_t					returns								OUT
@@ -186,7 +186,7 @@ static	inline	int64_t	GetRevision(
 #endif
 
 //
-//		GetRevisionW                                            (http://rdf.bg/gkdoc/CP64/GetRevisionW.html)
+//		GetRevisionW                                            (https://rdf.bg/gkdoc/CP64/GetRevisionW.html)
 //				const wchar_t			** timeStamp						IN / OUT
 //
 //				int64_t					returns								OUT
@@ -228,19 +228,19 @@ static	inline	int64_t	GetRevisionW(
 #endif
 
 //
-//		GetProtection                                           (http://rdf.bg/gkdoc/CP64/GetProtection.html)
+//		GetProtection                                           (https://rdf.bg/gkdoc/CP64/GetProtection.html)
 //				int64_t					returns								OUT
 //
 //	This call is required to be called to enable the DLL to work if protection is active.
 //
-//	Returns the number of days (incl. this one) that this version is still active or 0 if no protection is embedded.
+//	Returns the number of days (including this one) that this version is still active or 0 if no protection is embedded.
 //	In case no days are left and protection is active this call will return -1.
 //
 int64_t			DECL STDC	GetProtection(
 								);
 
 //
-//		GetEnvironment                                          (http://rdf.bg/gkdoc/CP64/GetEnvironment.html)
+//		GetEnvironment                                          (https://rdf.bg/gkdoc/CP64/GetEnvironment.html)
 //				const char				** environmentVariables				IN / OUT
 //				const char				** developmentVariables				IN / OUT
 //
@@ -293,7 +293,7 @@ static	inline	int64_t	GetEnvironment(
 #endif
 
 //
-//		GetEnvironmentW                                         (http://rdf.bg/gkdoc/CP64/GetEnvironmentW.html)
+//		GetEnvironmentW                                         (https://rdf.bg/gkdoc/CP64/GetEnvironmentW.html)
 //				const wchar_t			** environmentVariables				IN / OUT
 //				const wchar_t			** developmentVariables				IN / OUT
 //
@@ -346,7 +346,7 @@ static	inline	int64_t	GetEnvironmentW(
 #endif
 
 //
-//		SetAssertionFile                                        (http://rdf.bg/gkdoc/CP64/SetAssertionFile.html)
+//		SetAssertionFile                                        (https://rdf.bg/gkdoc/CP64/SetAssertionFile.html)
 //				const char				* fileName							IN
 //
 //				void					returns
@@ -379,7 +379,7 @@ static	inline	void	SetAssertionFile(
 #endif
 
 //
-//		SetAssertionFileW                                       (http://rdf.bg/gkdoc/CP64/SetAssertionFileW.html)
+//		SetAssertionFileW                                       (https://rdf.bg/gkdoc/CP64/SetAssertionFileW.html)
 //				const wchar_t			* fileName							IN
 //
 //				void					returns
@@ -412,7 +412,7 @@ static	inline	void	SetAssertionFileW(
 #endif
 
 //
-//		GetAssertionFile                                        (http://rdf.bg/gkdoc/CP64/GetAssertionFile.html)
+//		GetAssertionFile                                        (https://rdf.bg/gkdoc/CP64/GetAssertionFile.html)
 //				const char				** fileName							IN / OUT
 //
 //				const char				* returns							OUT
@@ -454,7 +454,7 @@ static	inline	const char	* GetAssertionFile(
 #endif
 
 //
-//		GetAssertionFileW                                       (http://rdf.bg/gkdoc/CP64/GetAssertionFileW.html)
+//		GetAssertionFileW                                       (https://rdf.bg/gkdoc/CP64/GetAssertionFileW.html)
 //				const wchar_t			** fileName							IN / OUT
 //
 //				const wchar_t			* returns							OUT
@@ -496,7 +496,7 @@ static	inline	const wchar_t	* GetAssertionFileW(
 #endif
 
 //
-//		SetCharacterSerialization                               (http://rdf.bg/gkdoc/CP64/SetCharacterSerialization.html)
+//		SetCharacterSerialization                               (https://rdf.bg/gkdoc/CP64/SetCharacterSerialization.html)
 //				OwlModel				model								IN
 //				int64_t					encoding							IN
 //				int64_t					wcharBitSizeOverride				IN
@@ -504,9 +504,9 @@ static	inline	const wchar_t	* GetAssertionFileW(
 //
 //				int64_t					returns								OUT
 //
-//	This call defines how characters for names, strings will be serializaed and how
-//	they are expected to be serialized. An exception are the Open / Import / Save calls,
-//	these calls have a fixed way of serialization of path / file names.
+//	This call defines how characters for names, strings will be serialized and how
+//	they are expected to be serialized. An exception are the Open/Import/Save calls,
+//	these calls have a fixed way of serialization of path/file names.
 //
 //	If the encoding value is non-zero the following values are possible (if zero encoding is kept as defined)
 //		 32 [default]	encoding ignored
@@ -560,7 +560,7 @@ int64_t			DECL STDC	SetCharacterSerialization(
 								);
 
 //
-//		GetCharacterSerialization                               (http://rdf.bg/gkdoc/CP64/GetCharacterSerialization.html)
+//		GetCharacterSerialization                               (https://rdf.bg/gkdoc/CP64/GetCharacterSerialization.html)
 //				OwlModel				model								IN
 //				int64_t					* encoding							IN / OUT
 //				bool					* ascii								IN / OUT
@@ -578,7 +578,7 @@ int64_t			DECL STDC	GetCharacterSerialization(
 								);
 
 //
-//		SetModellingStyle                                       (http://rdf.bg/gkdoc/CP64/SetModellingStyle.html)
+//		SetModellingStyle                                       (https://rdf.bg/gkdoc/CP64/SetModellingStyle.html)
 //				OwlModel				model								IN
 //				uint64_t				setting								IN
 //				uint64_t				mask								IN
@@ -594,7 +594,7 @@ void			DECL STDC	SetModellingStyle(
 								);
 
 //
-//		GetModellingStyle                                       (http://rdf.bg/gkdoc/CP64/GetModellingStyle.html)
+//		GetModellingStyle                                       (https://rdf.bg/gkdoc/CP64/GetModellingStyle.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
@@ -608,14 +608,14 @@ uint64_t		DECL STDC	GetModellingStyle(
 								);
 
 //
-//		AbortModel                                              (http://rdf.bg/gkdoc/CP64/AbortModel.html)
+//		AbortModel                                              (https://rdf.bg/gkdoc/CP64/AbortModel.html)
 //				OwlModel				model								IN
 //				int64_t					setting								IN
 //
 //				int64_t					returns								OUT
 //
 //	This function abort running processes for a model. It can be used when a task takes more time than
-//	expected / available, or in case the requested results are not relevant anymore.
+//	expected/available, or in case the requested results are not relevant anymore.
 //
 int64_t			DECL STDC	AbortModel(
 									OwlModel				model,
@@ -623,7 +623,7 @@ int64_t			DECL STDC	AbortModel(
 								);
 
 //
-//		GetSessionMetaInfo                                      (http://rdf.bg/gkdoc/CP64/GetSessionMetaInfo.html)
+//		GetSessionMetaInfo                                      (https://rdf.bg/gkdoc/CP64/GetSessionMetaInfo.html)
 //				int64_t					* allocatedBlocks					IN / OUT
 //				int64_t					* allocatedBytes					IN / OUT
 //				int64_t					* nonUsedBlocks						IN / OUT
@@ -642,7 +642,7 @@ int64_t			DECL STDC	GetSessionMetaInfo(
 								);
 
 //
-//		GetModelMetaInfo                                        (http://rdf.bg/gkdoc/CP64/GetModelMetaInfo.html)
+//		GetModelMetaInfo                                        (https://rdf.bg/gkdoc/CP64/GetModelMetaInfo.html)
 //				OwlModel				model								IN
 //				int64_t					* activeClasses						IN / OUT
 //				int64_t					* removedClasses					IN / OUT
@@ -669,7 +669,7 @@ int64_t			DECL STDC	GetModelMetaInfo(
 								);
 
 //
-//		GetInstanceMetaInfo                                     (http://rdf.bg/gkdoc/CP64/GetInstanceMetaInfo.html)
+//		GetInstanceMetaInfo                                     (https://rdf.bg/gkdoc/CP64/GetInstanceMetaInfo.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* allocatedBlocks					IN / OUT
 //				int64_t					* allocatedBytes					IN / OUT
@@ -686,7 +686,7 @@ int64_t			DECL STDC	GetInstanceMetaInfo(
 								);
 
 //
-//		GetSmoothness                                           (http://rdf.bg/gkdoc/CP64/GetSmoothness.html)
+//		GetSmoothness                                           (https://rdf.bg/gkdoc/CP64/GetSmoothness.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* degree							IN / OUT
 //
@@ -694,9 +694,9 @@ int64_t			DECL STDC	GetInstanceMetaInfo(
 //
 //	This function returns the smoothness of a line or surface.
 //	In case the smoothness can be defined the degree will get assigned either
-//		0 - continuous curve / surface (i.e. degree 9)
-//		1 - the direction of the curve / surface is gradually changing (i.e. degree 1)
-//		2 - the change of direction of the curve / surface is gradually changing (i.e. degree 2)
+//		0 - continuous curve/surface (i.e. degree 9)
+//		1 - the direction of the curve/surface is gradually changing (i.e. degree 1)
+//		2 - the change of direction of the curve/surface is gradually changing (i.e. degree 2)
 //	In return value of this function returns the dimension of the found smoothness:
 //		0 - smoothness could not be defined
 //		1 - found the smoothness of a curve
@@ -708,7 +708,7 @@ int64_t			DECL STDC	GetSmoothness(
 								);
 
 //
-//		AddState                                                (http://rdf.bg/gkdoc/CP64/AddState.html)
+//		AddState                                                (https://rdf.bg/gkdoc/CP64/AddState.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //
@@ -727,7 +727,7 @@ void			DECL STDC	AddState(
 								);
 
 //
-//		GetModel                                                (http://rdf.bg/gkdoc/CP64/GetModel.html)
+//		GetModel                                                (https://rdf.bg/gkdoc/CP64/GetModel.html)
 //				RdfsResource			rdfsResource						IN
 //
 //				OwlModel				returns								OUT
@@ -739,7 +739,7 @@ OwlModel		DECL STDC	GetModel(
 								);
 
 //
-//		OrderedHandles                                          (http://rdf.bg/gkdoc/CP64/OrderedHandles.html)
+//		OrderedHandles                                          (https://rdf.bg/gkdoc/CP64/OrderedHandles.html)
 //				OwlModel				model								IN
 //				int64_t					* classCnt							IN / OUT
 //				int64_t					* propertyCnt						IN / OUT
@@ -751,7 +751,7 @@ OwlModel		DECL STDC	GetModel(
 //
 //	This call can be used in two ways. The optional arguments classCnt,
 //	propertyCnt and instanceCnt can be used to get the total amount of active classes,
-//	properies and instances available within the model.
+//	properties and instances available within the model.
 //
 //	The setting and mask can be used to order the handles given for classes,
 //	properties and instances.
@@ -763,7 +763,7 @@ OwlModel		DECL STDC	GetModel(
 //		  can share the same handles, using the correct argument cannot be checked anymore
 //		  by the library itself. This could result in crashes in case of incorrect assignments
 //		  by the hosting application.
-//	Note: internally there is no performance gain / loss. This is purely meant for situations
+//	Note: internally there is no performance gain/loss. This is purely meant for situations
 //		  where the hosting application can benefit performance wise from having an ordered list.
 //	Note: use in combination with other libraries is not advised, i.e. when combined with the
 //		  IFC generation from the IFC Engine component for example
@@ -778,7 +778,7 @@ void			DECL STDC	OrderedHandles(
 								);
 
 //
-//		PeelArray                                               (http://rdf.bg/gkdoc/CP64/PeelArray.html)
+//		PeelArray                                               (https://rdf.bg/gkdoc/CP64/PeelArray.html)
 //				const void				** inValue							IN
 //				const void				** outValue							IN / OUT
 //				int64_t					elementSize							IN
@@ -788,7 +788,7 @@ void			DECL STDC	OrderedHandles(
 //	This function introduces functionality that is missing or complicated in some programming languages.
 //	The attribute inValue is a reference to an array of references. The attribute outValue is a reference to the same array,
 //	however a number of elements earlier or further, i.e. number of elements being attribute elementSize. Be aware that as
-//	we are talking about references the offset is depending on 32 bit / 64 bit compilation.
+//	we are talking about references the offset is depending on 32 bit/64 bit compilation.
 //
 void			DECL STDC	PeelArray(
 									const void				** inValue,
@@ -820,7 +820,7 @@ static	inline	void	PeelArray(
 #endif
 
 //
-//		SetInternalCheck                                        (http://rdf.bg/gkdoc/CP64/SetInternalCheck.html)
+//		SetInternalCheck                                        (https://rdf.bg/gkdoc/CP64/SetInternalCheck.html)
 //				OwlModel				model								IN
 //				uint64_t				setting								IN
 //				uint64_t				mask								IN
@@ -838,7 +838,7 @@ void			DECL STDC	SetInternalCheck(
 								);
 
 //
-//		GetInternalCheck                                        (http://rdf.bg/gkdoc/CP64/GetInternalCheck.html)
+//		GetInternalCheck                                        (https://rdf.bg/gkdoc/CP64/GetInternalCheck.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
@@ -854,20 +854,20 @@ uint64_t		DECL STDC	GetInternalCheck(
 								);
 
 //
-//		GetInternalCheckIssueCnt                                (http://rdf.bg/gkdoc/CP64/GetInternalCheckIssueCnt.html)
+//		GetInternalCheckIssueCnt                                (https://rdf.bg/gkdoc/CP64/GetInternalCheckIssueCnt.html)
 //				OwlModel				model								IN
 //
 //				int64_t					returns								OUT
 //
 //	This function returns all issues found and not retrieved by the hosting application through 
-//	GetInternalCheckIssue() / GetInternalCheckIssueW().
+//	GetInternalCheckIssue()/GetInternalCheckIssueW().
 //
 int64_t			DECL STDC	GetInternalCheckIssueCnt(
 									OwlModel				model
 								);
 
 //
-//		GetInternalCheckIssue                                   (http://rdf.bg/gkdoc/CP64/GetInternalCheckIssue.html)
+//		GetInternalCheckIssue                                   (https://rdf.bg/gkdoc/CP64/GetInternalCheckIssue.html)
 //				OwlModel				model								IN
 //				const char				** name								IN / OUT
 //				const char				** description						IN / OUT
@@ -913,7 +913,7 @@ static	inline	void	GetInternalCheckIssue(
 #endif
 
 //
-//		GetInternalCheckIssueW                                  (http://rdf.bg/gkdoc/CP64/GetInternalCheckIssueW.html)
+//		GetInternalCheckIssueW                                  (https://rdf.bg/gkdoc/CP64/GetInternalCheckIssueW.html)
 //				OwlModel				model								IN
 //				const wchar_t			** name								IN / OUT
 //				const wchar_t			** description						IN / OUT
@@ -959,7 +959,7 @@ static	inline	void	GetInternalCheckIssueW(
 #endif
 
 //
-//		CloseSession                                            (http://rdf.bg/gkdoc/CP64/CloseSession.html)
+//		CloseSession                                            (https://rdf.bg/gkdoc/CP64/CloseSession.html)
 //				int64_t					returns								OUT
 //
 //	This function closes the session, after this call the geometry kernel cannot be used anymore.
@@ -968,7 +968,7 @@ int64_t			DECL STDC	CloseSession(
 								);
 
 //
-//		CleanMemory                                             (http://rdf.bg/gkdoc/CP64/CleanMemory.html)
+//		CleanMemory                                             (https://rdf.bg/gkdoc/CP64/CleanMemory.html)
 //				void					returns
 //
 //		This function ..
@@ -977,7 +977,7 @@ void			DECL STDC	CleanMemory(
 								);
 
 //
-//		ClearCache                                              (http://rdf.bg/gkdoc/CP64/ClearCache.html)
+//		ClearCache                                              (https://rdf.bg/gkdoc/CP64/ClearCache.html)
 //				OwlModel				model								IN
 //
 //				void					returns
@@ -989,7 +989,7 @@ void			DECL STDC	ClearCache(
 								);
 
 //
-//		AllocModelMemory                                        (http://rdf.bg/gkdoc/CP64/AllocModelMemory.html)
+//		AllocModelMemory                                        (https://rdf.bg/gkdoc/CP64/AllocModelMemory.html)
 //				OwlModel				model								IN
 //				int64_t					size								IN
 //
@@ -1004,7 +1004,7 @@ int64_t			DECL STDC	AllocModelMemory(
 								);
 
 //
-//		SetExternalReferenceData                                (http://rdf.bg/gkdoc/CP64/SetExternalReferenceData.html)
+//		SetExternalReferenceData                                (https://rdf.bg/gkdoc/CP64/SetExternalReferenceData.html)
 //				RdfsResource			rdfsResource						IN
 //				int64_t					identifier							IN
 //				void					* data								IN / OUT
@@ -1021,13 +1021,13 @@ int64_t			DECL STDC	SetExternalReferenceData(
 								);
 
 //
-//		GetExternalReferenceData                                (http://rdf.bg/gkdoc/CP64/GetExternalReferenceData.html)
+//		GetExternalReferenceData                                (https://rdf.bg/gkdoc/CP64/GetExternalReferenceData.html)
 //				RdfsResource			rdfsResource						IN
 //				int64_t					identifier							IN
 //
 //				int64_t					returns								OUT
 //
-//	Gets application data from model, class, property, instance that were previosly set by SetExternalReferenceData
+//	Gets application data from model, class, property, instance that were previously set by SetExternalReferenceData
 //	Returns 0 on error, 1 on success
 //
 int64_t			DECL STDC	GetExternalReferenceData(
@@ -1036,7 +1036,7 @@ int64_t			DECL STDC	GetExternalReferenceData(
 								);
 
 //
-//		GetExternalReferenceDataId                              (http://rdf.bg/gkdoc/CP64/GetExternalReferenceDataId.html)
+//		GetExternalReferenceDataId                              (https://rdf.bg/gkdoc/CP64/GetExternalReferenceDataId.html)
 //				OwlModel				model								IN
 //				const char				* uniqueAppName						IN
 //
@@ -1069,7 +1069,7 @@ static	inline	int64_t	GetExternalReferenceDataId(
 }
 
 //
-//  File IO / Stream / Copy API Calls
+//  File IO/Stream/Copy API Calls
 //
 
 //}} End C++ polymorphic versions
@@ -1077,7 +1077,7 @@ static	inline	int64_t	GetExternalReferenceDataId(
 #endif
 
 //
-//		CreateModel                                             (http://rdf.bg/gkdoc/CP64/CreateModel.html)
+//		CreateModel                                             (https://rdf.bg/gkdoc/CP64/CreateModel.html)
 //				OwlModel				returns								OUT
 //
 //	This function creates and empty model.
@@ -1088,7 +1088,7 @@ OwlModel		DECL STDC	CreateModel(
 								);
 
 //
-//		OpenModel                                               (http://rdf.bg/gkdoc/CP64/OpenModel.html)
+//		OpenModel                                               (https://rdf.bg/gkdoc/CP64/OpenModel.html)
 //				const char				* fileName							IN
 //
 //				OwlModel				returns								OUT
@@ -1121,7 +1121,7 @@ static	inline	OwlModel	OpenModel(
 #endif
 
 //
-//		OpenModelW                                              (http://rdf.bg/gkdoc/CP64/OpenModelW.html)
+//		OpenModelW                                              (https://rdf.bg/gkdoc/CP64/OpenModelW.html)
 //				const wchar_t			* fileName							IN
 //
 //				OwlModel				returns								OUT
@@ -1154,7 +1154,7 @@ static	inline	OwlModel	OpenModelW(
 #endif
 
 //
-//		OpenModelS                                              (http://rdf.bg/gkdoc/CP64/OpenModelS.html)
+//		OpenModelS                                              (https://rdf.bg/gkdoc/CP64/OpenModelS.html)
 //				const void				* callback							IN
 //
 //				OwlModel				returns								OUT
@@ -1168,7 +1168,7 @@ OwlModel		DECL STDC	OpenModelS(
 								);
 
 //
-//		OpenModelA                                              (http://rdf.bg/gkdoc/CP64/OpenModelA.html)
+//		OpenModelA                                              (https://rdf.bg/gkdoc/CP64/OpenModelA.html)
 //				const unsigned char		* content							IN
 //				int64_t					size								IN
 //
@@ -1204,7 +1204,7 @@ static	inline	OwlModel	OpenModelA(
 #endif
 
 //
-//		ImportModel                                             (http://rdf.bg/gkdoc/CP64/ImportModel.html)
+//		ImportModel                                             (https://rdf.bg/gkdoc/CP64/ImportModel.html)
 //				OwlModel				model								IN
 //				const char				* fileName							IN
 //
@@ -1243,7 +1243,7 @@ static	inline	OwlInstance	ImportModel(
 #endif
 
 //
-//		ImportModelW                                            (http://rdf.bg/gkdoc/CP64/ImportModelW.html)
+//		ImportModelW                                            (https://rdf.bg/gkdoc/CP64/ImportModelW.html)
 //				OwlModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1282,7 +1282,7 @@ static	inline	OwlInstance	ImportModelW(
 #endif
 
 //
-//		ImportModelS                                            (http://rdf.bg/gkdoc/CP64/ImportModelS.html)
+//		ImportModelS                                            (https://rdf.bg/gkdoc/CP64/ImportModelS.html)
 //				OwlModel				model								IN
 //				const void				* callback							IN
 //
@@ -1300,7 +1300,7 @@ OwlInstance		DECL STDC	ImportModelS(
 								);
 
 //
-//		ImportModelA                                            (http://rdf.bg/gkdoc/CP64/ImportModelA.html)
+//		ImportModelA                                            (https://rdf.bg/gkdoc/CP64/ImportModelA.html)
 //				OwlModel				model								IN
 //				const unsigned char		* content							IN
 //				int64_t					size								IN
@@ -1342,7 +1342,7 @@ static	inline	OwlInstance	ImportModelA(
 #endif
 
 //
-//		SaveInstanceTree                                        (http://rdf.bg/gkdoc/CP64/SaveInstanceTree.html)
+//		SaveInstanceTree                                        (https://rdf.bg/gkdoc/CP64/SaveInstanceTree.html)
 //				OwlInstance				owlInstance							IN
 //				const char				* fileName							IN
 //
@@ -1377,7 +1377,7 @@ static	inline	int64_t	SaveInstanceTree(
 #endif
 
 //
-//		SaveInstanceTreeW                                       (http://rdf.bg/gkdoc/CP64/SaveInstanceTreeW.html)
+//		SaveInstanceTreeW                                       (https://rdf.bg/gkdoc/CP64/SaveInstanceTreeW.html)
 //				OwlInstance				owlInstance							IN
 //				const wchar_t			* fileName							IN
 //
@@ -1412,7 +1412,7 @@ static	inline	int64_t	SaveInstanceTreeW(
 #endif
 
 //
-//		SaveInstanceTreeS                                       (http://rdf.bg/gkdoc/CP64/SaveInstanceTreeS.html)
+//		SaveInstanceTreeS                                       (https://rdf.bg/gkdoc/CP64/SaveInstanceTreeS.html)
 //				OwlInstance				owlInstance							IN
 //				const void				* callback							IN
 //				int64_t					size								IN
@@ -1428,7 +1428,7 @@ int64_t			DECL STDC	SaveInstanceTreeS(
 								);
 
 //
-//		SaveInstanceTreeA                                       (http://rdf.bg/gkdoc/CP64/SaveInstanceTreeA.html)
+//		SaveInstanceTreeA                                       (https://rdf.bg/gkdoc/CP64/SaveInstanceTreeA.html)
 //				OwlInstance				owlInstance							IN
 //				unsigned char			* content							IN / OUT
 //				int64_t					* size								IN / OUT
@@ -1444,7 +1444,7 @@ int64_t			DECL STDC	SaveInstanceTreeA(
 								);
 
 //
-//		SaveInstanceNetwork                                     (http://rdf.bg/gkdoc/CP64/SaveInstanceNetwork.html)
+//		SaveInstanceNetwork                                     (https://rdf.bg/gkdoc/CP64/SaveInstanceNetwork.html)
 //				OwlInstance				owlInstance							IN
 //				bool					includeInverseRelations				IN
 //				const char				* fileName							IN
@@ -1483,7 +1483,7 @@ static	inline	int64_t	SaveInstanceNetwork(
 #endif
 
 //
-//		SaveInstanceNetworkW                                    (http://rdf.bg/gkdoc/CP64/SaveInstanceNetworkW.html)
+//		SaveInstanceNetworkW                                    (https://rdf.bg/gkdoc/CP64/SaveInstanceNetworkW.html)
 //				OwlInstance				owlInstance							IN
 //				bool					includeInverseRelations				IN
 //				const wchar_t			* fileName							IN
@@ -1522,7 +1522,7 @@ static	inline	int64_t	SaveInstanceNetworkW(
 #endif
 
 //
-//		SaveInstanceNetworkS                                    (http://rdf.bg/gkdoc/CP64/SaveInstanceNetworkS.html)
+//		SaveInstanceNetworkS                                    (https://rdf.bg/gkdoc/CP64/SaveInstanceNetworkS.html)
 //				OwlInstance				owlInstance							IN
 //				bool					includeInverseRelations				IN
 //				const void				* callback							IN
@@ -1540,7 +1540,7 @@ int64_t			DECL STDC	SaveInstanceNetworkS(
 								);
 
 //
-//		SaveInstanceNetworkA                                    (http://rdf.bg/gkdoc/CP64/SaveInstanceNetworkA.html)
+//		SaveInstanceNetworkA                                    (https://rdf.bg/gkdoc/CP64/SaveInstanceNetworkA.html)
 //				OwlInstance				owlInstance							IN
 //				bool					includeInverseRelations				IN
 //				unsigned char			* content							IN / OUT
@@ -1558,7 +1558,7 @@ int64_t			DECL STDC	SaveInstanceNetworkA(
 								);
 
 //
-//		SaveModel                                               (http://rdf.bg/gkdoc/CP64/SaveModel.html)
+//		SaveModel                                               (https://rdf.bg/gkdoc/CP64/SaveModel.html)
 //				OwlModel				model								IN
 //				const char				* fileName							IN
 //
@@ -1593,7 +1593,7 @@ static	inline	int64_t	SaveModel(
 #endif
 
 //
-//		SaveModelW                                              (http://rdf.bg/gkdoc/CP64/SaveModelW.html)
+//		SaveModelW                                              (https://rdf.bg/gkdoc/CP64/SaveModelW.html)
 //				OwlModel				model								IN
 //				const wchar_t			* fileName							IN
 //
@@ -1628,7 +1628,7 @@ static	inline	int64_t	SaveModelW(
 #endif
 
 //
-//		SaveModelS                                              (http://rdf.bg/gkdoc/CP64/SaveModelS.html)
+//		SaveModelS                                              (https://rdf.bg/gkdoc/CP64/SaveModelS.html)
 //				OwlModel				model								IN
 //				const void				* callback							IN
 //				int64_t					size								IN
@@ -1644,7 +1644,7 @@ int64_t			DECL STDC	SaveModelS(
 								);
 
 //
-//		SaveModelA                                              (http://rdf.bg/gkdoc/CP64/SaveModelA.html)
+//		SaveModelA                                              (https://rdf.bg/gkdoc/CP64/SaveModelA.html)
 //				OwlModel				model								IN
 //				unsigned char			* content							IN / OUT
 //				int64_t					* size								IN / OUT
@@ -1660,15 +1660,15 @@ int64_t			DECL STDC	SaveModelA(
 								);
 
 //
-//		SetOverrideFileIO                                       (http://rdf.bg/gkdoc/CP64/SetOverrideFileIO.html)
+//		SetOverrideFileIO                                       (https://rdf.bg/gkdoc/CP64/SetOverrideFileIO.html)
 //				OwlModel				model								IN
 //				uint64_t				setting								IN
 //				uint64_t				mask								IN
 //
 //				void					returns
 //
-//	This function overrides the type of file saved / exported independent of the extension given.
-//	By default the extension of the file name will define the type saved / exported:
+//	This function overrides the type of file saved/exported independent of the extension given.
+//	By default the extension of the file name will define the type saved/exported:
 //		.rdf => generated RDF serialized content
 //		.ttl => generated TTL serialized content
 //		.bin => generated BIN/X serialized content
@@ -1676,7 +1676,7 @@ int64_t			DECL STDC	SaveModelA(
 //	Available formats
 //		RDF
 //		TTL
-//		BIN/L - readible but large BIN format
+//		BIN/L - readable but large BIN format
 //		BIN/S - Optimized Binary, only running within given revision 
 //		BIN/X - Optimized Binary, running in all revisions supporting BIN/X
 //
@@ -1703,14 +1703,14 @@ void			DECL STDC	SetOverrideFileIO(
 								);
 
 //
-//		GetOverrideFileIO                                       (http://rdf.bg/gkdoc/CP64/GetOverrideFileIO.html)
+//		GetOverrideFileIO                                       (https://rdf.bg/gkdoc/CP64/GetOverrideFileIO.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
 //				uint64_t				returns								OUT
 //
-//	This function get the current overrides for type of file saved / exported independent of the extension given.
-//	By default the extension of the file name will define the type saved / exported:
+//	This function get the current overrides for type of file saved/exported independent of the extension given.
+//	By default the extension of the file name will define the type saved/exported:
 //		.rdf => generated RDF serialized content
 //		.ttl => generated TTL serialized content
 //		.bin => generated BIN/X serialized content
@@ -1744,7 +1744,7 @@ uint64_t		DECL STDC	GetOverrideFileIO(
 								);
 
 //
-//		CopyInstanceTree                                        (http://rdf.bg/gkdoc/CP64/CopyInstanceTree.html)
+//		CopyInstanceTree                                        (https://rdf.bg/gkdoc/CP64/CopyInstanceTree.html)
 //				OwlInstance				owlInstance							IN
 //				OwlModel				targetModel							IN
 //
@@ -1765,7 +1765,7 @@ int64_t			DECL STDC	CopyInstanceTree(
 								);
 
 //
-//		CopyInstanceNetwork                                     (http://rdf.bg/gkdoc/CP64/CopyInstanceNetwork.html)
+//		CopyInstanceNetwork                                     (https://rdf.bg/gkdoc/CP64/CopyInstanceNetwork.html)
 //				OwlInstance				owlInstance							IN
 //				bool					includeInverseRelations				IN
 //				OwlModel				targetModel							IN
@@ -1774,7 +1774,7 @@ int64_t			DECL STDC	CopyInstanceTree(
 //
 //	This function copies the instance network towards a new model.
 //	An instance network is different from an instance tree in that it can contain 'loops', the performance
-//	from this call will be slower in case the tree / network is sparse.
+//	from this call will be slower in case the tree/network is sparse.
 //	In case model is empty a new model will be created (the handle to this new model can be retrieved through
 //	the call GetModel() based on the return value of this call).
 //	The model can be any open model, it can be zero (a new model will be created on-the-fly) and it can be
@@ -1793,7 +1793,7 @@ OwlInstance		DECL STDC	CopyInstanceNetwork(
 								);
 
 //
-//		EncodeBase64                                            (http://rdf.bg/gkdoc/CP64/EncodeBase64.html)
+//		EncodeBase64                                            (https://rdf.bg/gkdoc/CP64/EncodeBase64.html)
 //				char					* output							IN / OUT
 //				const unsigned char		* input								IN
 //				int64_t					size								IN
@@ -1860,7 +1860,7 @@ static	inline	char	* EncodeBase64(
 #endif
 
 //
-//		EncodeBase64W                                           (http://rdf.bg/gkdoc/CP64/EncodeBase64W.html)
+//		EncodeBase64W                                           (https://rdf.bg/gkdoc/CP64/EncodeBase64W.html)
 //				wchar_t					* output							IN / OUT
 //				const unsigned char		* input								IN
 //				int64_t					size								IN
@@ -1927,7 +1927,7 @@ static	inline	wchar_t	* EncodeBase64W(
 #endif
 
 //
-//		DecodeBase64                                            (http://rdf.bg/gkdoc/CP64/DecodeBase64.html)
+//		DecodeBase64                                            (https://rdf.bg/gkdoc/CP64/DecodeBase64.html)
 //				unsigned char			* output							IN / OUT
 //				const char				* input								IN
 //				int64_t					size								IN
@@ -1984,7 +1984,7 @@ static	inline	int64_t	DecodeBase64(
 #endif
 
 //
-//		DecodeBase64W                                           (http://rdf.bg/gkdoc/CP64/DecodeBase64W.html)
+//		DecodeBase64W                                           (https://rdf.bg/gkdoc/CP64/DecodeBase64W.html)
 //				unsigned char			* output							IN / OUT
 //				const wchar_t			* input								IN
 //				int64_t					size								IN
@@ -2041,7 +2041,7 @@ static	inline	int64_t	DecodeBase64W(
 #endif
 
 //
-//		CopyModel                                               (http://rdf.bg/gkdoc/CP64/CopyModel.html)
+//		CopyModel                                               (https://rdf.bg/gkdoc/CP64/CopyModel.html)
 //				OwlModel				sourceModel							IN
 //				OwlModel				targetModel							IN
 //				int64_t					* values							IN / OUT
@@ -2068,7 +2068,7 @@ OwlModel		DECL STDC	CopyModel(
 								);
 
 //
-//		CloseModel                                              (http://rdf.bg/gkdoc/CP64/CloseModel.html)
+//		CloseModel                                              (https://rdf.bg/gkdoc/CP64/CloseModel.html)
 //				OwlModel				model								IN
 //
 //				int64_t					returns								OUT
@@ -2083,7 +2083,7 @@ int64_t			DECL STDC	CloseModel(
 								);
 
 //
-//		IsModel                                                 (http://rdf.bg/gkdoc/CP64/IsModel.html)
+//		IsModel                                                 (https://rdf.bg/gkdoc/CP64/IsModel.html)
 //				RdfsResource			rdfsResource						IN
 //
 //				OwlModel				returns								OUT
@@ -2101,7 +2101,7 @@ OwlModel		DECL STDC	IsModel(
 //
 
 //
-//		CreateClass                                             (http://rdf.bg/gkdoc/CP64/CreateClass.html)
+//		CreateClass                                             (https://rdf.bg/gkdoc/CP64/CreateClass.html)
 //				OwlModel				model								IN
 //				const char				* name								IN
 //
@@ -2156,7 +2156,7 @@ static	inline	OwlClass	CreateClass(
 #endif
 
 //
-//		CreateClassW                                            (http://rdf.bg/gkdoc/CP64/CreateClassW.html)
+//		CreateClassW                                            (https://rdf.bg/gkdoc/CP64/CreateClassW.html)
 //				OwlModel				model								IN
 //				const wchar_t			* name								IN
 //
@@ -2211,7 +2211,7 @@ static	inline	OwlClass	CreateClassW(
 #endif
 
 //
-//		GetClassByName                                          (http://rdf.bg/gkdoc/CP64/GetClassByName.html)
+//		GetClassByName                                          (https://rdf.bg/gkdoc/CP64/GetClassByName.html)
 //				OwlModel				model								IN
 //				const char				* name								IN
 //
@@ -2247,7 +2247,7 @@ static	inline	OwlClass	GetClassByName(
 #endif
 
 //
-//		GetClassByNameW                                         (http://rdf.bg/gkdoc/CP64/GetClassByNameW.html)
+//		GetClassByNameW                                         (https://rdf.bg/gkdoc/CP64/GetClassByNameW.html)
 //				OwlModel				model								IN
 //				const wchar_t			* name								IN
 //
@@ -2283,7 +2283,7 @@ static	inline	OwlClass	GetClassByNameW(
 #endif
 
 //
-//		GetClassesByIterator                                    (http://rdf.bg/gkdoc/CP64/GetClassesByIterator.html)
+//		GetClassesByIterator                                    (https://rdf.bg/gkdoc/CP64/GetClassesByIterator.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //
@@ -2299,7 +2299,7 @@ OwlClass		DECL STDC	GetClassesByIterator(
 								);
 
 //
-//		SetClassParent                                          (http://rdf.bg/gkdoc/CP64/SetClassParent.html)
+//		SetClassParent                                          (https://rdf.bg/gkdoc/CP64/SetClassParent.html)
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
 //
@@ -2315,7 +2315,7 @@ OwlClass		DECL STDC	GetClassesByIterator(
 //	Returns owlClass if this call made any change to the parent class relation of owlClass.
 //
 //	It will return 0 in case:
-//		owlClass and / or parentOwlClass are 0
+//		owlClass and/or parentOwlClass are 0
 //		owlClass equals parentOwlClass
 //		parentOwlClass is already (indirectly) a parent of owlClass
 //		owlClass is (indirectly) a parent of parentOwlClass
@@ -2329,7 +2329,7 @@ OwlClass		DECL STDC	SetClassParent(
 								);
 
 //
-//		SetClassParentEx                                        (http://rdf.bg/gkdoc/CP64/SetClassParentEx.html)
+//		SetClassParentEx                                        (https://rdf.bg/gkdoc/CP64/SetClassParentEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
@@ -2346,7 +2346,7 @@ OwlClass		DECL STDC	SetClassParent(
 //	Returns owlClass if this call made any change to the parent class relation of owlClass.
 //
 //	It will return 0 in case:
-//		owlClass and / or parentOwlClass are 0
+//		owlClass and/or parentOwlClass are 0
 //		owlClass equals parentOwlClass
 //		parentOwlClass is already (indirectly) a parent of owlClass
 //		owlClass is (indirectly) a parent of parentOwlClass
@@ -2364,7 +2364,7 @@ OwlClass		DECL STDC	SetClassParentEx(
 								);
 
 //
-//		UnsetClassParent                                        (http://rdf.bg/gkdoc/CP64/UnsetClassParent.html)
+//		UnsetClassParent                                        (https://rdf.bg/gkdoc/CP64/UnsetClassParent.html)
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
 //
@@ -2377,7 +2377,7 @@ OwlClass		DECL STDC	SetClassParentEx(
 //	It removes parentOwlClass as immediate parents of owlClass if result is consistent.
 //
 //	It will return 0 in case:
-//		owlClass and / or parentOwlClass are 0
+//		owlClass and/or parentOwlClass are 0
 //		owlClass equals parentOwlClass
 //		parentOwlClass was not a direct parent of owlClass (could be as another parent class of owlClass has parentOwlClass as parent)
 //
@@ -2390,7 +2390,7 @@ OwlClass		DECL STDC	UnsetClassParent(
 								);
 
 //
-//		UnsetClassParentEx                                      (http://rdf.bg/gkdoc/CP64/UnsetClassParentEx.html)
+//		UnsetClassParentEx                                      (https://rdf.bg/gkdoc/CP64/UnsetClassParentEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
@@ -2404,7 +2404,7 @@ OwlClass		DECL STDC	UnsetClassParent(
 //	It removes parentOwlClass as immediate parents of owlClass if result is consistent.
 //
 //	It will return 0 in case:
-//		owlClass and / or parentOwlClass are 0
+//		owlClass and/or parentOwlClass are 0
 //		owlClass equals parentOwlClass
 //		parentOwlClass was not a direct parent of owlClass (could be as another parent class of owlClass has parentOwlClass as parent)
 //
@@ -2421,7 +2421,7 @@ OwlClass		DECL STDC	UnsetClassParentEx(
 								);
 
 //
-//		IsClassAncestor                                         (http://rdf.bg/gkdoc/CP64/IsClassAncestor.html)
+//		IsClassAncestor                                         (https://rdf.bg/gkdoc/CP64/IsClassAncestor.html)
 //				OwlClass				owlClass							IN
 //				OwlClass				ancestorOwlClass					IN
 //
@@ -2436,7 +2436,7 @@ int64_t			DECL STDC	IsClassAncestor(
 								);
 
 //
-//		GetClassParentsByIterator                               (http://rdf.bg/gkdoc/CP64/GetClassParentsByIterator.html)
+//		GetClassParentsByIterator                               (https://rdf.bg/gkdoc/CP64/GetClassParentsByIterator.html)
 //				OwlClass				owlClass							IN
 //				OwlClass				parentOwlClass						IN
 //
@@ -2452,7 +2452,7 @@ OwlClass		DECL STDC	GetClassParentsByIterator(
 								);
 
 //
-//		SetNameOfClass                                          (http://rdf.bg/gkdoc/CP64/SetNameOfClass.html)
+//		SetNameOfClass                                          (https://rdf.bg/gkdoc/CP64/SetNameOfClass.html)
 //				OwlClass				owlClass							IN
 //				const char				* name								IN
 //
@@ -2497,7 +2497,7 @@ static	inline	int64_t	SetNameOfClass(
 #endif
 
 //
-//		SetNameOfClassW                                         (http://rdf.bg/gkdoc/CP64/SetNameOfClassW.html)
+//		SetNameOfClassW                                         (https://rdf.bg/gkdoc/CP64/SetNameOfClassW.html)
 //				OwlClass				owlClass							IN
 //				const wchar_t			* name								IN
 //
@@ -2542,7 +2542,7 @@ static	inline	int64_t	SetNameOfClassW(
 #endif
 
 //
-//		SetNameOfClassEx                                        (http://rdf.bg/gkdoc/CP64/SetNameOfClassEx.html)
+//		SetNameOfClassEx                                        (https://rdf.bg/gkdoc/CP64/SetNameOfClassEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const char				* name								IN
@@ -2594,7 +2594,7 @@ static	inline	int64_t	SetNameOfClassEx(
 #endif
 
 //
-//		SetNameOfClassWEx                                       (http://rdf.bg/gkdoc/CP64/SetNameOfClassWEx.html)
+//		SetNameOfClassWEx                                       (https://rdf.bg/gkdoc/CP64/SetNameOfClassWEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const wchar_t			* name								IN
@@ -2646,7 +2646,7 @@ static	inline	int64_t	SetNameOfClassWEx(
 #endif
 
 //
-//		GetNameOfClass                                          (http://rdf.bg/gkdoc/CP64/GetNameOfClass.html)
+//		GetNameOfClass                                          (https://rdf.bg/gkdoc/CP64/GetNameOfClass.html)
 //				OwlClass				owlClass							IN
 //				const char				** name								IN / OUT
 //
@@ -2693,7 +2693,7 @@ static	inline	const char	* GetNameOfClass(
 #endif
 
 //
-//		GetNameOfClassW                                         (http://rdf.bg/gkdoc/CP64/GetNameOfClassW.html)
+//		GetNameOfClassW                                         (https://rdf.bg/gkdoc/CP64/GetNameOfClassW.html)
 //				OwlClass				owlClass							IN
 //				const wchar_t			** name								IN / OUT
 //
@@ -2740,7 +2740,7 @@ static	inline	const wchar_t	* GetNameOfClassW(
 #endif
 
 //
-//		GetNameOfClassEx                                        (http://rdf.bg/gkdoc/CP64/GetNameOfClassEx.html)
+//		GetNameOfClassEx                                        (https://rdf.bg/gkdoc/CP64/GetNameOfClassEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const char				** name								IN / OUT
@@ -2796,7 +2796,7 @@ static	inline	const char	* GetNameOfClassEx(
 #endif
 
 //
-//		GetNameOfClassWEx                                       (http://rdf.bg/gkdoc/CP64/GetNameOfClassWEx.html)
+//		GetNameOfClassWEx                                       (https://rdf.bg/gkdoc/CP64/GetNameOfClassWEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const wchar_t			** name								IN / OUT
@@ -2852,7 +2852,7 @@ static	inline	const wchar_t	* GetNameOfClassWEx(
 #endif
 
 //
-//		GetClassPropertyByIterator                              (http://rdf.bg/gkdoc/CP64/GetClassPropertyByIterator.html)
+//		GetClassPropertyByIterator                              (https://rdf.bg/gkdoc/CP64/GetClassPropertyByIterator.html)
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
 //				int64_t					* minCard							IN / OUT
@@ -2899,7 +2899,7 @@ static	inline	RdfProperty	GetClassPropertyByIterator(
 #endif
 
 //
-//		GetClassPropertyByIteratorEx                            (http://rdf.bg/gkdoc/CP64/GetClassPropertyByIteratorEx.html)
+//		GetClassPropertyByIteratorEx                            (https://rdf.bg/gkdoc/CP64/GetClassPropertyByIteratorEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
@@ -2917,7 +2917,7 @@ static	inline	RdfProperty	GetClassPropertyByIterator(
 //	Note: this function does not return inherited restrictions.
 //
 //	This call has the same behavior as GetClassPropertyByIterator, however needs to be
-//	used in case classes and / or properties are exchanged as a successive series of integers.
+//	used in case classes and/or properties are exchanged as a successive series of integers.
 //
 RdfProperty		DECL STDC	GetClassPropertyByIteratorEx(
 									OwlModel				model,
@@ -2953,7 +2953,7 @@ static	inline	RdfProperty	GetClassPropertyByIteratorEx(
 #endif
 
 //
-//		SetClassPropertyCardinalityRestriction                  (http://rdf.bg/gkdoc/CP64/SetClassPropertyCardinalityRestriction.html)
+//		SetClassPropertyCardinalityRestriction                  (https://rdf.bg/gkdoc/CP64/SetClassPropertyCardinalityRestriction.html)
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
 //				int64_t					minCard								IN
@@ -2976,7 +2976,7 @@ void			DECL STDC	SetClassPropertyCardinalityRestriction(
 								);
 
 //
-//		SetClassPropertyCardinalityRestrictionEx                (http://rdf.bg/gkdoc/CP64/SetClassPropertyCardinalityRestrictionEx.html)
+//		SetClassPropertyCardinalityRestrictionEx                (https://rdf.bg/gkdoc/CP64/SetClassPropertyCardinalityRestrictionEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
@@ -3004,7 +3004,7 @@ void			DECL STDC	SetClassPropertyCardinalityRestrictionEx(
 								);
 
 //
-//		GetClassPropertyCardinalityRestriction                  (http://rdf.bg/gkdoc/CP64/GetClassPropertyCardinalityRestriction.html)
+//		GetClassPropertyCardinalityRestriction                  (https://rdf.bg/gkdoc/CP64/GetClassPropertyCardinalityRestriction.html)
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
 //				int64_t					* minCard							IN / OUT
@@ -3030,7 +3030,7 @@ void			DECL STDC	GetClassPropertyCardinalityRestriction(
 								);
 
 //
-//		GetClassPropertyCardinalityRestrictionEx                (http://rdf.bg/gkdoc/CP64/GetClassPropertyCardinalityRestrictionEx.html)
+//		GetClassPropertyCardinalityRestrictionEx                (https://rdf.bg/gkdoc/CP64/GetClassPropertyCardinalityRestrictionEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
@@ -3061,7 +3061,7 @@ void			DECL STDC	GetClassPropertyCardinalityRestrictionEx(
 								);
 
 //
-//		GetClassPropertyAggregatedCardinalityRestriction        (http://rdf.bg/gkdoc/CP64/GetClassPropertyAggregatedCardinalityRestriction.html)
+//		GetClassPropertyAggregatedCardinalityRestriction        (https://rdf.bg/gkdoc/CP64/GetClassPropertyAggregatedCardinalityRestriction.html)
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
 //				int64_t					* minCard							IN / OUT
@@ -3082,7 +3082,7 @@ void			DECL STDC	GetClassPropertyAggregatedCardinalityRestriction(
 								);
 
 //
-//		GetClassPropertyAggregatedCardinalityRestrictionEx      (http://rdf.bg/gkdoc/CP64/GetClassPropertyAggregatedCardinalityRestrictionEx.html)
+//		GetClassPropertyAggregatedCardinalityRestrictionEx      (https://rdf.bg/gkdoc/CP64/GetClassPropertyAggregatedCardinalityRestrictionEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
@@ -3108,14 +3108,14 @@ void			DECL STDC	GetClassPropertyAggregatedCardinalityRestrictionEx(
 								);
 
 //
-//		GetGeometryClass                                        (http://rdf.bg/gkdoc/CP64/GetGeometryClass.html)
+//		GetGeometryClass                                        (https://rdf.bg/gkdoc/CP64/GetGeometryClass.html)
 //				OwlClass				owlClass							IN
 //
 //				OwlClass				returns								OUT
 //
 //	Returns non-zero if the owlClass is a geometry type. This call will return the input class
 //	for all classes initially available. It will return as well non-for all classes created by the
-//	user or loaded / imported through a model that (indirectly) inherit one of the
+//	user or loaded/imported through a model that (indirectly) inherit one of the
 //	original classes available. in this case it returns the original available class
 //	it inherits the behavior from.
 //
@@ -3124,7 +3124,7 @@ OwlClass		DECL STDC	GetGeometryClass(
 								);
 
 //
-//		GetGeometryClassEx                                      (http://rdf.bg/gkdoc/CP64/GetGeometryClassEx.html)
+//		GetGeometryClassEx                                      (https://rdf.bg/gkdoc/CP64/GetGeometryClassEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //
@@ -3132,7 +3132,7 @@ OwlClass		DECL STDC	GetGeometryClass(
 //
 //	Returns non-zero if the owlClass is a geometry type. This call will return the input class
 //	for all classes initially available. It will return as well non-for all classes created by the
-//	user or loaded / imported through a model that (indirectly) inherit one of the
+//	user or loaded/imported through a model that (indirectly) inherit one of the
 //	original classes available. in this case it returns the original available class
 //	it inherits the behavior from.
 //
@@ -3145,7 +3145,7 @@ OwlClass		DECL STDC	GetGeometryClassEx(
 								);
 
 //
-//		IsClass                                                 (http://rdf.bg/gkdoc/CP64/IsClass.html)
+//		IsClass                                                 (https://rdf.bg/gkdoc/CP64/IsClass.html)
 //				RdfsResource			rdfsResource						IN
 //
 //				OwlClass				returns								OUT
@@ -3163,7 +3163,7 @@ OwlClass		DECL STDC	IsClass(
 //
 
 //
-//		CreateProperty                                          (http://rdf.bg/gkdoc/CP64/CreateProperty.html)
+//		CreateProperty                                          (https://rdf.bg/gkdoc/CP64/CreateProperty.html)
 //				OwlModel				model								IN
 //				int64_t					rdfPropertyType						IN
 //				const char				* name								IN
@@ -3237,7 +3237,7 @@ static	inline	RdfProperty	CreateProperty(
 #endif
 
 //
-//		CreatePropertyW                                         (http://rdf.bg/gkdoc/CP64/CreatePropertyW.html)
+//		CreatePropertyW                                         (https://rdf.bg/gkdoc/CP64/CreatePropertyW.html)
 //				OwlModel				model								IN
 //				int64_t					rdfPropertyType						IN
 //				const wchar_t			* name								IN
@@ -3311,7 +3311,7 @@ static	inline	RdfProperty	CreatePropertyW(
 #endif
 
 //
-//		GetPropertyByName                                       (http://rdf.bg/gkdoc/CP64/GetPropertyByName.html)
+//		GetPropertyByName                                       (https://rdf.bg/gkdoc/CP64/GetPropertyByName.html)
 //				OwlModel				model								IN
 //				const char				* name								IN
 //
@@ -3347,7 +3347,7 @@ static	inline	RdfProperty	GetPropertyByName(
 #endif
 
 //
-//		GetPropertyByNameW                                      (http://rdf.bg/gkdoc/CP64/GetPropertyByNameW.html)
+//		GetPropertyByNameW                                      (https://rdf.bg/gkdoc/CP64/GetPropertyByNameW.html)
 //				OwlModel				model								IN
 //				const wchar_t			* name								IN
 //
@@ -3383,7 +3383,7 @@ static	inline	RdfProperty	GetPropertyByNameW(
 #endif
 
 //
-//		GetPropertiesByIterator                                 (http://rdf.bg/gkdoc/CP64/GetPropertiesByIterator.html)
+//		GetPropertiesByIterator                                 (https://rdf.bg/gkdoc/CP64/GetPropertiesByIterator.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //
@@ -3399,7 +3399,7 @@ RdfProperty		DECL STDC	GetPropertiesByIterator(
 								);
 
 //
-//		SetPropertyRangeRestriction                             (http://rdf.bg/gkdoc/CP64/SetPropertyRangeRestriction.html)
+//		SetPropertyRangeRestriction                             (https://rdf.bg/gkdoc/CP64/SetPropertyRangeRestriction.html)
 //				RdfProperty				rdfProperty							IN
 //				OwlClass				owlClass							IN
 //				int64_t					setting								IN
@@ -3417,7 +3417,7 @@ void			DECL STDC	SetPropertyRangeRestriction(
 								);
 
 //
-//		SetPropertyRangeRestrictionEx                           (http://rdf.bg/gkdoc/CP64/SetPropertyRangeRestrictionEx.html)
+//		SetPropertyRangeRestrictionEx                           (https://rdf.bg/gkdoc/CP64/SetPropertyRangeRestrictionEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				OwlClass				owlClass							IN
@@ -3437,7 +3437,7 @@ void			DECL STDC	SetPropertyRangeRestrictionEx(
 								);
 
 //
-//		GetRangeRestrictionsByIterator                          (http://rdf.bg/gkdoc/CP64/GetRangeRestrictionsByIterator.html)
+//		GetRangeRestrictionsByIterator                          (https://rdf.bg/gkdoc/CP64/GetRangeRestrictionsByIterator.html)
 //				RdfProperty				rdfProperty							IN
 //				OwlClass				owlClass							IN
 //
@@ -3453,7 +3453,7 @@ int64_t			DECL STDC	GetRangeRestrictionsByIterator(
 								);
 
 //
-//		GetRangeRestrictionsByIteratorEx                        (http://rdf.bg/gkdoc/CP64/GetRangeRestrictionsByIteratorEx.html)
+//		GetRangeRestrictionsByIteratorEx                        (https://rdf.bg/gkdoc/CP64/GetRangeRestrictionsByIteratorEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				OwlClass				owlClass							IN
@@ -3471,7 +3471,7 @@ int64_t			DECL STDC	GetRangeRestrictionsByIteratorEx(
 								);
 
 //
-//		GetPropertyParentsByIterator                            (http://rdf.bg/gkdoc/CP64/GetPropertyParentsByIterator.html)
+//		GetPropertyParentsByIterator                            (https://rdf.bg/gkdoc/CP64/GetPropertyParentsByIterator.html)
 //				RdfProperty				rdfProperty							IN
 //				RdfProperty				parentRdfProperty					IN
 //
@@ -3487,7 +3487,7 @@ RdfProperty		DECL STDC	GetPropertyParentsByIterator(
 								);
 
 //
-//		SetNameOfProperty                                       (http://rdf.bg/gkdoc/CP64/SetNameOfProperty.html)
+//		SetNameOfProperty                                       (https://rdf.bg/gkdoc/CP64/SetNameOfProperty.html)
 //				RdfProperty				rdfProperty							IN
 //				const char				* name								IN
 //
@@ -3532,7 +3532,7 @@ static	inline	int64_t	SetNameOfProperty(
 #endif
 
 //
-//		SetNameOfPropertyW                                      (http://rdf.bg/gkdoc/CP64/SetNameOfPropertyW.html)
+//		SetNameOfPropertyW                                      (https://rdf.bg/gkdoc/CP64/SetNameOfPropertyW.html)
 //				RdfProperty				rdfProperty							IN
 //				const wchar_t			* name								IN
 //
@@ -3577,7 +3577,7 @@ static	inline	int64_t	SetNameOfPropertyW(
 #endif
 
 //
-//		SetNameOfPropertyEx                                     (http://rdf.bg/gkdoc/CP64/SetNameOfPropertyEx.html)
+//		SetNameOfPropertyEx                                     (https://rdf.bg/gkdoc/CP64/SetNameOfPropertyEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				const char				* name								IN
@@ -3629,7 +3629,7 @@ static	inline	int64_t	SetNameOfPropertyEx(
 #endif
 
 //
-//		SetNameOfPropertyWEx                                    (http://rdf.bg/gkdoc/CP64/SetNameOfPropertyWEx.html)
+//		SetNameOfPropertyWEx                                    (https://rdf.bg/gkdoc/CP64/SetNameOfPropertyWEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				const wchar_t			* name								IN
@@ -3681,7 +3681,7 @@ static	inline	int64_t	SetNameOfPropertyWEx(
 #endif
 
 //
-//		GetNameOfProperty                                       (http://rdf.bg/gkdoc/CP64/GetNameOfProperty.html)
+//		GetNameOfProperty                                       (https://rdf.bg/gkdoc/CP64/GetNameOfProperty.html)
 //				RdfProperty				rdfProperty							IN
 //				const char				** name								IN / OUT
 //
@@ -3728,7 +3728,7 @@ static	inline	const char	* GetNameOfProperty(
 #endif
 
 //
-//		GetNameOfPropertyW                                      (http://rdf.bg/gkdoc/CP64/GetNameOfPropertyW.html)
+//		GetNameOfPropertyW                                      (https://rdf.bg/gkdoc/CP64/GetNameOfPropertyW.html)
 //				RdfProperty				rdfProperty							IN
 //				const wchar_t			** name								IN / OUT
 //
@@ -3775,7 +3775,7 @@ static	inline	const wchar_t	* GetNameOfPropertyW(
 #endif
 
 //
-//		GetNameOfPropertyEx                                     (http://rdf.bg/gkdoc/CP64/GetNameOfPropertyEx.html)
+//		GetNameOfPropertyEx                                     (https://rdf.bg/gkdoc/CP64/GetNameOfPropertyEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				const char				** name								IN / OUT
@@ -3828,7 +3828,7 @@ static	inline	const char	* GetNameOfPropertyEx(
 #endif
 
 //
-//		GetNameOfPropertyWEx                                    (http://rdf.bg/gkdoc/CP64/GetNameOfPropertyWEx.html)
+//		GetNameOfPropertyWEx                                    (https://rdf.bg/gkdoc/CP64/GetNameOfPropertyWEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				const wchar_t			** name								IN / OUT
@@ -3881,7 +3881,7 @@ static	inline	const wchar_t	* GetNameOfPropertyWEx(
 #endif
 
 //
-//		SetPropertyType                                         (http://rdf.bg/gkdoc/CP64/SetPropertyType.html)
+//		SetPropertyType                                         (https://rdf.bg/gkdoc/CP64/SetPropertyType.html)
 //				RdfProperty				rdfProperty							IN
 //				RdfPropertyType			propertyType						IN
 //
@@ -3906,7 +3906,7 @@ RdfPropertyType	DECL STDC	SetPropertyType(
 								);
 
 //
-//		SetPropertyTypeEx                                       (http://rdf.bg/gkdoc/CP64/SetPropertyTypeEx.html)
+//		SetPropertyTypeEx                                       (https://rdf.bg/gkdoc/CP64/SetPropertyTypeEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //				RdfPropertyType			propertyType						IN
@@ -3921,7 +3921,7 @@ RdfPropertyType	DECL STDC	SetPropertyTypeEx(
 								);
 
 //
-//		GetPropertyType                                         (http://rdf.bg/gkdoc/CP64/GetPropertyType.html)
+//		GetPropertyType                                         (https://rdf.bg/gkdoc/CP64/GetPropertyType.html)
 //				RdfProperty				rdfProperty							IN
 //
 //				RdfPropertyType			returns								OUT
@@ -3940,7 +3940,7 @@ RdfPropertyType	DECL STDC	GetPropertyType(
 								);
 
 //
-//		GetPropertyTypeEx                                       (http://rdf.bg/gkdoc/CP64/GetPropertyTypeEx.html)
+//		GetPropertyTypeEx                                       (https://rdf.bg/gkdoc/CP64/GetPropertyTypeEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //
@@ -3955,7 +3955,7 @@ RdfPropertyType	DECL STDC	GetPropertyTypeEx(
 								);
 
 //
-//		RemoveProperty                                          (http://rdf.bg/gkdoc/CP64/RemoveProperty.html)
+//		RemoveProperty                                          (https://rdf.bg/gkdoc/CP64/RemoveProperty.html)
 //				RdfProperty				rdfProperty							IN
 //
 //				int64_t					returns								OUT
@@ -3996,7 +3996,7 @@ int64_t			DECL STDC	RemoveProperty(
 								);
 
 //
-//		RemovePropertyEx                                        (http://rdf.bg/gkdoc/CP64/RemovePropertyEx.html)
+//		RemovePropertyEx                                        (https://rdf.bg/gkdoc/CP64/RemovePropertyEx.html)
 //				OwlModel				model								IN
 //				RdfProperty				rdfProperty							IN
 //
@@ -4042,7 +4042,7 @@ int64_t			DECL STDC	RemovePropertyEx(
 								);
 
 //
-//		IsProperty                                              (http://rdf.bg/gkdoc/CP64/IsProperty.html)
+//		IsProperty                                              (https://rdf.bg/gkdoc/CP64/IsProperty.html)
 //				RdfsResource			rdfsResource						IN
 //
 //				RdfProperty				returns								OUT
@@ -4060,7 +4060,7 @@ RdfProperty		DECL STDC	IsProperty(
 //
 
 //
-//		CreateInstance                                          (http://rdf.bg/gkdoc/CP64/CreateInstance.html)
+//		CreateInstance                                          (https://rdf.bg/gkdoc/CP64/CreateInstance.html)
 //				OwlClass				owlClass							IN
 //				const char				* name								IN
 //
@@ -4109,7 +4109,7 @@ static	inline	OwlInstance	CreateInstance(
 #endif
 
 //
-//		CreateInstanceW                                         (http://rdf.bg/gkdoc/CP64/CreateInstanceW.html)
+//		CreateInstanceW                                         (https://rdf.bg/gkdoc/CP64/CreateInstanceW.html)
 //				OwlClass				owlClass							IN
 //				const wchar_t			* name								IN
 //
@@ -4158,7 +4158,7 @@ static	inline	OwlInstance	CreateInstanceW(
 #endif
 
 //
-//		CreateInstanceEx                                        (http://rdf.bg/gkdoc/CP64/CreateInstanceEx.html)
+//		CreateInstanceEx                                        (https://rdf.bg/gkdoc/CP64/CreateInstanceEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const char				* name								IN
@@ -4213,7 +4213,7 @@ static	inline	OwlInstance	CreateInstanceEx(
 #endif
 
 //
-//		CreateInstanceWEx                                       (http://rdf.bg/gkdoc/CP64/CreateInstanceWEx.html)
+//		CreateInstanceWEx                                       (https://rdf.bg/gkdoc/CP64/CreateInstanceWEx.html)
 //				OwlModel				model								IN
 //				OwlClass				owlClass							IN
 //				const wchar_t			* name								IN
@@ -4268,7 +4268,7 @@ static	inline	OwlInstance	CreateInstanceWEx(
 #endif
 
 //
-//		GetInstancesByIterator                                  (http://rdf.bg/gkdoc/CP64/GetInstancesByIterator.html)
+//		GetInstancesByIterator                                  (https://rdf.bg/gkdoc/CP64/GetInstancesByIterator.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //
@@ -4284,7 +4284,7 @@ OwlInstance		DECL STDC	GetInstancesByIterator(
 								);
 
 //
-//		GetInstanceClass                                        (http://rdf.bg/gkdoc/CP64/GetInstanceClass.html)
+//		GetInstanceClass                                        (https://rdf.bg/gkdoc/CP64/GetInstanceClass.html)
 //				OwlInstance				owlInstance							IN
 //
 //				OwlClass				returns								OUT
@@ -4297,7 +4297,7 @@ OwlClass		DECL STDC	GetInstanceClass(
 								);
 
 //
-//		GetInstanceClassEx                                      (http://rdf.bg/gkdoc/CP64/GetInstanceClassEx.html)
+//		GetInstanceClassEx                                      (https://rdf.bg/gkdoc/CP64/GetInstanceClassEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //
@@ -4312,7 +4312,7 @@ OwlClass		DECL STDC	GetInstanceClassEx(
 								);
 
 //
-//		GetInstanceClassByIterator                              (http://rdf.bg/gkdoc/CP64/GetInstanceClassByIterator.html)
+//		GetInstanceClassByIterator                              (https://rdf.bg/gkdoc/CP64/GetInstanceClassByIterator.html)
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
 //
@@ -4326,7 +4326,7 @@ OwlClass		DECL STDC	GetInstanceClassByIterator(
 								);
 
 //
-//		GetInstanceClassByIteratorEx                            (http://rdf.bg/gkdoc/CP64/GetInstanceClassByIteratorEx.html)
+//		GetInstanceClassByIteratorEx                            (https://rdf.bg/gkdoc/CP64/GetInstanceClassByIteratorEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
@@ -4388,7 +4388,7 @@ static	inline	void	GetInstancePropertyCardinalityRestriction(
 #endif
 
 //
-//		GetInstanceGeometryClass                                (http://rdf.bg/gkdoc/CP64/GetInstanceGeometryClass.html)
+//		GetInstanceGeometryClass                                (https://rdf.bg/gkdoc/CP64/GetInstanceGeometryClass.html)
 //				OwlInstance				owlInstance							IN
 //
 //				OwlClass				returns								OUT
@@ -4401,7 +4401,7 @@ OwlClass		DECL STDC	GetInstanceGeometryClass(
 								);
 
 //
-//		GetInstanceGeometryClassEx                              (http://rdf.bg/gkdoc/CP64/GetInstanceGeometryClassEx.html)
+//		GetInstanceGeometryClassEx                              (https://rdf.bg/gkdoc/CP64/GetInstanceGeometryClassEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //
@@ -4419,7 +4419,7 @@ OwlClass		DECL STDC	GetInstanceGeometryClassEx(
 								);
 
 //
-//		SetInstanceClass                                        (http://rdf.bg/gkdoc/CP64/SetInstanceClass.html)
+//		SetInstanceClass                                        (https://rdf.bg/gkdoc/CP64/SetInstanceClass.html)
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
 //
@@ -4432,7 +4432,7 @@ OwlInstance		DECL STDC	SetInstanceClass(
 								);
 
 //
-//		SetInstanceClassEx                                      (http://rdf.bg/gkdoc/CP64/SetInstanceClassEx.html)
+//		SetInstanceClassEx                                      (https://rdf.bg/gkdoc/CP64/SetInstanceClassEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
@@ -4454,7 +4454,7 @@ OwlInstance		DECL STDC	SetInstanceClassEx(
 								);
 
 //
-//		UnsetInstanceClass                                      (http://rdf.bg/gkdoc/CP64/UnsetInstanceClass.html)
+//		UnsetInstanceClass                                      (https://rdf.bg/gkdoc/CP64/UnsetInstanceClass.html)
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
 //
@@ -4471,7 +4471,7 @@ OwlInstance		DECL STDC	UnsetInstanceClass(
 								);
 
 //
-//		UnsetInstanceClassEx                                    (http://rdf.bg/gkdoc/CP64/UnsetInstanceClassEx.html)
+//		UnsetInstanceClassEx                                    (https://rdf.bg/gkdoc/CP64/UnsetInstanceClassEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlClass				owlClass							IN
@@ -4493,7 +4493,7 @@ OwlInstance		DECL STDC	UnsetInstanceClassEx(
 								);
 
 //
-//		GetInstancePropertyByIterator                           (http://rdf.bg/gkdoc/CP64/GetInstancePropertyByIterator.html)
+//		GetInstancePropertyByIterator                           (https://rdf.bg/gkdoc/CP64/GetInstancePropertyByIterator.html)
 //				OwlInstance				owlInstance							IN
 //				RdfProperty				rdfProperty							IN
 //
@@ -4510,7 +4510,7 @@ RdfProperty		DECL STDC	GetInstancePropertyByIterator(
 								);
 
 //
-//		GetInstancePropertyByIteratorEx                         (http://rdf.bg/gkdoc/CP64/GetInstancePropertyByIteratorEx.html)
+//		GetInstancePropertyByIteratorEx                         (https://rdf.bg/gkdoc/CP64/GetInstancePropertyByIteratorEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				RdfProperty				rdfProperty							IN
@@ -4525,7 +4525,7 @@ RdfProperty		DECL STDC	GetInstancePropertyByIteratorEx(
 								);
 
 //
-//		GetInstanceInverseReferencesByIterator                  (http://rdf.bg/gkdoc/CP64/GetInstanceInverseReferencesByIterator.html)
+//		GetInstanceInverseReferencesByIterator                  (https://rdf.bg/gkdoc/CP64/GetInstanceInverseReferencesByIterator.html)
 //				OwlInstance				owlInstance							IN
 //				OwlInstance				referencingOwlInstance				IN
 //
@@ -4539,7 +4539,7 @@ OwlInstance		DECL STDC	GetInstanceInverseReferencesByIterator(
 								);
 
 //
-//		GetInstanceReferencesByIterator                         (http://rdf.bg/gkdoc/CP64/GetInstanceReferencesByIterator.html)
+//		GetInstanceReferencesByIterator                         (https://rdf.bg/gkdoc/CP64/GetInstanceReferencesByIterator.html)
 //				OwlInstance				owlInstance							IN
 //				OwlInstance				referencedOwlInstance				IN
 //
@@ -4552,12 +4552,22 @@ OwlInstance		DECL STDC	GetInstanceReferencesByIterator(
 									OwlInstance				referencedOwlInstance
 								);
 
+//
+//		ConsolidateInstanceTree                                 (https://rdf.bg/gkdoc/CP64/ConsolidateInstanceTree.html)
+//				OwlInstance				owlInstance							IN
+//
+//				OwlInstance				returns								OUT
+//
+//	All technically unnecessary structures within the tree referenced by the owlInstance will be removed.
+//	These structures could be relevant for semantical representation, such semantic meaning is lost. The resulting
+//	geometry will however be the same.
+//
 OwlInstance		DECL STDC	ConsolidateInstanceTree(
 									OwlInstance				owlInstance
 								);
 
 //
-//		SetNameOfInstance                                       (http://rdf.bg/gkdoc/CP64/SetNameOfInstance.html)
+//		SetNameOfInstance                                       (https://rdf.bg/gkdoc/CP64/SetNameOfInstance.html)
 //				OwlInstance				owlInstance							IN
 //				const char				* name								IN
 //
@@ -4602,7 +4612,7 @@ static	inline	int64_t	SetNameOfInstance(
 #endif
 
 //
-//		SetNameOfInstanceW                                      (http://rdf.bg/gkdoc/CP64/SetNameOfInstanceW.html)
+//		SetNameOfInstanceW                                      (https://rdf.bg/gkdoc/CP64/SetNameOfInstanceW.html)
 //				OwlInstance				owlInstance							IN
 //				const wchar_t			* name								IN
 //
@@ -4647,7 +4657,7 @@ static	inline	int64_t	SetNameOfInstanceW(
 #endif
 
 //
-//		SetNameOfInstanceEx                                     (http://rdf.bg/gkdoc/CP64/SetNameOfInstanceEx.html)
+//		SetNameOfInstanceEx                                     (https://rdf.bg/gkdoc/CP64/SetNameOfInstanceEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				const char				* name								IN
@@ -4699,7 +4709,7 @@ static	inline	int64_t	SetNameOfInstanceEx(
 #endif
 
 //
-//		SetNameOfInstanceWEx                                    (http://rdf.bg/gkdoc/CP64/SetNameOfInstanceWEx.html)
+//		SetNameOfInstanceWEx                                    (https://rdf.bg/gkdoc/CP64/SetNameOfInstanceWEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				const wchar_t			* name								IN
@@ -4751,7 +4761,7 @@ static	inline	int64_t	SetNameOfInstanceWEx(
 #endif
 
 //
-//		GetNameOfInstance                                       (http://rdf.bg/gkdoc/CP64/GetNameOfInstance.html)
+//		GetNameOfInstance                                       (https://rdf.bg/gkdoc/CP64/GetNameOfInstance.html)
 //				OwlInstance				owlInstance							IN
 //				const char				** name								IN / OUT
 //
@@ -4798,7 +4808,7 @@ static	inline	const char	* GetNameOfInstance(
 #endif
 
 //
-//		GetNameOfInstanceW                                      (http://rdf.bg/gkdoc/CP64/GetNameOfInstanceW.html)
+//		GetNameOfInstanceW                                      (https://rdf.bg/gkdoc/CP64/GetNameOfInstanceW.html)
 //				OwlInstance				owlInstance							IN
 //				const wchar_t			** name								IN / OUT
 //
@@ -4845,7 +4855,7 @@ static	inline	const wchar_t	* GetNameOfInstanceW(
 #endif
 
 //
-//		GetNameOfInstanceEx                                     (http://rdf.bg/gkdoc/CP64/GetNameOfInstanceEx.html)
+//		GetNameOfInstanceEx                                     (https://rdf.bg/gkdoc/CP64/GetNameOfInstanceEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				const char				** name								IN / OUT
@@ -4898,7 +4908,7 @@ static	inline	const char	* GetNameOfInstanceEx(
 #endif
 
 //
-//		GetNameOfInstanceWEx                                    (http://rdf.bg/gkdoc/CP64/GetNameOfInstanceWEx.html)
+//		GetNameOfInstanceWEx                                    (https://rdf.bg/gkdoc/CP64/GetNameOfInstanceWEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				const wchar_t			** name								IN / OUT
@@ -4951,7 +4961,7 @@ static	inline	const wchar_t	* GetNameOfInstanceWEx(
 #endif
 
 //
-//		SetDatatypeProperty                                     (http://rdf.bg/gkdoc/CP64/SetDatatypeProperty.html)
+//		SetDatatypeProperty                                     (https://rdf.bg/gkdoc/CP64/SetDatatypeProperty.html)
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
 //				const void				* values							IN
@@ -5094,7 +5104,7 @@ static	inline	int64_t	SetDatatypeProperty(
 #endif
 
 //
-//		SetDatatypePropertyEx                                   (http://rdf.bg/gkdoc/CP64/SetDatatypePropertyEx.html)
+//		SetDatatypePropertyEx                                   (https://rdf.bg/gkdoc/CP64/SetDatatypePropertyEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
@@ -5126,7 +5136,7 @@ int64_t			DECL STDC	SetDatatypePropertyEx(
 								);
 
 //
-//		GetDatatypeProperty                                     (http://rdf.bg/gkdoc/CP64/GetDatatypeProperty.html)
+//		GetDatatypeProperty                                     (https://rdf.bg/gkdoc/CP64/GetDatatypeProperty.html)
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
 //				const void				** values							IN / OUT
@@ -5175,7 +5185,7 @@ static	inline	int64_t	GetDatatypeProperty(
 #endif
 
 //
-//		GetDatatypePropertyEx                                   (http://rdf.bg/gkdoc/CP64/GetDatatypePropertyEx.html)
+//		GetDatatypePropertyEx                                   (https://rdf.bg/gkdoc/CP64/GetDatatypePropertyEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
@@ -5231,7 +5241,7 @@ static	inline	int64_t	GetDatatypePropertyEx(
 #endif
 
 //
-//		SetObjectProperty                                       (http://rdf.bg/gkdoc/CP64/SetObjectProperty.html)
+//		SetObjectProperty                                       (https://rdf.bg/gkdoc/CP64/SetObjectProperty.html)
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
 //				const OwlInstance		* values							IN
@@ -5283,7 +5293,7 @@ static	inline	int64_t	SetObjectProperty(
 #endif
 
 //
-//		SetObjectPropertyEx                                     (http://rdf.bg/gkdoc/CP64/SetObjectPropertyEx.html)
+//		SetObjectPropertyEx                                     (https://rdf.bg/gkdoc/CP64/SetObjectPropertyEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
@@ -5314,7 +5324,7 @@ int64_t			DECL STDC	SetObjectPropertyEx(
 								);
 
 //
-//		GetObjectProperty                                       (http://rdf.bg/gkdoc/CP64/GetObjectProperty.html)
+//		GetObjectProperty                                       (https://rdf.bg/gkdoc/CP64/GetObjectProperty.html)
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
 //				const OwlInstance		** values							IN / OUT
@@ -5385,7 +5395,7 @@ static	inline	OwlInstance	GetObjectProperty(
 #endif
 
 //
-//		GetObjectPropertyEx                                     (http://rdf.bg/gkdoc/CP64/GetObjectPropertyEx.html)
+//		GetObjectPropertyEx                                     (https://rdf.bg/gkdoc/CP64/GetObjectPropertyEx.html)
 //				OwlModel				model								IN
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
@@ -5440,7 +5450,7 @@ static	inline	int64_t	GetObjectPropertyEx(
 #endif
 
 //
-//		CreateInstanceInContextStructure                        (http://rdf.bg/gkdoc/CP64/CreateInstanceInContextStructure.html)
+//		CreateInstanceInContextStructure                        (https://rdf.bg/gkdoc/CP64/CreateInstanceInContextStructure.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5456,7 +5466,7 @@ int64_t			DECL STDC	CreateInstanceInContextStructure(
 								);
 
 //
-//		DestroyInstanceInContextStructure                       (http://rdf.bg/gkdoc/CP64/DestroyInstanceInContextStructure.html)
+//		DestroyInstanceInContextStructure                       (https://rdf.bg/gkdoc/CP64/DestroyInstanceInContextStructure.html)
 //				OwlInstance				owlInstanceInContext				IN
 //
 //				void					returns
@@ -5470,7 +5480,7 @@ void			DECL STDC	DestroyInstanceInContextStructure(
 								);
 
 //
-//		InstanceInContextChild                                  (http://rdf.bg/gkdoc/CP64/InstanceInContextChild.html)
+//		InstanceInContextChild                                  (https://rdf.bg/gkdoc/CP64/InstanceInContextChild.html)
 //				OwlInstance				owlInstanceInContext				IN
 //
 //				int64_t					returns								OUT
@@ -5481,7 +5491,7 @@ int64_t			DECL STDC	InstanceInContextChild(
 								);
 
 //
-//		InstanceInContextNext                                   (http://rdf.bg/gkdoc/CP64/InstanceInContextNext.html)
+//		InstanceInContextNext                                   (https://rdf.bg/gkdoc/CP64/InstanceInContextNext.html)
 //				OwlInstance				owlInstanceInContext				IN
 //
 //				int64_t					returns								OUT
@@ -5492,7 +5502,7 @@ int64_t			DECL STDC	InstanceInContextNext(
 								);
 
 //
-//		InstanceInContextIsUpdated                              (http://rdf.bg/gkdoc/CP64/InstanceInContextIsUpdated.html)
+//		InstanceInContextIsUpdated                              (https://rdf.bg/gkdoc/CP64/InstanceInContextIsUpdated.html)
 //				OwlInstance				owlInstanceInContext				IN
 //
 //				int64_t					returns								OUT
@@ -5503,7 +5513,7 @@ int64_t			DECL STDC	InstanceInContextIsUpdated(
 								);
 
 //
-//		RemoveInstance                                          (http://rdf.bg/gkdoc/CP64/RemoveInstance.html)
+//		RemoveInstance                                          (https://rdf.bg/gkdoc/CP64/RemoveInstance.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5518,7 +5528,7 @@ int64_t			DECL STDC	RemoveInstance(
 								);
 
 //
-//		RemoveInstanceRecursively                               (http://rdf.bg/gkdoc/CP64/RemoveInstanceRecursively.html)
+//		RemoveInstanceRecursively                               (https://rdf.bg/gkdoc/CP64/RemoveInstanceRecursively.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5534,7 +5544,7 @@ int64_t			DECL STDC	RemoveInstanceRecursively(
 								);
 
 //
-//		RemoveInstances                                         (http://rdf.bg/gkdoc/CP64/RemoveInstances.html)
+//		RemoveInstances                                         (https://rdf.bg/gkdoc/CP64/RemoveInstances.html)
 //				OwlModel				model								IN
 //
 //				int64_t					returns								OUT
@@ -5548,7 +5558,7 @@ int64_t			DECL STDC	RemoveInstances(
 								);
 
 //
-//		IsInstance                                              (http://rdf.bg/gkdoc/CP64/IsInstance.html)
+//		IsInstance                                              (https://rdf.bg/gkdoc/CP64/IsInstance.html)
 //				RdfsResource			rdfsResource						IN
 //
 //				OwlInstance				returns								OUT
@@ -5648,7 +5658,7 @@ static	inline	bool	IsInstanceOfClassExact(
 #endif
 
 //
-//		CalculateInstance                                       (http://rdf.bg/gkdoc/CP64/CalculateInstance.html)
+//		CalculateInstance                                       (https://rdf.bg/gkdoc/CP64/CalculateInstance.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* vertexBufferSize					IN / OUT
 //				int64_t					* indexBufferSize					IN / OUT
@@ -5709,7 +5719,7 @@ static	inline	int64_t	CalculateInstance(
 #endif
 
 //
-//		UpdateInstance                                          (http://rdf.bg/gkdoc/CP64/UpdateInstance.html)
+//		UpdateInstance                                          (https://rdf.bg/gkdoc/CP64/UpdateInstance.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5725,7 +5735,7 @@ int64_t			DECL STDC	UpdateInstance(
 								);
 
 //
-//		InferenceInstance                                       (http://rdf.bg/gkdoc/CP64/InferenceInstance.html)
+//		InferenceInstance                                       (https://rdf.bg/gkdoc/CP64/InferenceInstance.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5738,7 +5748,7 @@ int64_t			DECL STDC	InferenceInstance(
 								);
 
 //
-//		UpdateInstanceVertexBuffer                              (http://rdf.bg/gkdoc/CP64/UpdateInstanceVertexBuffer.html)
+//		UpdateInstanceVertexBuffer                              (https://rdf.bg/gkdoc/CP64/UpdateInstanceVertexBuffer.html)
 //				OwlInstance				owlInstance							IN
 //				void					* vertexBuffer						IN / OUT
 //
@@ -5759,7 +5769,7 @@ int64_t			DECL STDC	UpdateInstanceVertexBuffer(
 								);
 
 //
-//		UpdateInstanceVertexBufferTrimmed                       (http://rdf.bg/gkdoc/CP64/UpdateInstanceVertexBufferTrimmed.html)
+//		UpdateInstanceVertexBufferTrimmed                       (https://rdf.bg/gkdoc/CP64/UpdateInstanceVertexBufferTrimmed.html)
 //				OwlInstance				owlInstance							IN
 //				void					* vertexBuffer						IN / OUT
 //				int64_t					offset								IN
@@ -5780,7 +5790,7 @@ int64_t			DECL STDC	UpdateInstanceVertexBufferTrimmed(
 								);
 
 //
-//		UpdateInstanceIndexBuffer                               (http://rdf.bg/gkdoc/CP64/UpdateInstanceIndexBuffer.html)
+//		UpdateInstanceIndexBuffer                               (https://rdf.bg/gkdoc/CP64/UpdateInstanceIndexBuffer.html)
 //				OwlInstance				owlInstance							IN
 //				void					* indexBuffer						IN / OUT
 //
@@ -5801,7 +5811,7 @@ int64_t			DECL STDC	UpdateInstanceIndexBuffer(
 								);
 
 //
-//		UpdateInstanceIndexBufferTrimmed                        (http://rdf.bg/gkdoc/CP64/UpdateInstanceIndexBufferTrimmed.html)
+//		UpdateInstanceIndexBufferTrimmed                        (https://rdf.bg/gkdoc/CP64/UpdateInstanceIndexBufferTrimmed.html)
 //				OwlInstance				owlInstance							IN
 //				void					* indexBuffer						IN / OUT
 //				int64_t					offset								IN
@@ -5822,7 +5832,7 @@ int64_t			DECL STDC	UpdateInstanceIndexBufferTrimmed(
 								);
 
 //
-//		UpdateInstanceTransformationBuffer                      (http://rdf.bg/gkdoc/CP64/UpdateInstanceTransformationBuffer.html)
+//		UpdateInstanceTransformationBuffer                      (https://rdf.bg/gkdoc/CP64/UpdateInstanceTransformationBuffer.html)
 //				OwlInstance				owlInstance							IN
 //				double					* transformationBuffer				IN / OUT
 //
@@ -5843,7 +5853,7 @@ int64_t			DECL STDC	UpdateInstanceTransformationBuffer(
 								);
 
 //
-//		ClearedInstanceExternalBuffers                          (http://rdf.bg/gkdoc/CP64/ClearedInstanceExternalBuffers.html)
+//		ClearedInstanceExternalBuffers                          (https://rdf.bg/gkdoc/CP64/ClearedInstanceExternalBuffers.html)
 //				OwlInstance				owlInstance							IN
 //
 //				void					returns
@@ -5859,7 +5869,7 @@ void			DECL STDC	ClearedInstanceExternalBuffers(
 								);
 
 //
-//		ClearedExternalBuffers                                  (http://rdf.bg/gkdoc/CP64/ClearedExternalBuffers.html)
+//		ClearedExternalBuffers                                  (https://rdf.bg/gkdoc/CP64/ClearedExternalBuffers.html)
 //				OwlModel				model								IN
 //
 //				void					returns
@@ -5874,7 +5884,7 @@ void			DECL STDC	ClearedExternalBuffers(
 								);
 
 //
-//		GetConceptualFaceCnt                                    (http://rdf.bg/gkdoc/CP64/GetConceptualFaceCnt.html)
+//		GetConceptualFaceCnt                                    (https://rdf.bg/gkdoc/CP64/GetConceptualFaceCnt.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -5886,7 +5896,7 @@ int64_t			DECL STDC	GetConceptualFaceCnt(
 								);
 
 //
-//		GetConceptualFace                                       (http://rdf.bg/gkdoc/CP64/GetConceptualFace.html)
+//		GetConceptualFace                                       (https://rdf.bg/gkdoc/CP64/GetConceptualFace.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					index								IN
 //				int64_t					* startIndexTriangles				IN / OUT
@@ -5978,7 +5988,7 @@ static	inline	ConceptualFace	GetConceptualFace(
 #endif
 
 //
-//		GetConceptualFaceMaterial                               (http://rdf.bg/gkdoc/CP64/GetConceptualFaceMaterial.html)
+//		GetConceptualFaceMaterial                               (https://rdf.bg/gkdoc/CP64/GetConceptualFaceMaterial.html)
 //				ConceptualFace			conceptualFace						IN
 //
 //				OwlInstance				returns								OUT
@@ -5991,7 +6001,7 @@ OwlInstance		DECL STDC	GetConceptualFaceMaterial(
 								);
 
 //
-//		GetConceptualFaceOriginCnt                              (http://rdf.bg/gkdoc/CP64/GetConceptualFaceOriginCnt.html)
+//		GetConceptualFaceOriginCnt                              (https://rdf.bg/gkdoc/CP64/GetConceptualFaceOriginCnt.html)
 //				ConceptualFace			conceptualFace						IN
 //
 //				int64_t					returns								OUT
@@ -6004,7 +6014,7 @@ int64_t			DECL STDC	GetConceptualFaceOriginCnt(
 								);
 
 //
-//		GetConceptualFaceOrigin                                 (http://rdf.bg/gkdoc/CP64/GetConceptualFaceOrigin.html)
+//		GetConceptualFaceOrigin                                 (https://rdf.bg/gkdoc/CP64/GetConceptualFaceOrigin.html)
 //				ConceptualFace			conceptualFace						IN
 //				int64_t					index								IN
 //
@@ -6019,7 +6029,7 @@ OwlInstance		DECL STDC	GetConceptualFaceOrigin(
 								);
 
 //
-//		GetConceptualFaceOriginEx                               (http://rdf.bg/gkdoc/CP64/GetConceptualFaceOriginEx.html)
+//		GetConceptualFaceOriginEx                               (https://rdf.bg/gkdoc/CP64/GetConceptualFaceOriginEx.html)
 //				ConceptualFace			conceptualFace						IN
 //				int64_t					index								IN
 //				int64_t					* originatingOwlInstance			IN / OUT
@@ -6036,7 +6046,7 @@ void			DECL STDC	GetConceptualFaceOriginEx(
 								);
 
 //
-//		GetFaceCnt                                              (http://rdf.bg/gkdoc/CP64/GetFaceCnt.html)
+//		GetFaceCnt                                              (https://rdf.bg/gkdoc/CP64/GetFaceCnt.html)
 //				OwlInstance				owlInstance							IN
 //
 //				int64_t					returns								OUT
@@ -6048,7 +6058,7 @@ int64_t			DECL STDC	GetFaceCnt(
 								);
 
 //
-//		GetFace                                                 (http://rdf.bg/gkdoc/CP64/GetFace.html)
+//		GetFace                                                 (https://rdf.bg/gkdoc/CP64/GetFace.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					index								IN
 //				int64_t					* startIndex						IN / OUT
@@ -6067,7 +6077,7 @@ void			DECL STDC	GetFace(
 								);
 
 //
-//		GetDependingPropertyCnt                                 (http://rdf.bg/gkdoc/CP64/GetDependingPropertyCnt.html)
+//		GetDependingPropertyCnt                                 (https://rdf.bg/gkdoc/CP64/GetDependingPropertyCnt.html)
 //				OwlInstance				baseOwlInstance						IN
 //				ConceptualFace			conceptualFace						IN
 //
@@ -6084,7 +6094,7 @@ int64_t			DECL STDC	GetDependingPropertyCnt(
 								);
 
 //
-//		GetDependingProperty                                    (http://rdf.bg/gkdoc/CP64/GetDependingProperty.html)
+//		GetDependingProperty                                    (https://rdf.bg/gkdoc/CP64/GetDependingProperty.html)
 //				OwlInstance				baseOwlInstance						IN
 //				ConceptualFace			conceptualFace						IN
 //				int64_t					index								IN
@@ -6111,7 +6121,7 @@ void			DECL STDC	GetDependingProperty(
 								);
 
 //
-//		SetFormat                                               (http://rdf.bg/gkdoc/CP64/SetFormat.html)
+//		SetFormat                                               (https://rdf.bg/gkdoc/CP64/SetFormat.html)
 //				OwlModel				model								IN
 //				uint64_t				setting								IN
 //				uint64_t				mask								IN
@@ -6171,8 +6181,8 @@ void			DECL STDC	GetDependingProperty(
 //			1	Polygon lines (wireframe) exported as tuples, i.e. typical 4 point polygon exported as 0 1 1 2 2 3 3 0
 //
 //		bit 15:	(FORMAT_EXPORT_ADVANCED_NORMALS)
-//			0	All normals of triangles are transformed orthogonal to the 2D face they belong to
-//			1	Normals are exported to be in line with the original semantic form description (could be non orthogonal to the 2D face) 
+//			0	All normal vectors of triangles are transformed orthogonal to the 2D face they belong to
+//			1	Normal vectors are exported to be in line with the original semantic form description (could be non orthogonal to the 2D face) 
 //
 //		bit 16:	(FORMAT_EXPORT_DIRECTX)
 //			0	no specific behavior
@@ -6284,7 +6294,7 @@ static	inline	uint64_t	SetFormat(
 #endif
 
 //
-//		GetFormat                                               (http://rdf.bg/gkdoc/CP64/GetFormat.html)
+//		GetFormat                                               (https://rdf.bg/gkdoc/CP64/GetFormat.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
@@ -6329,7 +6339,7 @@ static	inline	uint64_t	GetFormat(
 #endif
 
 //
-//		GetVertexDataOffset                                     (http://rdf.bg/gkdoc/CP64/GetVertexDataOffset.html)
+//		GetVertexDataOffset                                     (https://rdf.bg/gkdoc/CP64/GetVertexDataOffset.html)
 //				int64_t					requiredData						IN
 //				int64_t					setting								IN
 //
@@ -6352,7 +6362,7 @@ int32_t			DECL STDC	GetVertexDataOffset(
 								);
 
 //
-//		SetBehavior                                             (http://rdf.bg/gkdoc/CP64/SetBehavior.html)
+//		SetBehavior                                             (https://rdf.bg/gkdoc/CP64/SetBehavior.html)
 //				OwlModel				model								IN
 //				uint64_t				setting								IN
 //				uint64_t				mask								IN
@@ -6380,7 +6390,7 @@ void			DECL STDC	SetBehavior(
 								);
 
 //
-//		GetBehavior                                             (http://rdf.bg/gkdoc/CP64/GetBehavior.html)
+//		GetBehavior                                             (https://rdf.bg/gkdoc/CP64/GetBehavior.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
@@ -6394,7 +6404,7 @@ uint64_t		DECL STDC	GetBehavior(
 								);
 
 //
-//		SetVertexBufferTransformation                           (http://rdf.bg/gkdoc/CP64/SetVertexBufferTransformation.html)
+//		SetVertexBufferTransformation                           (https://rdf.bg/gkdoc/CP64/SetVertexBufferTransformation.html)
 //				OwlModel				model								IN
 //				const double			* matrix							IN
 //
@@ -6410,7 +6420,7 @@ void			DECL STDC	SetVertexBufferTransformation(
 								);
 
 //
-//		GetVertexBufferTransformation                           (http://rdf.bg/gkdoc/CP64/GetVertexBufferTransformation.html)
+//		GetVertexBufferTransformation                           (https://rdf.bg/gkdoc/CP64/GetVertexBufferTransformation.html)
 //				OwlModel				model								IN
 //				double					* matrix							IN / OUT
 //
@@ -6424,7 +6434,7 @@ void			DECL STDC	GetVertexBufferTransformation(
 								);
 
 //
-//		SetIndexBufferOffset                                    (http://rdf.bg/gkdoc/CP64/SetIndexBufferOffset.html)
+//		SetIndexBufferOffset                                    (https://rdf.bg/gkdoc/CP64/SetIndexBufferOffset.html)
 //				OwlModel				model								IN
 //				int64_t					offset								IN
 //
@@ -6439,7 +6449,7 @@ void			DECL STDC	SetIndexBufferOffset(
 								);
 
 //
-//		GetIndexBufferOffset                                    (http://rdf.bg/gkdoc/CP64/GetIndexBufferOffset.html)
+//		GetIndexBufferOffset                                    (https://rdf.bg/gkdoc/CP64/GetIndexBufferOffset.html)
 //				OwlModel				model								IN
 //
 //				int64_t					returns								OUT
@@ -6451,7 +6461,7 @@ int64_t			DECL STDC	GetIndexBufferOffset(
 								);
 
 //
-//		SetVertexBufferOffset                                   (http://rdf.bg/gkdoc/CP64/SetVertexBufferOffset.html)
+//		SetVertexBufferOffset                                   (https://rdf.bg/gkdoc/CP64/SetVertexBufferOffset.html)
 //				OwlModel				model								IN
 //				double					x									IN
 //				double					y									IN
@@ -6504,7 +6514,7 @@ static	inline	void	SetVertexBufferOffset(
 #endif
 
 //
-//		GetVertexBufferOffset                                   (http://rdf.bg/gkdoc/CP64/GetVertexBufferOffset.html)
+//		GetVertexBufferOffset                                   (https://rdf.bg/gkdoc/CP64/GetVertexBufferOffset.html)
 //				OwlModel				model								IN
 //				double					* x									IN / OUT
 //				double					* y									IN / OUT
@@ -6545,7 +6555,7 @@ static	inline	void	GetVertexBufferOffset(
 #endif
 
 //
-//		SetDefaultColor                                         (http://rdf.bg/gkdoc/CP64/SetDefaultColor.html)
+//		SetDefaultColor                                         (https://rdf.bg/gkdoc/CP64/SetDefaultColor.html)
 //				OwlModel				model								IN
 //				uint32_t				ambient								IN
 //				uint32_t				diffuse								IN
@@ -6565,7 +6575,7 @@ void			DECL STDC	SetDefaultColor(
 								);
 
 //
-//		GetDefaultColor                                         (http://rdf.bg/gkdoc/CP64/GetDefaultColor.html)
+//		GetDefaultColor                                         (https://rdf.bg/gkdoc/CP64/GetDefaultColor.html)
 //				OwlModel				model								IN
 //				uint32_t				* ambient							IN / OUT
 //				uint32_t				* diffuse							IN / OUT
@@ -6585,7 +6595,7 @@ void			DECL STDC	GetDefaultColor(
 								);
 
 //
-//		CheckConsistency                                        (http://rdf.bg/gkdoc/CP64/CheckConsistency.html)
+//		CheckConsistency                                        (https://rdf.bg/gkdoc/CP64/CheckConsistency.html)
 //				OwlModel				model								IN
 //				uint64_t				mask								IN
 //
@@ -6629,7 +6639,7 @@ uint64_t		DECL STDC	CheckConsistency(
 								);
 
 //
-//		CheckInstanceConsistency                                (http://rdf.bg/gkdoc/CP64/CheckInstanceConsistency.html)
+//		CheckInstanceConsistency                                (https://rdf.bg/gkdoc/CP64/CheckInstanceConsistency.html)
 //				OwlInstance				owlInstance							IN
 //				uint64_t				mask								IN
 //
@@ -6673,7 +6683,7 @@ uint64_t		DECL STDC	CheckInstanceConsistency(
 								);
 
 //
-//		IsDuplicate                                             (http://rdf.bg/gkdoc/CP64/IsDuplicate.html)
+//		IsDuplicate                                             (https://rdf.bg/gkdoc/CP64/IsDuplicate.html)
 //				OwlInstance				originalOwlInstance					IN
 //				OwlInstance				duplicateOwlInstance				IN
 //				double					* duplicateMatrix					IN / OUT
@@ -6745,7 +6755,7 @@ static	inline	bool	IsDuplicate(
 #endif
 
 //
-//		GetPerimeter                                            (http://rdf.bg/gkdoc/CP64/GetPerimeter.html)
+//		GetPerimeter                                            (https://rdf.bg/gkdoc/CP64/GetPerimeter.html)
 //				OwlInstance				owlInstance							IN
 //
 //				double					returns								OUT
@@ -6754,7 +6764,7 @@ static	inline	bool	IsDuplicate(
 //
 //	Note: internally the call does not store its results, any optimization based on known
 //		  dependencies between instances need to be implemented on the client.
-//	Note: due to internal structure using already calculated vertex buffer / index buffer does not
+//	Note: due to internal structure using already calculated vertex buffer/index buffer does not
 //		  give any performance benefits, in opposite to GetVolume and GetArea
 //
 double			DECL STDC	GetPerimeter(
@@ -6762,7 +6772,7 @@ double			DECL STDC	GetPerimeter(
 								);
 
 //
-//		GetArea                                                 (http://rdf.bg/gkdoc/CP64/GetArea.html)
+//		GetArea                                                 (https://rdf.bg/gkdoc/CP64/GetArea.html)
 //				OwlInstance				owlInstance							IN
 //				const void				* vertexBuffer						IN
 //				const void				* indexBuffer						IN
@@ -6818,7 +6828,7 @@ static	inline	double	GetArea(
 #endif
 
 //
-//		GetVolume                                               (http://rdf.bg/gkdoc/CP64/GetVolume.html)
+//		GetVolume                                               (https://rdf.bg/gkdoc/CP64/GetVolume.html)
 //				OwlInstance				owlInstance							IN
 //				const void				* vertexBuffer						IN
 //				const void				* indexBuffer						IN
@@ -6874,7 +6884,7 @@ static	inline	double	GetVolume(
 #endif
 
 //
-//		GetCenter                                               (http://rdf.bg/gkdoc/CP64/GetCenter.html)
+//		GetCenter                                               (https://rdf.bg/gkdoc/CP64/GetCenter.html)
 //				OwlInstance				owlInstance							IN
 //				const void				* vertexBuffer						IN
 //				const void				* indexBuffer						IN
@@ -6934,7 +6944,7 @@ static	inline	void	GetCenter(
 #endif
 
 //
-//		GetCentroid                                             (http://rdf.bg/gkdoc/CP64/GetCentroid.html)
+//		GetCentroid                                             (https://rdf.bg/gkdoc/CP64/GetCentroid.html)
 //				OwlInstance				owlInstance							IN
 //				const void				* vertexBuffer						IN
 //				const void				* indexBuffer						IN
@@ -6976,7 +6986,7 @@ static	inline	double	GetCentroid(
 #endif
 
 //
-//		GetConceptualFacePerimeter                              (http://rdf.bg/gkdoc/CP64/GetConceptualFacePerimeter.html)
+//		GetConceptualFacePerimeter                              (https://rdf.bg/gkdoc/CP64/GetConceptualFacePerimeter.html)
 //				ConceptualFace			conceptualFace						IN
 //
 //				double					returns								OUT
@@ -6988,7 +6998,7 @@ double			DECL STDC	GetConceptualFacePerimeter(
 								);
 
 //
-//		GetConceptualFaceArea                                   (http://rdf.bg/gkdoc/CP64/GetConceptualFaceArea.html)
+//		GetConceptualFaceArea                                   (https://rdf.bg/gkdoc/CP64/GetConceptualFaceArea.html)
 //				ConceptualFace			conceptualFace						IN
 //				const void				* vertexBuffer						IN
 //				const void				* indexBuffer						IN
@@ -7028,7 +7038,7 @@ static	inline	double	GetConceptualFaceArea(
 #endif
 
 //
-//		SetBoundingBoxReference                                 (http://rdf.bg/gkdoc/CP64/SetBoundingBoxReference.html)
+//		SetBoundingBoxReference                                 (https://rdf.bg/gkdoc/CP64/SetBoundingBoxReference.html)
 //				OwlInstance				owlInstance							IN
 //				double					* transformationMatrix				IN / OUT
 //				double					* startVector						IN / OUT
@@ -7053,7 +7063,7 @@ void			DECL STDC	SetBoundingBoxReference(
 								);
 
 //
-//		GetBoundingBox                                          (http://rdf.bg/gkdoc/CP64/GetBoundingBox.html)
+//		GetBoundingBox                                          (https://rdf.bg/gkdoc/CP64/GetBoundingBox.html)
 //				OwlInstance				owlInstance							IN
 //				double					* transformationMatrix				IN / OUT
 //				double					* startVector						IN / OUT
@@ -7063,7 +7073,7 @@ void			DECL STDC	SetBoundingBoxReference(
 //
 //	When the transformationMatrix is given, it will fill an array of 12 double values.
 //	When the transformationMatrix is left empty and both startVector and endVector are
-//	given the boundingbox without transformation is calculated and returned.
+//	given the bounding box without transformation is calculated and returned.
 //
 bool			DECL STDC	GetBoundingBox(
 									OwlInstance				owlInstance,
@@ -7110,14 +7120,14 @@ static	inline	bool	GetBoundingBox(
 #endif
 
 //
-//		GetRelativeTransformation                               (http://rdf.bg/gkdoc/CP64/GetRelativeTransformation.html)
+//		GetRelativeTransformation                               (https://rdf.bg/gkdoc/CP64/GetRelativeTransformation.html)
 //				OwlInstance				owlInstanceHead						IN
 //				OwlInstance				owlInstanceTail						IN
 //				double					* transformationMatrix				IN / OUT
 //
 //				void					returns
 //
-//	This function returns the relative transformation matrix between two instances, i.e. in practise
+//	This function returns the relative transformation matrix between two instances, i.e. in practice
 //	this means the matrices connected to the Transformation instances in the path in between.
 //	The matrix is only given when a unique path through inverse relations can be found,
 //	otherwise the identity matrix is returned.
@@ -7130,7 +7140,7 @@ void			DECL STDC	GetRelativeTransformation(
 								);
 
 //
-//		GetDistance                                             (http://rdf.bg/gkdoc/CP64/GetDistance.html)
+//		GetDistance                                             (https://rdf.bg/gkdoc/CP64/GetDistance.html)
 //				OwlInstance				firstOwlInstance					IN
 //				OwlInstance				secondOwlInstance					IN
 //				double					* pointFirstInstance				IN / OUT
@@ -7571,7 +7581,7 @@ static	inline	uint32_t	GetMaterialColorSpecular(
 #endif
 
 //
-//		GetVertexColor                                          (http://rdf.bg/gkdoc/CP64/GetVertexColor.html)
+//		GetVertexColor                                          (https://rdf.bg/gkdoc/CP64/GetVertexColor.html)
 //				OwlModel				model								IN
 //				const void				* vertexBuffer						IN
 //				int64_t					vertexIndex							IN
@@ -7703,7 +7713,7 @@ static	inline	uint32_t	GetVertexColorSpecular(
 #endif
 
 //
-//		GetConceptualFaceEx                                     (http://rdf.bg/gkdoc/CP64/GetConceptualFaceEx___.html)
+//		GetConceptualFaceEx                                     (https://rdf.bg/gkdoc/CP64/GetConceptualFaceEx___.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					index								IN
 //				int64_t					* startIndexTriangles				IN / OUT
@@ -7793,7 +7803,7 @@ static	inline	ConceptualFace	GetConceptualFaceEx(
 #endif
 
 //
-//		GetTriangles                                            (http://rdf.bg/gkdoc/CP64/GetTriangles___.html)
+//		GetTriangles                                            (https://rdf.bg/gkdoc/CP64/GetTriangles___.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* startIndex						IN / OUT
 //				int64_t					* noTriangles						IN / OUT
@@ -7814,7 +7824,7 @@ void			DECL STDC	GetTriangles(
 								);
 
 //
-//		GetLines                                                (http://rdf.bg/gkdoc/CP64/GetLines___.html)
+//		GetLines                                                (https://rdf.bg/gkdoc/CP64/GetLines___.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* startIndex						IN / OUT
 //				int64_t					* noLines							IN / OUT
@@ -7835,7 +7845,7 @@ void			DECL STDC	GetLines(
 								);
 
 //
-//		GetPoints                                               (http://rdf.bg/gkdoc/CP64/GetPoints___.html)
+//		GetPoints                                               (https://rdf.bg/gkdoc/CP64/GetPoints___.html)
 //				OwlInstance				owlInstance							IN
 //				int64_t					* startIndex						IN / OUT
 //				int64_t					* noPoints							IN / OUT
@@ -7856,7 +7866,7 @@ void			DECL STDC	GetPoints(
 								);
 
 //
-//		GetPropertyRestrictionsConsolidated                     (http://rdf.bg/gkdoc/CP64/GetPropertyRestrictionsConsolidated___.html)
+//		GetPropertyRestrictionsConsolidated                     (https://rdf.bg/gkdoc/CP64/GetPropertyRestrictionsConsolidated___.html)
 //				OwlClass				owlClass							IN
 //				RdfProperty				rdfProperty							IN
 //				int64_t					* minCard							IN / OUT
@@ -7874,7 +7884,7 @@ void			DECL STDC	GetPropertyRestrictionsConsolidated(
 								);
 
 //
-//		IsGeometryType                                          (http://rdf.bg/gkdoc/CP64/IsGeometryType___.html)
+//		IsGeometryType                                          (https://rdf.bg/gkdoc/CP64/IsGeometryType___.html)
 //				OwlClass				owlClass							IN
 //
 //				bool					returns								OUT
@@ -7887,7 +7897,7 @@ bool			DECL STDC	IsGeometryType(
 								);
 
 //
-//		SetObjectTypeProperty                                   (http://rdf.bg/gkdoc/CP64/SetObjectTypeProperty___.html)
+//		SetObjectTypeProperty                                   (https://rdf.bg/gkdoc/CP64/SetObjectTypeProperty___.html)
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
 //				const OwlInstance		* values							IN
@@ -7905,7 +7915,7 @@ int64_t			DECL STDC	SetObjectTypeProperty(
 								);
 
 //
-//		GetObjectTypeProperty                                   (http://rdf.bg/gkdoc/CP64/GetObjectTypeProperty___.html)
+//		GetObjectTypeProperty                                   (https://rdf.bg/gkdoc/CP64/GetObjectTypeProperty___.html)
 //				OwlInstance				owlInstance							IN
 //				OwlObjectProperty		owlObjectProperty					IN
 //				const OwlInstance		** values							IN / OUT
@@ -7948,7 +7958,7 @@ static	inline	int64_t	GetObjectTypeProperty(
 #endif
 
 //
-//		SetDataTypeProperty                                     (http://rdf.bg/gkdoc/CP64/SetDataTypeProperty___.html)
+//		SetDataTypeProperty                                     (https://rdf.bg/gkdoc/CP64/SetDataTypeProperty___.html)
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
 //				const void				* values							IN
@@ -7966,7 +7976,7 @@ int64_t			DECL STDC	SetDataTypeProperty(
 								);
 
 //
-//		GetDataTypeProperty                                     (http://rdf.bg/gkdoc/CP64/GetDataTypeProperty___.html)
+//		GetDataTypeProperty                                     (https://rdf.bg/gkdoc/CP64/GetDataTypeProperty___.html)
 //				OwlInstance				owlInstance							IN
 //				OwlDatatypeProperty		owlDatatypeProperty					IN
 //				const void				** values							IN / OUT
@@ -8009,7 +8019,7 @@ static	inline	int64_t	GetDataTypeProperty(
 #endif
 
 //
-//		InstanceCopyCreated                                     (http://rdf.bg/gkdoc/CP64/InstanceCopyCreated___.html)
+//		InstanceCopyCreated                                     (https://rdf.bg/gkdoc/CP64/InstanceCopyCreated___.html)
 //				OwlInstance				owlInstance							IN
 //
 //				void					returns
@@ -8021,7 +8031,7 @@ void			DECL STDC	InstanceCopyCreated(
 								);
 
 //
-//		GetPropertyByNameAndType                                (http://rdf.bg/gkdoc/CP64/GetPropertyByNameAndType___.html)
+//		GetPropertyByNameAndType                                (https://rdf.bg/gkdoc/CP64/GetPropertyByNameAndType___.html)
 //				OwlModel				model								IN
 //				const char				* name								IN
 //				int64_t					rdfPropertyType						IN
@@ -8029,7 +8039,7 @@ void			DECL STDC	InstanceCopyCreated(
 //				int64_t					returns								OUT
 //
 //	This call is deprecated and will be removed by end of 2022.
-//	Please use the call GetPropertyByName(Ex) / GetPropertyByNameW(Ex) + GetPropertyType(Ex) instead, just rename the function name.
+//	Please use the call GetPropertyByName(Ex)/GetPropertyByNameW(Ex) + GetPropertyType(Ex) instead, just rename the function name.
 //
 int64_t			DECL STDC	GetPropertyByNameAndType(
 									OwlModel				model,
@@ -8061,7 +8071,7 @@ static	inline	int64_t	GetPropertyByNameAndType(
 #endif
 
 //
-//		GetParentsByIterator                                    (http://rdf.bg/gkdoc/CP64/GetParentsByIterator___.html)
+//		GetParentsByIterator                                    (https://rdf.bg/gkdoc/CP64/GetParentsByIterator___.html)
 //				int64_t					owlClassOrRdfProperty				IN
 //				int64_t					parentOwlClassOrRdfProperty			IN
 //
