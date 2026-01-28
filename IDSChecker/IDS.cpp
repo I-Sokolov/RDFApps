@@ -446,7 +446,7 @@ double Context::GetUnitScale(SdaiInstance unit, const char* unitKind)
 {
     double scale = 1;
     if (unit) {
-        scale = getUnitInstanceConversionFactor(unit, (char**)nullptr, nullptr, nullptr);
+        scale = getUnitInstanceConversionFactor(unit, (char**) nullptr, nullptr, nullptr, nullptr);
     }
     else if (unitKind) {
         scale = getProjectUnitConversionFactor(model, unitKind, nullptr, nullptr, nullptr);
